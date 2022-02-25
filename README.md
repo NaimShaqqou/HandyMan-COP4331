@@ -4,8 +4,9 @@
 - Asir Alam (Website Frontend + ...)
 - Esteban Brugal (Project Manager + ...)
 - Jeyoos Jaison (Role...)
+- Johnathan (check this name pls) (Mobile Frontend + ...)
 - Naim Shaqqou (Mobile Frontend + ...)
-- Zhichen Xu (Role...)
+- Zhichen Xu (Website Frontend)
 
 ## To-Do List
 - [x] Create Github Repository
