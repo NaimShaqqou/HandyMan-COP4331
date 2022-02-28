@@ -4,7 +4,7 @@
 - Asir Alam (Website Frontend + ...)
 - Esteban Brugal (Project Manager + ...)
 - Jeyoos Jaison (Role...)
-- Johnathan (check this name pls) (Mobile Frontend + ...)
+- Jonathan (check this name pls) (Mobile Frontend + ...)
 - Naim Shaqqou (Mobile Frontend + ...)
 - Zhichen Xu (Website Frontend)
 
