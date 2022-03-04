@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 function Login()
 {
-    const app_name='cop4331-demo-naim'
+    const app_name='myhandyman1'
     function buildPath(route)
     {
         if (process.env.NODE_ENV === 'production')
