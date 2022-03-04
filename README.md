@@ -10,5 +10,5 @@
 
 ## To-Do List
 - [x] Create Github Repository
-- [ ] Set up hosting and domain
+- [x] Set up hosting and domain
 - [ ] stuff
