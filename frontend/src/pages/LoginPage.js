@@ -4,12 +4,15 @@ import PageTitle from '../components/PageTitle';
 import Login from '../components/Login';
 import Register from '../components/Register';
 
+import '../LoginPage.css';
+
 const LoginPage = () =>
 {
     return(
-        <div>
+        <div class='loginPageDiv'>
             <PageTitle />
             <Login />
+            <br />
             <Register />
         </div>
     );

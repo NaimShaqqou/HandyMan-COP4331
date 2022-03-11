@@ -27,7 +27,6 @@ function Register()
         var obj = {login:rloginName.value,password:rloginPassword.value};
         var js = JSON.stringify(obj);
 
-        //alert("Register " + js);
         setMessage("Register " + js);
 
         // try
