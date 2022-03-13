@@ -10,6 +10,7 @@ const LoginPage = () =>
 {
     return(
         <div class='loginPageDiv'>
+            <Imagess />
             <PageTitle />
             <Login />
             <br />
