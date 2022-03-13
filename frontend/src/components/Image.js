@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Imagess(){
+function Image(){
 
     return (
         <div>
@@ -11,4 +11,4 @@ function Imagess(){
     )
 }
 
-export default Imagess;
+export default Image;
