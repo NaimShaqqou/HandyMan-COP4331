@@ -41,8 +41,9 @@ function Login() {
   return (
     <div id="loginDiv">
       <form onSubmit={doLogin}>
-        <span id="inner-title">PLEASE LOG IN!</span>
+        <span class="log" id="inner-title">Log In</span>
         <br />
+        
         <input
           type="text"
           id="loginName"
@@ -50,6 +51,7 @@ function Login() {
           ref={(c) => (loginName = c)}
         />
         <br />
+        
         <input
           type="password"
           id="loginPassword"
@@ -66,6 +68,7 @@ function Login() {
         />
       </form>
       <span id="loginResult">{message}</span>
+      
     </div>
   );
 }

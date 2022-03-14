@@ -1,9 +1,9 @@
 import React from 'react';
-
+import '../PageTitle.css'
 function PageTitle()
 {
     return (
-        <h1 id="title">Handyman Login Page</h1>
+        <h1 id="title">(((Project Slogan)))</h1>
     );
 };
 
