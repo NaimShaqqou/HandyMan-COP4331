@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
+import '../LoginBox.css'
 
 function Login() {
   var bp = require("./Path.js");
@@ -43,15 +44,18 @@ function Login() {
       <form onSubmit={doLogin}>
         <span class="log" id="inner-title">Log In</span>
         <br />
-        
-        <input
-          type="text"
-          id="loginName"
-          placeholder="Username"
-          ref={(c) => (loginName = c)}
-        />
-        <br />
-        
+          <div class="emailbox">
+            <label class="emailfont">Email/Username:</label>
+            <br />
+            <br />
+            <i class="emaillogo"></i>
+            <input type="text"
+              id="loginName"
+              placeholder="Username"
+              ref={(c) => (loginName = c)}
+            />
+            <br />
+          </div>
         <input
           type="password"
           id="loginPassword"

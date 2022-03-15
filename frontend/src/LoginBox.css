@@ -25,15 +25,53 @@
 
 .log{
     position: absolute;
-width: 88px;
-height: 45px;
-left: 43px;
-top: 25px;
+    width: 88px;
+    height: 45px;
+    left: 43px;
+    top: 25px;
 
-font-family: 'Poppins';
-font-style: normal;
-font-weight: 500;
-font-size: 30px;
-line-height: 45px;
-color: #000000;
+    font-family: 'Poppins',sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 45px;
+    color: #000000;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
+.emailfont{
+    position: absolute;
+    left: 0%;
+    right: 74.13%;
+    top: 0%;
+    bottom: 68.75%;
+
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+/* identical to box height */
+
+
+color: #999999;
+
+}
+
+.emailbox{
+    position: absolute;
+    width: 429px;
+    height: 64px;
+    left: 45px;
+    top: 107px;
+    box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.emaillogo{
+    background:url('https://tinyimg.io/i/PlEqXGd.png');
+    height:16px;
+    width:16px;
+    display:block;
+}
+
