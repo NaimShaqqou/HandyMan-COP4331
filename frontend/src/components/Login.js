@@ -44,32 +44,36 @@ function Login() {
       <form onSubmit={doLogin}>
         <span class="log" id="inner-title">Log In</span>
         <br />
-          <div class="emailbox">
-            <label class="emailfont">Email/Username:</label>
-            <br />
-            <br />
-            <i class="emaillogo"></i>
-            <input type="text"
+          <div class="innerbox">
+            <label class="epfont">Email/Username:</label>
+            <img alt="User" width="16" height="16" src="url('https://tinyimg.io/i/PlEqXGd.png')" />
+            <input class="input1" type="text"
               id="loginName"
-              placeholder="Username"
+              placeholder="Username/Email Address"
               ref={(c) => (loginName = c)}
             />
+            <hr />
+            <label class="epfont">Password:</label>
+            
+            <i class="emaillogo"></i>
+            <input class="input1"
+              type="password"
+              id="loginPassword"
+              placeholder="Password"
+              ref={(c) => (loginPassword = c)}
+            />
             <br />
+            <hr />
           </div>
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="Password"
-          ref={(c) => (loginPassword = c)}
-        />
-        <br />
-        <input
-          type="submit"
+          <div class="inner2box">
+        <input type="submit"
           id="loginButton"
           class="buttons"
           value="Do It"
           onClick={doLogin}
         />
+        <p class="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
+        </div>
       </form>
       <span id="loginResult">{message}</span>
       
