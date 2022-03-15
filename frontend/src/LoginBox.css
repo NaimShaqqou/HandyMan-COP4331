@@ -1,107 +1,121 @@
-.loginbox 
-    {
-        position: absolute;
-        width: 518px;
-        height: 521px;
-        left: 250px;
-        top: 216px;
+.loginbox {
+  position: absolute;
+  width: 518px;
+  height: 521px;
+  left: 250px;
+  top: 216px;
 
-        background: #FFFFFF;
-        box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
-        border-radius: 40px;
-        padding: 10px 10px 10px 10px;
-    }
-
-.inner
-{
-    position: absolute;
-    width: 431px;
-    height: 461px;
-    left: 43px;
-    top: 25px;
-    
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  background: #ffffff;
+  box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
+  border-radius: 40px;
+  padding: 10px 10px 10px 10px;
 }
 
-.log{
-    position: absolute;
-    width: 88px;
-    height: 45px;
-    left: 43px;
-    top: 25px;
+.inner {
+  position: absolute;
+  width: 431px;
+  height: 461px;
+  left: 43px;
+  top: 25px;
 
-    font-family: 'Poppins',sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 45px;
-    color: #000000;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
-.epfont{
-    position: static;
-    left: 0%;
-    right: 74.13%;
-    top: 0%;
-    bottom: 68.75%;
+.log {
+  position: absolute;
+  width: 88px;
+  height: 45px;
+  left: 43px;
+  top: 25px;
 
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 13px;
-    line-height: 20px;
-    margin-bottom:10px;
-/* identical to box height */
-
-
-color: #999999;
-
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 45px;
+  color: #000000;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.innerbox{
-    position: absolute;
-    width: 431px;
-    height: 177px;
-    left: 43px;
-    top: 107px;
-    box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+.epfont {
+  position: static;
+  left: 0%;
+  right: 74.13%;
+  top: 0%;
+  bottom: 68.75%;
+
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 10px;
+  /* identical to box height */
+
+  color: #999999;
 }
 
-.emaillogo{
-    background:url('https://tinyimg.io/i/PlEqXGd.png');
-    height:25px;
-    width:25px;
-    display:block;
+.innerbox {
+  position: absolute;
+  width: 431px;
+  height: 177px;
+  left: 43px;
+  top: 107px;
+  box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.inner2box{
-    position: absolute;
-    width:428px;
-    height:121px;
-    left:43px;
-    right:43px;
-    top:359px;
-    bottom:41px;
-    box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+.emaillogo {
+  background: url("https://tinyimg.io/i/PlEqXGd.png");
+  height: 30px;
+  width: 30px;
+  display: block;
 }
 
-.alignbot{
-    display:flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+.inner2box {
+  position: absolute;
+  width: 428px;
+  height: 121px;
+  left: 43px;
+  right: 43px;
+  top: 359px;
+  bottom: 41px;
+  box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-input{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin-bottom:15px;
+.alignbot {
+  padding: 35px;
+  text-align: center;
 }
 
-.input1{
-    width:390px;
-    height:20px;
+input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.env {
+  padding-left: 25px;
+  background: url("https://icons-for-free.com/iconfiles/png/512/envelope-131965017430203317.png")
+    no-repeat left;
+  background-size: 20px 20px;
+  width: 370px;
+  height: 20px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.pas {
+  padding-left: 25px;
+
+  background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2uZSaKlGTEhriVwNqXm45Sxpvy9vMTo3ONw&usqp=CAU")
+    no-repeat left;
+
+  background-size: 20px 20px;
+  width: 370px;
+  height: 20px;
+  margin-top: 5px;
+  border-radius: 5px;
 }

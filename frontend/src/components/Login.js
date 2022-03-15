@@ -46,23 +46,20 @@ function Login() {
         <br />
           <div class="innerbox">
             <label class="epfont">Email/Username:</label>
-            <img alt="User" width="16" height="16" src="url('https://tinyimg.io/i/PlEqXGd.png')" />
-            <input class="input1" type="text"
+            <br />
+            <input class="env" type="text"
               id="loginName"
               placeholder="Username/Email Address"
               ref={(c) => (loginName = c)}
             />
             <hr />
             <label class="epfont">Password:</label>
-            
-            <i class="emaillogo"></i>
-            <input class="input1"
+            <input class="pas"
               type="password"
               id="loginPassword"
               placeholder="Password"
               ref={(c) => (loginPassword = c)}
             />
-            <br />
             <hr />
           </div>
           <div class="inner2box">
