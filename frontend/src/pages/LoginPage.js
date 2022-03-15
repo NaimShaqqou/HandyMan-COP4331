@@ -1,19 +1,18 @@
 import React from 'react';
 
 import PageTitle from '../components/PageTitle';
-import Login from '../components/Login';
-import Register from '../components/Register';
-
+import Logo from '../components/Logo';
+import LoginBox from '../components/LoginBox';
 import '../LoginPage.css';
 
 const LoginPage = () =>
 {
     return(
         <div class='loginPageDiv'>
+            <Logo />
             <PageTitle />
-            <Login />
-            <br />
-            <Register />
+            <LoginBox />
+            
         </div>
     );
 };
