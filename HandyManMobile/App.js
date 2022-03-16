@@ -1,22 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { NativeBaseProvider, Box, Center, View } from 'native-base';
 
 import Navigation from './src/navigation';
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
+    <NativeBaseProvider>
       <Navigation />
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-});
