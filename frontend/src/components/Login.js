@@ -35,7 +35,7 @@ function Login() {
       }
     } catch (e) {
       console.log(e.toString());
-      return;
+      return; 
     }
   };
 
