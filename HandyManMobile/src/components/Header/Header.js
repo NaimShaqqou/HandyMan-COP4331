@@ -1,36 +1,33 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { Icon, Block, NavBar } from 'galio-framework'
+import { 
+    Box,
+    HStack,
+    IconButton,
+    Icon,
+    Text
+} from 'native-base'
+import { MaterialIcons } from "@native-base/icons"
 import React from 'react'
 
-
-
-const Header = ({ title }) => {
+const Header = ({title}) => {
   return (
-      <View>
-      <Block>
-          <NavBar 
-            back
-            title={title}
-            style={styles.navbar}
-            leftIconName={'chevron-left'}
-            leftIconColor={'#4A4A4A'}
-            titleStyle={styles.title}
-          />
-      </Block>
-      </View>
+    <>
+        <Box bg="primary.500" h='10' />
+        <HStack bg="primary.500" justifyContent="space-between" alignItems="center" w="100%" h='16'>
+            <HStack alignItems="center">
+                <IconButton icon={<Icon size="sm" as={MaterialIcons} name="menu" color="white" />} />
+                <Text color="white" fontSize="20" fontWeight="bold">
+                    {title}
+                </Text>
+            </HStack>
+            <HStack>
+                <IconButton icon={<Icon as={MaterialIcons} name="chat" size="sm" color="white" />} />
+                <IconButton icon={<Icon as={MaterialIcons} name="search" size="sm" color="white" />} />
+                <IconButton icon={<Icon as={MaterialIcons} name="map" size="sm" color="white" />} />
+            </HStack>
+        </HStack>
+    </>
+
   )
 }
 
-const styles = StyleSheet.create({
-    navbar: {
-        paddingVertical: 0,
-        zIndex: 5,
-    },
-    title: {
-        width: '100%',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-})
-
-export default Header;
+export default Header
