@@ -1,5 +1,7 @@
 import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
 import React, { useState } from 'react'
+import { Button, Container, Center, Input } from 'native-base'
+
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import PrivacyPolicy from '../../components/PrivacyPolicy'
@@ -30,18 +32,17 @@ const Login = () => {
   }
 
   return (
-    <ScrollView 
-      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} 
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.root}>
-        <Text style={styles.heading}>Login</Text>
-
-        <CustomInput
+    
+    <Center>
+      <Container centerContent>
+      <Text style={styles.heading}>Login</Text>
+        {/* <CustomInput
           placeholder="Username"
           value={username}
           setValue={setUsername}
-        />
+        /> */}
+
+        <Input placeholder="Username" isFullWidth />
 
         <CustomInput 
           placeholder="Password" 
@@ -51,11 +52,17 @@ const Login = () => {
         />
 
 
-        <CustomButton 
+        {/* <CustomButton 
           text="Login" 
           onPress={onLoginPressed}
           type="PRIMARY"
-        />
+        /> */}
+
+        <Button 
+          onPress={ onLoginPressed }
+        >
+          Login
+        </Button>
 
         <CustomButton 
           text="Forgot Password?" 
@@ -71,9 +78,8 @@ const Login = () => {
         />
 
         <PrivacyPolicy text="logging in" />
-
-      </View>
-    </ScrollView>
+      </Container>
+    </Center>
   )
 }
 
