@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PageTitle from '../components/PageTitle';
-import Logo from '../components/Logo';
+import Title from '../components/Title';
 import LoginBox from '../components/LoginBox';
 import '../LoginPage.css';
 
@@ -9,7 +9,7 @@ const LoginPage = () =>
 {
     return(
         <div class='loginPageDiv'>
-            <Logo />
+            <Title />
             <PageTitle />
             <LoginBox />
             

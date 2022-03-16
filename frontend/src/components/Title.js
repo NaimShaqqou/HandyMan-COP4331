@@ -1,11 +1,10 @@
 import React from 'react';
-import '../Logo.css'
+import '../Title.css'
 function Logo(){
 
     return (
         <div>
             <p class="logo">Handler</p>
-            
         </div>
 
     )

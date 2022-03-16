@@ -3,7 +3,7 @@ import '../PageTitle.css'
 function PageTitle()
 {
     return (
-        <h1 id="title">(((Project Slogan)))</h1>
+        <h1 id="title">(((Project2 Slogan)))</h1>
     );
 };
 
