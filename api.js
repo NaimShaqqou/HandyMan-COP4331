@@ -1,3 +1,5 @@
+const { ObjectId } = require("mongodb");
+
 require("express");
 require("mongodb");
 
@@ -84,17 +86,17 @@ exports.setApp = function (app, client) {
   });
 
   app.post("/api/login", async (req, res, next) => {
-    // incoming: login, password
+    // incoming: email, password
     // outgoing: id, firstName, lastName, error
 
     var error = "";
 
-    const { login, password } = req.body;
+    const { email, password } = req.body;
 
     const db = client.db();
     const results = await db
       .collection("Users")
-      .find({ Login: login, Password: password })
+      .find({ Email: email, Password: password })
       .toArray();
 
     var id = -1;
@@ -103,18 +105,20 @@ exports.setApp = function (app, client) {
     var ret;
 
     if (results.length > 0) {
-      id = results[0].UserId;
+      id = results[0]._id.valueOf();
       fn = results[0].FirstName;
       ln = results[0].LastName;
       try {
         const token = require("./createJWT.js");
         ret = token.createToken(fn, ln, id);
+        console.log(ret)
       } catch (e) {
         ret = { error: e.message };
       }
     } else {
-      ret = { error: "Login/Password incorrect", id: id };
+      ret = { error: "Email/Password incorrect", id: id };
     }
+    
     res.status(200).json(ret);
   });
 
@@ -151,6 +155,8 @@ exports.setApp = function (app, client) {
     } catch (e) {
       console.log(e.message);
     }
+
+    userId = ObjectId(userId)
 
     const db = client.db();
     const writeResult = await db.collection("Services").insertOne(
@@ -208,6 +214,8 @@ exports.setApp = function (app, client) {
       console.log(e.message);
     }
 
+    userId = ObjectId(userId)
+
     const db = client.db();
     const deleteResult = db
       .collection("Services")
@@ -249,6 +257,8 @@ exports.setApp = function (app, client) {
     } catch (e) {
       console.log(e.message);
     }
+
+    userId = ObjectId(userId)
 
     const db = client.db();
     const user = db

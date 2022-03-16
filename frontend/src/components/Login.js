@@ -4,7 +4,7 @@ import '../LoginBox.css'
 
 function Login() {
   var bp = require("./Path.js");
-  var loginName;
+  var loginEmail;
   var loginPassword;
 
   const [message, setMessage] = useState("");
@@ -12,7 +12,7 @@ function Login() {
   const doLogin = async (event) => {
     event.preventDefault();
     
-    var obj = { login: loginName.value, password: loginPassword.value };
+    var obj = { email: loginEmail.value, password: loginPassword.value };
     var js = JSON.stringify(obj);
 
     try {
@@ -50,7 +50,7 @@ function Login() {
             <input class="env" type="text"
               id="loginName"
               placeholder="Username/Email Address"
-              ref={(c) => (loginName = c)}
+              ref={(c) => (loginEmail = c)}
             />
             <hr />
             <label class="epfont">Password:</label>
