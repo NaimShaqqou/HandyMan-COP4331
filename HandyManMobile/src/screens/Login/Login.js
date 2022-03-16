@@ -1,15 +1,14 @@
-import { StyleSheet, Dimensions } from 'react-native'
+import { Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { Button, Box, Center, Input, Icon, Heading, FormControl, Link } from 'native-base'
-import { MaterialIcons } from "@native-base/icons"
 
-
-import PrivacyPolicy from '../../components/PrivacyPolicy'
 import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from "@native-base/icons"
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
   const [show, setShow] = useState('');
 
   const { height } = Dimensions.get('window').height;
@@ -22,7 +21,7 @@ const Login = () => {
   }
 
   const onForgotPasswordPressed = () => {
-    console.log("Forgot Password Pressed");
+    console.warn("Forgot Password Pressed");
 
     // TODO: create forgot password page
     // navigate to that page from here
@@ -35,12 +34,6 @@ const Login = () => {
   return (
     <Center w="100%" flex={1} >
       <Box safeArea w="90%" p="2" py="8" justifyContent='center' >
-        {/* <CustomInput
-          placeholder="Username"
-          value={username}
-          setValue={setUsername}
-        /> */}
-
         <Heading size="xl" fontWeight="600">
           Welcome to Handler
         </Heading>
@@ -80,21 +73,6 @@ const Login = () => {
               Forgot Password?
             </Link>
           </FormControl>
-
-          {/* <CustomInput 
-            placeholder="Password" 
-            value={password} 
-            setValue={setPassword} 
-            secureTextEntry 
-          /> */}
-
-
-          {/* <CustomButton 
-            text="Login" 
-            onPress={onLoginPressed}
-            type="PRIMARY"
-          /> */}
-
           
           <Button 
             onPress={ onLoginPressed }
@@ -105,36 +83,49 @@ const Login = () => {
             Login
           </Button>
 
+          <Button 
+            mt={6}
+            variant="outline"
+            onPress={onRegisterTransition}
+            w="100%"
+          >
+            Don't have an account? Register here!
+          </Button>
         </Center>
-          
-
-        <Button 
-          mt={6}
-          variant="outline"
-          onPress={onRegisterTransition}
-        >
-          Don't have an account? Register here!
-        </Button>
-
-        {/* <CustomButton 
-          text="Forgot Password?" 
-          onPress={onForgotPasswordPressed} 
-          type="TERTIARY"
-        /> */}
-
-
-        {/* <CustomButton 
-          text="Don't have an account? Click here!"
-          onPress={onRegisterTransition}
-          type="TERTIARY"
-        /> */}
-
       </Box>
-      
     </Center>
   )
 }
 
-
-
 export default Login
+
+{/* <CustomInput
+  placeholder="Username"
+  value={username}
+  setValue={setUsername}
+/> */}
+
+{/* <CustomInput 
+placeholder="Password" 
+value={password} 
+setValue={setPassword} 
+secureTextEntry 
+/> */}
+
+{/* <CustomButton 
+text="Login" 
+onPress={onLoginPressed}
+type="PRIMARY"
+/> */}
+
+{/* <CustomButton 
+  text="Forgot Password?" 
+  onPress={onForgotPasswordPressed} 
+  type="TERTIARY"
+/> */}
+
+{/* <CustomButton 
+  text="Don't have an account? Click here!"
+  onPress={onRegisterTransition}
+  type="TERTIARY"
+/> */}
