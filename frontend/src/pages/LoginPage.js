@@ -12,7 +12,6 @@ const LoginPage = () =>
             <Title />
             <PageTitle />
             <LoginBox />
-            
         </div>
     );
 };

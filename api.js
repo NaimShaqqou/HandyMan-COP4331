@@ -127,7 +127,7 @@ exports.setApp = function (app, client) {
     // outgoing: serviceId, error (optional), jwtToken
     var response;
 
-    const {
+    let {
       userId,
       title,
       longitude,
@@ -179,21 +179,22 @@ exports.setApp = function (app, client) {
           };
         } else {
           response = {
-            serviceId: objectInserted[0]._id,
+            serviceId: objectInserted.insertedId.valueOf(),
             refreshedToken: refreshedToken,
           };
         }
+        res.status(200).json(response);
       }
     );
 
-    res.status(200).json(response);
+    
   });
 
-  app.post("api/delete-service", async (req, res, next) => {
+  app.post("/api/delete-service", async (req, res, next) => {
     // incoming: userId, title, jwtToken
     // outgoing: error (optional), jwtToken
 
-    const { userId, title, jwtToken } = req.body;
+    let { userId, title, jwtToken } = req.body;
 
     var response;
 
@@ -230,16 +231,15 @@ exports.setApp = function (app, client) {
             refreshedToken: refreshedToken,
           };
         }
+        res.status(200).json(response);
       });
-
-    res.status(200).json(response);
   });
 
-  app.post("api/change-password", async (req, res, next) => {
+  app.post("/api/change-password", async (req, res, next) => {
     // incoming: userId, oldPassword, newPassword, jwtToken
     // outgoing: error (optional), jwtToken
 
-    const { userId, oldPassword, newPassword, jwtToken } = req.body;
+    let { userId, oldPassword, newPassword, jwtToken } = req.body;
 
     try {
       if (token.isExpired(jwtToken)) {
@@ -261,7 +261,7 @@ exports.setApp = function (app, client) {
     userId = ObjectId(userId)
 
     const db = client.db();
-    const user = db
+    const user = await db
       .collection("Users")
       .findOne({ _id: userId, Password: oldPassword });
 
@@ -283,18 +283,19 @@ exports.setApp = function (app, client) {
       return;
     }
 
-    db.collection("Users").update(
-      { user },
-      { $set: { Password: oldPassword } },
+    let id = user._id;
+
+    db.collection("Users").updateOne(
+      { _id: id },
+      { $set: {Password: newPassword} },
       function (err, objectReturned) {
         if (err) {
           response = { error: err, refreshedToken: refreshedToken };
         } else {
           response = { refreshedToken: refreshedToken };
         }
+        res.status(200).json(response);
       }
     );
-
-    res.status(200).json(response);
   });
 };

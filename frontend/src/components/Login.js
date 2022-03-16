@@ -35,7 +35,7 @@ function Login() {
       }
     } catch (e) {
       console.log(e.toString());
-      return;
+      return; 
     }
   };
 
@@ -43,36 +43,40 @@ function Login() {
     <div id="loginDiv">
       <form onSubmit={doLogin}>
         <span class="log" id="inner-title">Log In</span>
-        <br />
-          <div class="innerbox">
-            <label class="epfont">Email/Username:</label>
-            <br />
-            <input class="env" type="text"
-              id="loginName"
-              placeholder="Username/Email Address"
-              ref={(c) => (loginEmail = c)}
-            />
-            <hr />
-            <label class="epfont">Password:</label>
-            <input class="pas"
-              type="password"
-              id="loginPassword"
-              placeholder="Password"
-              ref={(c) => (loginPassword = c)}
-            />
-            <hr />
-          </div>
-          <div class="inner2box">
-        <input type="submit"
-          id="loginButton"
-          class="buttons"
-          value="Do It"
-          onClick={doLogin}
-        />
-        <p class="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
+
+        {/* <br /> */}
+
+        <div class="innerbox">
+          <label class="epfont">Email/Username:</label>
+          <br />
+          <input class="env" type="text"
+            id="loginName"
+            placeholder="Username/Email Address"
+            ref={(c) => (loginEmail = c)}
+          />
+          {/* <hr /> */}
+          <label class="epfont">Password:</label>
+          <input class="pas"
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            ref={(c) => (loginPassword = c)}
+          />
+          {/* <hr /> */}
+        </div>
+
+        <div class="inner2box">
+          <span id="loginResult">{message}</span>
+          <p></p>
+          <input type="submit"
+            id="loginButton"
+            class="buttons"
+            value="Do It"
+            onClick={doLogin}
+          />
+          <p class="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
         </div>
       </form>
-      <span id="loginResult">{message}</span>
       
     </div>
   );
