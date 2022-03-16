@@ -12,7 +12,8 @@ const PrivacyPolicy = ({ text }) => {
     <>
         <Text style={styles.text}>
             By {text} you are agreeing to our{' '}
-            <Text style={styles.link} onPress={onPrivacyPressed}>Terms and Privacy Policy</Text>
+            <Text style={styles.link} onPress={onPrivacyPressed}>Terms and Privacy Policy </Text> 
+            <Text>IMA CHANGE THIS LOL</Text>
         </Text>
     </>
   )

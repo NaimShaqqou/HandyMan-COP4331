@@ -1,17 +1,18 @@
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import React, { useState } from 'react'
-import { Button, Container, Center, Input } from 'native-base'
+import { Button, Box, Center, Input, Icon, Heading, FormControl, Link } from 'native-base'
+import { MaterialIcons } from "@native-base/icons"
 
-import CustomInput from '../../components/CustomInput'
-import CustomButton from '../../components/CustomButton'
+
 import PrivacyPolicy from '../../components/PrivacyPolicy'
 import { useNavigation } from '@react-navigation/native'
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [show, setShow] = useState('');
 
-  const { height } = useWindowDimensions();
+  const { height } = Dimensions.get('window').height;
   const navigation = useNavigation();
 
   const onLoginPressed = () => {
@@ -21,7 +22,7 @@ const Login = () => {
   }
 
   const onForgotPasswordPressed = () => {
-    console.warn("Forgot Password Pressed");
+    console.log("Forgot Password Pressed");
 
     // TODO: create forgot password page
     // navigate to that page from here
@@ -32,75 +33,108 @@ const Login = () => {
   }
 
   return (
-    
-    <Center>
-      <Container centerContent>
-      <Text style={styles.heading}>Login</Text>
+    <Center w="100%" flex={1} >
+      <Box safeArea w="90%" p="2" py="8" justifyContent='center' >
         {/* <CustomInput
           placeholder="Username"
           value={username}
           setValue={setUsername}
         /> */}
 
-        <Input placeholder="Username" isFullWidth />
+        <Heading size="xl" fontWeight="600">
+          Welcome to Handler
+        </Heading>
+        <Heading mt="1" fontWeight="medium" size="sm">
+          Login to continue! 
+        </Heading>
 
-        <CustomInput 
-          placeholder="Password" 
-          value={password} 
-          setValue={setPassword} 
-          secureTextEntry 
-        />
+        <Center mt={10} w='100%'>
+          <FormControl>
+            <Input 
+              variant="underlined" 
+              placeholder="Username" 
+              size="2xl" 
+              w="100%" 
+              InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
+            />
+          </FormControl>
+          <FormControl mt={8}>
+            <Input 
+              variant="underlined" 
+              placeholder="Password" 
+              size="2xl" 
+              w="100%" 
+              type={show ? "text" : "password"}
+              InputRightElement={<Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} 
+                size={5} mr="2" color="muted.400" onPress={() => setShow(!show)} />}
+              InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
+            />
+            <Link _text={{
+              fontWeight: '500',
+              color: 'secondary.500'
+            }}
+              alignSelf='flex-end'
+              mt='1'
+              onPress={onForgotPasswordPressed}
+            >
+              Forgot Password?
+            </Link>
+          </FormControl>
+
+          {/* <CustomInput 
+            placeholder="Password" 
+            value={password} 
+            setValue={setPassword} 
+            secureTextEntry 
+          /> */}
 
 
-        {/* <CustomButton 
-          text="Login" 
-          onPress={onLoginPressed}
-          type="PRIMARY"
-        /> */}
+          {/* <CustomButton 
+            text="Login" 
+            onPress={onLoginPressed}
+            type="PRIMARY"
+          /> */}
+
+          
+          <Button 
+            onPress={ onLoginPressed }
+            size="lg"
+            w="100%"
+            mt={6}
+          >
+            Login
+          </Button>
+
+        </Center>
+          
 
         <Button 
-          onPress={ onLoginPressed }
+          mt={6}
+          variant="outline"
+          onPress={onRegisterTransition}
         >
-          Login
+          Don't have an account? Register here!
         </Button>
 
-        <CustomButton 
+        {/* <CustomButton 
           text="Forgot Password?" 
           onPress={onForgotPasswordPressed} 
           type="TERTIARY"
-        />
+        /> */}
 
 
-        <CustomButton 
+        {/* <CustomButton 
           text="Don't have an account? Click here!"
           onPress={onRegisterTransition}
           type="TERTIARY"
-        />
+        /> */}
 
-        <PrivacyPolicy text="logging in" />
-      </Container>
+      </Box>
+      
     </Center>
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    padding: 20,
-  },
-  logo: {
-    width: '70%',
-    maxWidth: 500,
-    maxHeight: 300,
-  },
-  register: {
 
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    padding: 20
-  },
-});
 
 export default Login
