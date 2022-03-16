@@ -8,9 +8,13 @@
     "@testing-library/user-event": "^13.5.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
+    "native-base": "^3.3.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-jwt": "^1.1.4",
+    "react-native-safe-area-context": "^3.1.9",
+    "react-native-svg": "^12.1.0",
+    "react-native-web": "^0.17.7",
     "react-scripts": "5.0.0",
     "web-vitals": "^2.1.4"
   },
