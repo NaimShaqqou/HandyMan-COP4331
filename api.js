@@ -298,4 +298,64 @@ exports.setApp = function (app, client) {
       }
     );
   });
+
+  app.post("/api/add-review", async (req, res, next) => {
+    // incoming: userId, serviceId, reviewer profile picture, ReviewText
+    // outgoing: reviewId, error (optional), jwtToken
+    var response;
+
+    let {
+      userId,
+      serviceId,
+      //reviewerProfilePic,
+      reviewText,
+    } = req.body;
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // It's a good idea to keep track of the userId as well (ask esteban)
+    // userId = ObjectId(userId)
+    serviceId = ObjectId(serviceId)
+
+    const db = client.db();
+    const writeResult = await db.collection("Services").insertOne(
+      {
+        // UserId: userId
+        ServiceId: serviceId,
+        ReviewText: reviewText,
+      },
+      function (err, objectInserted) {
+        if (err) {
+          response = {
+            reviewId: -1,
+            error: err,
+            refreshedToken: refreshedToken,
+          };
+        } else {
+          response = {
+            serviceId: objectInserted.insertedId.valueOf(),
+            refreshedToken: refreshedToken,
+          };
+        }
+        res.status(200).json(response);
+      }
+    );
+  });
+
+
 };
