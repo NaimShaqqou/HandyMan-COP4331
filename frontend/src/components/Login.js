@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import '../LoginBox.css'
+import Button from '@mui/material/Button'
 
 function Login() {
   var bp = require("./Path.js");
@@ -68,12 +69,13 @@ function Login() {
         <div class="inner2box">
           <span id="loginResult">{message}</span>
           <p></p>
-          <input type="submit"
+          <Button id="loginButton" variant="contained" onClick={doLogin}>Log in</Button>
+          {/* <input type="submit"
             id="loginButton"
             class="buttons"
             value="Do It"
             onClick={doLogin}
-          />
+          /> */}
           <p class="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
         </div>
       </form>

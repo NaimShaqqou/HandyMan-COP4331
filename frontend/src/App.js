@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom
 import './App.css';
 
 import LoginPage from './pages/LoginPage';
-import CardPage from './pages/CardPage';
+import HomePage from './pages/HomePage';
 import TestPage from './pages/TestPage';
 
 function App() {
@@ -12,10 +12,10 @@ function App() {
     <Router>
       <Switch>
         <Route path="/" exact>
-          <LoginPage />
+          <HomePage />
         </Route>
-        <Route path="/cards" exact>
-          <CardPage />
+        <Route path="/login" exact>
+          <LoginPage />
         </Route>
         <Route path="/test" exact>
           <TestPage />
