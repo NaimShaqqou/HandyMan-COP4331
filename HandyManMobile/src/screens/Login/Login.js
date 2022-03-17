@@ -6,17 +6,27 @@ import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from "@native-base/icons"
 
 const Login = () => {
+  // username: contains username typed by the user
+  // password: contains password typed by the user
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
+  // used for hiding/unhiding the password
   const [show, setShow] = useState('');
 
-  const { height } = Dimensions.get('window').height;
+  const { height } = Dimensions.get('window').height; // not needed
+  
+  // to navigate between pages
+  // refer to the "navigation" folder for more info
   const navigation = useNavigation();
 
   const onLoginPressed = () => {
-    // Authentication
+    // TODO: Authentication
+    console.warn("Username: " + username + "\nPassword: " + password)
 
+
+
+    // this takes the user to the home page
     navigation.navigate('Home');
   }
 
@@ -49,6 +59,7 @@ const Login = () => {
               size="2xl" 
               w="100%" 
               InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
+              onChangeText={newUsername => setUsername(newUsername)}
             />
           </FormControl>
           <FormControl mt={8}>
@@ -61,6 +72,7 @@ const Login = () => {
               InputRightElement={<Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} 
                 size={5} mr="2" color="muted.400" onPress={() => setShow(!show)} />}
               InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
+              onChangeText={newPassword => setPassword(newPassword)}
             />
             <Link _text={{
               fontWeight: '500',
