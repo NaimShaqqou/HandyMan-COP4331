@@ -8,7 +8,7 @@ import '../LoginPage.css';
 const LoginPage = () =>
 {
     return(
-        <div class='loginPageDiv'>
+        <div className='loginPageDiv'>
             <Title />
             <PageTitle />
             <LoginBox />

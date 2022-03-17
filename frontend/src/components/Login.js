@@ -16,6 +16,8 @@ function Login() {
     var obj = { email: loginEmail.value, password: loginPassword.value };
     var js = JSON.stringify(obj);
 
+    // alert('click');
+
     try {
       const response = await fetch(bp.buildPath("api/login"), {
         method: "POST",
@@ -27,12 +29,13 @@ function Login() {
       if (res.id <= 0) {
         setMessage("User/Password combination incorrect");
       } else {
+        alert('found');
+        setMessage("");
         var storage = require("../tokenStorage.js");
         var user = jwt_decode(res)
         localStorage.setItem("user_data", JSON.stringify(user))
         storage.storeToken(res);
-        setMessage("");
-        window.location.href = "/cards";
+        window.location.href = "/";
       }
     } catch (e) {
       console.log(e.toString());
@@ -43,21 +46,21 @@ function Login() {
   return (
     <div id="loginDiv">
       <form onSubmit={doLogin}>
-        <span class="log" id="inner-title">Log In</span>
+        <span className="log" id="inner-title">Log In</span>
 
         {/* <br /> */}
 
-        <div class="innerbox">
-          <label class="epfont">Email/Username:</label>
+        <div className="innerbox">
+          <label className="epfont">Email/Username:</label>
           <br />
-          <input class="env" type="text"
+          <input className="env" type="text"
             id="loginName"
             placeholder="Username/Email Address"
             ref={(c) => (loginEmail = c)}
           />
           {/* <hr /> */}
-          <label class="epfont">Password:</label>
-          <input class="pas"
+          <label className="epfont">Password:</label>
+          <input className="pas"
             type="password"
             id="loginPassword"
             placeholder="Password"
@@ -66,17 +69,17 @@ function Login() {
           {/* <hr /> */}
         </div>
 
-        <div class="inner2box">
+        <div className="inner2box">
           <span id="loginResult">{message}</span>
           <p></p>
           <Button id="loginButton" variant="contained" onClick={doLogin}>Log in</Button>
           {/* <input type="submit"
             id="loginButton"
-            class="buttons"
+            className="buttons"
             value="Do It"
             onClick={doLogin}
           /> */}
-          <p class="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
+          <p className="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
         </div>
       </form>
       
