@@ -115,7 +115,7 @@ exports.setApp = function (app, client) {
       try {
         const token = require("./createJWT.js");
         ret = token.createToken(fn, ln, id);
-        console.log(ret)
+        console.log(ret);
       } catch (e) {
         ret = { error: e.message };
       }
@@ -131,7 +131,7 @@ exports.setApp = function (app, client) {
     // outgoing: serviceId, error (optional), jwtToken
     var response;
 
-    const {
+    let {
       userId,
       title,
       longitude,
@@ -183,21 +183,22 @@ exports.setApp = function (app, client) {
           };
         } else {
           response = {
-            serviceId: objectInserted[0]._id,
+            serviceId: objectInserted.insertedId.valueOf(),
             refreshedToken: refreshedToken,
           };
         }
+        res.status(200).json(response);
       }
     );
 
-    res.status(200).json(response);
+    
   });
 
-  app.post("api/delete-service", async (req, res, next) => {
+  app.post("/api/delete-service", async (req, res, next) => {
     // incoming: userId, title, jwtToken
     // outgoing: error (optional), jwtToken
 
-    const { userId, title, jwtToken } = req.body;
+    let { userId, title, jwtToken } = req.body;
 
     var response;
 
@@ -234,16 +235,15 @@ exports.setApp = function (app, client) {
             refreshedToken: refreshedToken,
           };
         }
+        res.status(200).json(response);
       });
-
-    res.status(200).json(response);
   });
 
-  app.post("api/change-password", async (req, res, next) => {
+  app.post("/api/change-password", async (req, res, next) => {
     // incoming: userId, oldPassword, newPassword, jwtToken
     // outgoing: error (optional), jwtToken
 
-    const { userId, oldPassword, newPassword, jwtToken } = req.body;
+    let { userId, oldPassword, newPassword, jwtToken } = req.body;
 
     try {
       if (token.isExpired(jwtToken)) {
@@ -265,7 +265,7 @@ exports.setApp = function (app, client) {
     userId = ObjectId(userId)
 
     const db = client.db();
-    const user = db
+    const user = await db
       .collection("Users")
       .findOne({ _id: userId, Password: oldPassword });
 
@@ -287,18 +287,79 @@ exports.setApp = function (app, client) {
       return;
     }
 
-    db.collection("Users").update(
-      { user },
-      { $set: { Password: oldPassword } },
+    let id = user._id;
+
+    db.collection("Users").updateOne(
+      { _id: id },
+      { $set: {Password: newPassword} },
       function (err, objectReturned) {
         if (err) {
           response = { error: err, refreshedToken: refreshedToken };
         } else {
           response = { refreshedToken: refreshedToken };
         }
+        res.status(200).json(response);
       }
     );
-
-    res.status(200).json(response);
   });
+
+  app.post("/api/add-review", async (req, res, next) => {
+    // incoming: userId, serviceId, reviewer profile picture, ReviewText
+    // outgoing: reviewId, error (optional), jwtToken
+    var response;
+
+    let {
+      userId,
+      serviceId,
+      //reviewerProfilePic,
+      reviewText,
+    } = req.body;
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // It's a good idea to keep track of the userId as well (ask esteban)
+    // userId = ObjectId(userId)
+    serviceId = ObjectId(serviceId)
+
+    const db = client.db();
+    const writeResult = await db.collection("Services").insertOne(
+      {
+        // UserId: userId
+        ServiceId: serviceId,
+        ReviewText: reviewText,
+      },
+      function (err, objectInserted) {
+        if (err) {
+          response = {
+            reviewId: -1,
+            error: err,
+            refreshedToken: refreshedToken,
+          };
+        } else {
+          response = {
+            serviceId: objectInserted.insertedId.valueOf(),
+            refreshedToken: refreshedToken,
+          };
+        }
+        res.status(200).json(response);
+      }
+    );
+  });
+
+
 };

@@ -4,7 +4,7 @@ function Logo(){
 
     return (
         <div>
-            <p class="logo">Handler</p>
+            <p className="logo">Handler</p>
         </div>
 
     )

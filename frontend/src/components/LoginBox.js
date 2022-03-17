@@ -5,7 +5,7 @@ import Login from '../components/Login';
 function LoginBox()
 {
     return(
-        <div class="loginbox">
+        <div className="loginbox">
             <Login />
         </div>
     );

@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@native-base/icons": "^0.0.11",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "expo": "~44.0.0",
@@ -21,8 +22,9 @@
     "react-native": "0.64.3",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
-    "react-native-svg": "12.1.1"
+    "undefined": "@native-base/icons/lib"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

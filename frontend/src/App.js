@@ -4,17 +4,21 @@ import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom
 import './App.css';
 
 import LoginPage from './pages/LoginPage';
-import CardPage from './pages/CardPage';
+import HomePage from './pages/HomePage';
+import TestPage from './pages/TestPage';
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route path="/" exact>
+          <HomePage />
+        </Route>
+        <Route path="/login" exact>
           <LoginPage />
         </Route>
-        <Route path="/cards" exact>
-          <CardPage />
+        <Route path="/test" exact>
+          <TestPage />
         </Route>
         <Redirect to="/" />
       </Switch>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import '../LoginBox.css'
+import Button from '@mui/material/Button'
 
 function Login() {
   var bp = require("./Path.js");
@@ -15,6 +16,8 @@ function Login() {
     var obj = { email: loginEmail.value, password: loginPassword.value };
     var js = JSON.stringify(obj);
 
+    // alert('click');
+
     try {
       const response = await fetch(bp.buildPath("api/login"), {
         method: "POST",
@@ -26,53 +29,58 @@ function Login() {
       if (res.id <= 0) {
         setMessage("User/Password combination incorrect");
       } else {
-        var storage = require("../tokenStorage.js");
-        var user = jwt_decode(res)
-        localStorage.setItem("user_data", JSON.stringify(user))
-        storage.storeToken(res);
         setMessage("");
-        window.location.href = "/cards";
+        var storage = require("../tokenStorage.js");
+        var user = jwt_decode(res);
+        localStorage.setItem("user_data", JSON.stringify(user));
+        storage.storeToken(res);
+        window.location.href = "/";
       }
     } catch (e) {
       console.log(e.toString());
-      return;
+      return; 
     }
   };
 
   return (
     <div id="loginDiv">
       <form onSubmit={doLogin}>
-        <span class="log" id="inner-title">Log In</span>
-        <br />
-          <div class="innerbox">
-            <label class="epfont">Email/Username:</label>
-            <br />
-            <input class="env" type="text"
-              id="loginName"
-              placeholder="Username/Email Address"
-              ref={(c) => (loginEmail = c)}
-            />
-            <hr />
-            <label class="epfont">Password:</label>
-            <input class="pas"
-              type="password"
-              id="loginPassword"
-              placeholder="Password"
-              ref={(c) => (loginPassword = c)}
-            />
-            <hr />
-          </div>
-          <div class="inner2box">
-        <input type="submit"
-          id="loginButton"
-          class="buttons"
-          value="Do It"
-          onClick={doLogin}
-        />
-        <p class="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
+        <span className="log" id="inner-title">Log In</span>
+
+        {/* <br /> */}
+
+        <div className="innerbox">
+          <label className="epfont">Email/Username:</label>
+          <br />
+          <input className="env" type="text"
+            id="loginName"
+            placeholder="Username/Email Address"
+            ref={(c) => (loginEmail = c)}
+          />
+          {/* <hr /> */}
+          <label className="epfont">Password:</label>
+          <input className="pas"
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            ref={(c) => (loginPassword = c)}
+          />
+          {/* <hr /> */}
+        </div>
+
+        <div className="inner2box">
+          <span id="loginResult">{message}</span>
+          <p></p>
+          <Button id="loginButton" variant="contained" onClick={doLogin}>Log in</Button>
+          {/* <input type="submit"
+            id="loginButton"
+            className="buttons"
+            value="Do It"
+            onClick={doLogin}
+          /> */}
+          <p className="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
         </div>
       </form>
-      <span id="loginResult">{message}</span>
       
     </div>
   );

@@ -1,15 +1,15 @@
-import { View } from 'react-native'
-import { Text, Block, NavBar } from 'galio-framework'
-import Header from '../../components/Header'
+import { Center, Box } from 'native-base'
 import React from 'react'
+import Header from '../../components/Header'
 
 const Home = () => {
   return (
-    <View>
-    <Block flex safe>
-      <Header title="Welcome to HandyMan!" />
-    </Block>
-    </View>
+    <Center>
+      {/* <Box w="100%" bg={'primary.500'} h='10' /> */}
+      <Box w="100%">
+        <Header title="Home"/>
+      </Box>
+    </Center>
   )
 }
 
