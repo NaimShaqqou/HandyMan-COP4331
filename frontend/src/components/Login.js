@@ -29,11 +29,10 @@ function Login() {
       if (res.id <= 0) {
         setMessage("User/Password combination incorrect");
       } else {
-        alert('found');
         setMessage("");
         var storage = require("../tokenStorage.js");
-        var user = jwt_decode(res)
-        localStorage.setItem("user_data", JSON.stringify(user))
+        var user = jwt_decode(res);
+        localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res);
         window.location.href = "/";
       }
