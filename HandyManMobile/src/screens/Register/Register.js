@@ -7,18 +7,28 @@ import { MaterialIcons } from "@native-base/icons"
 
 
 const Register = () => {
+  // email: email the user inputs
+  // username: username the user inputs
+  // password: password the user inputs
+  // passwordRepeat: repeated password the user inputs
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {passwordRepeat, setPasswordRepeat} = useState('');
+  const [passwordRepeat, setPasswordRepeat] = useState('');
 
+  // logic for revealing password
   const [show, setShow] = useState('');
 
-  const { height } = useWindowDimensions();
+  const { height } = useWindowDimensions(); // not needed anymore
   const navigation = useNavigation();
 
   const onRegisterPressed = () => {
     // TODO: email confirmation
+      // make sure user enters proper email, passwords, available username
+      // call register api
+
+    // for testing purposes
+    console.warn("Email: " + email + "\nusername: " + username + "\npassword: " + password + "\npasswordRepeat: " + passwordRepeat);
     
     navigation.navigate('Home');
   }
@@ -30,12 +40,6 @@ const Register = () => {
   return (
     
     <Center w="100%" flex={1} >
-      {/* <Image
-        source={Logo}
-        style={[styles.logo, { height: height * 0.2 }]}
-        resizeMode="contain"
-      /> */}
-
       <Box safeArea w="90%" p="2" py="8" justifyContent='center' >
         
 
@@ -54,6 +58,7 @@ const Register = () => {
               size="2xl" 
               w="100%" 
               InputLeftElement={<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />}
+              onChangeText={newEmail => setEmail(newEmail)}
             />
           </FormControl>
 
@@ -64,6 +69,7 @@ const Register = () => {
               size="2xl" 
               w="100%" 
               InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
+              onChangeText={newUsername => setUsername(newUsername)}
             />
           </FormControl>
 
@@ -77,6 +83,7 @@ const Register = () => {
               InputRightElement={<Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} 
                 size={5} mr="2" color="muted.400" onPress={() => setShow(!show)} />}
               InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
+              onChangeText={newPassword => setPassword(newPassword)}
             />
           </FormControl>
 
@@ -90,6 +97,7 @@ const Register = () => {
               InputRightElement={<Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} 
                 size={5} mr="2" color="muted.400" onPress={() => setShow(!show)} />}
               InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
+              onChangeText={newPasswordRepeat => setPasswordRepeat(newPasswordRepeat)}
             />
           </FormControl>
 
