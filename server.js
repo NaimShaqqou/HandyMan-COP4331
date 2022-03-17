@@ -13,12 +13,14 @@ app.set("port", process.env.PORT || 5000);
 
 require("dotenv").config();
 const url = process.env.MONGODB_URI;
-const MongoClient = require("mongodb").MongoClient;
-const client = new MongoClient(url);
-client.connect();
+const mongoose = require("mongoose");
+mongoose.connect(url)
+  .then(() => console.log("Mongo DB connected"))
+  .catch(err => console.log(err));
+
 
 var api = require('./api.js')
-api.setApp(app, client)
+api.setApp( app, mongoose );
 
 // app.post("/api/addcard", async (req, res, next) => {
 //   // incoming: userId, color

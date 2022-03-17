@@ -1,4 +1,7 @@
 const { ObjectId } = require("mongodb");
+const User = require("./models/user.js");
+//load card model
+const Card = require("./models/card.js");
 
 require("express");
 require("mongodb");
@@ -21,15 +24,19 @@ exports.setApp = function (app, client) {
       console.log(e.message);
     }
 
-    const newCard = { Card: card, UserId: userId };
-    var error = "";
-
-    try {
-      const db = client.db();
-      const result = db.collection("Cards").insertOne(newCard);
-    } catch (e) {
-      error = e.toString();
-    }
+  //const newCard = { Card: card, UserId: userId };
+  const newCard = new Card({ Card: card, UserId: userId });
+  var error = '';
+  try 
+ {
+    // const db = client.db();
+    // const result = db.collection('Cards').insertOne(newCard);
+    newCard.save();
+  }
+  catch (e) 
+ {
+    error = e.toString();
+  }
 
     var refreshedToken = null;
     try {
@@ -61,12 +68,11 @@ exports.setApp = function (app, client) {
     }
 
     var _search = search.trim();
-
-    const db = client.db();
-    const results = await db
-      .collection("Cards")
-      .find({ Card: { $regex: _search + ".*", $options: "r" } })
-      .toArray();
+    //   const db = client.db();
+    //   const results = await db.collection('Cards').find({ "Card": { $regex: _search + '.*', $options: 'r' } }).toArray();
+    const results = await Card.find({ "Card": { $regex: _search + '.*', $options: 'r' } });
+  
+  
 
     var _ret = [];
     for (var i = 0; i < results.length; i++) {
@@ -91,13 +97,11 @@ exports.setApp = function (app, client) {
 
     var error = "";
 
-    const { email, password } = req.body;
-
-    const db = client.db();
-    const results = await db
-      .collection("Users")
-      .find({ Email: email, Password: password })
-      .toArray();
+    const { login, password } = req.body;
+    // const db = client.db();
+    // const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
+    const results = await User.find({ Login: login, Password: password });
+  
 
     var id = -1;
     var fn = "";
