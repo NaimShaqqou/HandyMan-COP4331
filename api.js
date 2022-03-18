@@ -339,30 +339,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     var ret = { error: error, jwtToken: refreshedToken };
 
     res.status(200).json(ret);
-
-    // const db = client.db();
-    // const writeResult = await db.collection("Reviews").insertOne(
-    //   {
-    //     UserId: userId,
-    //     ServiceId: serviceId,
-    //     ReviewText: reviewText,
-    //   },
-    //   function (err, objectInserted) {
-    //     if (err) {
-    //       response = {
-    //         reviewId: -1,
-    //         error: err,
-    //         //refreshedToken: refreshedToken,
-    //       };
-    //     } else {
-    //       response = {
-    //         serviceId: objectInserted.insertedId.valueOf(),
-    //         //refreshedToken: refreshedToken,
-    //       };
-    //     }
-    //     res.status(200).json(response);
-    //   }
-    // );
   });
 
   app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
