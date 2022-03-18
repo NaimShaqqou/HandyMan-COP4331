@@ -25,10 +25,10 @@ function LoginBox() {
   const doLogin = async (event) => {
     event.preventDefault();
     
-    var obj = { email: values.username, password: values.password };
+    var obj = { login: values.username, password: values.password };
     var js = JSON.stringify(obj);
 
-    alert('click');
+    // alert('click');
 
     try {
       const response = await fetch(bp.buildPath("api/login"), {
@@ -40,13 +40,15 @@ function LoginBox() {
       
       if (res.id <= 0) {
         setMessage("User/Password combination incorrect");
+        alert('wrong credentials');
       } else {
-        setMessage("");
+        alert('login success!');
+        setMessage("Logged in");
         var storage = require("../tokenStorage.js");
         var user = jwt_decode(res);
         localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res);
-        window.location.href = "/";
+        // window.location.href = "/";
       }
     } catch (e) {
       console.log(e.toString());
