@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { NativeBaseProvider, Box, Center, View } from 'native-base';
+import { NativeBaseProvider } from 'native-base';
 
 import Navigation from './src/navigation';
 
