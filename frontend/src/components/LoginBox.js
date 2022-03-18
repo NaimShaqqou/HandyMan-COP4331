@@ -21,7 +21,7 @@ function LoginBox() {
   var loginPassword;
 
   const [message, setMessage] = useState("");
-  
+
   const doLogin = async (event) => {
     event.preventDefault();
     
