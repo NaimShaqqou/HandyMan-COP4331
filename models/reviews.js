@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //Create Schema
 const ReviewsSchema = new Schema({
-    UserId: {
-        type: ObjectId
-    },
+    UserId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Users'
+        }
+    ],
     ServiceId: [
         {
             type: Schema.Types.ObjectId, ref: 'Services'
