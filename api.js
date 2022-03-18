@@ -100,38 +100,49 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // incoming: login, password
     // outgoing: id, firstName, lastName, error
 
-    var error = "";
+    let error = "";
     let results;
 
     const { login, password } = req.body;
+    let parameter = "";
 
+    console.log("Given:");
+    console.log(req.body);
+    
     if (login.includes("@")) {
-      results = await User.findOne({ Email: login, Password: password});
+      parameter = "Email";
     } else {
-      results = await User.findOne({ Username: login, Password: password});
+      parameter = "Username";
     }
     
-    var id = -1;
-    var fn = "";
-    var ln = "";
-    var ret;
+    let id = -1;
+    let fn = "";
+    let ln = "";
+    let ret;
 
-    if (results == null) {
-      id = results._id.valueOf();
-      fn = results.FirstName;
-      ln = results.LastName;
-      try {
-        const token = require("./createJWT.js");
-        ret = token.createToken(fn, ln, id);
-        console.log(ret);
-      } catch (e) {
-        ret = { error: e.message };
+    let filters = {}
+    filters[parameter] = login
+    filters["Password"] = password
+
+    User.findOne(filters, function(err, user) {
+      console.log(user)
+      if (err) {
+        return res.status(200).json({error: err.message});
+      } else if (user) {
+        id = user._id.valueOf();
+        fn = user.FirstName;
+        ln = user.LastName;
+        try {
+          const token = require("./createJWT.js");
+          ret = {jwtToken: token.createToken(fn, ln, id)};
+        } catch (e) {
+          ret = { error: e.message };
+        }
+      } else {
+        ret = { error: "Incorrect credentials", id: id };
       }
-    } else {
-      ret = { error: "Email/Password incorrect", id: id };
-    }
-    
-    res.status(200).json(ret);
+      res.status(200).json(ret);
+    });
   });
 
   app.post("/api/add-service", async (req, res, next) => {
@@ -142,7 +153,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let {
       userId,
       title,
-      imageUrl,
+      imageUrls,
       longitude,
       latitude,
       description,
@@ -175,7 +186,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       {
         UserId: userId,
         Title: title,
-        ImageUrl: imageUrl,
+        Images: imageUrls,
         Longitude: longitude,
         Latitude: latitude,
         Description: description,
