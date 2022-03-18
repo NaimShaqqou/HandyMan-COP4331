@@ -1,5 +1,9 @@
 const { ObjectId } = require("mongodb");
+
+// import schema
 const User = require("./models/user.js");
+const Review = require("./models/reviews.js");
+
 //load card model
 const Card = require("./models/card.js");
 const Service = require("./models/services.js");
@@ -295,13 +299,14 @@ exports.setApp = function (app, client, cloudinaryParser) {
     var response;
 
     let {
-      //userId,
+      userId,
       serviceId,
       //reviewerProfilePic,
       reviewText,
       jwtToken,
     } = req.body;
 
+    
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -311,6 +316,18 @@ exports.setApp = function (app, client, cloudinaryParser) {
     } catch (e) {
       console.log(e.message);
     }
+              
+    userId = ObjectId(userId)
+    serviceId = ObjectId(serviceId)
+    const review = new Review({UserId: userId, ServiceId: serviceId, ReviewText: reviewText})
+    try {
+      await review.save();
+
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    res.send(review);
 
     var refreshedToken = null;
     try {
@@ -319,33 +336,33 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    // It's a good idea to keep track of the userId as well (ask esteban)
-    // userId = ObjectId(userId)
-    serviceId = ObjectId(serviceId)
+    var ret = { error: error, jwtToken: refreshedToken };
 
-    const db = client.db();
-    const writeResult = await db.collection("Reviews").insertOne(
-      {
-        // UserId: userId
-        ServiceId: serviceId,
-        ReviewText: reviewText,
-      },
-      function (err, objectInserted) {
-        if (err) {
-          response = {
-            reviewId: -1,
-            error: err,
-            refreshedToken: refreshedToken,
-          };
-        } else {
-          response = {
-            serviceId: objectInserted.insertedId.valueOf(),
-            refreshedToken: refreshedToken,
-          };
-        }
-        res.status(200).json(response);
-      }
-    );
+    res.status(200).json(ret);
+
+    // const db = client.db();
+    // const writeResult = await db.collection("Reviews").insertOne(
+    //   {
+    //     UserId: userId,
+    //     ServiceId: serviceId,
+    //     ReviewText: reviewText,
+    //   },
+    //   function (err, objectInserted) {
+    //     if (err) {
+    //       response = {
+    //         reviewId: -1,
+    //         error: err,
+    //         //refreshedToken: refreshedToken,
+    //       };
+    //     } else {
+    //       response = {
+    //         serviceId: objectInserted.insertedId.valueOf(),
+    //         //refreshedToken: refreshedToken,
+    //       };
+    //     }
+    //     res.status(200).json(response);
+    //   }
+    // );
   });
 
   app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
