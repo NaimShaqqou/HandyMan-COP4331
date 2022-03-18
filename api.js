@@ -117,7 +117,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let ln = "";
     let ret;
 
-    User.findOne({ Password: password}, function(err, user) {
+    User.findOne({ parameter: login, Password: password}, function(err, user) {
       console.log(user)
       if (err) {
         return res.status(200).json({error: err.message});
