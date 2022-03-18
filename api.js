@@ -138,7 +138,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let {
       userId,
       title,
-      imageUrl,
+      imageUrls,
       longitude,
       latitude,
       description,
@@ -171,7 +171,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       {
         UserId: userId,
         Title: title,
-        ImageUrl: imageUrl,
+        Images: imageUrls,
         Longitude: longitude,
         Latitude: latitude,
         Description: description,
