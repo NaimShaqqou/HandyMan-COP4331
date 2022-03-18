@@ -1,16 +1,18 @@
 import React from 'react';
 
-import PasswordInput from '../components/PasswordInput';
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import ResponsiveAppBar from '../components/NavBar';
 
 const TestPage = () => {
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div>
-      <h1>Test Potato ( ͡° ͜ʖ ͡°)</h1>
-
-      <PasswordInput> </PasswordInput>
-      
+      <ResponsiveAppBar />
     </div>
   );
 };
