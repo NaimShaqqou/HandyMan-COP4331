@@ -13,7 +13,7 @@ const ServicesSchema = new Schema({
         required: true
     },
     Images: {
-        type: Image,
+        type: [String],
         required: true
     },
     Longitude: {
@@ -33,7 +33,7 @@ const ServicesSchema = new Schema({
         required: true
     },
     DaysAvailable: [{
-        type: String,
+        type: [String],
         required:true
     }],
     Category:{

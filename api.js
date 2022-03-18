@@ -2,11 +2,12 @@ const { ObjectId } = require("mongodb");
 const User = require("./models/user.js");
 //load card model
 const Card = require("./models/card.js");
+const Service = require("./models/services.js");
 
 require("express");
 require("mongodb");
 
-exports.setApp = function (app, client) {
+exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
   app.post("/api/addcard", async (req, res, next) => {
@@ -92,26 +93,29 @@ exports.setApp = function (app, client) {
   });
 
   app.post("/api/login", async (req, res, next) => {
-    // incoming: email, password
+    // incoming: login, password
     // outgoing: id, firstName, lastName, error
 
     var error = "";
+    let results;
 
     const { login, password } = req.body;
-    // const db = client.db();
-    // const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
-    const results = await User.find({ Login: login, Password: password });
-  
 
+    if (login.includes("@")) {
+      results = await User.findOne({ Email: login, Password: password});
+    } else {
+      results = await User.findOne({ Username: login, Password: password});
+    }
+    
     var id = -1;
     var fn = "";
     var ln = "";
     var ret;
 
-    if (results.length > 0) {
-      id = results[0]._id.valueOf();
-      fn = results[0].FirstName;
-      ln = results[0].LastName;
+    if (results == null) {
+      id = results._id.valueOf();
+      fn = results.FirstName;
+      ln = results.LastName;
       try {
         const token = require("./createJWT.js");
         ret = token.createToken(fn, ln, id);
@@ -134,6 +138,7 @@ exports.setApp = function (app, client) {
     let {
       userId,
       title,
+      imageUrl,
       longitude,
       latitude,
       description,
@@ -162,11 +167,11 @@ exports.setApp = function (app, client) {
 
     userId = ObjectId(userId)
 
-    const db = client.db();
-    const writeResult = await db.collection("Services").insertOne(
+    const writeResult = await Service.create(
       {
         UserId: userId,
         Title: title,
+        ImageUrl: imageUrl,
         Longitude: longitude,
         Latitude: latitude,
         Description: description,
@@ -187,6 +192,7 @@ exports.setApp = function (app, client) {
             refreshedToken: refreshedToken,
           };
         }
+        console.log(objectInserted)
         res.status(200).json(response);
       }
     );
@@ -222,15 +228,14 @@ exports.setApp = function (app, client) {
     userId = ObjectId(userId)
 
     const db = client.db();
-    const deleteResult = db
-      .collection("Services")
-      .deleteOne({ UserId: userId, Title: title }, function (err, result) {
+    const deleteResult = Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
         if (err) {
           response = {
             error: err,
             refreshedToken: refreshedToken,
           };
         } else {
+          console.log("Deleted " + result.deletedCount + " documents")
           response = {
             refreshedToken: refreshedToken,
           };
@@ -262,22 +267,6 @@ exports.setApp = function (app, client) {
       console.log(e.message);
     }
 
-    userId = ObjectId(userId)
-
-    const db = client.db();
-    const user = await db
-      .collection("Users")
-      .findOne({ _id: userId, Password: oldPassword });
-
-    if (!user) {
-      var r = {
-        error: "Old password is not correct",
-        jwtToken: refreshedToken,
-      };
-      res.status(200).json(r);
-      return;
-    }
-
     if (oldPassword == newPassword) {
       var r = {
         error: "Passwords can't be the same",
@@ -287,20 +276,17 @@ exports.setApp = function (app, client) {
       return;
     }
 
-    let id = user._id;
+    userId = ObjectId(userId)
 
-    db.collection("Users").updateOne(
-      { _id: id },
-      { $set: {Password: newPassword} },
-      function (err, objectReturned) {
-        if (err) {
-          response = { error: err, refreshedToken: refreshedToken };
-        } else {
-          response = { refreshedToken: refreshedToken };
-        }
-        res.status(200).json(response);
+    const user = User.findOneAndUpdate({ _id: userId, Password: oldPassword }, { Password: newPassword}, function(err, objectReturned) {
+      if (err) {
+        response = { error: err, refreshedToken: refreshedToken };
+      } else {
+        response = { refreshedToken: refreshedToken };
       }
-    );
+      console.log(objectReturned)
+      res.status(200).json(response);
+    });
   });
 
   app.post("/api/add-review", async (req, res, next) => {
@@ -360,6 +346,10 @@ exports.setApp = function (app, client) {
       }
     );
   });
+
+  app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
+      res.status(200).json({ imageUrl: req.file.path })
+  })
 
 
 };

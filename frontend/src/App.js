@@ -6,6 +6,7 @@ import './App.css';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import TestPage from './pages/TestPage';
+import TestImagePage from './pages/TestImagePage';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         </Route>
         <Route path="/test" exact>
           <TestPage />
+        </Route>
+        <Route path="/image" exact>
+          <TestImagePage />
         </Route>
         <Redirect to="/" />
       </Switch>
