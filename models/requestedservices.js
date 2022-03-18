@@ -3,15 +3,17 @@ const services = require("./services");
 const Schema = mongoose.Schema;
 //Create Schema
 const RequestedServicesSchema = new Schema({
-    RSId: {
-        type: Number
-    },
-    RequestedId: {
-        type: Number
-    },
-    ServiceId: {
-        type: Number
-    },
+    
+    RequestedId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Users'
+        }
+    ],
+    ServiceId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Services'
+        }
+    ],
     Completion: {
         type: Boolean,
         required: true

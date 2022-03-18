@@ -1,13 +1,16 @@
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //Create Schema
 const ReviewsSchema = new Schema({
-    ReviewId: {
-        type: Number
+    UserId: {
+        type: ObjectId
     },
-    ServiceId: {
-        type: Number
-    },
+    ServiceId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Services'
+        }
+    ],
     ProfilePictureOfReviewer: {
         type: Image,
         required: true

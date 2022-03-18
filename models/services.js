@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //Create Schema
 const ServicesSchema = new Schema({
-    ServiceId: {
-        type: Number
-    },
-    UserId: {
-        type: Number
-    },
+    
+    UserId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Users'
+        }
+    ],
     Title: {
         type: String,
         required: true

@@ -2,15 +2,17 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //Create Schema
 const MessagesSchema = new Schema({
-    MessageId: {
-        type: Number
-    },
-    SenderId: {
-        type: Number
-    },
-    ReceiverId: {
-        type: Number
-    },
+    
+    SenderId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Users'
+        }
+    ],
+    ReceiverId: [
+        {
+            type: Schema.Types.ObjectId, ref: 'Users'
+        }
+    ],
     Timestamp: {
         type: String,
         required: true
