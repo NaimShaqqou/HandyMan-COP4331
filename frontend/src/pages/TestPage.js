@@ -1,19 +1,16 @@
 import React from 'react';
 
+import PasswordInput from '../components/PasswordInput';
 import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 
 const TestPage = () => {
   return (
     <div>
       <h1>Test Potato ( ͡° ͜ʖ ͡°)</h1>
-      <Button
-        size='medium'
-        // disabled
-        variant="contained"
-        color="primary"
-        onClick={() => alert('click')}>
-        Text
-      </Button>
+
+      <PasswordInput> </PasswordInput>
+      
     </div>
   );
 };

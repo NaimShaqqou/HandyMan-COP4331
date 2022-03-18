@@ -1,0 +1,49 @@
+          {/* <TextField
+            id="loginUsername"
+            placeholder="Username"
+            type="text"
+            // label="Password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle />
+                </InputAdornment>
+              ),
+              endAdornment: ( <InputAdornment position="end"> </InputAdornment>)
+            }}
+            variant="standard"
+            // variant="outlined"
+            ref={(c) => (loginEmail = c)}
+          />
+
+          <br />
+          <br />
+
+          <TextField
+            id="loginPassword"
+            placeholder="Password"
+            type={values.showPassword ? 'text' : 'password'}
+            // label="Password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            variant="standard"
+            // variant="outlined"
+            ref={(c) => (loginPassword = c)}
+          /> */}
