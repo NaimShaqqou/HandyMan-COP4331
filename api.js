@@ -106,12 +106,15 @@ exports.setApp = function (app, client, cloudinaryParser) {
     const { login, password } = req.body;
     let parameter = "";
 
+    console.log("Given:");
+    console.log(req.body);
+    
     if (login.includes("@")) {
       parameter = "Email";
     } else {
       parameter = "Username";
     }
-
+    
     let id = -1;
     let fn = "";
     let ln = "";
@@ -122,7 +125,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     filters["Password"] = password
 
     User.findOne(filters, function(err, user) {
-      console.log()
       console.log(user)
       if (err) {
         return res.status(200).json({error: err.message});

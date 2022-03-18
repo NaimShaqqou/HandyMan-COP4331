@@ -21,14 +21,14 @@ function LoginBox() {
   var loginPassword;
 
   const [message, setMessage] = useState("");
-  
+
   const doLogin = async (event) => {
     event.preventDefault();
     
-    var obj = { email: values.username, password: values.password };
+    var obj = { login: values.username, password: values.password };
     var js = JSON.stringify(obj);
 
-    alert('click');
+    // alert('click');
 
     try {
       const response = await fetch(bp.buildPath("api/login"), {
@@ -40,13 +40,15 @@ function LoginBox() {
       
       if (res.id <= 0) {
         setMessage("User/Password combination incorrect");
+        alert('wrong credentials');
       } else {
-        setMessage("");
+        alert('login success!');
+        setMessage("Logged in");
         var storage = require("../tokenStorage.js");
         var user = jwt_decode(res);
         localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res);
-        window.location.href = "/";
+        // window.location.href = "/";
       }
     } catch (e) {
       console.log(e.toString());
@@ -77,66 +79,61 @@ function LoginBox() {
 
   return (
     <div className="loginbox">
-      <div id="loginDiv">
+      <div className="loginDiv">
         <form onSubmit={doLogin}>
-          <h2>Welcome to Handler</h2>
           <h3>Login to continue!</h3>
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
+            <Input
+              id="loginUsername"
+              type='text'
+              value={values.username}
+              onChange={handleChange('username')}
+              placeholder="Username"
+              startAdornment={
+                <InputAdornment position="start">
+                  <AccountCircle />
+                </InputAdornment>
+              }
+            />
+          </FormControl>
 
-          <div className="innerbox">
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
+            <Input
+              id="loginPassword"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChange('password')}
+              placeholder="Password"
+              startAdornment={
+                <InputAdornment position="start">
+                  <LockIcon />
+                </InputAdornment>
+              }
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <p>
+            <a href="https://www.google.com">Forgot Password?</a>
+          </p>
 
-            <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-              {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
-              <Input
-                id="loginUsername"
-                type='text'
-                value={values.username}
-                onChange={handleChange('username')}
-                placeholder="Username"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+          <span id="loginResult">{message}</span>
 
-            <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-              {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
-              <Input
-                id="loginPassword"
-                type={values.showPassword ? 'text' : 'password'}
-                value={values.password}
-                onChange={handleChange('password')}
-                placeholder="Password"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <LockIcon />
-                  </InputAdornment>
-                }
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <p>
-              <a href="https://www.google.com">Forgot Password?</a>
-            </p>
+          <p></p>
 
-            <span id="loginResult">{message}</span>
-
-            <p></p>
-
-            <Button id="loginButton" variant="contained" type="submit">Log in</Button>
-            <p className="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
-          </div>
+          <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+          <p className="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
         </form>
       </div>
     </div>
