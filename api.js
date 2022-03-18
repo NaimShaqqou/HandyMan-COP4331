@@ -296,7 +296,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
   app.post("/api/add-review", async (req, res, next) => {
     // incoming: userId, serviceId, reviewer profile picture, ReviewText
     // outgoing: reviewId, error (optional), jwtToken
-    var response;
 
     let {
       userId,
@@ -306,7 +305,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       jwtToken,
     } = req.body;
 
-    
+    // check jwt
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -317,28 +316,25 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
               
+    // send request
     userId = ObjectId(userId)
     serviceId = ObjectId(serviceId)
     const review = new Review({UserId: userId, ServiceId: serviceId, ReviewText: reviewText})
     try {
       await review.save();
-
     } catch (e) {
       console.log(e.message);
     }
 
     res.send(review);
 
+    //refresh token
     var refreshedToken = null;
     try {
       refreshedToken = token.refresh(jwtToken);
     } catch (e) {
       console.log(e.message);
     }
-
-    var ret = { error: error, jwtToken: refreshedToken };
-
-    res.status(200).json(ret);
   });
 
   app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
