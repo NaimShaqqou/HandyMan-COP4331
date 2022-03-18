@@ -309,10 +309,11 @@ exports.setApp = function (app, client) {
     var response;
 
     let {
-      userId,
+      //userId,
       serviceId,
       //reviewerProfilePic,
       reviewText,
+      jwtToken,
     } = req.body;
 
     try {
@@ -337,7 +338,7 @@ exports.setApp = function (app, client) {
     serviceId = ObjectId(serviceId)
 
     const db = client.db();
-    const writeResult = await db.collection("Services").insertOne(
+    const writeResult = await db.collection("Reviews").insertOne(
       {
         // UserId: userId
         ServiceId: serviceId,
