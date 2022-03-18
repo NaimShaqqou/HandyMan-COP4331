@@ -7,6 +7,7 @@ const Review = require("./models/reviews.js");
 //load card model
 const Card = require("./models/card.js");
 const Service = require("./models/services.js");
+const { ObjectID } = require("bson");
 
 require("express");
 require("mongodb");
@@ -316,7 +317,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       jwtToken,
     } = req.body;
 
-    // check jwt
+    //check jwt
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -328,9 +329,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
               
     // send request
-    userId = ObjectId(userId)
-    serviceId = ObjectId(serviceId)
-    const review = new Review({UserId: userId, ServiceId: serviceId, ReviewText: reviewText})
+    const review = new Review({
+      UserId: userId, 
+      ServiceId: serviceId, 
+      ReviewText: reviewText
+    })
+
     try {
       await review.save();
     } catch (e) {
@@ -346,6 +350,63 @@ exports.setApp = function (app, client, cloudinaryParser) {
     } catch (e) {
       console.log(e.message);
     }
+  });
+
+  // TODO: user can only leave one review for each service
+  // NOT WORKING YET
+  app.post("/api/delete-review", async (req, res, next) => {
+    // incoming: reviewId (to delete single review), 
+    //           userId (optional - deletes all reviews associated with user),
+    //           serviceId (optional - deletes all reviews associated with service)
+    // outgoing: reviewId, jwtToken, error (optional)
+
+    let {
+      userId,
+      reviewId,
+      serviceId,
+      // jwtToken
+    } = req.body;
+
+    // check jwt
+    // try {
+    //   if (token.isExpired(jwtToken)) {
+    //     var r = { error: "The JWT is no longer valid", jwtToken: "" };
+    //     res.status(200).json(r);
+    //     return;
+    //   }
+    // } catch (e) {
+    //   console.log(e.message);
+    // }
+
+    // find and delete review
+    // const review = new Review({
+    //   _id: reviewId,
+    //   UserId: userId, 
+    //   ServiceId: serviceId,
+    //   ReviewText: { type: String } 
+    // }) 
+
+    try {
+      Review.deleteOne({
+        $or: [
+          {_id: reviewId},
+          {UserId: userId},
+          {ServiceId: serviceId},
+        ]
+      });
+    } catch (error) {
+      res.send(error);
+    }
+    
+    //refresh token
+    // var refreshedToken = null;
+    // try {
+    //   refreshedToken = token.refresh(jwtToken);
+    // } catch (e) {
+    //   console.log(e.message);
+    // }
+
+    res.send("deleted");
   });
 
   app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {

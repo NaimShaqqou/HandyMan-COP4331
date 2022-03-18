@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 //Create Schema
 const ReviewsSchema = new Schema({
     UserId: [
@@ -19,7 +20,7 @@ const ReviewsSchema = new Schema({
     // },
     ReviewText: {
         type: String,
-        required: true
     },
-    });
+});
+
 module.exports = user = mongoose.model("Reviews", ReviewsSchema);
