@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import jwt_decode from "jwt-decode";
 import { useNavigation } from '@react-navigation/native'
 
-import { Button, Box, Center, Input, Icon, Heading, FormControl, Link } from 'native-base'
+import { Button, Box, Center, Input, Icon, Heading, FormControl, Link, WarningOutlineIcon } from 'native-base'
 import { MaterialIcons } from "@native-base/icons"
 
 const LoginBox = () => {
-    var bp = require("../Path.js");
+    //var bp = require("../Path.js");
     
     // call the login api
     const doLogin = async (event) => {
@@ -16,7 +16,7 @@ const LoginBox = () => {
         var js = JSON.stringify(obj);
 
         try {
-            const response = await fetch(bp.buildPath("api/login"), {
+            const response = await fetch('https://myhandyman1.herokuapp.com/api/login', {
                 method: 'POST',
                 body: js,
                 headers: { "Content-Type": "application/json" }
@@ -25,16 +25,19 @@ const LoginBox = () => {
 
             // TODO: display errors in app
             if (res.id <= 0) {
-                console.log("User/Password combination incorrect");
-                console.warn("Wrong credentials");
+                setValid(false);
             } else {
+                setValid(true);
                 console.log("login success!");
                 var storage = require("../../tokenStorage.js");
-                var user = jwt_decode(res);
-                localStorage.setItem("user_data", JSON.stringify(user));
-                storage.storeToken(res);
+                var user = jwt_decode(res.jwtToken);
+                
+                // jwtToken storage (need redux bc local storage doesn't work)
+                //localStorage.setItem("user_data", JSON.stringify(user));
+                //storage.storeToken(res);
 
                 // TODO: call navigation function here
+                goToHome();
             }
         } catch (e) {
             console.log(e.toString());
@@ -46,12 +49,7 @@ const LoginBox = () => {
     // refer to the "navigation" folder for more info
     const navigation = useNavigation();
 
-    const onLoginPressed = () => {
-        // TODO: Authentication
-        console.log("Username: " + username + "\nPassword: " + pass)
-
-        doLogin();
-
+    const goToHome = () => {
         // this takes the user to the home page
         navigation.navigate('Home');
     }
@@ -75,6 +73,9 @@ const LoginBox = () => {
     // used for hiding/unhiding the password
     const [show, setShow] = useState('');
 
+    // for form validation
+    const [valid, setValid] = useState(true);
+
 
     return (
         <Box safeArea w="90%" p="2" py="8" justifyContent='center' >
@@ -86,28 +87,35 @@ const LoginBox = () => {
         </Heading>
 
         <Center mt={10} w='100%'>
-          <FormControl>
-            <Input 
-              variant="underlined" 
-              placeholder="Username" 
-              size="2xl" 
-              w="100%" 
-              InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={ newUsername => setUsername(newUsername) }
-            />
-          </FormControl>
-          <FormControl mt={8}>
-            <Input 
-              variant="underlined" 
-              placeholder="Password" 
-              size="2xl" 
-              w="100%" 
-              type={show ? "text" : "password"}
-              InputRightElement={<Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} 
-                size={5} mr="2" color="muted.400" onPress={() => setShow(!show)} />}
-              InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={ newPassword => setPassword(newPassword) }
-            />
+            <FormControl isInvalid={valid? false : true}>
+                <Input 
+                variant="underlined" 
+                placeholder="Username" 
+                size="2xl" 
+                w="100%" 
+                InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
+                onChangeText={ newUsername => setUsername(newUsername) }
+                />
+            </FormControl>
+
+            <FormControl mt={8} isInvalid={valid? false : true}>
+                <Input 
+                variant="underlined" 
+                placeholder="Password" 
+                size="2xl" 
+                w="100%" 
+                type={show ? "text" : "password"}
+                InputRightElement={<Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} 
+                    size={5} mr="2" color="muted.400" onPress={() => setShow(!show)} />}
+                InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
+                onChangeText={ newPassword => setPassword(newPassword) }
+                />
+
+                <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                    User/Password combination incorrect.
+                </FormControl.ErrorMessage>
+            </FormControl>
+          
             <Link _text={{
               fontWeight: '500',
               color: 'secondary.500'
@@ -118,25 +126,24 @@ const LoginBox = () => {
             >
               Forgot Password?
             </Link>
-          </FormControl>
-          
-          <Button 
-            onPress={ doLogin }
-            size="lg"
-            w="100%"
-            mt={6}
-          >
-            Login
-          </Button>
 
-          <Button 
-            mt={6}
-            variant="outline"
-            onPress={ onRegisterTransition }
-            w="100%"
-          >
-            Don't have an account? Register here!
-          </Button>
+            <Button 
+                onPress={ doLogin }
+                size="lg"
+                w="100%"
+                mt={6}
+            >
+                Login
+            </Button>
+
+            <Button 
+                mt={6}
+                variant="outline"
+                onPress={ onRegisterTransition }
+                w="100%"
+            >
+                Don't have an account? Register here!
+            </Button>
         </Center>
       </Box>
     );
