@@ -7,7 +7,7 @@ const Home = () => {
     <Center>
       {/* <Box w="100%" bg={'primary.500'} h='10' /> */}
       <Box w="100%">
-        <Header title="Home"/>
+        <Header title="Home" />
       </Box>
     </Center>
   )
