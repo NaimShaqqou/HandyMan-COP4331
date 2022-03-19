@@ -107,7 +107,7 @@ exports.setApp = function (app, client) {
     try {
       //const db = client.db();
       //const result = db.collection("Users").insertOne(newUser);
-      const result = await User.insertOne(newUser);
+      const result = User.insertOne(newUser);
     } catch (e) {
       ret = { error: e.message };
     }
@@ -125,7 +125,6 @@ exports.setApp = function (app, client) {
     // const db = client.db();
     // const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
     const results = await User.find({ Login: login, Password: password });
-  
 
     var id = -1;
     var fn = "";
