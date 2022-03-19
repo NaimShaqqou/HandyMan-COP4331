@@ -307,8 +307,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   // TODO: user can only leave one review for each service
   app.post("/api/add-review", async (req, res, next) => {
-    // incoming: userId, serviceId, reviewer profile picture, ReviewText
-    // outgoing: reviewId, error (optional), jwtToken
+    // incoming: userId, serviceId, reviewer profile picture, ReviewText, jwtToken
+    // outgoing: error (optional), jwtToken
 
     let {
       userId,
@@ -344,14 +344,16 @@ exports.setApp = function (app, client, cloudinaryParser) {
       ReviewText: reviewText
     })
 
-    try {
-      await review.save();
-    } catch (e) {
-      console.log(e.message);
-    }
+    await review.save({}, function(err) {
+      if(err) {
+        res.send({ error: err, RefreshedToken: refreshedToken })
+      } else {
+        res.send({ RefreshedToken: refreshedToken });
+      }
+    });
 
     console.log(review);
-    res.send({ RefreshedToken: refreshedToken });
+    
   });
 
   
@@ -360,7 +362,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     //           userId (deletes all reviews associated with user),
     //           serviceId (deletes all reviews associated with service),
     //           NOTE: at least one parameter is needed to make it work
-    // outgoing: deleteCount, jwtToken, error (optional), acknowledged
+    // outgoing: deleteCount, jwtToken, error (optional)
 
     let {
       userId,
@@ -397,10 +399,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
       ]
     }, function (err, result) {
       if (err) {
-        res.send(err);
+        res.send({ error: err, RefreshedToken: refreshedToken });
       } else {
-        console.log(result);
-        res.send({ RefreshedToken: refreshedToken });
+        res.send({ deletedCount: result.deletedCount, RefreshedToken: refreshedToken });
       }
     });
   });

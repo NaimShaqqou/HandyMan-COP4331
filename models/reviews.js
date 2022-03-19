@@ -20,6 +20,8 @@ const ReviewsSchema = new Schema({
     // },
     ReviewText: {
         type: String,
+        required: true,
+        trim: true,
     },
 });
 
