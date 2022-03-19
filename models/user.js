@@ -5,15 +5,18 @@ const UserSchema = new Schema({
 
   FirstName: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   LastName: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   Username: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   Password: {
     type: String,
@@ -21,15 +24,25 @@ const UserSchema = new Schema({
   },
   Email: {
     type: String,
-    required:true
+    required:true,
+    // makes sure that the input is a valid email address
+    // I will test this once register api is complete
+    // validate: value => {
+    //   if (!validator.isEmail(value)) {
+    //     throw new Error({error: 'Invalid Email Address'})
+    //   }
+    // },
+
   },
   ProfileDescription: {
     type: String,
-    default: ''
+    default: '',
+    trim: true,
   },
   ProfilePicture: {
     type: String,
-    default: ''
+    default: '',
+    trim: true,
   },
 });
 module.exports = user = mongoose.model("Users", UserSchema);
