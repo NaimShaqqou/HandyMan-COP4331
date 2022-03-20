@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 //Create Schema
 const RequestedServicesSchema = new Schema({
     
-    RequestedId: [
+    RequestedId: 
         {
             type: Schema.Types.ObjectId, ref: 'Users'
         }
-    ],
-    ServiceId: [
+    ,
+    ServiceId: 
         {
             type: Schema.Types.ObjectId, ref: 'Services'
         }
-    ],
+    ,
     Completion: {
         type: Boolean,
         required: true

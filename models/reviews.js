@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 
 //Create Schema
 const ReviewsSchema = new Schema({
-    UserId: [
+    UserId: 
         {
             type: Schema.Types.ObjectId, ref: 'Users'
         }
-    ],
-    ServiceId: [
+    ,
+    ServiceId: 
         {
             type: Schema.Types.ObjectId, ref: 'Services'
         }
-    ],
+    ,
     // ProfilePictureOfReviewer: {
     //     type: Image,
     //     required: true

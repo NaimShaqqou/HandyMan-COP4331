@@ -183,7 +183,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     userId = ObjectId(userId)
 
-    const writeResult = await Service.create(
+    await Service.create(
       {
         UserId: userId,
         Title: title,
@@ -204,7 +204,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           };
         } else {
           response = {
-            serviceId: objectInserted.insertedId.valueOf(),
+            serviceId: objectInserted._id.valueOf(),
             refreshedToken: refreshedToken,
           };
         }
@@ -218,7 +218,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/delete-service", async (req, res, next) => {
     // incoming: userId, title, jwtToken
-    // outgoing: error (optional), jwtToken
+    // outgoing: error (optional), deletedServiceCount, jwtToken
 
     let { userId, title, jwtToken } = req.body;
 
@@ -243,16 +243,17 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     userId = ObjectId(userId)
 
-    const db = client.db();
-    const deleteResult = Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
+    Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
         if (err) {
           response = {
             error: err,
+            deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
           };
         } else {
           console.log("Deleted " + result.deletedCount + " documents")
           response = {
+            deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
           };
         }
@@ -297,8 +298,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
     const user = User.findOneAndUpdate({ _id: userId, Password: oldPassword }, { Password: newPassword}, function(err, objectReturned) {
       if (err) {
         response = { error: err, refreshedToken: refreshedToken };
+      } else if (objectReturned == null) {
+        response = { error: "Wrong password", refreshedToken: refreshedToken };
       } else {
-        response = { refreshedToken: refreshedToken };
+        response = {refreshedToken: refreshedToken };
       }
       console.log(objectReturned)
       res.status(200).json(response);

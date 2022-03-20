@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 //Create Schema
 const ServicesSchema = new Schema({
     
-    UserId: [
+    UserId: 
         {
             type: Schema.Types.ObjectId, ref: 'Users'
         }
-    ],
+    ,
     Title: {
         type: String,
         required: true
@@ -32,10 +32,10 @@ const ServicesSchema = new Schema({
         type: String,
         required: true
     },
-    DaysAvailable: [{
+    DaysAvailable: {
         type: [String],
         required:true
-    }],
+    },
     Category:{
         type:String,
         requried:true

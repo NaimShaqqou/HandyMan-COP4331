@@ -3,16 +3,16 @@ const Schema = mongoose.Schema;
 //Create Schema
 const MessagesSchema = new Schema({
     
-    SenderId: [
+    SenderId: 
         {
             type: Schema.Types.ObjectId, ref: 'Users'
         }
-    ],
-    ReceiverId: [
+    ,
+    ReceiverId: 
         {
             type: Schema.Types.ObjectId, ref: 'Users'
         }
-    ],
+    ,
     Timestamp: {
         type: String,
         required: true
