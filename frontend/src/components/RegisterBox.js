@@ -1,69 +1,157 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
+import jwt_decode from "jwt-decode";
+import '../Login.css'
 
-function RegisterBox()
-{
-    const app_name='myhandyman1'
-    function buildPath(route)
-    {
-      if (process.env.NODE_ENV === 'production')
-      {
-        return 'https://' + app_name + '.herokuapp.com/' + route;
+// Material UI
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import LockIcon from '@mui/icons-material/Lock';
+import FormControl from '@mui/material/FormControl';
+import { Input } from "@mui/material";
+
+function RegisterBox() {
+  var bp = require("./Path.js");
+
+  const [message, setMessage] = useState("");
+
+  const doLogin = async (event) => {
+    event.preventDefault();
+    
+    var obj = { login: values.username, password: values.password };
+    var js = JSON.stringify(obj);
+
+    // alert('click');
+
+    try {
+      const response = await fetch(bp.buildPath("api/login"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      var res = JSON.parse(await response.text());
+      
+      if (res.id <= 0) {
+        setMessage("User/Password combination incorrect");
+        alert('wrong credentials');
+      } else {
+        alert('login success!');
+        setMessage("Logged in");
+        var storage = require("../tokenStorage.js");
+        var user = jwt_decode(res);
+        localStorage.setItem("user_data", JSON.stringify(user));
+        storage.storeToken(res);
+        // window.location.href = "/";
       }
-      else
-      {
-        return 'http://localhost:5000/' + route;
-      }
+    } catch (e) {
+      console.log(e.toString());
+      return; 
     }
+  };
 
-    var rloginName;
-    var rloginPassword;
+  const [values, setValues] = React.useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    password: '',
+    email: '',
+    showPassword: false,
+  });
 
-    const [message, setMessage] = useState('');
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
 
-    const doRegister = async event => 
-    {
-      event.preventDefault();
+  const handleClickShowPassword = () => {
+    setValues({
+      ...values,
+      showPassword: !values.showPassword,
+    });
+  };
 
-      var obj = {login:rloginName.value,password:rloginPassword.value};
-      var js = JSON.stringify(obj);
-
-      setMessage("Register " + js);
-
-      try
-      {    
-          const response = await fetch(buildPath('api/login'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-          var res = JSON.parse(await response.text());
-
-          if( res.id <= 0 )
-          {
-              setMessage('User/Password combination incorrect');
-          }
-          else
-          {
-              var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
-              localStorage.setItem('user_data', JSON.stringify(user));
-              setMessage('');
-              window.location.href = '/cards';
-          }
-      }
-      catch(e)
-      {
-          console.log(e.toString());
-          return;
-      }    
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   return (
     <div className="loginbox">
-      <h3>Create an Account</h3>
-      <form onSubmit={doRegister}>
-        <input type="text" id="rloginName" placeholder="Username" ref={(c) => rloginName = c} /><br />
-        <input type="password" id="rloginPassword" placeholder="Password" ref={(c => rloginPassword = c)} /><br />
-        <input type="submit" id="registerButton" className="buttons" value="Register" onClick={doRegister} />
-      </form>
-      <span id="registerResult">{message}</span>
+      <div className="loginDiv">
+        <form onSubmit={doLogin}>
+          <h3>Create an Account</h3>
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerFirstName"
+              type='text'
+              value={values.firstName}
+              onChange={handleChange('firstName')}
+              placeholder="First Name"
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerLastName"
+              type='text'
+              value={values.username}
+              onChange={handleChange('lastName')}
+              placeholder="Last Name"
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerUsername"
+              type='text'
+              value={values.username}
+              onChange={handleChange('userName')}
+              placeholder="Username"
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="loginPassword"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChange('password')}
+              placeholder="Password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerEmail"
+              type='text'
+              value={values.email}
+              onChange={handleChange('registerEmail')}
+              placeholder="Email"
+            />
+          </FormControl>
+
+          <span id="registerResult">{message}</span>
+
+          <p></p>
+
+          <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+          <p className="alignbot">Already have an account? <a href="/login">Log in here!</a></p>
+        </form>
+      </div>
     </div>
   );
-};
+}
 
 export default RegisterBox;

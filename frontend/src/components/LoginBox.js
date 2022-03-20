@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
-import '../LoginBox.css'
+import '../Login.css'
 
 // Material UI
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -12,13 +11,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import { Input } from "@mui/material";
 
 function LoginBox() {
   var bp = require("./Path.js");
-  var loginEmail;
-  var loginPassword;
 
   const [message, setMessage] = useState("");
 
