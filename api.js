@@ -56,13 +56,13 @@ exports.setApp = function (app, client, cloudinaryParser) {
     res.status(200).json(ret);
   });
 
-  app.post("/api/searchcards", async (req, res, next) => {
-    // incoming: userId, search, jwtToken
+  app.post("/api/search-services", async (req, res, next) => {
+    // incoming: search, jwtToken
     // outgoing: results[], error
 
     var error = "";
 
-    const { userId, search, jwtToken } = req.body;
+    const { search, jwtToken } = req.body;
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -74,15 +74,19 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
 
     var _search = search.trim();
-    //   const db = client.db();
-    //   const results = await db.collection('Cards').find({ "Card": { $regex: _search + '.*', $options: 'r' } }).toArray();
-    const results = await Card.find({ "Card": { $regex: _search + '.*', $options: 'r' } });
-  
-  
+
+    // Looks through the different fields of a service using the specified given search
+    const results = await Service.find({
+      $or: [
+        { Title: _search },
+        { Description: _search },
+        { Category: _search }
+      ]
+    });
 
     var _ret = [];
     for (var i = 0; i < results.length; i++) {
-      _ret.push(results[i].Card);
+      _ret.push(results[i].Service);
     }
 
     var refreshedToken = null;
