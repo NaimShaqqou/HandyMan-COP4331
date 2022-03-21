@@ -1,12 +1,18 @@
 const { ObjectId } = require("mongodb");
+
+// import schema
 const User = require("./models/user.js");
+const Review = require("./models/reviews.js");
+
 //load card model
 const Card = require("./models/card.js");
+const Service = require("./models/services.js");
+const { ObjectID } = require("bson");
 
 require("express");
 require("mongodb");
 
-exports.setApp = function (app, client) {
+exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
   app.post("/api/addcard", async (req, res, next) => {
@@ -50,13 +56,13 @@ exports.setApp = function (app, client) {
     res.status(200).json(ret);
   });
 
-  app.post("/api/searchcards", async (req, res, next) => {
-    // incoming: userId, search, jwtToken
+  app.post("/api/search-services", async (req, res, next) => {
+    // incoming: search, jwtToken
     // outgoing: results[], error
 
     var error = "";
 
-    const { userId, search, jwtToken } = req.body;
+    const { search, jwtToken } = req.body;
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -68,15 +74,19 @@ exports.setApp = function (app, client) {
     }
 
     var _search = search.trim();
-    //   const db = client.db();
-    //   const results = await db.collection('Cards').find({ "Card": { $regex: _search + '.*', $options: 'r' } }).toArray();
-    const results = await Card.find({ "Card": { $regex: _search + '.*', $options: 'r' } });
-  
-  
+
+    // Looks through the different fields of a service using the specified given search
+    const results = await Service.find({
+      $or: [
+        { Title: _search },
+        { Description: _search },
+        { Category: _search }
+      ]
+    });
 
     var _ret = [];
     for (var i = 0; i < results.length; i++) {
-      _ret.push(results[i].Card);
+      _ret.push(results[i].Service);
     }
 
     var refreshedToken = null;
@@ -139,37 +149,52 @@ exports.setApp = function (app, client) {
   });
 
   app.post("/api/login", async (req, res, next) => {
-    // incoming: email, password
+    // incoming: login, password
     // outgoing: id, firstName, lastName, error
 
-    var error = "";
+    let error = "";
+    let results;
 
     const { login, password } = req.body;
-    // const db = client.db();
-    // const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
-    const results = await User.find({ Login: login, Password: password });
+    let parameter = "";
 
-    var id = -1;
-    var fn = "";
-    var ln = "";
-    var ret;
-
-    if (results.length > 0) {
-      id = results[0]._id.valueOf();
-      fn = results[0].FirstName;
-      ln = results[0].LastName;
-      try {
-        const token = require("./createJWT.js");
-        ret = token.createToken(fn, ln, id);
-        console.log(ret);
-      } catch (e) {
-        ret = { error: e.message };
-      }
+    console.log("Given:");
+    console.log(req.body);
+    
+    if (login.includes("@")) {
+      parameter = "Email";
     } else {
-      ret = { error: "Email/Password incorrect", id: id };
+      parameter = "Username";
     }
     
-    res.status(200).json(ret);
+    let id = -1;
+    let fn = "";
+    let ln = "";
+    let ret;
+
+    let filters = {}
+    filters[parameter] = login
+    filters["Password"] = password
+
+    User.findOne(filters, function(err, user) {
+      console.log(user)
+      if (err) {
+        return res.status(200).json({error: err.message});
+      } else if (user) {
+        id = user._id.valueOf();
+        fn = user.FirstName;
+        ln = user.LastName;
+        try {
+          const token = require("./createJWT.js");
+          ret = {jwtToken: token.createToken(fn, ln, id)};
+        } catch (e) {
+          ret = { error: e.message };
+        }
+      } else {
+        ret = { error: "Incorrect credentials", id: id };
+      }
+      res.status(200).json(ret);
+    });
   });
 
   app.post("/api/add-service", async (req, res, next) => {
@@ -180,6 +205,7 @@ exports.setApp = function (app, client) {
     let {
       userId,
       title,
+      imageUrls,
       longitude,
       latitude,
       description,
@@ -208,11 +234,11 @@ exports.setApp = function (app, client) {
 
     userId = ObjectId(userId)
 
-    const db = client.db();
-    const writeResult = await db.collection("Services").insertOne(
+    await Service.create(
       {
         UserId: userId,
         Title: title,
+        Images: imageUrls,
         Longitude: longitude,
         Latitude: latitude,
         Description: description,
@@ -229,10 +255,11 @@ exports.setApp = function (app, client) {
           };
         } else {
           response = {
-            serviceId: objectInserted.insertedId.valueOf(),
+            serviceId: objectInserted._id.valueOf(),
             refreshedToken: refreshedToken,
           };
         }
+        console.log(objectInserted)
         res.status(200).json(response);
       }
     );
@@ -242,7 +269,7 @@ exports.setApp = function (app, client) {
 
   app.post("/api/delete-service", async (req, res, next) => {
     // incoming: userId, title, jwtToken
-    // outgoing: error (optional), jwtToken
+    // outgoing: error (optional), deletedServiceCount, jwtToken
 
     let { userId, title, jwtToken } = req.body;
 
@@ -267,17 +294,17 @@ exports.setApp = function (app, client) {
 
     userId = ObjectId(userId)
 
-    const db = client.db();
-    const deleteResult = db
-      .collection("Services")
-      .deleteOne({ UserId: userId, Title: title }, function (err, result) {
+    Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
         if (err) {
           response = {
             error: err,
+            deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
           };
         } else {
+          console.log("Deleted " + result.deletedCount + " documents")
           response = {
+            deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
           };
         }
@@ -308,22 +335,6 @@ exports.setApp = function (app, client) {
       console.log(e.message);
     }
 
-    userId = ObjectId(userId)
-
-    const db = client.db();
-    const user = await db
-      .collection("Users")
-      .findOne({ _id: userId, Password: oldPassword });
-
-    if (!user) {
-      var r = {
-        error: "Old password is not correct",
-        jwtToken: refreshedToken,
-      };
-      res.status(200).json(r);
-      return;
-    }
-
     if (oldPassword == newPassword) {
       var r = {
         error: "Passwords can't be the same",
@@ -333,34 +344,35 @@ exports.setApp = function (app, client) {
       return;
     }
 
-    let id = user._id;
+    userId = ObjectId(userId)
 
-    db.collection("Users").updateOne(
-      { _id: id },
-      { $set: {Password: newPassword} },
-      function (err, objectReturned) {
-        if (err) {
-          response = { error: err, refreshedToken: refreshedToken };
-        } else {
-          response = { refreshedToken: refreshedToken };
-        }
-        res.status(200).json(response);
+    const user = User.findOneAndUpdate({ _id: userId, Password: oldPassword }, { Password: newPassword}, function(err, objectReturned) {
+      if (err) {
+        response = { error: err, refreshedToken: refreshedToken };
+      } else if (objectReturned == null) {
+        response = { error: "Wrong password", refreshedToken: refreshedToken };
+      } else {
+        response = {refreshedToken: refreshedToken };
       }
-    );
+      console.log(objectReturned)
+      res.status(200).json(response);
+    });
   });
 
+  // TODO: user can only leave one review for each service
   app.post("/api/add-review", async (req, res, next) => {
-    // incoming: userId, serviceId, reviewer profile picture, ReviewText
-    // outgoing: reviewId, error (optional), jwtToken
-    var response;
+    // incoming: userId, serviceId, reviewer profile picture, ReviewText, jwtToken
+    // outgoing: error (optional), jwtToken
 
     let {
       userId,
       serviceId,
       //reviewerProfilePic,
       reviewText,
+      jwtToken,
     } = req.body;
 
+    //check jwt
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -371,6 +383,60 @@ exports.setApp = function (app, client) {
       console.log(e.message);
     }
 
+    //refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+              
+    // send request
+    const review = new Review({
+      UserId: userId, 
+      ServiceId: serviceId, 
+      ReviewText: reviewText
+    })
+
+    await review.save({}, function(err) {
+      if(err) {
+        res.send({ error: err, RefreshedToken: refreshedToken })
+      } else {
+        res.send({ RefreshedToken: refreshedToken });
+      }
+    });
+
+    console.log(review);
+    
+  });
+
+  
+  app.post("/api/delete-review", async (req, res, next) => {
+    // incoming: reviewId (to delete single review), 
+    //           userId (deletes all reviews associated with user),
+    //           serviceId (deletes all reviews associated with service),
+    //           NOTE: at least one parameter is needed to make it work
+    // outgoing: deleteCount, jwtToken, error (optional)
+
+    let {
+      userId,
+      reviewId,
+      serviceId,
+      jwtToken
+    } = req.body;
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
     var refreshedToken = null;
     try {
       refreshedToken = token.refresh(jwtToken);
@@ -378,34 +444,25 @@ exports.setApp = function (app, client) {
       console.log(e.message);
     }
 
-    // It's a good idea to keep track of the userId as well (ask esteban)
-    // userId = ObjectId(userId)
-    serviceId = ObjectId(serviceId)
-
-    const db = client.db();
-    const writeResult = await db.collection("Services").insertOne(
-      {
-        // UserId: userId
-        ServiceId: serviceId,
-        ReviewText: reviewText,
-      },
-      function (err, objectInserted) {
-        if (err) {
-          response = {
-            reviewId: -1,
-            error: err,
-            refreshedToken: refreshedToken,
-          };
-        } else {
-          response = {
-            serviceId: objectInserted.insertedId.valueOf(),
-            refreshedToken: refreshedToken,
-          };
-        }
-        res.status(200).json(response);
+    // find and delete review
+    Review.deleteMany({
+      $or: [
+        {_id: reviewId},
+        {UserId: userId},
+        {ServiceId: serviceId}
+      ]
+    }, function (err, result) {
+      if (err) {
+        res.send({ error: err, RefreshedToken: refreshedToken });
+      } else {
+        res.send({ deletedCount: result.deletedCount, RefreshedToken: refreshedToken });
       }
-    );
+    });
   });
+
+  app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
+      res.status(200).json({ imageUrl: req.file.path })
+  })
 
 
 };

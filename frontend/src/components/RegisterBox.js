@@ -13,7 +13,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
 import { Input } from "@mui/material";
 
-function LoginBox() {
+function RegisterBox() {
   var bp = require("./Path.js");
 
   const [message, setMessage] = useState("");
@@ -53,8 +53,11 @@ function LoginBox() {
   };
 
   const [values, setValues] = React.useState({
+    firstName: '',
+    lastName: '',
     username: '',
     password: '',
+    email: '',
     showPassword: false,
   });
 
@@ -77,36 +80,44 @@ function LoginBox() {
     <div className="loginbox">
       <div className="loginDiv">
         <form onSubmit={doLogin}>
-          <h3>Login to continue!</h3>
+          <h3>Create an Account</h3>
           <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-            {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
             <Input
-              id="loginUsername"
+              id="registerFirstName"
               type='text'
-              value={values.username}
-              onChange={handleChange('username')}
-              placeholder="Username"
-              startAdornment={
-                <InputAdornment position="start">
-                  <AccountCircle />
-                </InputAdornment>
-              }
+              value={values.firstName}
+              onChange={handleChange('firstName')}
+              placeholder="First Name"
             />
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-            {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
+            <Input
+              id="registerLastName"
+              type='text'
+              value={values.username}
+              onChange={handleChange('lastName')}
+              placeholder="Last Name"
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerUsername"
+              type='text'
+              value={values.username}
+              onChange={handleChange('userName')}
+              placeholder="Username"
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
             <Input
               id="loginPassword"
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
               onChange={handleChange('password')}
               placeholder="Password"
-              startAdornment={
-                <InputAdornment position="start">
-                  <LockIcon />
-                </InputAdornment>
-              }
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -120,20 +131,27 @@ function LoginBox() {
               }
             />
           </FormControl>
-          <p>
-            <a href="https://www.google.com">Forgot Password?</a>
-          </p>
 
-          <span id="loginResult">{message}</span>
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerEmail"
+              type='text'
+              value={values.email}
+              onChange={handleChange('registerEmail')}
+              placeholder="Email"
+            />
+          </FormControl>
+
+          <span id="registerResult">{message}</span>
 
           <p></p>
 
           <Button id="loginButton" variant="contained" type="submit">Log in</Button>
-          <p className="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
+          <p className="alignbot">Already have an account? <a href="/login">Log in here!</a></p>
         </form>
       </div>
     </div>
   );
 }
 
-export default LoginBox;
+export default RegisterBox;

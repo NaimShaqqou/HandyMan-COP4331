@@ -1,19 +1,18 @@
 import React from 'react';
 
-import Button from '@mui/material/Button'
+import ResponsiveAppBar from '../components/NavBar';
 
 const TestPage = () => {
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div>
-      <h1>Test Potato ( ͡° ͜ʖ ͡°)</h1>
-      <Button
-        size='medium'
-        // disabled
-        variant="contained"
-        color="primary"
-        onClick={() => alert('click')}>
-        Text
-      </Button>
+      <ResponsiveAppBar />
     </div>
   );
 };
