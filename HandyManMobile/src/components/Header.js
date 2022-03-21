@@ -11,8 +11,8 @@ import React from 'react'
 const Header = ({title}) => {
   return (
     <>
-        <Box bg="primary.500" h='10' />
-        <HStack bg="primary.500" justifyContent="space-between" alignItems="center" w="100%" h='16'>
+        {/* <Box bg="primary.500" h='200' /> */}
+        <HStack bg="primary.500" justifyContent="space-between" alignItems="center" w="100%" h='16' >
             <HStack alignItems="center">
                 <IconButton icon={<Icon size="sm" as={MaterialIcons} name="menu" color="white" />} />
                 <Text color="white" fontSize="20" fontWeight="bold">
