@@ -113,39 +113,17 @@ exports.setApp = function (app, client, cloudinaryParser) {
     const newUser = { FirstName: firstName, LastName: lastName, Username: username, Password: password, Email: email };
     // var id = -1;
     // return id?
+    ret = { error: "Successfully added user" };
 
-    // try {
-    //   const db = await client.db();
-    //   const result = await db.collection("Users").insertOne(newUser);
-    //   //const result = await User.insertOne(newUser);
-    // } catch (e) {
-    //   ret = { error: e.message };
-    // }
+    try {
+      const result = User.create(newUser);
+    } catch (e) {
+      ret = { error: e.message };
+    }
 
-    // res.status(200).json(ret);
+    // email verification
 
-    const db = client.db();
-    const result = await db.collection("Users").insertOne(
-      {
-        FirstName: firstName, 
-        LastName: lastName, 
-        Username: username, 
-        Password: password, 
-        Email: email
-      },
-      function (err, objectInserted) {
-        if (err) {
-          response = {
-            error: err,
-          };
-        } else {
-          response = {
-            error: err
-          };
-        }
-        res.status(200).json(response);
-      }
-    );
+    res.status(200).json(ret);
   });
 
   app.post("/api/login", async (req, res, next) => {
