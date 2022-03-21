@@ -15,47 +15,6 @@ require("mongodb");
 exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
-  app.post("/api/addcard", async (req, res, next) => {
-    // incoming: userId, color, jwtToken
-    // outgoing: error
-
-    const { userId, card, jwtToken } = req.body;
-    try {
-      if (token.isExpired(jwtToken)) {
-        var r = { error: "The JWT is no longer valid", jwtToken: "" };
-        res.status(200).json(r);
-        return;
-      }
-    } catch (e) {
-      console.log(e.message);
-    }
-
-  //const newCard = { Card: card, UserId: userId };
-  const newCard = new Card({ Card: card, UserId: userId });
-  var error = '';
-  try 
- {
-    // const db = client.db();
-    // const result = db.collection('Cards').insertOne(newCard);
-    newCard.save();
-  }
-  catch (e) 
- {
-    error = e.toString();
-  }
-
-    var refreshedToken = null;
-    try {
-      refreshedToken = token.refresh(jwtToken);
-    } catch (e) {
-      console.log(e.message);
-    }
-
-    var ret = { error: error, jwtToken: refreshedToken };
-
-    res.status(200).json(ret);
-  });
-
   app.post("/api/search-services", async (req, res, next) => {
     // incoming: search, jwtToken
     // outgoing: results[], error
@@ -128,7 +87,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/login", async (req, res, next) => {
     // incoming: login, password
-    // outgoing: id, firstName, lastName, error
+    // outgoing: jwtToken, error
 
     let error = "";
     let results;
@@ -162,14 +121,20 @@ exports.setApp = function (app, client, cloudinaryParser) {
         id = user._id.valueOf();
         fn = user.FirstName;
         ln = user.LastName;
+
+        if (!user.Verified) {
+          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." })
+          return;
+        }
+
         try {
           const token = require("./createJWT.js");
-          ret = {jwtToken: token.createToken(fn, ln, id)};
+          ret = { error: null, jwtToken: token.createToken(fn, ln, id)};
         } catch (e) {
           ret = { error: e.message };
         }
       } else {
-        ret = { error: "Incorrect credentials", id: id };
+        ret = { error: "Incorrect credentials" };
       }
       res.status(200).json(ret);
     });
@@ -177,7 +142,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/add-service", async (req, res, next) => {
     // incoming: userId, title, longitude, latitude, description, price, daysAvailable, category, jwtToken
-    // outgoing: serviceId, error (optional), jwtToken
+    // outgoing: serviceId, error, jwtToken
     var response;
 
     let {
@@ -228,13 +193,14 @@ exports.setApp = function (app, client, cloudinaryParser) {
         if (err) {
           response = {
             serviceId: -1,
-            error: err,
+            error: err.message,
             refreshedToken: refreshedToken,
           };
         } else {
           response = {
             serviceId: objectInserted._id.valueOf(),
             refreshedToken: refreshedToken,
+            error: null
           };
         }
         console.log(objectInserted)
@@ -247,7 +213,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/delete-service", async (req, res, next) => {
     // incoming: userId, title, jwtToken
-    // outgoing: error (optional), deletedServiceCount, jwtToken
+    // outgoing: error, deletedServiceCount, jwtToken
 
     let { userId, title, jwtToken } = req.body;
 
@@ -275,7 +241,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
         if (err) {
           response = {
-            error: err,
+            error: err.message,
             deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
           };
@@ -284,6 +250,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           response = {
             deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
+            error: null
           };
         }
         res.status(200).json(response);
@@ -292,7 +259,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/change-password", async (req, res, next) => {
     // incoming: userId, oldPassword, newPassword, jwtToken
-    // outgoing: error (optional), jwtToken
+    // outgoing: error, jwtToken
 
     let { userId, oldPassword, newPassword, jwtToken } = req.body;
 
@@ -326,11 +293,11 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     const user = User.findOneAndUpdate({ _id: userId, Password: oldPassword }, { Password: newPassword}, function(err, objectReturned) {
       if (err) {
-        response = { error: err, refreshedToken: refreshedToken };
+        response = { error: err.message, refreshedToken: refreshedToken };
       } else if (objectReturned == null) {
         response = { error: "Wrong password", refreshedToken: refreshedToken };
       } else {
-        response = {refreshedToken: refreshedToken };
+        response = {refreshedToken: refreshedToken, error: null};
       }
       console.log(objectReturned)
       res.status(200).json(response);
@@ -441,6 +408,44 @@ exports.setApp = function (app, client, cloudinaryParser) {
   app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
       res.status(200).json({ imageUrl: req.file.path })
   })
+
+  app.get("/api/verify-email", async (req, res, next) => {
+      let id = req.body.verifycode
+      User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
+        if (response) {
+          res.status(200).json({ response: "Your account has been verified, please login."})
+        } else {
+          res.status(200).json({ resposne: "Your account has not been verified"})
+        }
+      })
+  })
+
+  function verifyEmail(email, userId) {
+    let url;
+    if (process.env.NODE_ENV === 'production') 
+    {
+      url='https://myhandyman1.herokuapp.com/';
+    } else {
+      url = 'http://localhost:5000/' 
+    }
+    
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email, 
+      from: 'emailverifysendgrid@gmail.com', 
+      subject: 'Verify your HandyMan account',
+      html: '<strong>Click this link to verify your email: </strong><a href=' + url + 'api/verify-email?verifycode=' + userId +' >Verify my account</>',
+    }
+    sgMail
+    .send(msg)
+    .then(() => {
+      return(rand)
+    })
+    .catch((error) => {
+      return(error)
+    })
+  }
 
 
 };

@@ -18,11 +18,12 @@
     ],
     "ios": {
       "infoPlist": {
-        "NSAppTransportSecurity": { 
+        "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         }
       },
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "HandyMan"
     },
     "android": {
       "adaptiveIcon": {
