@@ -60,6 +60,53 @@ exports.setApp = function (app, client, cloudinaryParser) {
     res.status(200).json(ret);
   });
 
+  app.post("/api/register", async (req, res, next) => {
+    // incoming: email, password, firstName, lastName, username
+    // outgoing: error
+
+    var error = "";
+    var ret;
+
+    const { email, password, firstName, lastName, username } = req.body;
+
+    const newUser = { FirstName: firstName, LastName: lastName, Username: username, Password: password, Email: email };
+    // var id = -1;
+    // return id?
+
+    // try {
+    //   const db = await client.db();
+    //   const result = await db.collection("Users").insertOne(newUser);
+    //   //const result = await User.insertOne(newUser);
+    // } catch (e) {
+    //   ret = { error: e.message };
+    // }
+
+    // res.status(200).json(ret);
+
+    const db = client.db();
+    const result = await db.collection("Users").insertOne(
+      {
+        FirstName: firstName, 
+        LastName: lastName, 
+        Username: username, 
+        Password: password, 
+        Email: email
+      },
+      function (err, objectInserted) {
+        if (err) {
+          response = {
+            error: err,
+          };
+        } else {
+          response = {
+            error: err
+          };
+        }
+        res.status(200).json(response);
+      }
+    );
+  });
+
   app.post("/api/login", async (req, res, next) => {
     // incoming: login, password
     // outgoing: jwtToken, error
