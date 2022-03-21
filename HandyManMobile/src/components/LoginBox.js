@@ -23,8 +23,9 @@ const LoginBox = () => {
             var res = JSON.parse(await response.text());
 
             // TODO: display errors in app
-            if (res.id <= 0) {
+            if (res.error != null) {
                 setValid(false);
+                setMsg(res.error);
             } else {
                 setValid(true);
                 console.log("login success!");
@@ -76,6 +77,7 @@ const LoginBox = () => {
     const [show, setShow] = useState(false);
     const [valid, setValid] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState('');
 
 
     return (
@@ -113,7 +115,7 @@ const LoginBox = () => {
                 />
 
                 <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-                    User/Password combination incorrect.
+                    { msg }
                 </FormControl.ErrorMessage>
             </FormControl>
           
