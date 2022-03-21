@@ -143,6 +143,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
         id = user._id.valueOf();
         fn = user.FirstName;
         ln = user.LastName;
+
+        if (!user.Verified) {
+          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." })
+          return;
+        }
+
         try {
           const token = require("./createJWT.js");
           ret = { error: null, jwtToken: token.createToken(fn, ln, id)};
@@ -424,6 +430,44 @@ exports.setApp = function (app, client, cloudinaryParser) {
   app.post("/api/store-image", cloudinaryParser.single("image"), async (req, res) => {
       res.status(200).json({ imageUrl: req.file.path })
   })
+
+  app.get("/api/verify-email", async (req, res, next) => {
+      let id = req.body.verifycode
+      User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
+        if (response) {
+          res.status(200).json({ response: "Your account has been verified, please login."})
+        } else {
+          res.status(200).json({ resposne: "Your account has not been verified"})
+        }
+      })
+  })
+
+  function verifyEmail(email, userId) {
+    let url;
+    if (process.env.NODE_ENV === 'production') 
+    {
+      url='https://myhandyman1.herokuapp.com/';
+    } else {
+      url = 'http://localhost:5000/' 
+    }
+    
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email, 
+      from: 'emailverifysendgrid@gmail.com', 
+      subject: 'Verify your HandyMan account',
+      html: '<strong>Click this link to verify your email: </strong><a href=' + url + 'api/verify-email?verifycode=' + userId +' >Verify my account</>',
+    }
+    sgMail
+    .send(msg)
+    .then(() => {
+      return(rand)
+    })
+    .catch((error) => {
+      return(error)
+    })
+  }
 
 
 };
