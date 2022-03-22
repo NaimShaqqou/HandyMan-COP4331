@@ -432,12 +432,20 @@ exports.setApp = function (app, client, cloudinaryParser) {
   })
 
   app.get("/api/verify-email", async (req, res, next) => {
-      let id = req.body.verifycode
+      let id;
+
+      try {
+        id = ObjectId(req.query.verifycode)
+      } catch (e) {
+        res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
+        return;
+      }
+      
       User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
         if (response) {
-          res.status(200).json({ response: "Your account has been verified, please login."})
+          res.status(200).sendFile('backendHtml/successfullVerifyEmail.html' , { root : __dirname})
         } else {
-          res.status(200).json({ resposne: "Your account has not been verified"})
+          res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
         }
       })
   })
