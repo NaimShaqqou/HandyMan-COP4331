@@ -487,6 +487,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   })
 
   app.post("/api/forgot-password-email", async (req, res, next) => {
+    let email = req.body.email
     encryptedEmail = crypto.encrypt_string(email)
     
     const sgMail = require('@sendgrid/mail')
