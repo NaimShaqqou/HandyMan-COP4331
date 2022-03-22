@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-function RegisterBox()
+function RegisterBox2()
 {
     const app_name='myhandyman1'
     function buildPath(route)
@@ -66,4 +66,4 @@ function RegisterBox()
   );
 };
 
-export default RegisterBox;
+export default RegisterBox2;

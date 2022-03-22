@@ -6,7 +6,7 @@ import LoginBox from '../components/LoginBox';
 import RegisterBox from '../components/RegisterBox';
 import ResponsiveAppBar from '../components/NavBar';
 import '../LoginPage.css';
-
+import RegisterBox2 from '../components/RegisterBox2';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';

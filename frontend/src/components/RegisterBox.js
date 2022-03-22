@@ -38,8 +38,8 @@ function RegisterBox() {
         setMessage("User/Password combination incorrect");
         alert('wrong credentials');
       } else {
-        alert('login success!');
-        setMessage("Logged in");
+        alert('Register Successful!');
+        setMessage("Registered!");
         var storage = require("../tokenStorage.js");
         var user = jwt_decode(res);
         localStorage.setItem("user_data", JSON.stringify(user));
@@ -95,7 +95,7 @@ function RegisterBox() {
             <Input
               id="registerLastName"
               type='text'
-              value={values.username}
+              value={values.lastname}
               onChange={handleChange('lastName')}
               placeholder="Last Name"
             />
@@ -106,7 +106,7 @@ function RegisterBox() {
               id="registerUsername"
               type='text'
               value={values.username}
-              onChange={handleChange('userName')}
+              onChange={handleChange('username')}
               placeholder="Username"
             />
           </FormControl>
@@ -137,16 +137,16 @@ function RegisterBox() {
               id="registerEmail"
               type='text'
               value={values.email}
-              onChange={handleChange('registerEmail')}
+              onChange={handleChange('email')}
               placeholder="Email"
             />
           </FormControl>
-
+          <br /><br />
           <span id="registerResult">{message}</span>
 
           <p></p>
 
-          <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+          <Button id="loginButton" variant="contained" type="submit">Register!</Button>
           <p className="alignbot">Already have an account? <a href="/login">Log in here!</a></p>
         </form>
       </div>
