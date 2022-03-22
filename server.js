@@ -31,6 +31,9 @@ const parser = multer({ storage: storage });
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({
+  extended: true
+}))
 
 app.set("port", process.env.PORT || 5000);
 

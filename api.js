@@ -8,11 +8,24 @@ const Review = require("./models/reviews.js");
 const Card = require("./models/card.js");
 const Service = require("./models/services.js");
 const { ObjectID } = require("bson");
+const crypto = require('./crypto.js');
+const { listeners } = require("./models/user.js");
 
 require("express");
 require("mongodb");
 
 exports.setApp = function (app, client, cloudinaryParser) {
+ 
+
+  let url;
+  if (process.env.NODE_ENV === 'production') 
+  {
+    url='https://myhandyman1.herokuapp.com/';
+  } else {
+    url = 'http://localhost:5000/' 
+  }
+
+
   var token = require("./createJWT.js");
 
   app.post("/api/search-services", async (req, res, next) => {
@@ -20,7 +33,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // outgoing: results[], error
 
     var error = "";
-
+  
     const { search, jwtToken } = req.body;
     try {
       if (token.isExpired(jwtToken)) {
@@ -440,7 +453,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
         res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
         return;
       }
-      
+
       User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
         if (response) {
           res.status(200).sendFile('backendHtml/successfullVerifyEmail.html' , { root : __dirname})
@@ -450,15 +463,52 @@ exports.setApp = function (app, client, cloudinaryParser) {
       })
   })
 
-  function verifyEmail(email, userId) {
-    let url;
-    if (process.env.NODE_ENV === 'production') 
-    {
-      url='https://myhandyman1.herokuapp.com/';
+  app.get("/api/forgot-password-page", async (req, res, next) => {
+    if (url === 'https://myhandyman1.herokuapp.com/') {
+      res.status(200).sendFile('backendHtml/forgotPasswordEmail.html' , { root : __dirname})
     } else {
-      url = 'http://localhost:5000/' 
+      res.status(200).sendFile('backendHtml/forgotPasswordEmailDev.html' , { root : __dirname})
     }
+  })
+
+  app.post("/api/forgot-password", async (req, res, next) => {
+    let encryptedEmail = req.body.email
+    let email = crypto.decrypt_string(encryptedEmail);
+    let password = req.body.password;
+
+
+    User.findOneAndUpdate({ Email: email }, { Password: password }, function(err, objectReturned) {
+      if (objectReturned) {
+        res.status(200).sendFile('backendHtml/forgotPasswordSuccess.html' , { root : __dirname})
+      } else {
+        res.status(200).sendFile('backendHtml/forgotPasswordFail.html', { root : __dirname})
+      }
+    });
+  })
+
+  app.post("/api/forgot-password-email", async (req, res, next) => {
+    encryptedEmail = crypto.encrypt_string(email)
     
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email, 
+      from: 'emailverifysendgrid@gmail.com', 
+      subject: 'Change HandyMan account password',
+      html: '<strong>Click this link to change your password: </strong><a href=' + url + 'api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
+    }
+    sgMail
+    .send(msg)
+    .then(() => {
+      res.status(200).json("Email sent")
+    })
+    .catch((error) => {
+      res.status(200).json(error)
+    })
+  })
+
+  function verifyEmail(email, userId) {
+
     const sgMail = require('@sendgrid/mail')
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
@@ -476,6 +526,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
       return(error)
     })
   }
+
+
 
 
 };
