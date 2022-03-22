@@ -444,48 +444,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       res.status(200).json({ imageUrl: req.file.path })
   })
 
-  app.get("/api/verify-email", async (req, res, next) => {
-      let id;
-
-      try {
-        id = ObjectId(req.query.verifycode)
-      } catch (e) {
-        res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
-        return;
-      }
-
-      User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
-        if (response) {
-          res.status(200).sendFile('backendHtml/successfullVerifyEmail.html' , { root : __dirname})
-        } else {
-          res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
-        }
-      })
-  })
-
-  app.get("/api/forgot-password-page", async (req, res, next) => {
-    if (url === 'https://myhandyman1.herokuapp.com/') {
-      res.status(200).sendFile('backendHtml/forgotPasswordEmail.html' , { root : __dirname})
-    } else {
-      res.status(200).sendFile('backendHtml/forgotPasswordEmailDev.html' , { root : __dirname})
-    }
-  })
-
-  app.post("/api/forgot-password", async (req, res, next) => {
-    let encryptedEmail = req.body.email
-    let email = crypto.decrypt_string(encryptedEmail);
-    let password = req.body.password;
-
-
-    User.findOneAndUpdate({ Email: email }, { Password: password }, function(err, objectReturned) {
-      if (objectReturned) {
-        res.status(200).sendFile('backendHtml/forgotPasswordSuccess.html' , { root : __dirname})
-      } else {
-        res.status(200).sendFile('backendHtml/forgotPasswordFail.html', { root : __dirname})
-      }
-    });
-  })
-
   app.post("/api/forgot-password-email", async (req, res, next) => {
     let email = req.body.email
     encryptedEmail = crypto.encrypt_string(email)
@@ -527,8 +485,49 @@ exports.setApp = function (app, client, cloudinaryParser) {
       return(error)
     })
   }
+  
+//------------- These endpoints won't be called by the frontend. --------------------
+
+  app.post("/api/forgot-password", async (req, res, next) => {
+    let encryptedEmail = req.body.email
+    let email = crypto.decrypt_string(encryptedEmail);
+    let password = req.body.password;
 
 
+    User.findOneAndUpdate({ Email: email }, { Password: password }, function(err, objectReturned) {
+      if (objectReturned) {
+        res.status(200).sendFile('backendHtml/forgotPasswordSuccess.html' , { root : __dirname})
+      } else {
+        res.status(200).sendFile('backendHtml/forgotPasswordFail.html', { root : __dirname})
+      }
+    });
+  })
 
+  app.get("/api/forgot-password-page", async (req, res, next) => {
+    if (url === 'https://myhandyman1.herokuapp.com/') {
+      res.status(200).sendFile('backendHtml/forgotPasswordEmail.html' , { root : __dirname})
+    } else {
+      res.status(200).sendFile('backendHtml/forgotPasswordEmailDev.html' , { root : __dirname})
+    }
+  })
+
+  app.get("/api/verify-email", async (req, res, next) => {
+    let id;
+
+    try {
+      id = ObjectId(req.query.verifycode)
+    } catch (e) {
+      res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
+      return;
+    }
+
+    User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
+      if (response) {
+        res.status(200).sendFile('backendHtml/successfullVerifyEmail.html' , { root : __dirname})
+      } else {
+        res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
+      }
+    })
+  })
 
 };
