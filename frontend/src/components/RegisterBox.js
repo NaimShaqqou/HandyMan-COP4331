@@ -38,8 +38,8 @@ function RegisterBox() {
         setMessage("User/Password combination incorrect");
         alert('wrong credentials');
       } else {
-        alert('login success!');
-        setMessage("Logged in");
+        alert('Register Successful!');
+        setMessage("Registered!");
         var storage = require("../tokenStorage.js");
         var user = jwt_decode(res);
         localStorage.setItem("user_data", JSON.stringify(user));
@@ -57,8 +57,10 @@ function RegisterBox() {
     lastName: '',
     username: '',
     password: '',
+    rpassword: '',
     email: '',
     showPassword: false,
+    rshowPassword: false,
   });
 
   const handleChange = (prop) => (event) => {
@@ -73,6 +75,18 @@ function RegisterBox() {
   };
 
   const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+
+  const rhandleClickShowPassword = () => {
+    setValues({
+      ...values,
+      rshowPassword: !values.rshowPassword,
+    });
+  };
+
+  const rhandleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
@@ -95,7 +109,7 @@ function RegisterBox() {
             <Input
               id="registerLastName"
               type='text'
-              value={values.username}
+              value={values.lastname}
               onChange={handleChange('lastName')}
               placeholder="Last Name"
             />
@@ -106,7 +120,7 @@ function RegisterBox() {
               id="registerUsername"
               type='text'
               value={values.username}
-              onChange={handleChange('userName')}
+              onChange={handleChange('username')}
               placeholder="Username"
             />
           </FormControl>
@@ -134,19 +148,40 @@ function RegisterBox() {
 
           <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
             <Input
-              id="registerEmail"
-              type='text'
-              value={values.email}
-              onChange={handleChange('registerEmail')}
-              placeholder="Email"
+              id="rloginPassword"
+              type={values.rshowPassword ? 'text' : 'password'}
+              value={values.rpassword}
+              onChange={handleChange('rpassword')}
+              placeholder="Repeat Password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle pass1 visibility"
+                    onClick={rhandleClickShowPassword}
+                    onMouseDown={rhandleMouseDownPassword}
+                  >
+                    {values.rshowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
             />
           </FormControl>
 
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerEmail"
+              type='text'
+              value={values.email}
+              onChange={handleChange('email')}
+              placeholder="Email"
+            />
+          </FormControl>
+          <br /><br />
           <span id="registerResult">{message}</span>
 
           <p></p>
 
-          <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+          <Button id="loginButton" variant="contained" type="submit">Register!</Button>
           <p className="alignbot">Already have an account? <a href="/login">Log in here!</a></p>
         </form>
       </div>
