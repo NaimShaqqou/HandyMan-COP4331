@@ -11,8 +11,7 @@ const Home = () => {
     <Center flex={1}>
       <MapView style={styles.map} />
       <Box w="100%" position={'absolute'} safeAreaTop alignItems='center' top={0} h="25%">
-        <Header title="Home" />
-        <Box mt='10' h='30%' >
+        <Box h='30%' backgroundColor={'black'}>
           <SearchBar mt='20' />
         </Box>
       </Box>
