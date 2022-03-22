@@ -57,8 +57,10 @@ function RegisterBox() {
     lastName: '',
     username: '',
     password: '',
+    rpassword: '',
     email: '',
     showPassword: false,
+    rshowPassword: false,
   });
 
   const handleChange = (prop) => (event) => {
@@ -73,6 +75,18 @@ function RegisterBox() {
   };
 
   const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+
+  const rhandleClickShowPassword = () => {
+    setValues({
+      ...values,
+      rshowPassword: !values.rshowPassword,
+    });
+  };
+
+  const rhandleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
@@ -126,6 +140,27 @@ function RegisterBox() {
                     onMouseDown={handleMouseDownPassword}
                   >
                     {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="rloginPassword"
+              type={values.rshowPassword ? 'text' : 'password'}
+              value={values.rpassword}
+              onChange={handleChange('rpassword')}
+              placeholder="Repeat Password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle pass1 visibility"
+                    onClick={rhandleClickShowPassword}
+                    onMouseDown={rhandleMouseDownPassword}
+                  >
+                    {values.rshowPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
