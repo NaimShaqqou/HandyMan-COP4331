@@ -34,17 +34,17 @@ function LoginBox() {
       });
       var res = JSON.parse(await response.text());
       
-      if (res.id <= 0) {
-        setMessage("User/Password combination incorrect");
-        alert('wrong credentials');
-      } else {
+      if ("jwtToken" in res) {
         alert('login success!');
         setMessage("Logged in");
         var storage = require("../tokenStorage.js");
-        var user = jwt_decode(res);
+        var user = jwt_decode(res["jwtToken"]);
         localStorage.setItem("user_data", JSON.stringify(user));
-        storage.storeToken(res);
+        storage.storeToken(res["jwtToken"]);
         // window.location.href = "/";
+      } else {
+        alert('wrong credentials');
+        setMessage("User/Password combination incorrect");
       }
     } catch (e) {
       console.log(e.toString());
