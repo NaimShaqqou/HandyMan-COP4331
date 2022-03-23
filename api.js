@@ -508,12 +508,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
   };
 
   // Returns services that are within maxDistance. (Assumes maxDistance is in miles)
-  function getServicesWithinDistance(services, location, maxDistance) {
+  function getServicesWithinDistance(services, coordinates, maxDistance) {
     let filteredServices = new Array();
     maxDistanceInMeters = maxDistance * 1609.34
 
     services.forEach((service) => {
-      let distance = getDistance(service.Latitude, service.Longitude, location.latitude, location.longitude)
+      let distance = getDistance(service.Latitude, service.Longitude, coordinates.latitude, coordinates.longitude)
       if (distance <= maxDistanceInMeters) {
         filteredServices.push(service)
       }
