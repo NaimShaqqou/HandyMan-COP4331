@@ -4,7 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider, Center } from 'native-base';
 import { ActivityIndicator } from 'react-native';
 
-import Navigation from './src/navigation/navigation.js';
+import { NavigationContainer } from '@react-navigation/native'
+import AuthStack from './src/navigation/AuthStack.js'
+import AppStack from './src/navigation/AppStack.js'
 
 // Context used to handle jwt things
 import AppContext from './src/components/AppContext.js'
@@ -47,12 +49,16 @@ export default function App() {
   }
 
   return (
-    //<AppContext.provider value={authContext}>
+    <AppContext.Provider value={authContext}>
       <NativeBaseProvider>
-        <Navigation />
+        <NavigationContainer>
+          { jwtToken == null ? <AppStack /> : <AuthStack /> }
+        </NavigationContainer>
+
         <StatusBar style="auto" />
+
       </NativeBaseProvider>
-    //</AppContext.provider>
+    </AppContext.Provider>
   );
 }
 
