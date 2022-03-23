@@ -66,6 +66,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     const { email, password, firstName, lastName, username } = req.body;
 
+    // duplicate username/email
+
     const result = User.create(
       {
         FirstName: firstName, 
