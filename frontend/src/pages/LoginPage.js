@@ -6,12 +6,13 @@ import LoginBox from '../components/LoginBox';
 import RegisterBox from '../components/RegisterBox';
 import ResponsiveAppBar from '../components/NavBar';
 import '../LoginPage.css';
-
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -73,18 +74,36 @@ const LoginPage = () =>
               <Tab label="Register" {...a11yProps(1)} />
             </Tabs>
           </Box>
-
-          <TabPanel value={value} index={0}>
-            <LoginBox />
-          </TabPanel>
-          
-          <TabPanel value={value} index={1} style={{textAlign: 'right'}}>
-            <RegisterBox />
-          </TabPanel>
         </Box>
+
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <TabPanel value={value} index={0}>
+              <LoginBox />
+            </TabPanel>
+          </Grid>
+
+          <Grid item xs>
+            <TabPanel value={value} index={1}>
+              <RegisterBox />
+            </TabPanel>
+          </Grid>
+        </Grid>
       </div>
     </div>
   );
+};
+
+const classes = {
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: 20,
+    textAlign: "center",
+    backgroundColor: "white",
+    color: "black"
+  }
 };
 
 export default LoginPage;

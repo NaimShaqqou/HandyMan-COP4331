@@ -1,4 +1,17 @@
 .loginPageDiv {
-  width: 50%;
+  width: 65%;
   margin: 0 auto;
 }
+
+/*.loginb{
+  position:relative;
+  left:40px;
+  top:40px;
+}
+
+.regisb{
+  position:relative;
+  right:-640px;
+  top:40px;
+}
+*/

@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
-import jwt_decode from "jwt-decode";
+import AppContext from './AppContext.js'
 import { useNavigation } from '@react-navigation/native'
 
 import { Button, Box, Center, Input, Icon, Heading, FormControl, Link, WarningOutlineIcon } from 'native-base'
 import { MaterialIcons } from "@native-base/icons"
 
-const LoginBox = () => {    
+// to store user info in global variable
+//const context = useContext(AppContext)
+
+const LoginBox = () => {
+    const { Login } = React.useContext(AppContext);
+
     // call the login api
     const doLogin = async (event) => {
         event.preventDefault();
@@ -23,22 +28,20 @@ const LoginBox = () => {
             var res = JSON.parse(await response.text());
 
             // TODO: display errors in app
-            if (res.id <= 0) {
+            if (res.error != null) {
                 setValid(false);
+                setMsg(res.error);
             } else {
                 setValid(true);
                 console.log("login success!");
-                var storage = require("../tokenStorage.js");
-                var user = jwt_decode(res.jwtToken);
                 
-                // jwtToken storage (need redux bc local storage doesn't work)
-                //localStorage.setItem("user_data", JSON.stringify(user));
-                //storage.storeToken(res);
-
+                Login({jwtToken: res.jwtToken})
+                //console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
+                
                 // TODO: call navigation function here
                 goToHome();
             }
-
+            
             setLoading(false);
         } catch (e) {
             console.log(e.toString());
@@ -76,6 +79,7 @@ const LoginBox = () => {
     const [show, setShow] = useState(false);
     const [valid, setValid] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState('');
 
 
     return (
@@ -113,7 +117,7 @@ const LoginBox = () => {
                 />
 
                 <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-                    User/Password combination incorrect.
+                    { msg }
                 </FormControl.ErrorMessage>
             </FormControl>
           

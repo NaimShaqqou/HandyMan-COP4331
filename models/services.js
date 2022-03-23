@@ -16,6 +16,10 @@ const ServicesSchema = new Schema({
         type: [String],
         required: true
     },
+    Address: {
+        type: String,
+        required: true
+    },
     Longitude: {
         type: String,
         required: true

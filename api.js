@@ -1,4 +1,5 @@
 const { ObjectId } = require("mongodb");
+const axios = require('axios');
 
 // import schema
 const User = require("./models/user.js");
@@ -8,11 +9,25 @@ const Review = require("./models/reviews.js");
 const Card = require("./models/card.js");
 const Service = require("./models/services.js");
 const { ObjectID } = require("bson");
+const crypto = require('./crypto.js');
+const { listeners } = require("./models/user.js");
 
 require("express");
 require("mongodb");
+require("dotenv")
 
 exports.setApp = function (app, client, cloudinaryParser) {
+ 
+
+  let url;
+  if (process.env.NODE_ENV === 'production') 
+  {
+    url='https://myhandyman1.herokuapp.com/';
+  } else {
+    url = 'http://localhost:5000/' 
+  }
+
+
   var token = require("./createJWT.js");
 
   app.post("/api/search-services", async (req, res, next) => {
@@ -20,7 +35,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // outgoing: results[], error
 
     var error = "";
-
+  
     const { search, jwtToken } = req.body;
     try {
       if (token.isExpired(jwtToken)) {
@@ -151,16 +166,14 @@ exports.setApp = function (app, client, cloudinaryParser) {
   });
 
   app.post("/api/add-service", async (req, res, next) => {
-    // incoming: userId, title, longitude, latitude, description, price, daysAvailable, category, jwtToken
+    // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
     // outgoing: serviceId, error, jwtToken
     var response;
-
     let {
       userId,
       title,
       imageUrls,
-      longitude,
-      latitude,
+      address,
       description,
       price,
       daysAvailable,
@@ -185,6 +198,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
+    let coordinates = await convertAddressToCoordinates(address)
     userId = ObjectId(userId)
 
     await Service.create(
@@ -192,8 +206,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
         UserId: userId,
         Title: title,
         Images: imageUrls,
-        Longitude: longitude,
-        Latitude: latitude,
+        Address: address,
+        Longitude: coordinates.lng.toString(),
+        Latitude: coordinates.lat.toString(),
         Description: description,
         Price: price,
         DaysAvailable: daysAvailable,
@@ -419,26 +434,31 @@ exports.setApp = function (app, client, cloudinaryParser) {
       res.status(200).json({ imageUrl: req.file.path })
   })
 
-  app.get("/api/verify-email", async (req, res, next) => {
-      let id = req.body.verifycode
-      User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
-        if (response) {
-          res.status(200).json({ response: "Your account has been verified, please login."})
-        } else {
-          res.status(200).json({ resposne: "Your account has not been verified"})
-        }
-      })
+  app.post("/api/forgot-password-email", async (req, res, next) => {
+    let email = req.body.email
+    encryptedEmail = crypto.encrypt_string(email)
+    
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email, 
+      from: 'emailverifysendgrid@gmail.com', 
+      subject: 'Change HandyMan account password',
+      html: '<strong>Click this link to change your password: </strong><a href=' + url + 'api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
+    }
+    sgMail
+    .send(msg)
+    .then(() => {
+      res.status(200).json("Email sent")
+    })
+    .catch((error) => {
+      res.status(200).json(error)
+    })
   })
 
+  // Sends email to verify their account
   function verifyEmail(email, userId) {
-    let url;
-    if (process.env.NODE_ENV === 'production') 
-    {
-      url='https://myhandyman1.herokuapp.com/';
-    } else {
-      url = 'http://localhost:5000/' 
-    }
-    
+
     const sgMail = require('@sendgrid/mail')
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
@@ -456,6 +476,103 @@ exports.setApp = function (app, client, cloudinaryParser) {
       return(error)
     })
   }
+
+  // Helper function for getDistance()
+  var rad = function(x) {
+    return x * Math.PI / 180;
+  };
+  
+  // Finds distance in meters between two coordinates. Uses Haversine formula
+  function getDistance(lat1, long1, lat2, long2) {
+    var R = 6378137; // Earth’s mean radius in meter
+    var latitudeDistance = rad(lat2 - lat1);
+    var longitudeDistance = rad(long2 - long1);
+    var a = Math.sin(latitudeDistance / 2) * Math.sin(latitudeDistance / 2) +
+      Math.cos(rad(lat1)) * Math.cos(rad(lat2)) *
+      Math.sin(longitudeDistance / 2) * Math.sin(longitudeDistance / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c;
+    return distance; 
+  };
+
+  // Returns services that are within maxDistance. (Assumes maxDistance is in miles)
+  function getServicesWithinDistance(services, coordinates, maxDistance) {
+    let filteredServices = new Array();
+    maxDistanceInMeters = maxDistance * 1609.34
+
+    services.forEach((service) => {
+      let distance = getDistance(service.Latitude, service.Longitude, coordinates.latitude, coordinates.longitude)
+      if (distance <= maxDistanceInMeters) {
+        filteredServices.push(service)
+      }
+    })
+
+    return filteredServices;
+  }
+
+  // Returns coordinates = { lat, lng }
+  async function convertAddressToCoordinates(address) {
+    let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
+    let apiKey = process.env.GEOCODING_API_KEY
+    address = address.replaceAll(' ', '+')
+    googleUrl = googleUrl + address + '&key=' + apiKey;
+    let coordinates;
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = response.data.results[0]
+        console.log(result)
+        coordinates = result.geometry.location
+        console.log(coordinates);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return coordinates;
+  }
+
+//------------- These endpoints won't be called by the frontend. --------------------
+  app.post("/api/forgot-password", async (req, res, next) => {
+    let encryptedEmail = req.body.email
+    let email = crypto.decrypt_string(encryptedEmail);
+    let password = req.body.password;
+
+
+    User.findOneAndUpdate({ Email: email }, { Password: password }, function(err, objectReturned) {
+      if (objectReturned) {
+        res.status(200).sendFile('backendHtml/forgotPasswordSuccess.html' , { root : __dirname})
+      } else {
+        res.status(200).sendFile('backendHtml/forgotPasswordFail.html', { root : __dirname})
+      }
+    });
+  })
+
+  app.get("/api/forgot-password-page", async (req, res, next) => {
+    if (url === 'https://myhandyman1.herokuapp.com/') {
+      res.status(200).sendFile('backendHtml/forgotPasswordEmail.html' , { root : __dirname})
+    } else {
+      res.status(200).sendFile('backendHtml/forgotPasswordEmailDev.html' , { root : __dirname})
+    }
+  })
+
+  app.get("/api/verify-email", async (req, res, next) => {
+    let id;
+
+    try {
+      id = ObjectId(req.query.verifycode)
+    } catch (e) {
+      res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
+      return;
+    }
+
+    User.findByIdAndUpdate(id, {Verified: true}, function(err, response) {
+      if (response) {
+        res.status(200).sendFile('backendHtml/successfullVerifyEmail.html' , { root : __dirname})
+      } else {
+        res.status(200).sendFile('backendHtml/failedVerifyEmail.html', { root : __dirname})
+      }
+    })
+  })
 
 
 };

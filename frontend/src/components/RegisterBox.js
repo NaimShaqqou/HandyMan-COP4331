@@ -11,41 +11,49 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
+import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
 
 function RegisterBox() {
   var bp = require("./Path.js");
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
-  const doLogin = async (event) => {
+  const doRegister = async (event) => {
     event.preventDefault();
     
-    var obj = { login: values.username, password: values.password };
+    var obj = {
+      email: values.email,
+      password: values.password,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      username: values.username
+    };
+
     var js = JSON.stringify(obj);
 
     // alert('click');
 
     try {
-      const response = await fetch(bp.buildPath("api/login"), {
+      const response = await fetch(bp.buildPath("api/register"), {
         method: "POST",
         body: js,
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
       
-      if (res.id <= 0) {
-        setMessage("User/Password combination incorrect");
-        alert('wrong credentials');
-      } else {
-        alert('login success!');
-        setMessage("Logged in");
-        var storage = require("../tokenStorage.js");
-        var user = jwt_decode(res);
-        localStorage.setItem("user_data", JSON.stringify(user));
-        storage.storeToken(res);
-        // window.location.href = "/";
-      }
+      // if ("jwtToken" in res) {
+      //   alert('login success!');
+      //   setMessage("Logged in");
+      //   var storage = require("../tokenStorage.js");
+      //   var user = jwt_decode(res["jwtToken"]);
+      //   localStorage.setItem("user_data", JSON.stringify(user));
+      //   storage.storeToken(res["jwtToken"]);
+      //   // window.location.href = "/";
+      // } else {
+      //   alert('wrong credentials');
+      //   setMessage("User/Password combination incorrect");
+      // }
     } catch (e) {
       console.log(e.toString());
       return; 
@@ -57,8 +65,10 @@ function RegisterBox() {
     lastName: '',
     username: '',
     password: '',
+    rpassword: '',
     email: '',
     showPassword: false,
+    rshowPassword: false,
   });
 
   const handleChange = (prop) => (event) => {
@@ -76,10 +86,53 @@ function RegisterBox() {
     event.preventDefault();
   };
 
+
+  const rhandleClickShowPassword = () => {
+    setValues({
+      ...values,
+      rshowPassword: !values.rshowPassword,
+    });
+  };
+
+  const rhandleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
-    <div className="loginbox">
+    // <div className="loginbox">
+    <Box style={classes.paper} sx={{
+      // width: {
+      //   mobile: 100,
+      //   laptop: 300,
+      //   desktop: 720,
+      // },
+      // maxHeight: { xs: 500, md: 700 },
+      // height: 1000,
+      minHeight: {
+        sm: 300,
+        md: 400 
+      },
+      // maxWidth: 500,
+      // minWidth: 500,
+      // maxWidth: {
+      //   sx: true,
+      //   md: 500
+      // },
+      minWidth: {
+        sm: true,
+        md: 500
+      },
+      // display: 'flex',
+      // flexDirection: { xs: 'column', md: 'row' },
+      // alignItems: 'center',
+      // bgcolor: 'background.paper',
+      // overflow: 'hidden',
+      // borderRadius: '12px',
+      // boxShadow: 1,
+      // fontWeight: 'bold',
+    }}>
       <div className="loginDiv">
-        <form onSubmit={doLogin}>
+        <form onSubmit={doRegister}>
           <h3>Create an Account</h3>
           <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
             <Input
@@ -95,7 +148,7 @@ function RegisterBox() {
             <Input
               id="registerLastName"
               type='text'
-              value={values.username}
+              value={values.lastname}
               onChange={handleChange('lastName')}
               placeholder="Last Name"
             />
@@ -106,7 +159,7 @@ function RegisterBox() {
               id="registerUsername"
               type='text'
               value={values.username}
-              onChange={handleChange('userName')}
+              onChange={handleChange('username')}
               placeholder="Username"
             />
           </FormControl>
@@ -134,24 +187,60 @@ function RegisterBox() {
 
           <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
             <Input
-              id="registerEmail"
-              type='text'
-              value={values.email}
-              onChange={handleChange('registerEmail')}
-              placeholder="Email"
+              id="rloginPassword"
+              type={values.rshowPassword ? 'text' : 'password'}
+              value={values.rpassword}
+              onChange={handleChange('rpassword')}
+              placeholder="Repeat Password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle pass1 visibility"
+                    onClick={rhandleClickShowPassword}
+                    onMouseDown={rhandleMouseDownPassword}
+                  >
+                    {values.rshowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
             />
           </FormControl>
 
+          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+            <Input
+              id="registerEmail"
+              type='text'
+              value={values.email}
+              onChange={handleChange('email')}
+              placeholder="Email"
+            />
+          </FormControl>
+          <br /><br />
           <span id="registerResult">{message}</span>
 
           <p></p>
 
-          <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+          <Button id="loginButton" variant="contained" type="submit">Register!</Button>
           <p className="alignbot">Already have an account? <a href="/login">Log in here!</a></p>
         </form>
       </div>
-    </div>
+    </Box>
+    // </div>
   );
 }
+
+const classes = {
+  paper: {
+    // padding: 20,
+    textAlign: "center",
+    // color: "black",
+    borderRadius: "40px",
+    boxShadow: "0px 4px 35px rgba(0, 0, 0, 0.08)",
+    padding: "10px 10px 10px 10px",
+    // minHeight: {xs: 500, md: 700 },
+    // "width": "700px",
+    // "height": "500px",
+  }
+};
 
 export default RegisterBox;
