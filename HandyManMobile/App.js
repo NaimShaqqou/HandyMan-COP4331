@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider, Center } from 'native-base';
 import { ActivityIndicator } from 'react-native';
@@ -112,28 +112,3 @@ export default function App() {
     </AppContext.Provider>
   );
 }
-
-// Context stuff, will use that to store jwt and see if user is logged in
-// const userSettings = {
-//   userData: '',
-//   isLoggedIn: false,
-//   jwtToken: '',
-//   userLogin,
-//   userLogout,
-// }
-
-// const userLogin = ({ jwtToken, userData }) => {
-//   setIsLoggedIn(true)
-//   setJwtToken({ jwtToken })
-//   setUserData({ userData })
-// }
-
-// const userLogout = () => {
-//   setIsLoggedIn(false)
-//   setJwtToken('')
-//   setUserData('')
-// }
-
-// jwtToken storage (need redux bc local storage doesn't work)
-//localStorage.setItem("user_data", JSON.stringify(user));
-//storage.storeToken(res);

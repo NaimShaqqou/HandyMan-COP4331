@@ -7,8 +7,6 @@ import CustomDrawer from '../components/CustomDrawer.js'
 import HomeScreen from '../screens/Home.js'
 import ProfileScreen from '../screens/Profile.js'
 
-import { AppContext } from '../components/AppContext.js'
-
 
 const Drawer = createDrawerNavigator();
 

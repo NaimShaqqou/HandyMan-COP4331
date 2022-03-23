@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import AppContext from './AppContext.js'
-import jwt_decode from "jwt-decode";
 import { useNavigation } from '@react-navigation/native'
 
 import { Button, Box, Center, Input, Icon, Heading, FormControl, Link, WarningOutlineIcon } from 'native-base'
@@ -36,7 +35,6 @@ const LoginBox = () => {
                 setValid(true);
                 console.log("login success!");
                 
-                var user = jwt_decode(res.jwtToken);
                 Login({jwtToken: res.jwtToken})
                 //console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
                 
