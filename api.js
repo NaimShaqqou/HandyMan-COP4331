@@ -1,4 +1,5 @@
 const { ObjectId } = require("mongodb");
+const axios = require('axios');
 
 // import schema
 const User = require("./models/user.js");
@@ -13,6 +14,7 @@ const { listeners } = require("./models/user.js");
 
 require("express");
 require("mongodb");
+require("dotenv")
 
 exports.setApp = function (app, client, cloudinaryParser) {
  
@@ -175,8 +177,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   });
 
+  // NOTE: Can't test this endpoint on local machine due to Google Api endpoint
   app.post("/api/add-service", async (req, res, next) => {
-    // incoming: userId, title, longitude, latitude, description, price, daysAvailable, category, jwtToken
+    // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
     // outgoing: serviceId, error, jwtToken
     var response;
 
@@ -184,8 +187,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       userId,
       title,
       imageUrls,
-      longitude,
-      latitude,
+      address,
       description,
       price,
       daysAvailable,
@@ -210,6 +212,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
+    let coordinates = await convertAddressToCoordinates(address)
+
     userId = ObjectId(userId)
 
     await Service.create(
@@ -217,8 +221,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
         UserId: userId,
         Title: title,
         Images: imageUrls,
-        Longitude: longitude,
-        Latitude: latitude,
+        Address: address,
+        Longitude: coordinates.lng.toString(),
+        Latitude: coordinates.lat.toString(),
         Description: description,
         Price: price,
         DaysAvailable: daysAvailable,
@@ -466,6 +471,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     })
   })
 
+  // Sends email to verify their account
   function verifyEmail(email, userId) {
 
     const sgMail = require('@sendgrid/mail')
@@ -485,7 +491,61 @@ exports.setApp = function (app, client, cloudinaryParser) {
       return(error)
     })
   }
+
+  // Helper function for getDistance()
+  var rad = function(x) {
+    return x * Math.PI / 180;
+  };
   
+  // Finds distance in meters between two coordinates. Uses Haversine formula
+  function getDistance(lat1, long1, lat2, long2) {
+    var R = 6378137; // Earth’s mean radius in meter
+    var latitudeDistance = rad(lat2 - lat1);
+    var longitudeDistance = rad(long2 - long1);
+    var a = Math.sin(latitudeDistance / 2) * Math.sin(latitudeDistance / 2) +
+      Math.cos(rad(lat1)) * Math.cos(rad(lat2)) *
+      Math.sin(longitudeDistance / 2) * Math.sin(longitudeDistance / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c;
+    return distance; 
+  };
+
+  // Returns services that are within maxDistance. (Assumes maxDistance is in miles)
+  function getServicesWithinDistance(services, location, maxDistance) {
+    let filteredServices = new Array();
+    maxDistanceInMeters = maxDistance * 1609.34
+
+    services.forEach((service) => {
+      let distance = getDistance(service.Latitude, service.Longitude, location.latitude, location.longitude)
+      if (distance <= maxDistanceInMeters) {
+        filteredServices.push(service)
+      }
+    })
+
+    return filteredServices;
+  }
+
+  // Returns coordinates = { lat, lng }
+  async function convertAddressToCoordinates(address) {
+    let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
+    let apiKey = process.env.GEOCODING_API_KEY
+    address = address.replace(' ', '+')
+
+    googleUrl = googleUrl +_address + '&key=' + apiKey;
+    let coordinates;
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = JSON.parse(response)
+        coordinates = result.geometry.location
+        console.log(coordinates);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return coordinates;
+  }
+
 //------------- These endpoints won't be called by the frontend. --------------------
 
   app.post("/api/forgot-password", async (req, res, next) => {
@@ -529,5 +589,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       }
     })
   })
+
 
 };
