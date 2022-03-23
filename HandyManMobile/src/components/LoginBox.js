@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import AppContext from './AppContext.js'
 import jwt_decode from "jwt-decode";
 import { useNavigation } from '@react-navigation/native'
 
 import { Button, Box, Center, Input, Icon, Heading, FormControl, Link, WarningOutlineIcon } from 'native-base'
 import { MaterialIcons } from "@native-base/icons"
+
+// to store user info in global variable
+//const context = useContext(AppContext)
 
 const LoginBox = () => {    
     // call the login api
@@ -29,12 +33,10 @@ const LoginBox = () => {
             } else {
                 setValid(true);
                 console.log("login success!");
-                var storage = require("../tokenStorage.js");
                 var user = jwt_decode(res.jwtToken);
-                
-                // jwtToken storage (need redux bc local storage doesn't work)
-                //localStorage.setItem("user_data", JSON.stringify(user));
-                //storage.storeToken(res);
+
+                // context.userLogin({jwtToken: res.jwtToken, userData:user})
+                // console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
 
                 // TODO: call navigation function here
                 goToHome();

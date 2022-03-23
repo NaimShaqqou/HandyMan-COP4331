@@ -1,14 +1,82 @@
 import 'react-native-gesture-handler';
+import React, { useState, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { NativeBaseProvider } from 'native-base';
+import { NativeBaseProvider, Center } from 'native-base';
+import { ActivityIndicator } from 'react-native';
 
 import Navigation from './src/navigation/navigation.js';
 
+// Context used to handle jwt things
+import AppContext from './src/components/AppContext.js'
+
 export default function App() {
+  const [userData, setUserData] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [jwtToken, setJwtToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const authContext = React.useMemo(() => ({
+    Login: () => {
+      setJwtToken('myToken');
+      setIsLoading(false);
+    },
+    Logout: () => {
+      setJwtToken(null);
+      setIsLoading(false);
+    },
+    Register: () => {
+      setJwtToken('myToken');
+      setIsLoading(false);
+    },
+  }));
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000)
+  }, [])
+
+  if ( isLoading ) {
+    return (
+      <NativeBaseProvider>
+        <Center flex={1}>
+          <ActivityIndicator size="large" />
+        </Center>
+      </NativeBaseProvider>
+    );
+  }
+
   return (
-    <NativeBaseProvider>
-      <Navigation />
-      <StatusBar style="auto" />
-    </NativeBaseProvider>
+    //<AppContext.provider value={authContext}>
+      <NativeBaseProvider>
+        <Navigation />
+        <StatusBar style="auto" />
+      </NativeBaseProvider>
+    //</AppContext.provider>
   );
 }
+
+// Context stuff, will use that to store jwt and see if user is logged in
+// const userSettings = {
+//   userData: '',
+//   isLoggedIn: false,
+//   jwtToken: '',
+//   userLogin,
+//   userLogout,
+// }
+
+// const userLogin = ({ jwtToken, userData }) => {
+//   setIsLoggedIn(true)
+//   setJwtToken({ jwtToken })
+//   setUserData({ userData })
+// }
+
+// const userLogout = () => {
+//   setIsLoggedIn(false)
+//   setJwtToken('')
+//   setUserData('')
+// }
+
+// jwtToken storage (need redux bc local storage doesn't work)
+//localStorage.setItem("user_data", JSON.stringify(user));
+//storage.storeToken(res);
