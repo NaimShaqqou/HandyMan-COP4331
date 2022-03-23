@@ -10,6 +10,8 @@ import { MaterialIcons } from "@native-base/icons"
 //const context = useContext(AppContext)
 
 const LoginBox = () => {    
+    const { Login } = React.useContext(AppContext);
+
     // call the login api
     const doLogin = async (event) => {
         event.preventDefault();
@@ -33,10 +35,10 @@ const LoginBox = () => {
             } else {
                 setValid(true);
                 console.log("login success!");
+                
                 var user = jwt_decode(res.jwtToken);
-
-                // context.userLogin({jwtToken: res.jwtToken, userData:user})
-                // console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
+                //Login({jwtToken: res.jwtToken, userData:user})
+                //console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
 
                 // TODO: call navigation function here
                 goToHome();
