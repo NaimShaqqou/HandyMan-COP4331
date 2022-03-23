@@ -12,7 +12,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper"
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -74,19 +75,35 @@ const LoginPage = () =>
             </Tabs>
           </Box>
         </Box>
-        <Box sx={{width:'100%'}}>
-          <TabPanel class='loginb' value={value} index={0}>
-            <LoginBox />
-          </TabPanel>
-        </Box>
-        <Box sx={{width:'100%'}}>
-          <TabPanel class='regisb' value={value} index={1}>
-            <RegisterBox />
-          </TabPanel>
-        </Box>
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <TabPanel value={value} index={0}>
+            <Paper style={classes.paper}>
+              <LoginBox />
+              </Paper>
+            </TabPanel>
+          </Grid>
+          <Grid item xs>
+            <TabPanel value={value} index={1}>
+            <Paper style={classes.paper}>
+              <RegisterBox />
+              </Paper>
+            </TabPanel>
+          </Grid>
+        </Grid>
       </div>
     </div>
   );
 };
-
+const classes = {
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: 20,
+    textAlign: "center",
+    backgroundColor: "white",
+    color: "black"
+  }
+};
 export default LoginPage;
