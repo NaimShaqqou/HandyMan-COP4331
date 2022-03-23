@@ -44,7 +44,7 @@ export default function App() {
       case 'REGISTER': 
         return {
           ...prevState,
-          userName: action.id,
+          //userName: action.id,
           jwtToken: action.token,
           isLoading: false,
         };
@@ -85,7 +85,7 @@ export default function App() {
         console.log(e)
       }
 
-      dispatch({ type: 'REGISTER', token: userToken});
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken});
     }, 1000)
   }, [])
 
