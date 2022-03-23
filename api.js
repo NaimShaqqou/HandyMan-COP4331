@@ -177,7 +177,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   });
 
-  // NOTE: To test endpoint on local machine must change to GEOCODING_API_KEY_LOCAL_TESTING in convertAddressToCoordinates() function
   app.post("/api/add-service", async (req, res, next) => {
     // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
     // outgoing: serviceId, error, jwtToken
@@ -533,10 +532,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     await axios(googleUrl)
       .then((response) => {
-        console.log(response)
-        console.log(response.data)
         let result = response.data.results[0]
-        console.log(reslut)
+        console.log(result)
         coordinates = result.geometry.location
         console.log(coordinates);
       })
