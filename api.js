@@ -544,7 +544,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
   }
 
 //------------- These endpoints won't be called by the frontend. --------------------
-
   app.post("/api/forgot-password", async (req, res, next) => {
     let encryptedEmail = req.body.email
     let email = crypto.decrypt_string(encryptedEmail);
