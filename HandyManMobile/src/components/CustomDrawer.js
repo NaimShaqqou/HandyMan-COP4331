@@ -1,13 +1,12 @@
 import React from 'react'
+import AppContext from './AppContext.js'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Box, Text, Image, Button, Icon } from 'native-base'
 import { ImageBackground } from 'react-native'
 import { MaterialIcons } from "@native-base/icons"
 
-import { AppContext } from './AppContext.js'
-
 const CustomDrawer = (props) => {
-    //const { Logout } = React.useContext(AppContext);
+    const { Logout } = React.useContext(AppContext);
 
     return (
         <Box flex="1">
@@ -37,7 +36,7 @@ const CustomDrawer = (props) => {
                     }}
                     leftIcon={<Icon as={MaterialIcons} name="logout" />}
                     py='15px'
-                    //onPress={() => {Logout()}}
+                    onPress={() => {Logout()}}
                 >
                     Sign Out
                 </Button>

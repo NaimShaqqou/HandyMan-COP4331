@@ -9,7 +9,7 @@ import { MaterialIcons } from "@native-base/icons"
 // to store user info in global variable
 //const context = useContext(AppContext)
 
-const LoginBox = () => {    
+const LoginBox = () => {
     const { Login } = React.useContext(AppContext);
 
     // call the login api
@@ -34,17 +34,17 @@ const LoginBox = () => {
                 setMsg(res.error);
             } else {
                 setValid(true);
+                setLoading(false);
                 console.log("login success!");
                 
                 var user = jwt_decode(res.jwtToken);
-                //Login({jwtToken: res.jwtToken, userData: user})
+                Login({jwtToken: res.jwtToken})
                 //console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
 
                 // TODO: call navigation function here
                 goToHome();
             }
 
-            setLoading(false);
         } catch (e) {
             console.log(e.toString());
             setLoading(false);

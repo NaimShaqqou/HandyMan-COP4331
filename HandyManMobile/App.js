@@ -10,35 +10,86 @@ import AppStack from './src/navigation/AppStack.js'
 
 // Context used to handle jwt things
 import AppContext from './src/components/AppContext.js'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
-  const [userData, setUserData] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [jwtToken, setJwtToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const initialLoginState = {
+    isLoading: true,
+    userName: null,
+    jwtToken: null,
+  };
+
+  const loginReducer = (prevState, action) => {
+    switch( action.type ) {
+      case 'RETRIEVE_TOKEN': 
+        return {
+          ...prevState,
+          jwtToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGIN': 
+        return {
+          ...prevState,
+          //userName: action.id,
+          jwtToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGOUT': 
+        return {
+          ...prevState,
+          //userName: null,
+          jwtToken: null,
+          isLoading: false,
+        };
+      case 'REGISTER': 
+        return {
+          ...prevState,
+          userName: action.id,
+          jwtToken: action.token,
+          isLoading: false,
+        };
+    }
+  };
+
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
-    Login: () => {
-      setJwtToken('myToken');
-      setIsLoading(false);
+    Login: async({ jwtToken }) => {
+      try {
+        await AsyncStorage.setItem('jwtToken', jwtToken)
+      } catch(e) {
+        console.log(e)
+      }
+      dispatch({ type: 'LOGIN', token: jwtToken})
     },
-    Logout: () => {
-      setJwtToken(null);
-      setIsLoading(false);
+    Logout: async() => {
+      try {
+        await AsyncStorage.removeItem('jwtToken')
+      } catch(e) {
+        console.log(e)
+      }
+      dispatch({ type: 'LOGOUT' })
     },
     Register: () => {
       setJwtToken('myToken');
       setIsLoading(false);
     },
-  }));
+  }), []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
+    setTimeout(async() => {
+      let userToken = null
+      try {
+        userToken = await AsyncStorage.getItem('jwtToken')
+      } catch(e) {
+        console.log(e)
+      }
+
+      dispatch({ type: 'REGISTER', token: userToken});
     }, 1000)
   }, [])
 
-  if ( isLoading ) {
+  if ( loginState.isLoading ) {
     return (
       <NativeBaseProvider>
         <Center flex={1}>
@@ -52,7 +103,7 @@ export default function App() {
     <AppContext.Provider value={authContext}>
       <NativeBaseProvider>
         <NavigationContainer>
-          { jwtToken != null ? <AppStack /> : <AuthStack /> }
+          { loginState.jwtToken != null ? <AppStack /> : <AuthStack /> }
         </NavigationContainer>
 
         <StatusBar style="auto" />

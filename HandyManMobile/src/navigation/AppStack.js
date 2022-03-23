@@ -7,12 +7,15 @@ import CustomDrawer from '../components/CustomDrawer.js'
 import HomeScreen from '../screens/Home.js'
 import ProfileScreen from '../screens/Profile.js'
 
+import { AppContext } from '../components/AppContext.js'
+
+
 const Drawer = createDrawerNavigator();
 
 const AppStack = () => {
   return (
     <Drawer.Navigator 
-        drawerContent={props => <CustomDrawer {...props} />}
+        drawerContent={props => <CustomDrawer { ...props } />}
         screenOptions={{
             drawerActiveBackgroundColor: '#06b6d4',
             drawerActiveTintColor: '#fff',
@@ -35,7 +38,7 @@ const AppStack = () => {
             )
         }} />
     </Drawer.Navigator>
-  )
+  );
 }
 
 export default AppStack
