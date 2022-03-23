@@ -2,7 +2,19 @@ import React, { useState } from 'react'
 import AppContext from './AppContext.js'
 import { useNavigation } from '@react-navigation/native'
 
-import { Button, Box, Center, Input, Icon, Heading, FormControl, Link, WarningOutlineIcon } from 'native-base'
+import { 
+    Button, 
+    Box,
+    Center, 
+    Input, 
+    Icon, 
+    Heading, 
+    FormControl, 
+    Link, 
+    WarningOutlineIcon, 
+    Modal,
+    Text
+} from 'native-base'
 import { MaterialIcons } from "@native-base/icons"
 
 // to store user info in global variable
@@ -27,7 +39,6 @@ const LoginBox = () => {
             });
             var res = JSON.parse(await response.text());
 
-            // TODO: display errors in app
             if (res.error != null) {
                 setValid(false);
                 setMsg(res.error);
@@ -36,10 +47,6 @@ const LoginBox = () => {
                 console.log("login success!");
                 
                 Login({jwtToken: res.jwtToken})
-                //console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
-                
-                // TODO: call navigation function here
-                goToHome();
             }
             
             setLoading(false);
@@ -54,16 +61,29 @@ const LoginBox = () => {
     // refer to the "navigation" folder for more info
     const navigation = useNavigation();
 
-    const goToHome = () => {
-        // this takes the user to the home page
-        navigation.navigate('Home');
-    }
+    // sends a reset password email to the user
+    const onForgotPasswordPressed = async (event) => {
+        event.preventDefault();
 
-    const onForgotPasswordPressed = () => {
         console.warn("Forgot Password Pressed");
+        setShowModal(false);
 
-        // TODO: create forgot password page
-        // navigate to that page from here
+        var obj = { email: email }
+        var js = JSON.stringify(obj);
+
+        try {
+            const response = await fetch('https://myhandyman1.herokuapp.com/api/forgot-password-email', {
+                method: 'POST',
+                body: js,
+                headers: { "Content-Type": "application/json" }
+            });
+
+            var res = JSON.parse(await response.text());
+            console.warn(res)
+        } catch (e) {
+            console.log(e.toString());
+            return;
+        }
     }
 
     const onRegisterTransition = () => {
@@ -72,14 +92,17 @@ const LoginBox = () => {
 
     // username: contains username typed by the user
     // password: contains password typed by the user
+    // email: contains the email to reset the password
     const [username, setUsername] = useState('');
     const [pass, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     
     // form things
     const [show, setShow] = useState(false);
     const [valid, setValid] = useState(true);
     const [loading, setLoading] = useState(false);
     const [msg, setMsg] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
 
     return (
@@ -90,6 +113,40 @@ const LoginBox = () => {
         <Heading mt="1" fontWeight="medium" size="sm">
           Login to continue! 
         </Heading>
+
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+            <Modal.Content>
+                <Modal.Header>Reset your Password</Modal.Header>
+                <Modal.Body>
+                    <Text>
+                        Please enter the email that is associated with your account.
+                    </Text>
+                    <Text>
+                        After clicking the "Confirm" button, you will receive an email
+                        with instructions on how to reset your password. 
+                    </Text>
+                    <FormControl mt='10px'>
+                        <Input 
+                            variant='underlined' 
+                            placeholder='Email'
+                            InputLeftElement={<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />}
+                            size='xl'
+                            onChangeText={newEmail => setEmail(newEmail)}
+                        />
+                    </FormControl>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button.Group space={2}>
+                        <Button variant="ghost" colorScheme="blueGray" onPress={() => {setShowModal(false)}}>
+                            Cancel
+                        </Button>
+                        <Button onPress={ onForgotPasswordPressed }>
+                            Confirm
+                        </Button>
+                    </Button.Group>
+                </Modal.Footer>
+            </Modal.Content>
+        </Modal>
 
         <Center mt={10} w='100%'>
             <FormControl isInvalid={valid? false : true}>
@@ -127,7 +184,7 @@ const LoginBox = () => {
             }}
               alignSelf='flex-end'
               mt='1'
-              onPress={ onForgotPasswordPressed }
+              onPress={() => setShowModal(true)}
             >
               Forgot Password?
             </Link>
@@ -139,6 +196,12 @@ const LoginBox = () => {
                 mt={6}
                 isLoading={loading ? true : false}
                 isLoadingText='Logging in...'
+                _loading={{
+                    bg: "primary.400:alpha.70",
+                    _text: {
+                      color: "coolGray.700"
+                    }
+                }}
             >
                 Login
             </Button>
