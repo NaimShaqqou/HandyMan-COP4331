@@ -212,7 +212,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    let coordinates = convertAddressToCoordinates(address)
+    let coordinates = await convertAddressToCoordinates(address)
 
     userId = ObjectId(userId)
 
@@ -526,7 +526,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   }
 
   // Returns coordinates = { lat, lng }
-  function convertAddressToCoordinates(address) {
+  async function convertAddressToCoordinates(address) {
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
     address = address.replace(' ', '+')
