@@ -177,12 +177,11 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   });
 
-  // NOTE: Can't test this endpoint on local machine due to Google Api endpoint
+  // NOTE: To test endpoint on local machine must change to GEOCODING_API_KEY_LOCAL_TESTING in convertAddressToCoordinates() function
   app.post("/api/add-service", async (req, res, next) => {
     // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
     // outgoing: serviceId, error, jwtToken
     var response;
-
     let {
       userId,
       title,
@@ -213,7 +212,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
 
     let coordinates = await convertAddressToCoordinates(address)
-
     userId = ObjectId(userId)
 
     await Service.create(
@@ -529,14 +527,13 @@ exports.setApp = function (app, client, cloudinaryParser) {
   async function convertAddressToCoordinates(address) {
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
-    address = address.replace(' ', '+')
-
-    googleUrl = googleUrl +_address + '&key=' + apiKey;
+    address = address.replaceAll(' ', '+')
+    googleUrl = googleUrl + address + '&key=' + apiKey;
     let coordinates;
 
     await axios(googleUrl)
       .then((response) => {
-        let result = JSON.parse(response)
+        let result = response.data.results[0]
         coordinates = result.geometry.location
         console.log(coordinates);
       })
