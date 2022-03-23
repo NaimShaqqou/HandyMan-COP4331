@@ -533,7 +533,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     await axios(googleUrl)
       .then((response) => {
+        console.log(response)
+        console.log(response.data)
         let result = response.data.results[0]
+        console.log(reslut)
         coordinates = result.geometry.location
         console.log(coordinates);
       })
