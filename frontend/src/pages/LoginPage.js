@@ -73,12 +73,14 @@ const LoginPage = () =>
               <Tab label="Register" {...a11yProps(1)} />
             </Tabs>
           </Box>
-
-          <TabPanel value={value} index={0}>
+        </Box>
+        <Box sx={{width:'100%'}}>
+          <TabPanel class='loginb' value={value} index={0}>
             <LoginBox />
           </TabPanel>
-          
-          <TabPanel value={value} index={1} style={{textAlign: 'right'}}>
+        </Box>
+        <Box sx={{width:'100%'}}>
+          <TabPanel class='regisb' value={value} index={1}>
             <RegisterBox />
           </TabPanel>
         </Box>
