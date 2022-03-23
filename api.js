@@ -177,12 +177,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   });
 
-  // NOTE: Can't test this endpoint on local machine due to Google Api endpoint
   app.post("/api/add-service", async (req, res, next) => {
     // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
     // outgoing: serviceId, error, jwtToken
     var response;
-
     let {
       userId,
       title,
@@ -213,7 +211,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
 
     let coordinates = await convertAddressToCoordinates(address)
-
     userId = ObjectId(userId)
 
     await Service.create(
@@ -511,12 +508,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
   };
 
   // Returns services that are within maxDistance. (Assumes maxDistance is in miles)
-  function getServicesWithinDistance(services, location, maxDistance) {
+  function getServicesWithinDistance(services, coordinates, maxDistance) {
     let filteredServices = new Array();
     maxDistanceInMeters = maxDistance * 1609.34
 
     services.forEach((service) => {
-      let distance = getDistance(service.Latitude, service.Longitude, location.latitude, location.longitude)
+      let distance = getDistance(service.Latitude, service.Longitude, coordinates.latitude, coordinates.longitude)
       if (distance <= maxDistanceInMeters) {
         filteredServices.push(service)
       }
@@ -529,14 +526,14 @@ exports.setApp = function (app, client, cloudinaryParser) {
   async function convertAddressToCoordinates(address) {
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
-    address = address.replace(' ', '+')
-
-    googleUrl = googleUrl +_address + '&key=' + apiKey;
+    address = address.replaceAll(' ', '+')
+    googleUrl = googleUrl + address + '&key=' + apiKey;
     let coordinates;
 
     await axios(googleUrl)
       .then((response) => {
-        let result = JSON.parse(response)
+        let result = response.data.results[0]
+        console.log(result)
         coordinates = result.geometry.location
         console.log(coordinates);
       })
@@ -547,7 +544,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
   }
 
 //------------- These endpoints won't be called by the frontend. --------------------
-
   app.post("/api/forgot-password", async (req, res, next) => {
     let encryptedEmail = req.body.email
     let email = crypto.decrypt_string(encryptedEmail);
