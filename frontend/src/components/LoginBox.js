@@ -11,6 +11,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
+import Paper from "@mui/material/Paper"
+import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
 
 function LoginBox() {
@@ -74,66 +76,122 @@ function LoginBox() {
   };
 
   return (
-    <div className="loginbox">
-      <div className="loginDiv">
-        <form onSubmit={doLogin}>
-          <h3>Login to continue!</h3>
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-            {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
-            <Input
-              id="loginUsername"
-              type='text'
-              value={values.username}
-              onChange={handleChange('username')}
-              placeholder="Username"
-              startAdornment={
-                <InputAdornment position="start">
-                  <AccountCircle />
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+    // <div className="loginbox">
+    <Box style={classes.paper} sx={{
+      // width: {
+      //   mobile: 100,
+      //   laptop: 300,
+      //   desktop: 720,
+      // },
+      // maxHeight: { xs: 500, md: 700 },
+      // height: 1000,
+      minHeight: {
+        sm: 300,
+        md: 400 
+      },
+      // maxWidth: 500,
+      // minWidth: 500,
+      // maxWidth: {
+      //   sx: true,
+      //   md: 500
+      // },
+      minWidth: {
+        sm: 400,
+        md: 500
+      },
+      // display: 'flex',
+      // flexDirection: { xs: 'column', md: 'row' },
+      // alignItems: 'center',
+      // bgcolor: 'background.paper',
+      // overflow: 'hidden',
+      // borderRadius: '12px',
+      // boxShadow: 1,
+      // fontWeight: 'bold',
+    }}>
 
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-            {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
-            <Input
-              id="loginPassword"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChange('password')}
-              placeholder="Password"
-              startAdornment={
-                <InputAdornment position="start">
-                  <LockIcon />
-                </InputAdornment>
-              }
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <p>
-            <a href="https://www.google.com">Forgot Password?</a>
-          </p>
+      <form onSubmit={doLogin}>
+        <h3>Login to continue!</h3>
+        <FormControl sx={classes.text} variant="standard">
+          {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
+          <Input
+            id="loginUsername"
+            type='text'
+            value={values.username}
+            onChange={handleChange('username')}
+            placeholder="Username"
+            startAdornment={
+              <InputAdornment position="start">
+                <AccountCircle />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
 
-          <span id="loginResult">{message}</span>
+        <br />
 
-          <p></p>
+        <FormControl sx={classes.text} variant="standard">
+          {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
+          <Input
+            id="loginPassword"
+            type={values.showPassword ? 'text' : 'password'}
+            value={values.password}
+            onChange={handleChange('password')}
+            placeholder="Password"
+            startAdornment={
+              <InputAdornment position="start">
+                <LockIcon />
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <p>
+          <a href="https://www.google.com">Forgot Password?</a>
+        </p>
 
-          <Button id="loginButton" variant="contained" type="submit">Log in</Button>
-          <p className="alignbot">New to Handler? <a href="https://www.google.com">Create a New Account!</a></p>
-        </form>
-      </div>
-    </div>
+        <span id="loginResult">{message}</span>
+
+        <p></p>
+
+        <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+
+        <br />
+        <br />
+        <span>New to Handler?</span>
+        <br />
+        <a href="https://www.google.com">Create a New Account!</a>
+      </form>
+    </Box>
+    // </div>
   );
 }
+
+const classes = {
+  paper: {
+    // padding: 20,
+    textAlign: "center",
+    // color: "black",
+    borderRadius: "40px",
+    boxShadow: "0px 4px 35px rgba(0, 0, 0, 0.08)",
+    padding: "10px 10px 10px 10px",
+    // minHeight: {xs: 500, md: 700 },
+    // "width": "700px",
+    // "height": "500px",
+  },
+  text: {
+    m: 1,
+    width: '30ch',
+  }
+};
 
 export default LoginBox;

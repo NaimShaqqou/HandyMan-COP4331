@@ -6,7 +6,6 @@ import LoginBox from '../components/LoginBox';
 import RegisterBox from '../components/RegisterBox';
 import ResponsiveAppBar from '../components/NavBar';
 import '../LoginPage.css';
-import RegisterBox2 from '../components/RegisterBox2';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -14,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper"
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -75,19 +75,17 @@ const LoginPage = () =>
             </Tabs>
           </Box>
         </Box>
+
         <Grid container spacing={2}>
           <Grid item xs>
             <TabPanel value={value} index={0}>
-            <Paper style={classes.paper}>
               <LoginBox />
-              </Paper>
             </TabPanel>
           </Grid>
+
           <Grid item xs>
             <TabPanel value={value} index={1}>
-            <Paper style={classes.paper}>
               <RegisterBox />
-              </Paper>
             </TabPanel>
           </Grid>
         </Grid>
@@ -95,6 +93,7 @@ const LoginPage = () =>
     </div>
   );
 };
+
 const classes = {
   root: {
     flexGrow: 1
@@ -106,4 +105,5 @@ const classes = {
     color: "black"
   }
 };
+
 export default LoginPage;
