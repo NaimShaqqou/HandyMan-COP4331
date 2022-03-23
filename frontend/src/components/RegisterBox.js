@@ -21,6 +21,12 @@ function RegisterBox() {
 
   const doRegister = async (event) => {
     event.preventDefault();
+
+    if (values.password !== values.rpassword) {
+      alert("Passwords do not match");
+      setMessage("Passwords do not match");
+      return;
+    }
     
     var obj = {
       email: values.email,
@@ -41,6 +47,9 @@ function RegisterBox() {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
+
+      alert('Account Created Successfully!');
+      setMessage("Account Created Successfully!");
       
       // if ("jwtToken" in res) {
       //   alert('login success!');
