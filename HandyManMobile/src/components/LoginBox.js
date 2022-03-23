@@ -37,7 +37,7 @@ const LoginBox = () => {
                 console.log("login success!");
                 
                 var user = jwt_decode(res.jwtToken);
-                //Login({jwtToken: res.jwtToken, userData:user})
+                //Login({jwtToken: res.jwtToken, userData: user})
                 //console.log("UserData: " + context.userData + "\njwtToken: " + context.jwtToken)
 
                 // TODO: call navigation function here

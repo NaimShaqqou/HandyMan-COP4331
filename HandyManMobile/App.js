@@ -52,7 +52,7 @@ export default function App() {
     <AppContext.Provider value={authContext}>
       <NativeBaseProvider>
         <NavigationContainer>
-          { jwtToken == null ? <AppStack /> : <AuthStack /> }
+          { jwtToken != null ? <AppStack /> : <AuthStack /> }
         </NavigationContainer>
 
         <StatusBar style="auto" />
