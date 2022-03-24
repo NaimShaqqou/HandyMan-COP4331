@@ -86,19 +86,21 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     // duplicate username/email
 
-    User.findOne(email, function(err, user) {
+    User.findOne({Email : email}, function(err, user) {
       if (err) {
-        return res.status(200).json({error: err.message});
+        return void res.status(200).json({error: err.message});
       } else if (user) {
-          return res.status(200).json({ error: "Email already exists. Please enter a different email." })
+        return void res.status(200).json({ error: "Email already exists. Please enter a different email." });
       }
     });
 
-    User.findOne(username, function(err, user) {
+    console.log('code still executes for some reason');
+
+    User.findOne({Username: username}, function(err, user) {
       if (err) {
-        return res.status(200).json({error: err.message});
+        return void res.status(200).json({error: err.message});
       } else if (user) {
-          return res.status(200).json({ error: "Username already exists. Please enter a different username." })
+        return void res.status(200).json({ error: "Username already exists. Please enter a different username." });
       }
     });
 
@@ -122,7 +124,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
             id : user._id.valueOf(),
             error: "Successfully added user!"
           };
-          //verifyEmail(email, user._id.valueOf());
+          verifyEmail(email, user._id.valueOf());
         }
         res.status(200).json(response);
       }
@@ -183,6 +185,70 @@ exports.setApp = function (app, client, cloudinaryParser) {
       res.status(200).json(ret);
     });
   });
+
+  app.post("/api/edit-service", async (req, res, next) => {
+    // incoming: userId, serviceId, title, address, description, price, daysAvailable, category, jwtToken
+    // outgoing: serviceId, error, jwtToken
+    var response;
+    let {
+      userId,
+      serviceId,
+      title,
+      imageUrls,
+      address,
+      description,
+      price,
+      daysAvailable,
+      category,
+      jwtToken,
+    } = req.body;
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    let coordinates = await convertAddressToCoordinates(address);
+    userId = ObjectId(userId);
+
+    Service.findOneAndUpdate({ UserId: userId, _id: serviceId }, 
+      {
+        UserId: userId,
+        Title: title,
+        Images: imageUrls,
+        Address: address,
+        Longitude: coordinates.location.lng.toString(),
+        Latitude: coordinates.location.lat.toString(),
+        Description: description,
+        Price: price,
+        DaysAvailable: daysAvailable,
+        Category: category
+      }, 
+      function(err, service) {
+      if (err) {
+        response = { error: err.message, refreshedToken: refreshedToken };
+      } else if (service == null) {
+        response = { error: "Wrong Service ID", refreshedToken: refreshedToken };
+      } else {
+        response = { ServiceId: service._id.valueOf(), error: "Successfully edited service", refreshedToken: refreshedToken};
+      }
+      console.log(service);
+      res.status(200).json(response);
+    });
+  });
+
 
   app.post("/api/add-service", async (req, res, next) => {
     // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
@@ -251,8 +317,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
         res.status(200).json(response);
       }
     );
-
-    
   });
 
   app.post("/api/delete-service", async (req, res, next) => {
