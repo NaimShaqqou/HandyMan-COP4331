@@ -11,7 +11,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
-import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
 
@@ -42,12 +41,10 @@ function LoginBox(props) {
         alert('login success!');
         setMessage("Logged in");
         var storage = require("../tokenStorage.js");
-        var user = jwt_decode(res["jwtToken"]);
-        localStorage.setItem("user_data", JSON.stringify(user));
+        // var user = jwt_decode(res["jwtToken"]);
+        // localStorage.setItem("jwtToken", user);
+        // localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res["jwtToken"]);
-        // console.log(user['userId']);
-        // myContext.setUserId(user['userId']);
-        // console.log(user);
         window.location.href = "/";
       } else {
         alert('wrong credentials');

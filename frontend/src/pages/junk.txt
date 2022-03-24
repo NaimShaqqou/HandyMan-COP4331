@@ -51,3 +51,42 @@
           </Search>
           </Toolbar>
           </AppBar>
+
+
+
+
+
+
+
+
+
+
+      <Container maxWidth="sm">
+          <Autocomplete
+          freeSolo
+          id="free-solo-demo"
+          options={top100Films.map((option) => option.title)}
+          renderInput={
+            (params) => <TextField {...params}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchIcon/>
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            label="Search Services" variant="outlined"/>
+            }
+
+          />
+
+          <InputBase
+            autocomplete=""
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search Services"
+            inputProps={{ 'aria-label': 'search services' }}
+            options={top100Films.map((option) => option.title)}
+          />
+      </Container>
