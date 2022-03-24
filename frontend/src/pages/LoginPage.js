@@ -80,7 +80,7 @@ const LoginPage = () =>
           
           <Grid item xs>
             <TabPanel value={value} index={0}>
-              <LoginBox class="padding-top:20px"/>
+              <LoginBox func={setValue}/>
             </TabPanel>
           </Grid>
           

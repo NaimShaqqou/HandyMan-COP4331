@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import './App.css';
@@ -9,6 +9,7 @@ import TestPage from './pages/TestPage';
 import TestImagePage from './pages/TestImagePage';
 
 function App() {
+
   return (
     <Router>
       <Switch>
