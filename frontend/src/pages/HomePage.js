@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import GoogleMapReact from 'google-map-react';
 import ResponsiveAppBar from '../components/NavBar';
 
 import {
@@ -19,6 +19,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search"
 
 // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
+
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
@@ -147,8 +148,10 @@ const top100Films = [
 ];
 
 const HomePage = () =>
-{
+{const [center, setCenter] = useState({lat: 11.0168, lng: 76.9558 });
+const [zoom, setZoom] = useState(11);
   return(
+    
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
@@ -164,7 +167,11 @@ const HomePage = () =>
             }
           />
       </Container>
+      <div className="google-map-code">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.9114859634215!2d-81.20224858452536!3d28.6024320921926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e7685d6a0a495f%3A0x5fd59b92b3c79bab!2sUniversity%20of%20Central%20Florida!5e0!3m2!1sen!2sus!4v1648162123608!5m2!1sen!2sus" width="600" height="450" frameboard ="0" style={{border:0}} allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        </div>
     </div>
+    
   );
 }
 
