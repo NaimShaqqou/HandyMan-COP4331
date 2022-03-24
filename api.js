@@ -436,24 +436,36 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/forgot-password-email", async (req, res, next) => {
     let email = req.body.email
-    encryptedEmail = crypto.encrypt_string(email)
+
+    User.findOne({Email: email}, function(err, user) {
+      if (err) {
+        return res.status(200).json({error: err.message});
+      } else if (user) {
+        encryptedEmail = crypto.encrypt_string(email)
     
-    const sgMail = require('@sendgrid/mail')
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-    const msg = {
-      to: email, 
-      from: 'emailverifysendgrid@gmail.com', 
-      subject: 'Change HandyMan account password',
-      html: '<strong>Click this link to change your password: </strong><a href=' + url + 'api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
-    }
-    sgMail
-    .send(msg)
-    .then(() => {
-      res.status(200).json("Email sent")
-    })
-    .catch((error) => {
-      res.status(200).json(error)
-    })
+        const sgMail = require('@sendgrid/mail')
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        const msg = {
+          to: email, 
+          from: 'emailverifysendgrid@gmail.com', 
+          subject: 'Change HandyMan account password',
+          html: '<strong>Click this link to change your password: </strong><a href=' + url + 'api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
+        }
+        sgMail
+        .send(msg)
+        .then(() => {
+          return res.status(200).json({ success: "Email sent", error: "" })
+        })
+        .catch((error) => {
+          return res.status(200).json({error : error.message, success: ""})
+        })
+      } else {
+        return res.status(200).json({error : "Email is not associated with an account.", success: ""})
+      }
+    });
+
+
+    
   })
 
   app.post("/api/autocomplete-place", async (req, res, next) => {
