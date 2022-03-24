@@ -128,8 +128,8 @@ function RegisterBox() {
       //   md: 500
       // },
       minWidth: {
-        sm: true,
-        md: 500
+        sm: 385,
+        md: 550
       },
       // display: 'flex',
       // flexDirection: { xs: 'column', md: 'row' },
@@ -143,7 +143,7 @@ function RegisterBox() {
       <div className="loginDiv">
         <form onSubmit={doRegister}>
           <h3>Create an Account</h3>
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+          <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="registerFirstName"
               type='text'
@@ -153,7 +153,7 @@ function RegisterBox() {
             />
           </FormControl>
 
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+          <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="registerLastName"
               type='text'
@@ -163,7 +163,7 @@ function RegisterBox() {
             />
           </FormControl>
 
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+          <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="registerUsername"
               type='text'
@@ -172,8 +172,16 @@ function RegisterBox() {
               placeholder="Username"
             />
           </FormControl>
-
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+          <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+            <Input
+              id="registerEmail"
+              type='text'
+              value={values.email}
+              onChange={handleChange('email')}
+              placeholder="Email"
+            />
+          </FormControl>
+          <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="loginPassword"
               type={values.showPassword ? 'text' : 'password'}
@@ -194,7 +202,7 @@ function RegisterBox() {
             />
           </FormControl>
 
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
+          <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="rloginPassword"
               type={values.rshowPassword ? 'text' : 'password'}
@@ -215,15 +223,7 @@ function RegisterBox() {
             />
           </FormControl>
 
-          <FormControl sx={{ m: 1, width: '30ch' }} variant="standard">
-            <Input
-              id="registerEmail"
-              type='text'
-              value={values.email}
-              onChange={handleChange('email')}
-              placeholder="Email"
-            />
-          </FormControl>
+          
           <br /><br />
           <span id="registerResult">{message}</span>
 
@@ -245,7 +245,7 @@ const classes = {
     // color: "black",
     borderRadius: "40px",
     boxShadow: "0px 4px 35px rgba(0, 0, 0, 0.08)",
-    padding: "10px 10px 10px 10px",
+    padding: "10px 00px 30px 10px",
     // minHeight: {xs: 500, md: 700 },
     // "width": "700px",
     // "height": "500px",

@@ -76,12 +76,14 @@ const LoginPage = () =>
           </Box>
         </Box>
 
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
+          
           <Grid item xs>
             <TabPanel value={value} index={0}>
-              <LoginBox />
+              <LoginBox class="padding-top:20px"/>
             </TabPanel>
           </Grid>
+          
 
           <Grid item xs>
             <TabPanel value={value} index={1}>
