@@ -154,12 +154,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
         try {
           const token = require("./createJWT.js");
-          ret = { error: null, jwtToken: token.createToken(fn, ln, id)};
+          ret = { error: "", jwtToken: token.createToken(fn, ln, id)};
         } catch (e) {
-          ret = { error: e.message };
+          ret = { error: e.message, jwtToken: ""};
         }
       } else {
-        ret = { error: "Incorrect credentials" };
+        ret = { error: "Incorrect credentials", jwtToken: ""};
       }
       res.status(200).json(ret);
     });
@@ -225,7 +225,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           response = {
             serviceId: objectInserted._id.valueOf(),
             refreshedToken: refreshedToken,
-            error: null
+            error: ""
           };
         }
         console.log(objectInserted)
@@ -275,7 +275,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           response = {
             deletedServiceCount: result.deletedCount,
             refreshedToken: refreshedToken,
-            error: null
+            error: ""
           };
         }
         res.status(200).json(response);
@@ -322,7 +322,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       } else if (objectReturned == null) {
         response = { error: "Wrong password", refreshedToken: refreshedToken };
       } else {
-        response = {refreshedToken: refreshedToken, error: null};
+        response = {refreshedToken: refreshedToken, error: ""};
       }
       console.log(objectReturned)
       res.status(200).json(response);
@@ -454,6 +454,30 @@ exports.setApp = function (app, client, cloudinaryParser) {
     .catch((error) => {
       res.status(200).json(error)
     })
+  })
+
+  app.post("/api/autocomplete-place", async (req, res, next) => {
+    let input = req.body.input
+    let googleUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
+    let apiKey = process.env.PLACES_API_KEY
+    let predictions = new Array()
+
+    input = input.replaceAll(' ', '+')
+    googleUrl = googleUrl + input + "&components=country:us&types=(regions)&key=" + apiKey
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = response.data.predictions
+        result.forEach((place) => {
+          predictions.push(place.description)
+        })
+        console.log(predictions)
+        res.status(200).json({predictions: predictions, error: ""})
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({ error: error.message, predictions: predictions})
+      });
   })
 
   // Sends email to verify their account
