@@ -1,15 +1,11 @@
 import React from 'react';
 
-import PageTitle from '../components/PageTitle';
-import LoggedInName from '../components/LoggedInName';
-import CardUI from '../components/CardUI';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Autocomplete from '@mui/material/Autocomplete';
 import ResponsiveAppBar from '../components/NavBar';
 
 import {
+  TextField,
+  Autocomplete,
+  Container,
   styled,
   alpha,
   InputBase,
@@ -158,17 +154,16 @@ const HomePage = () =>
       <h1>Handler</h1>
       <h2>Hello userId: {localStorage.getItem('user_data')}</h2>
 
-          <Box sx={classes.box}>
-            <Autocomplete
-            freeSolo
-            id="free-solo-demo"
-            options={top100Films.map((option) => option.title)}
-            renderInput={
-              (params) => <TextField {...params} label="Search Services" variant="outlined"/>
-              }
-            />
-            <SearchIcon style={{ cursor:"pointer", display:"inline", padding:"17px"}}/>
-           </Box>
+      <Container maxWidth="sm">
+          <Autocomplete
+          freeSolo
+          id="free-solo-demo"
+          options={top100Films.map((option) => option.title)}
+          renderInput={
+            (params) => <TextField {...params} label="Search Services" variant="outlined"/>
+            }
+          />
+      </Container>
     </div>
   );
 }
@@ -177,10 +172,10 @@ const classes = {
   box: {
     width: 500,
     // padding: 20,
-    textAlign: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    color: "black"
+    // textAlign: "center",
+    // justifyContent: "center",
+    // backgroundColor: "blue",
+    // color: "black"
   }
 };
 
