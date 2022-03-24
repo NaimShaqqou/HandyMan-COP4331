@@ -1,0 +1,53 @@
+ <Box sx={classes.box}>
+        
+          <Paper
+      component="form"
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+    >
+      <IconButton sx={{ p: '10px' }} aria-label="menu">
+        <MenuIcon />
+      </IconButton>
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search Services"
+        inputProps={{ 'aria-label': 'search services' }}
+        options={top100Films.map((option) => option.title)}
+      />
+      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+     
+    </Paper>
+      </Box>
+
+      <Autocomplete
+          freeSolo
+          id="free-solo-demo"
+          options={top100Films.map((option) => option.title)}
+          renderInput={(params) => <TextField {...params} label="Search Services" />}
+        />
+        <br /> <br />
+        <AppBar color="transparent" position="static">
+        <Toolbar
+          sx={{
+            justifyContent: "space-between"
+          }}
+        >
+        <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search"
+              inputProps={{ "aria-label": "search" }}
+              options={top100Films.map((option) => option.title)}
+            />
+          <Autocomplete
+            freeSolo
+            id="free-solo-demo"
+            options={top100Films.map((option) => option.title)}
+            renderInput={(params) => <TextField {...params} label="Search Services" />}
+          />
+          </Search>
+          </Toolbar>
+          </AppBar>
