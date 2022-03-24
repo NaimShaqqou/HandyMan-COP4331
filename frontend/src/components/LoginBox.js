@@ -15,8 +15,10 @@ import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
 
-function LoginBox() {
+function LoginBox(props) {
   var bp = require("./Path.js");
+
+  // console.log(props);
 
   const [message, setMessage] = useState("");
 
@@ -35,15 +37,18 @@ function LoginBox() {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
-      
-      if ("jwtToken" in res) {
+
+      if (res['jwtToken'] != "") {
         alert('login success!');
         setMessage("Logged in");
         var storage = require("../tokenStorage.js");
         var user = jwt_decode(res["jwtToken"]);
         localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res["jwtToken"]);
-        // window.location.href = "/";
+        // console.log(user['userId']);
+        // myContext.setUserId(user['userId']);
+        // console.log(user);
+        window.location.href = "/";
       } else {
         alert('wrong credentials');
         setMessage("User/Password combination incorrect");

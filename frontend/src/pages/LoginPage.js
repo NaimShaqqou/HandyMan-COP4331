@@ -79,7 +79,7 @@ const LoginPage = () =>
         <Grid container spacing={2}>
           <Grid item xs>
             <TabPanel value={value} index={0}>
-              <LoginBox />
+              <LoginBox func={setValue}/>
             </TabPanel>
           </Grid>
 

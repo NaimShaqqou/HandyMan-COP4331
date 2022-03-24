@@ -143,6 +143,7 @@ const HomePage = () =>
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
+      <h2>Hello userId: {localStorage.getItem('user_data')}</h2>
 
       <Box sx={classes.box}>
         <Autocomplete
