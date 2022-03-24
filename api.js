@@ -1,3 +1,5 @@
+import {PolyUtil} from "node-geometry-library";
+
 const { ObjectId } = require("mongodb");
 const axios = require('axios');
 
@@ -207,8 +209,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
         Title: title,
         Images: imageUrls,
         Address: address,
-        Longitude: coordinates.lng.toString(),
-        Latitude: coordinates.lat.toString(),
+        Longitude: coordinates.location.lng.toString(),
+        Latitude: coordinates.location.lat.toString(),
         Description: description,
         Price: price,
         DaysAvailable: daysAvailable,
@@ -463,9 +465,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
         return res.status(200).json({error : "Email is not associated with an account.", success: ""})
       }
     });
-
-
-    
   })
 
   app.post("/api/autocomplete-place", async (req, res, next) => {
@@ -531,22 +530,62 @@ exports.setApp = function (app, client, cloudinaryParser) {
     return distance; 
   };
 
-  // Returns services that are within maxDistance. (Assumes maxDistance is in miles)
-  function getServicesWithinDistance(services, coordinates, maxDistance) {
+  // Returns services that are within maxDistance. (Assumes maxDistance is in miles). 
+  function getServicesWithinDistance(services, location, maxDistance) {
     let filteredServices = new Array();
     maxDistanceInMeters = maxDistance * 1609.34
 
-    services.forEach((service) => {
-      let distance = getDistance(service.Latitude, service.Longitude, coordinates.latitude, coordinates.longitude)
-      if (distance <= maxDistanceInMeters) {
-        filteredServices.push(service)
-      }
-    })
+    locationInfo = convertAddressToCoordinates(location)
 
+    if (!location.types.includes("street_address")) {
+      polygonCoords = createPolygonCoordinates(locationInfo.viewport)
+      console.log(polygonCoords)
+
+      services.forEach((service) => {
+        if (PolyUtil.containsLocation({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords)) {
+          filteredServices.push(service)
+        } else {
+          let distance = maxDistanceInMeters.toString()
+          let digits = distance.split('.')
+          let numOfDigitsBeforeDecimal = digits[0].length
+          let power = 6 - numOfDigitsBeforeDecimal
+          let num = "1e-" + power 
+
+          if(PolyUtil.isLocationOnEdge({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords, parseFloat(num))) {
+            filteredServices.push(service)
+          }
+        }
+      })
+    } else {
+      services.forEach((service) => {
+        let distance = getDistance(parseFloat(service.Latitude), parseFloat(service.Longitude), locationInfo.location.lat, locationInfo.location.lng)
+        if (distance <= maxDistanceInMeters) {
+          filteredServices.push(service)
+        }
+      })
+    }
     return filteredServices;
   }
 
-  // Returns coordinates = { lat, lng }
+  function createPolygonCoordinates(coordinates) {
+    let lat1 = parseFloat(coordinates.northeast.lat)
+    let lng1 = parseFloat(coordinates.northeast.lng)
+    let lat2 = parseFloat(coordinates.southwest.lat)
+    let lng2 = parseFloat(coordinates.southwest.lng)
+
+    let centerLong = (lng1 + lng2)/2
+    let centerLat = (lat1 + lat2)/2
+    let halfDiagonalLong = (lng1 - lng2)/2
+    let halfDiagonalLat = (lat1 - lat2)/2
+
+    let corner1 = {lat: centerLat - halfDiagonalLong, lng: centerLong - halfDiagonalLat}
+    let corner2 = {lat: centerLat + halfDiagonalLong, lng: centerLong + halfDiagonalLat}
+    let corner3 = {lat: lat1, lng: lng1}
+    let corner4 = {lat: lat2, lng: lng2}
+
+    return(new Array(corner1, corner2, corner3, corner4))
+  }
+
   async function convertAddressToCoordinates(address) {
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
@@ -557,8 +596,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     await axios(googleUrl)
       .then((response) => {
         let result = response.data.results[0]
-        console.log(result)
-        coordinates = result.geometry.location
+        coordinates = { location: result.geometry.location, viewport: result.geometry.viewport, type: result.types } 
         console.log(coordinates);
       })
       .catch((error) => {

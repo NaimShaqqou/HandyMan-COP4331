@@ -22,6 +22,7 @@
         "mongoose": "^6.2.7",
         "multer": "^1.4.4",
         "multer-storage-cloudinary": "^4.0.0",
+        "node-geometry-library": "^1.2.6",
         "react-router-dom": "^5.2.0"
     }
 }
