@@ -23,12 +23,21 @@ const ForgotPasswordBox = () => {
             var res = JSON.parse(await response.text());
             
             setLoading(false);
-            toast.show({
-                title: "Email Sent",
-                status: "success",
-                description: "We have sent an email to the address you provided with instructions on how to reset your password.",
-                duration: null
-              })
+            if (res.error == "") {
+                toast.show({
+                    title: "Email Sent",
+                    status: "success",
+                    description: "We have sent an email to the address you provided with instructions on how to reset your password.",
+                    duration: null
+                })
+            } else {
+                toast.show({
+                    title: "Error",
+                    status: "error",
+                    description: "An error has occurred. Please submit again.",
+                    duration: null
+                })
+            }
         } catch (e) {
             console.log(e.toString());
             return;
