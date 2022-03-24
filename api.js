@@ -86,6 +86,22 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     // duplicate username/email
 
+    User.findOne(email, function(err, user) {
+      if (err) {
+        return res.status(200).json({error: err.message});
+      } else if (user) {
+          return res.status(200).json({ error: "Email already exists. Please enter a different email." })
+      }
+    });
+
+    User.findOne(username, function(err, user) {
+      if (err) {
+        return res.status(200).json({error: err.message});
+      } else if (user) {
+          return res.status(200).json({ error: "Username already exists. Please enter a different username." })
+      }
+    });
+
     const result = User.create(
       {
         FirstName: firstName, 
