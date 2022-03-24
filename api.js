@@ -441,7 +441,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     User.findOne({Email: email}, function(err, user) {
       if (err) {
-        return res.status(200).json({error: err.message});
+        return res.status(200).json({error: err.message, success: ""});
       } else if (user) {
         encryptedEmail = crypto.encrypt_string(email)
     
