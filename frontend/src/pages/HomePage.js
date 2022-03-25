@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
-import GoogleMapReact from 'google-map-react';
+// import GoogleMapReact from 'google-map-react';
+
+import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+
+// import { storeTokenn, retrieveToken } from '../tokenStorage'
 
 import {
+  FormControl,
+  Input,
   TextField,
   Autocomplete,
   Container,
+  InputAdornment,
   styled,
   alpha,
   InputBase,
@@ -15,6 +23,8 @@ import {
   Typography,
   CssBaseline
 } from "@mui/material";
+
+// AIzaSyDHnQ6nt9wx2-tqMER__xN7_xL-8HTzt0s
 
 import SearchIcon from "@mui/icons-material/Search"
 
@@ -148,14 +158,28 @@ const top100Films = [
 ];
 
 const HomePage = () =>
-{const [center, setCenter] = useState({lat: 11.0168, lng: 76.9558 });
-const [zoom, setZoom] = useState(11);
+{
+  var storage = require("../tokenStorage.js");
+  // storage.storeToken(null);
+
+  // let id = (storage.retrieveToken() == null) ? 'null' : JSON.stringify(jwt_decode(storage.retrieveToken()));
+
+  let id = storage.retrieveToken();
+
+  if (id == null) {
+    id = 'null';
+  } else {
+    id = JSON.stringify(jwt_decode(id));
+  }
+
   return(
     
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
-      <h2>Hello userId: {localStorage.getItem('user_data')}</h2>
+      {/* <h2>Hello userId: {((storage.retrieveToken() == null) ? 'null' : JSON.stringify(jwt_decode(storage.retrieveToken())))}</h2> */}
+      <h2>Hello userId: {id}</h2>
+      {/* <h2>Hello userId: {jwt_decode(retrieveToken())}</h2> */}
 
       <Container maxWidth="sm">
           <Autocomplete
@@ -163,7 +187,19 @@ const [zoom, setZoom] = useState(11);
           id="free-solo-demo"
           options={top100Films.map((option) => option.title)}
           renderInput={
-            (params) => <TextField {...params} label="Search Services" variant="outlined"/>
+            (params) => <TextField {...params}
+            InputProps={{
+              // ...params.InputProps,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <IconButton>
+                    <SearchIcon/>
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            placeholder="Search Services"
+            label="" variant="outlined"/>
             }
           />
       </Container>

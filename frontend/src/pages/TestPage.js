@@ -1,5 +1,7 @@
 import React from 'react';
 
+import MyComponent from '../components/gmaps';
+
 import PageTitle from '../components/PageTitle';
 import Title from '../components/Title';
 import LoginBox from '../components/LoginBox';
@@ -14,18 +16,13 @@ import Box from '@mui/material/Box';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper"
 
-const TestPage = () => {
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { Loader } from '@googlemaps/js-api-loader';
 
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
+const MyApp = (status) => {
   return (
-    <div>
-    </div>
-  );
+    <MyComponent/>
+  )
 };
 
-export default TestPage;
+export default MyApp;
