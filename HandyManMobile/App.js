@@ -71,7 +71,6 @@ export default function App() {
       dispatch({ type: 'LOGOUT' })
     },
     Register: () => {
-      setJwtToken('myToken');
       setIsLoading(false);
     },
   }), []);
