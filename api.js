@@ -1,4 +1,3 @@
-// import {PolyUtil} from "node-geometry-library";
 const {PolyUtil, SphericalUtil} = require("node-geometry-library");
 
 const { ObjectId } = require("mongodb");
@@ -25,9 +24,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
   let url;
   if (process.env.NODE_ENV === 'production') 
   {
-    url='https://myhandyman1.herokuapp.com/';
+    url='https://myhandyman1.herokuapp.com';
   } else {
-    url = 'http://localhost:5000/' 
+    url = 'http://localhost:5000' 
   }
 
 
@@ -376,21 +375,32 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     userId = ObjectId(userId)
 
-    Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
+    Service.findOneAndDelete({ UserId: userId, Title: title }, function (err, result) {
         if (err) {
           response = {
             error: err.message,
-            deletedServiceCount: result.deletedCount,
-            refreshedToken: refreshedToken,
+            refreshedToken: refreshedToken
           };
         } else {
-          console.log("Deleted " + result.deletedCount + " documents")
-          response = {
-            deletedServiceCount: result.deletedCount,
-            refreshedToken: refreshedToken,
-            error: ""
-          };
+          if (result == null) {
+            response = {
+              refreshedToken: refreshedToken,
+              error: "Couldn't delete service."
+            };
+          } else {
+            response = {
+              refreshedToken: refreshedToken,
+              error: ""
+            };
+
+            // Delete reviews associated with service
+            axios.post(url + '/api/delete-review', {
+              serviceId: result._id,
+              jwtToken: refreshedToken
+            })
+          }
         }
+        
         res.status(200).json(response);
       });
   });
@@ -562,7 +572,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           to: email, 
           from: 'emailverifysendgrid@gmail.com', 
           subject: 'Change HandyMan account password',
-          html: '<strong>Click this link to change your password: </strong><a href=' + url + 'api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
+          html: '<strong>Click this link to change your password: </strong><a href=' + url + '/api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
         }
         sgMail
         .send(msg)
@@ -611,7 +621,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       to: email, 
       from: 'emailverifysendgrid@gmail.com', 
       subject: 'Verify your HandyMan account',
-      html: '<strong>Click this link to verify your email: </strong><a href=' + url + 'api/verify-email?verifycode=' + userId +' >Verify my account</>',
+      html: '<strong>Click this link to verify your email: </strong><a href=' + url + '/api/verify-email?verifycode=' + userId +' >Verify my account</>',
     }
     sgMail
     .send(msg)
