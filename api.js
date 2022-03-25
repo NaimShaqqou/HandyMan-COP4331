@@ -199,8 +199,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // outgoing: serviceId, error, jwtToken
     var response;
 
-    console.log(req.body)
-
     let {
       userId,
       oldTitle, 
@@ -228,9 +226,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       DaysAvailable: oldDaysAvailable, 
       Category: oldCategory
     }
-    console.log(filter)
 
-    console.log(newAddress)
     let coordinates = await convertAddressToCoordinates(newAddress);
     userId = ObjectId(userId);
 
@@ -245,7 +241,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       DaysAvailable: newDaysAvailable, 
       Category: newCategory
     }
-    console.log(update)
 
     try {
       if (token.isExpired(jwtToken)) {
@@ -273,7 +268,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       } else {
         response = { ServiceId: service._id.valueOf(), error: "Successfully edited service", refreshedToken: refreshedToken};
       }
-      console.log(service);
       res.status(200).json(response);
     });
   });
