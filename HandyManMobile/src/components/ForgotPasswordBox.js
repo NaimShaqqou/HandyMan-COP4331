@@ -28,14 +28,16 @@ const ForgotPasswordBox = () => {
                     title: "Email Sent",
                     status: "success",
                     description: "We have sent an email to the address you provided with instructions on how to reset your password.",
-                    duration: null
+                    duration: null,
+                    width: '90%'
                 })
             } else {
                 toast.show({
                     title: "Error",
                     status: "error",
                     description: "An error has occurred. Please submit again.",
-                    duration: null
+                    duration: null,
+                    w: '90%'
                 })
             }
         } catch (e) {
@@ -76,7 +78,7 @@ const ForgotPasswordBox = () => {
                         size="lg"
                         w='100%'
                         isLoading={loading ? true : false}
-                        isLoadingText='Logging in...'
+                        isLoadingText='Submitting...'
                         _loading={{
                             bg: "primary.400:alpha.70",
                             _text: {

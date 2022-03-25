@@ -86,7 +86,7 @@ const LoginBox = () => {
 
 
     return (
-        <Box safeArea w="90%" justifyContent='center' >
+        <Box w="90%" p="2" py="8" justifyContent='center' >
         <Heading size="xl" fontWeight="600">
           Welcome to Handler
         </Heading>
