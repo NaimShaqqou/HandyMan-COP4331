@@ -31,12 +31,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
   app.post("/api/search-services", async (req, res, next) => {
-    // incoming: search, jwtToken
+    // incoming: search, location, jwtToken
     // outgoing: results[], error
 
     var error = "";
   
-    const { search, jwtToken } = req.body;
+    const { search, location, maxDist, jwtToken } = req.body;
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -62,6 +62,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
     for (var i = 0; i < results.length; i++) {
       _ret.push(results[i].Service);
     }
+
+    // Filters services based on distance
+    _ret = getServicesWithinDistance(_ret, convertAddressToCoordinates(location), maxDist);
 
     var refreshedToken = null;
     try {
