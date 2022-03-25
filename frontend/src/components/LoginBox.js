@@ -11,12 +11,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
-import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
 
-function LoginBox() {
+function LoginBox(props) {
   var bp = require("./Path.js");
+
+  // console.log(props);
 
   const [message, setMessage] = useState("");
 
@@ -35,15 +36,16 @@ function LoginBox() {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
-      
-      if ("jwtToken" in res) {
+
+      if (res['jwtToken'] != "") {
         alert('login success!');
         setMessage("Logged in");
         var storage = require("../tokenStorage.js");
-        var user = jwt_decode(res["jwtToken"]);
-        localStorage.setItem("user_data", JSON.stringify(user));
+        // var user = jwt_decode(res["jwtToken"]);
+        // localStorage.setItem("jwtToken", user);
+        // localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res["jwtToken"]);
-        // window.location.href = "/";
+        window.location.href = "/";
       } else {
         alert('wrong credentials');
         setMessage("User/Password combination incorrect");
@@ -96,8 +98,8 @@ function LoginBox() {
       //   md: 500
       // },
       minWidth: {
-        sm: 400,
-        md: 500
+        sm: 385,
+        md: 550
       },
       // display: 'flex',
       // flexDirection: { xs: 'column', md: 'row' },
@@ -183,14 +185,14 @@ const classes = {
     // color: "black",
     borderRadius: "40px",
     boxShadow: "0px 4px 35px rgba(0, 0, 0, 0.08)",
-    padding: "10px 10px 10px 10px",
+    padding: "10px 0px 30px 10px",
     // minHeight: {xs: 500, md: 700 },
     // "width": "700px",
     // "height": "500px",
   },
   text: {
     m: 1,
-    width: '30ch',
+    width: '25ch',
   }
 };
 

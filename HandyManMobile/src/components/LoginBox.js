@@ -39,7 +39,7 @@ const LoginBox = () => {
             });
             var res = JSON.parse(await response.text());
 
-            if (res.error != null) {
+            if (res.error != '') {
                 setValid(false);
                 setMsg(res.error);
             } else {
@@ -63,27 +63,7 @@ const LoginBox = () => {
 
     // sends a reset password email to the user
     const onForgotPasswordPressed = async (event) => {
-        event.preventDefault();
-
-        console.warn("Forgot Password Pressed");
-        setShowModal(false);
-
-        var obj = { email: email }
-        var js = JSON.stringify(obj);
-
-        try {
-            const response = await fetch('https://myhandyman1.herokuapp.com/api/forgot-password-email', {
-                method: 'POST',
-                body: js,
-                headers: { "Content-Type": "application/json" }
-            });
-
-            var res = JSON.parse(await response.text());
-            console.warn(res)
-        } catch (e) {
-            console.log(e.toString());
-            return;
-        }
+        navigation.navigate('forgotPassword');
     }
 
     const onRegisterTransition = () => {
@@ -106,7 +86,7 @@ const LoginBox = () => {
 
 
     return (
-        <Box safeArea w="90%" justifyContent='center' >
+        <Box w="90%" p="2" py="8" justifyContent='center' >
         <Heading size="xl" fontWeight="600">
           Welcome to Handler
         </Heading>
@@ -114,7 +94,7 @@ const LoginBox = () => {
           Login to continue! 
         </Heading>
 
-        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
             <Modal.Content>
                 <Modal.Header>Reset your Password</Modal.Header>
                 <Modal.Body>
@@ -146,7 +126,7 @@ const LoginBox = () => {
                     </Button.Group>
                 </Modal.Footer>
             </Modal.Content>
-        </Modal>
+        </Modal> */}
 
         <Center mt={10} w='100%'>
             <FormControl isInvalid={valid? false : true}>
@@ -184,7 +164,7 @@ const LoginBox = () => {
             }}
               alignSelf='flex-end'
               mt='1'
-              onPress={() => setShowModal(true)}
+              onPress={onForgotPasswordPressed}
             >
               Forgot Password?
             </Link>

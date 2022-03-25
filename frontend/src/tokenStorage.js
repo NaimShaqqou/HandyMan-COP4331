@@ -11,6 +11,7 @@ exports.storeToken = function ( tok )
       console.log(e.message);
     }
 }
+
 exports.retrieveToken = function ()
 {
     var ud;

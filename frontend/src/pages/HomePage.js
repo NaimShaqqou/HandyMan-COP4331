@@ -1,15 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+// import GoogleMapReact from 'google-map-react';
 
-import PageTitle from '../components/PageTitle';
-import LoggedInName from '../components/LoggedInName';
-import CardUI from '../components/CardUI';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Autocomplete from '@mui/material/Autocomplete';
+import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+
+// import { storeTokenn, retrieveToken } from '../tokenStorage'
+
+import {
+  FormControl,
+  Input,
+  TextField,
+  Autocomplete,
+  Container,
+  InputAdornment,
+  styled,
+  alpha,
+  InputBase,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  CssBaseline
+} from "@mui/material";
+
+// AIzaSyDHnQ6nt9wx2-tqMER__xN7_xL-8HTzt0s
+
+import SearchIcon from "@mui/icons-material/Search"
 
 // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
+
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
@@ -139,20 +159,55 @@ const top100Films = [
 
 const HomePage = () =>
 {
+  var storage = require("../tokenStorage.js");
+  // storage.storeToken(null);
+
+  // let id = (storage.retrieveToken() == null) ? 'null' : JSON.stringify(jwt_decode(storage.retrieveToken()));
+
+  let id = storage.retrieveToken();
+
+  if (id == null) {
+    id = 'null';
+  } else {
+    id = JSON.stringify(jwt_decode(id));
+  }
+
   return(
+    
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
+      {/* <h2>Hello userId: {((storage.retrieveToken() == null) ? 'null' : JSON.stringify(jwt_decode(storage.retrieveToken())))}</h2> */}
+      <h2>Hello userId: {id}</h2>
+      {/* <h2>Hello userId: {jwt_decode(retrieveToken())}</h2> */}
 
-      <Box sx={classes.box}>
-        <Autocomplete
+      <Container maxWidth="sm">
+          <Autocomplete
           freeSolo
           id="free-solo-demo"
           options={top100Films.map((option) => option.title)}
-          renderInput={(params) => <TextField {...params} label="Search Services" />}
-        />
-      </Box>
+          renderInput={
+            (params) => <TextField {...params}
+            InputProps={{
+              // ...params.InputProps,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <IconButton>
+                    <SearchIcon/>
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            placeholder="Search Services"
+            label="" variant="outlined"/>
+            }
+          />
+      </Container>
+      <div className="google-map-code">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.9114859634215!2d-81.20224858452536!3d28.6024320921926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e7685d6a0a495f%3A0x5fd59b92b3c79bab!2sUniversity%20of%20Central%20Florida!5e0!3m2!1sen!2sus!4v1648162123608!5m2!1sen!2sus" width="600" height="450" frameboard ="0" style={{border:0}} allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        </div>
     </div>
+    
   );
 }
 
@@ -160,10 +215,10 @@ const classes = {
   box: {
     width: 500,
     // padding: 20,
-    textAlign: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    color: "black"
+    // textAlign: "center",
+    // justifyContent: "center",
+    // backgroundColor: "blue",
+    // color: "black"
   }
 };
 

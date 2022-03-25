@@ -1,3 +1,5 @@
+const {PolyUtil, SphericalUtil} = require("node-geometry-library");
+
 const { ObjectId } = require("mongodb");
 const axios = require('axios');
 
@@ -22,9 +24,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
   let url;
   if (process.env.NODE_ENV === 'production') 
   {
-    url='https://myhandyman1.herokuapp.com/';
+    url='https://myhandyman1.herokuapp.com';
   } else {
-    url = 'http://localhost:5000/' 
+    url = 'http://localhost:5000' 
   }
 
 
@@ -83,34 +85,60 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // outgoing: userId, error
 
     const { email, password, firstName, lastName, username } = req.body;
+    let valid = true;
 
     // duplicate username/email
-
-    const result = User.create(
+    await User.findOne({Username : username}).then((user)=>{
+      if (user != null)
       {
-        FirstName: firstName, 
-        LastName: lastName, 
-        Username: username, 
-        Password: password, 
-        Email: email,
-        Verified: false
-      },
-      function (err, user) {
-        if (err) {
-          response = {
-            id : "-1",
-            error: err.message
-          };
-        } else {
-          response = {
-            id : user._id.valueOf(),
-            error: "Successfully added user!"
-          };
-          //verifyEmail(email, user._id.valueOf());
-        }
-        res.status(200).json(response);
+        valid = false;
+        return res.status(200).json({ error: "Username already exists. Please enter a different username." });
       }
-    );
+    }).catch(err=>{
+      return res.status(200).json({error: err.message});
+    }) 
+
+    if (valid){
+      await User.findOne({Email : email}).then((user)=>{
+        if (user != null)
+        {
+          valid = false;
+          return res.status(200).json({ error: "Email already exists. Please enter a different email." });
+        }
+      }).catch(err=>{
+        return res.status(200).json({error: err.message});
+      }) 
+    }
+   
+    if (valid)
+    {
+      const result = User.create(
+        {
+          FirstName: firstName, 
+          LastName: lastName, 
+          Username: username, 
+          Password: password, 
+          Email: email,
+          Verified: false
+        },
+        function (err, user) {
+          if (err) {
+            response = {
+              id : "-1",
+              error: err.message
+            };
+          } else {
+            response = {
+              id : user._id.valueOf(),
+              error: "Successfully added user!"
+            };
+            verifyEmail(email, user._id.valueOf());
+          }
+          console.log("sending it after creating user");
+          res.status(200).json(response);
+        }
+      );
+    } 
   });
 
   app.post("/api/login", async (req, res, next) => {
@@ -168,6 +196,146 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   });
 
+  app.post("/api/edit-profile", async (req, res, next) => {
+    // incoming: userId, newFirstName, newLastName, newUsername, newEmail, newPassword, newProfileDescription, newProfilePicture, jwtToken
+    // outgoing: userId, error, jwtToken
+    var response;
+
+    let {
+      userId,
+      newFirstName, 
+      newLastName, 
+      newUsername, 
+      newEmail,
+      newPassword,
+      newProfileDescription, 
+      newProfilePicture,
+      jwtToken
+    } = req.body;
+
+    let update = {
+      UserId: userId,
+      FirstName: newFirstName, 
+      LastName: newLastName, 
+      Username: newUsername, 
+      Email: newEmail,
+      Password: newPassword,
+      ProfileDescript_: newProfileDescription, 
+      ProfilePicture: newProfilePicture 
+    }
+
+    userId = ObjectId(userId);
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    User.findOneAndUpdate({_id: userId}, update, 
+      function(err, user) {
+      if (err) {
+        response = { error: err.message, refreshedToken: refreshedToken };
+      } else if (user == null) {
+        response = { error: "Incorrect information", refreshedToken: refreshedToken };
+      } else {
+        response = { UserId: user._id.valueOf(), error: "Successfully edited profile", refreshedToken: refreshedToken};
+      }
+      res.status(200).json(response);
+    });
+  });
+
+  app.post("/api/edit-service", async (req, res, next) => {
+    // incoming: userId, oldTitle, oldAddress, oldDescription, oldPrice, oldDaysAvailable, oldCategory, 
+    // newTitle, newImages, newAddress, newDescription, newPrice, newDaysAvailable, newCategoryjwtToken
+    // outgoing: serviceId, error, jwtToken
+    var response;
+
+    let {
+      userId,
+      oldTitle, 
+      oldAddress, 
+      oldDescription, 
+      oldPrice, 
+      oldDaysAvailable, 
+      oldCategory,
+      newTitle, 
+      newImages,
+      newAddress, 
+      newDescription, 
+      newPrice, 
+      newDaysAvailable, 
+      newCategory,
+      jwtToken
+    } = req.body;
+
+    let filter = {
+      UserId: userId,
+      Title: oldTitle, 
+      Address: oldAddress,
+      Description: oldDescription, 
+      Price: oldPrice, 
+      DaysAvailable: oldDaysAvailable, 
+      Category: oldCategory
+    }
+
+    let coordinates = await convertAddressToCoordinates(newAddress);
+    userId = ObjectId(userId);
+
+    let update = {
+      Title: newTitle, 
+      Address: newAddress, 
+      Images: newImages,
+      Longitude: coordinates.location.lng.toString(),
+      Latitude: coordinates.location.lat.toString(),
+      Description: newDescription, 
+      Price: newPrice, 
+      DaysAvailable: newDaysAvailable, 
+      Category: newCategory
+    }
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    Service.findOneAndUpdate(filter, update, 
+      function(err, service) {
+      if (err) {
+        response = { error: err.message, refreshedToken: refreshedToken };
+      } else if (service == null) {
+        response = { error: "Incorrect information", refreshedToken: refreshedToken };
+      } else {
+        response = { ServiceId: service._id.valueOf(), error: "Successfully edited service", refreshedToken: refreshedToken};
+      }
+      res.status(200).json(response);
+    });
+  });
+
+
   app.post("/api/add-service", async (req, res, next) => {
     // incoming: userId, title, address, description, price, daysAvailable, category, jwtToken
     // outgoing: serviceId, error, jwtToken
@@ -210,8 +378,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
         Title: title,
         Images: imageUrls,
         Address: address,
-        Longitude: coordinates.lng.toString(),
-        Latitude: coordinates.lat.toString(),
+        Longitude: coordinates.location.lng.toString(),
+        Latitude: coordinates.location.lat.toString(),
         Description: description,
         Price: price,
         DaysAvailable: daysAvailable,
@@ -235,8 +403,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
         res.status(200).json(response);
       }
     );
-
-    
   });
 
   app.post("/api/delete-service", async (req, res, next) => {
@@ -266,21 +432,32 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     userId = ObjectId(userId)
 
-    Service.deleteOne({ UserId: userId, Title: title }, function (err, result) {
+    Service.findOneAndDelete({ UserId: userId, Title: title }, function (err, result) {
         if (err) {
           response = {
             error: err.message,
-            deletedServiceCount: result.deletedCount,
-            refreshedToken: refreshedToken,
+            refreshedToken: refreshedToken
           };
         } else {
-          console.log("Deleted " + result.deletedCount + " documents")
-          response = {
-            deletedServiceCount: result.deletedCount,
-            refreshedToken: refreshedToken,
-            error: ""
-          };
+          if (result == null) {
+            response = {
+              refreshedToken: refreshedToken,
+              error: "Couldn't delete service."
+            };
+          } else {
+            response = {
+              refreshedToken: refreshedToken,
+              error: ""
+            };
+
+            // Delete reviews associated with service
+            axios.post(url + '/api/delete-review', {
+              serviceId: result._id,
+              jwtToken: refreshedToken
+            })
+          }
         }
+        
         res.status(200).json(response);
       });
   });
@@ -439,24 +616,33 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/forgot-password-email", async (req, res, next) => {
     let email = req.body.email
-    encryptedEmail = crypto.encrypt_string(email)
+
+    User.findOne({Email: email}, function(err, user) {
+      if (err) {
+        return res.status(200).json({error: err.message, success: ""});
+      } else if (user) {
+        encryptedEmail = crypto.encrypt_string(email)
     
-    const sgMail = require('@sendgrid/mail')
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-    const msg = {
-      to: email, 
-      from: 'emailverifysendgrid@gmail.com', 
-      subject: 'Change HandyMan account password',
-      html: '<strong>Click this link to change your password: </strong><a href=' + url + 'api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
-    }
-    sgMail
-    .send(msg)
-    .then(() => {
-      res.status(200).json("Email sent")
-    })
-    .catch((error) => {
-      res.status(200).json(error)
-    })
+        const sgMail = require('@sendgrid/mail')
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        const msg = {
+          to: email, 
+          from: 'emailverifysendgrid@gmail.com', 
+          subject: 'Change HandyMan account password',
+          html: '<strong>Click this link to change your password: </strong><a href=' + url + '/api/forgot-password-page?email=' + encryptedEmail +' >Change password</>',
+        }
+        sgMail
+        .send(msg)
+        .then(() => {
+          return res.status(200).json({ success: "Email sent", error: "" })
+        })
+        .catch((error) => {
+          return res.status(200).json({error : error.message, success: ""})
+        })
+      } else {
+        return res.status(200).json({error : "Email is not associated with an account.", success: ""})
+      }
+    });
   })
 
   app.post("/api/autocomplete-place", async (req, res, next) => {
@@ -492,7 +678,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       to: email, 
       from: 'emailverifysendgrid@gmail.com', 
       subject: 'Verify your HandyMan account',
-      html: '<strong>Click this link to verify your email: </strong><a href=' + url + 'api/verify-email?verifycode=' + userId +' >Verify my account</>',
+      html: '<strong>Click this link to verify your email: </strong><a href=' + url + '/api/verify-email?verifycode=' + userId +' >Verify my account</>',
     }
     sgMail
     .send(msg)
@@ -504,40 +690,55 @@ exports.setApp = function (app, client, cloudinaryParser) {
     })
   }
 
-  // Helper function for getDistance()
-  var rad = function(x) {
-    return x * Math.PI / 180;
-  };
-  
-  // Finds distance in meters between two coordinates. Uses Haversine formula
-  function getDistance(lat1, long1, lat2, long2) {
-    var R = 6378137; // Earth’s mean radius in meter
-    var latitudeDistance = rad(lat2 - lat1);
-    var longitudeDistance = rad(long2 - long1);
-    var a = Math.sin(latitudeDistance / 2) * Math.sin(latitudeDistance / 2) +
-      Math.cos(rad(lat1)) * Math.cos(rad(lat2)) *
-      Math.sin(longitudeDistance / 2) * Math.sin(longitudeDistance / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var distance = R * c;
-    return distance; 
-  };
-
-  // Returns services that are within maxDistance. (Assumes maxDistance is in miles)
-  function getServicesWithinDistance(services, coordinates, maxDistance) {
+  // Returns services that are within maxDistance. (Assumes maxDistance is in miles). 
+  async function getServicesWithinDistance(services, location, maxDistance) {
+    maxDistance = maxDistance == 0 ? 1 : maxDistance;
     let filteredServices = new Array();
-    maxDistanceInMeters = maxDistance * 1609.34
+    let maxDistanceInMeters = maxDistance * 1609.34
+
+    locationInfo = await convertAddressToCoordinates(location)
+    console.log(locationInfo)
+    polygonCoords = createPolygonCoordinates(locationInfo.viewport)
+    console.log(polygonCoords)
 
     services.forEach((service) => {
-      let distance = getDistance(service.Latitude, service.Longitude, coordinates.latitude, coordinates.longitude)
+      let distance = SphericalUtil.computeDistanceBetween({lat: parseFloat(service.Latitude) , lng: parseFloat(service.Longitude)}, {lat: locationInfo.location.lat, lng: locationInfo.location.lng})
       if (distance <= maxDistanceInMeters) {
         filteredServices.push(service)
+      } else if (PolyUtil.containsLocation({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords)) {
+        // Check if service is inside location
+        filteredServices.push(service)
+      } else {
+        let num = maxDistanceInMeters * 1e-5
+        // Check if service is close enough to location
+        if(PolyUtil.isLocationOnEdge({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords, num)) {
+          filteredServices.push(service)
+        }
       }
     })
-
-    return filteredServices;
+    
+    return (filteredServices)
   }
 
-  // Returns coordinates = { lat, lng }
+  function createPolygonCoordinates(coordinates) {
+    let lat1 = parseFloat(coordinates.northeast.lat)
+    let lng1 = parseFloat(coordinates.northeast.lng)
+    let lat2 = parseFloat(coordinates.southwest.lat)
+    let lng2 = parseFloat(coordinates.southwest.lng)
+
+    let centerLong = (lng1 + lng2)/2
+    let centerLat = (lat1 + lat2)/2
+    let halfDiagonalLong = (lng1 - lng2)/2
+    let halfDiagonalLat = (lat1 - lat2)/2
+
+    let corner1 = {lat: centerLat + halfDiagonalLong, lng: centerLong - halfDiagonalLat}
+    let corner2 = {lat: centerLat - halfDiagonalLong, lng: centerLong + halfDiagonalLat}
+    let corner3 = {lat: lat1, lng: lng1}
+    let corner4 = {lat: lat2, lng: lng2}
+
+    return(new Array(corner2, corner4, corner1, corner3))
+  }
+
   async function convertAddressToCoordinates(address) {
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
@@ -548,9 +749,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     await axios(googleUrl)
       .then((response) => {
         let result = response.data.results[0]
-        console.log(result)
-        coordinates = result.geometry.location
-        console.log(coordinates);
+        coordinates = { location: result.geometry.location, viewport: result.geometry.viewport, type: result.types } 
       })
       .catch((error) => {
         console.log(error);
