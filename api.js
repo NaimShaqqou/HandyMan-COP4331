@@ -193,6 +193,66 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   });
 
+  app.post("/api/edit-profile", async (req, res, next) => {
+    // incoming: userId, newFirstName, newLastName, newUsername, newEmail, newPassword, newProfileDescription, newProfilePicture, jwtToken
+    // outgoing: userId, error, jwtToken
+    var response;
+
+    let {
+      userId,
+      newFirstName, 
+      newLastName, 
+      newUsername, 
+      newEmail,
+      newPassword,
+      newProfileDescription, 
+      newProfilePicture,
+      jwtToken
+    } = req.body;
+
+    let update = {
+      UserId: userId,
+      FirstName: newFirstName, 
+      LastName: newLastName, 
+      Username: newUsername, 
+      Email: newEmail,
+      Password: newPassword,
+      ProfileDescript_: newProfileDescription, 
+      ProfilePicture: newProfilePicture 
+    }
+
+    userId = ObjectId(userId);
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    User.findOneAndUpdate({_id: userId}, update, 
+      function(err, user) {
+      if (err) {
+        response = { error: err.message, refreshedToken: refreshedToken };
+      } else if (user == null) {
+        response = { error: "Incorrect information", refreshedToken: refreshedToken };
+      } else {
+        response = { UserId: user._id.valueOf(), error: "Successfully edited profile", refreshedToken: refreshedToken};
+      }
+      res.status(200).json(response);
+    });
+  });
+
   app.post("/api/edit-service", async (req, res, next) => {
     // incoming: userId, oldTitle, oldAddress, oldDescription, oldPrice, oldDaysAvailable, oldCategory, 
     // newTitle, newImages, newAddress, newDescription, newPrice, newDaysAvailable, newCategoryjwtToken
