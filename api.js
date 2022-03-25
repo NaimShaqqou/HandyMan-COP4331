@@ -33,7 +33,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
   app.post("/api/search-services", async (req, res, next) => {
-    // incoming: search, location, jwtToken
+    // incoming: search, location, maxDist, jwtToken
     // outgoing: results[], error
 
     var error = "";
