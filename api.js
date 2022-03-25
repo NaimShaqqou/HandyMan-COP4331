@@ -1,5 +1,5 @@
 // import {PolyUtil} from "node-geometry-library";
-const {PolyUtil} = require("node-geometry-library");
+const {PolyUtil, SphericalUtil} = require("node-geometry-library");
 
 const { ObjectId } = require("mongodb");
 const axios = require('axios');
@@ -623,59 +623,34 @@ exports.setApp = function (app, client, cloudinaryParser) {
     })
   }
 
-  // Helper function for getDistance()
-  var rad = function(x) {
-    return x * Math.PI / 180;
-  };
-  
-  // Finds distance in meters between two coordinates. Uses Haversine formula
-  function getDistance(lat1, long1, lat2, long2) {
-    var R = 6378137; // Earth’s mean radius in meter
-    var latitudeDistance = rad(lat2 - lat1);
-    var longitudeDistance = rad(long2 - long1);
-    var a = Math.sin(latitudeDistance / 2) * Math.sin(latitudeDistance / 2) +
-      Math.cos(rad(lat1)) * Math.cos(rad(lat2)) *
-      Math.sin(longitudeDistance / 2) * Math.sin(longitudeDistance / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var distance = R * c;
-    return distance; 
-  };
-
   // Returns services that are within maxDistance. (Assumes maxDistance is in miles). 
-  function getServicesWithinDistance(services, location, maxDistance) {
+  async function getServicesWithinDistance(services, location, maxDistance) {
+    maxDistance = maxDistance == 0 ? 1 : maxDistance;
     let filteredServices = new Array();
-    maxDistanceInMeters = maxDistance * 1609.34
+    let maxDistanceInMeters = maxDistance * 1609.34
 
-    locationInfo = convertAddressToCoordinates(location)
+    locationInfo = await convertAddressToCoordinates(location)
+    console.log(locationInfo)
+    polygonCoords = createPolygonCoordinates(locationInfo.viewport)
+    console.log(polygonCoords)
 
-    if (!location.types.includes("street_address")) {
-      polygonCoords = createPolygonCoordinates(locationInfo.viewport)
-      console.log(polygonCoords)
-
-      services.forEach((service) => {
-        if (PolyUtil.containsLocation({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords)) {
-          filteredServices.push(service)
-        } else {
-          let distance = maxDistanceInMeters.toString()
-          let digits = distance.split('.')
-          let numOfDigitsBeforeDecimal = digits[0].length
-          let power = 6 - numOfDigitsBeforeDecimal
-          let num = "1e-" + power 
-
-          if(PolyUtil.isLocationOnEdge({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords, parseFloat(num))) {
-            filteredServices.push(service)
-          }
-        }
-      })
-    } else {
-      services.forEach((service) => {
-        let distance = getDistance(parseFloat(service.Latitude), parseFloat(service.Longitude), locationInfo.location.lat, locationInfo.location.lng)
-        if (distance <= maxDistanceInMeters) {
+    services.forEach((service) => {
+      let distance = SphericalUtil.computeDistanceBetween({lat: parseFloat(service.Latitude) , lng: parseFloat(service.Longitude)}, {lat: locationInfo.location.lat, lng: locationInfo.location.lng})
+      if (distance <= maxDistanceInMeters) {
+        filteredServices.push(service)
+      } else if (PolyUtil.containsLocation({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords)) {
+        // Check if service is inside location
+        filteredServices.push(service)
+      } else {
+        let num = maxDistanceInMeters * 1e-5
+        // Check if service is close enough to location
+        if(PolyUtil.isLocationOnEdge({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords, num)) {
           filteredServices.push(service)
         }
-      })
-    }
-    return filteredServices;
+      }
+    })
+    
+    return (filteredServices)
   }
 
   function createPolygonCoordinates(coordinates) {
@@ -689,12 +664,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let halfDiagonalLong = (lng1 - lng2)/2
     let halfDiagonalLat = (lat1 - lat2)/2
 
-    let corner1 = {lat: centerLat - halfDiagonalLong, lng: centerLong - halfDiagonalLat}
-    let corner2 = {lat: centerLat + halfDiagonalLong, lng: centerLong + halfDiagonalLat}
+    let corner1 = {lat: centerLat + halfDiagonalLong, lng: centerLong - halfDiagonalLat}
+    let corner2 = {lat: centerLat - halfDiagonalLong, lng: centerLong + halfDiagonalLat}
     let corner3 = {lat: lat1, lng: lng1}
     let corner4 = {lat: lat2, lng: lng2}
 
-    return(new Array(corner1, corner2, corner3, corner4))
+    return(new Array(corner2, corner4, corner1, corner3))
   }
 
   async function convertAddressToCoordinates(address) {
@@ -708,7 +683,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       .then((response) => {
         let result = response.data.results[0]
         coordinates = { location: result.geometry.location, viewport: result.geometry.viewport, type: result.types } 
-        console.log(coordinates);
       })
       .catch((error) => {
         console.log(error);
