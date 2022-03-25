@@ -1,11 +1,7 @@
-<<<<<<< Updated upstream
 import React, { useState } from 'react';
-import GoogleMapReact from 'google-map-react';
-=======
-import React from 'react';
+// import GoogleMapReact from 'google-map-react';
 
 import jwt_decode from "jwt-decode";
->>>>>>> Stashed changes
 import ResponsiveAppBar from '../components/NavBar';
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 
@@ -162,10 +158,6 @@ const top100Films = [
 ];
 
 const HomePage = () =>
-<<<<<<< Updated upstream
-{const [center, setCenter] = useState({lat: 11.0168, lng: 76.9558 });
-const [zoom, setZoom] = useState(11);
-=======
 {
   var storage = require("../tokenStorage.js");
   // storage.storeToken(null);
@@ -180,7 +172,6 @@ const [zoom, setZoom] = useState(11);
     id = JSON.stringify(jwt_decode(id));
   }
 
->>>>>>> Stashed changes
   return(
     
     <div>
