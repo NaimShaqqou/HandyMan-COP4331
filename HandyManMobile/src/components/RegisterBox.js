@@ -10,6 +10,18 @@ const RegisterBox = () => {
     const doRegister = async (event) => {
         event.preventDefault();
         setIsLoading(true);
+        setValid(true);
+        setPassValid(true);
+        setUserValid(true);
+        setEmailValid(true);
+
+        if (password != passwordRepeat)
+        {
+          setPassValid(false);
+          setMsg("Passwords do not match.");
+          setIsLoading(false);
+          return;
+        }
 
         // call register api
         var obj = { 
@@ -33,11 +45,11 @@ const RegisterBox = () => {
             navigation.navigate('confirmEmail');
           } else if (res.error == 'Username already exists. Please enter a different username.') {
             setUserValid(false);
-            setMsg(res.error);
+            setUserMsg(res.error);
             setIsLoading(false);
           } else if (res.error == 'Email already exists. Please enter a different email.') {
             setEmailValid(false);
-            setMsg(res.error);
+            setEmailMsg(res.error);
             setIsLoading(false);
           } else {
             // everything invalid 
@@ -79,7 +91,10 @@ const RegisterBox = () => {
     const [userValid, setUserValid] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
     const [valid, setValid] = useState(true);
+    const [passValid, setPassValid] = useState(true);
     const [msg, setMsg] = useState('');
+    const [userMsg, setUserMsg] = useState('');
+    const [emailMsg, setEmailMsg] = useState('');
 
   
     return (
@@ -122,6 +137,10 @@ const RegisterBox = () => {
               InputLeftElement={<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />}
               onChangeText={newEmail => setEmail(newEmail)}
             />
+
+            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+              { emailMsg }
+            </FormControl.ErrorMessage>
           </FormControl>
 
           <FormControl mt={8} isInvalid={userValid ? false : true}>
@@ -133,9 +152,13 @@ const RegisterBox = () => {
               InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
               onChangeText={newUsername => setUsername(newUsername)}
             />
+
+            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+              { userMsg }
+            </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl mt={8} isInvalid={valid? false : true}>
+          <FormControl mt={8} isInvalid={passValid? false : true}>
             <Input 
               variant="underlined" 
               placeholder="Password" 
@@ -149,7 +172,7 @@ const RegisterBox = () => {
             />
           </FormControl>
 
-          <FormControl mt={8} isInvalid={valid? false : true}>
+          <FormControl mt={8} isInvalid={passValid? false : true}>
             <Input 
               variant="underlined" 
               placeholder="Confirm Password" 

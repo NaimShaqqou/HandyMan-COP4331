@@ -24,13 +24,13 @@ const ConfirmEmail = () => {
         >
             <Box safeArea w="90%" justifyContent='center' >
                 <Heading size="xl" fontWeight="600">
-                    Confirm your Email.
+                    Confirm your Account
                 </Heading>
                 <Heading mt="4" fontWeight="medium" size="sm">
-                    We have sent an email to the address you provided with instructions on how to confirm your email.
+                    We have sent an email to the address you provided with instructions on how to confirm your account.
                 </Heading>
                 <Heading mt="4" fontWeight="medium" size="sm">
-                    Once you have confirmed your email, click the button below to login to your account.
+                    Once you have confirmed your account, click the button below to login to your account.
                 </Heading>
 
                 <Button 
