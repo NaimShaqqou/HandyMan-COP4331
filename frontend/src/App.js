@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import TestPage from './pages/TestPage';
 import TestImagePage from './pages/TestImagePage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
 
@@ -24,6 +25,9 @@ function App() {
         </Route>
         <Route path="/image" exact>
           <TestImagePage />
+        </Route>
+        <Route path="/profile" exact>
+          <ProfilePage />
         </Route>
         <Redirect to="/" />
       </Switch>
