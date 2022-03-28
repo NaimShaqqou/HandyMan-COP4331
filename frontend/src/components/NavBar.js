@@ -1,6 +1,9 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import { useSelector } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search"
+import SearchBar from "./SearchBar"
 
 import {
   AppBar,
@@ -8,18 +11,25 @@ import {
   Toolbar,
   IconButton,
   Typography,
+  InputAdornment,
+  TextField,
   Menu,
   Container,
+  Autocomplete,
   Avatar,
   Button,
   Tooltip,
   MenuItem
 } from '@mui/material'
+import axios from 'axios';
 
 const pages = [];
-const settings = ['Profile', 'Logout'];
+const loggedInSettings = ['Profile', 'Services', 'Logout']
 
 const ResponsiveAppBar = () => {
+  let user = useSelector((state) => state.user);
+  const pathname = window.location.pathname
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -51,6 +61,11 @@ const ResponsiveAppBar = () => {
           >
             Handler
           </Typography>
+
+          {pathname !== "/" && 
+          <Container maxWidth="sm">
+            <SearchBar />
+          </Container>}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -133,11 +148,14 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {user.userId !== "" && loggedInSettings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              {user.userId === "" && <MenuItem key="Login" onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>}
             </Menu>
           </Box>
         </Toolbar>

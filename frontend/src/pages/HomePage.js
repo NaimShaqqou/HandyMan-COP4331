@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import SearchBar from "../components/SearchBar.js"
+
 
 // import { storeTokenn, retrieveToken } from '../tokenStorage'
 
@@ -182,26 +184,7 @@ const HomePage = () =>
       {/* <h2>Hello userId: {jwt_decode(retrieveToken())}</h2> */}
 
       <Container maxWidth="sm">
-          <Autocomplete
-          freeSolo
-          id="free-solo-demo"
-          options={top100Films.map((option) => option.title)}
-          renderInput={
-            (params) => <TextField {...params}
-            InputProps={{
-              // ...params.InputProps,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton>
-                    <SearchIcon/>
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            placeholder="Search Services"
-            label="" variant="outlined"/>
-            }
-          />
+          <SearchBar />
       </Container>
       <div className="google-map-code">
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.9114859634215!2d-81.20224858452536!3d28.6024320921926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e7685d6a0a495f%3A0x5fd59b92b3c79bab!2sUniversity%20of%20Central%20Florida!5e0!3m2!1sen!2sus!4v1648162123608!5m2!1sen!2sus" width="600" height="450" frameboard ="0" style={{border:0}} allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
