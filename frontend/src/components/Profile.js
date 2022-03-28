@@ -21,6 +21,8 @@ function Profile() {
     const [fileData, setFileData] = useState();
     const [password, setPassword] = useState({ oldPassword: "", newPassword: "" });
     const [changePasswordMessage, setChangePasswordMessage] = useState("");
+    const [newPasswordValidation, setNewPasswordValidation] = useState(false)
+    const [oldPasswordValidation, setOldPasswordValidation] = useState(false)
     const dispatch = useDispatch();
 
     const handleOpen = () => setOpen(true);
@@ -28,6 +30,8 @@ function Profile() {
         setOpen(false);
         setChangePasswordMessage("")
         setPassword({oldPassword: "", newPassword: ""})
+        setNewPasswordValidation(false)
+        setOldPasswordValidation(false)
     }
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
@@ -105,6 +109,8 @@ function Profile() {
     async function changePassword() { 
         let message
         if (password.oldPassword === "" || password.newPassword === "") {
+            if (password.oldPassword === "") setOldPasswordValidation(true)
+            if (password.newPassword === "") setNewPasswordValidation(true)
             return
         }
         await axios.post(bp.buildPath("api/change-password"), {userId: userInfo.userId, oldPassword: password.oldPassword, newPassword: password.newPassword, jwtToken: userInfo.jwtToken}).then((response) => {
@@ -250,15 +256,17 @@ function Profile() {
                                                     label="Old Password"
                                                     required
                                                     variant="outlined"
-                                                    error={password.oldPassword === ""}
+                                                    error={oldPasswordValidation === true}
                                                     helperText={
-                                                        password.oldPassword === ""
+                                                        oldPasswordValidation === true
                                                             ? "Can't be empty!"
                                                             : " "
                                                     }
-                                                    onChange={(e) =>
+                                                    onChange={(e) => {
                                                         setPassword({ ...password, oldPassword: e.target.value })
-                                                    }
+                                                        setOldPasswordValidation(false)
+                                                    }                                  
+                                                   }
                                                 ></TextField>
                                             </Grid>
                                             <Grid item>
@@ -267,14 +275,16 @@ function Profile() {
                                                     label="New Password"
                                                     required
                                                     variant="outlined"
-                                                    error={password.newPassword === ""}
+                                                    error={newPasswordValidation === true}
                                                     helperText={
-                                                        password.newPassword === ""
+                                                        newPasswordValidation === true
                                                             ? "Can't be empty!"
                                                             : " "
                                                     }
-                                                    onChange={(e) =>
+                                                    onChange={(e) => {
                                                         setPassword({ ...password, newPassword: e.target.value })
+                                                        setNewPasswordValidation(false)
+                                                    }
                                                     }
                                                 ></TextField>
                                             </Grid>
