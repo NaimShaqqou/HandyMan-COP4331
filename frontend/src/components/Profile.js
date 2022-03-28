@@ -19,20 +19,23 @@ function Profile() {
     const [showSaveChangesButton, setShowSaveChangesButton] = useState(false);
     const [showEditButton, setShowEditButton] = useState(true);
     const [fileData, setFileData] = useState();
-    const [password, setPassword] = useState({ oldPassword: "", newPassword: "" });
+    const [password, setPassword] = useState({
+        oldPassword: "",
+        newPassword: "",
+    });
     const [changePasswordMessage, setChangePasswordMessage] = useState("");
-    const [newPasswordValidation, setNewPasswordValidation] = useState(false)
-    const [oldPasswordValidation, setOldPasswordValidation] = useState(false)
+    const [newPasswordValidation, setNewPasswordValidation] = useState(false);
+    const [oldPasswordValidation, setOldPasswordValidation] = useState(false);
     const dispatch = useDispatch();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
-        setChangePasswordMessage("")
-        setPassword({oldPassword: "", newPassword: ""})
-        setNewPasswordValidation(false)
-        setOldPasswordValidation(false)
-    }
+        setChangePasswordMessage("");
+        setPassword({ oldPassword: "", newPassword: "" });
+        setNewPasswordValidation(false);
+        setOldPasswordValidation(false);
+    };
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
     function editProfile() {
@@ -106,23 +109,31 @@ function Profile() {
         setUserInfo(user);
     }
 
-    async function changePassword() { 
-        let message
+    async function changePassword() {
+        let message;
         if (password.oldPassword === "" || password.newPassword === "") {
-            if (password.oldPassword === "") setOldPasswordValidation(true)
-            if (password.newPassword === "") setNewPasswordValidation(true)
-            return
+            if (password.oldPassword === "") setOldPasswordValidation(true);
+            if (password.newPassword === "") setNewPasswordValidation(true);
+            return;
         }
-        await axios.post(bp.buildPath("api/change-password"), {userId: userInfo.userId, oldPassword: password.oldPassword, newPassword: password.newPassword, jwtToken: userInfo.jwtToken}).then((response) => {
-            if (response.data.error === "") {
-                message = "Successfully changed password."
-            } else {
-                message = response.data.error
-            }
-            setChangePasswordMessage(message)
-        }).catch((error) => {
-            console.log(error)
-        }) 
+        await axios
+            .post(bp.buildPath("api/change-password"), {
+                userId: userInfo.userId,
+                oldPassword: password.oldPassword,
+                newPassword: password.newPassword,
+                jwtToken: userInfo.jwtToken,
+            })
+            .then((response) => {
+                if (response.data.error === "") {
+                    message = "Successfully changed password.";
+                } else {
+                    message = response.data.error;
+                }
+                setChangePasswordMessage(message);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     const style = {
@@ -252,7 +263,7 @@ function Profile() {
                                         <Grid container direction="column" spacing={2}>
                                             <Grid item>
                                                 <TextField
-                                                fullWidth
+                                                    fullWidth
                                                     label="Old Password"
                                                     required
                                                     variant="outlined"
@@ -263,15 +274,17 @@ function Profile() {
                                                             : " "
                                                     }
                                                     onChange={(e) => {
-                                                        setPassword({ ...password, oldPassword: e.target.value })
-                                                        setOldPasswordValidation(false)
-                                                    }                                  
-                                                   }
+                                                        setPassword({
+                                                            ...password,
+                                                            oldPassword: e.target.value,
+                                                        });
+                                                        setOldPasswordValidation(false);
+                                                    }}
                                                 ></TextField>
                                             </Grid>
                                             <Grid item>
                                                 <TextField
-                                                fullWidth
+                                                    fullWidth
                                                     label="New Password"
                                                     required
                                                     variant="outlined"
@@ -282,17 +295,22 @@ function Profile() {
                                                             : " "
                                                     }
                                                     onChange={(e) => {
-                                                        setPassword({ ...password, newPassword: e.target.value })
-                                                        setNewPasswordValidation(false)
-                                                    }
-                                                    }
+                                                        setPassword({
+                                                            ...password,
+                                                            newPassword: e.target.value,
+                                                        });
+                                                        setNewPasswordValidation(false);
+                                                    }}
                                                 ></TextField>
                                             </Grid>
                                             <span>{changePasswordMessage}</span>
                                             <Grid item>
-                                            <Button variant="contained" onClick={async () => await changePassword()}>
-                                                Confirm 
-                                            </Button> 
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={async () => await changePassword()}
+                                                >
+                                                    Confirm
+                                                </Button>
                                             </Grid>
                                         </Grid>
                                     </Box>
