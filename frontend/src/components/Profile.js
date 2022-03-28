@@ -7,16 +7,28 @@ import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import axios from "axios";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 
 function Profile() {
     let bp = require("./Path.js");
     let user = useSelector((state) => state.user);
+    const [open, setOpen] = useState(false);
     const [userInfo, setUserInfo] = useState(user);
     const [showSaveChangesButton, setShowSaveChangesButton] = useState(false);
     const [showEditButton, setShowEditButton] = useState(true);
     const [fileData, setFileData] = useState();
+    const [password, setPassword] = useState({ oldPassword: "", newPassword: "" });
+    const [changePasswordMessage, setChangePasswordMessage] = useState("");
     const dispatch = useDispatch();
 
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        setChangePasswordMessage("")
+        setPassword({oldPassword: "", newPassword: ""})
+    }
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
     function editProfile() {
@@ -25,13 +37,16 @@ function Profile() {
     }
 
     const handleImageChange = ({ target }) => {
-        setFileData(target.files[0])
-        setUserInfo({ ...userInfo, profilePicture: URL.createObjectURL(target.files[0]) })
-    }
+        setFileData(target.files[0]);
+        setUserInfo({
+            ...userInfo,
+            profilePicture: URL.createObjectURL(target.files[0]),
+        });
+    };
 
     async function uploadImage() {
-        const formData = new FormData()
-        formData.append("image", fileData)
+        const formData = new FormData();
+        formData.append("image", fileData);
         let imageUrl;
 
         await axios({
@@ -53,7 +68,7 @@ function Profile() {
     }
 
     async function saveChanges() {
-        let newImageUrl = await uploadImage()
+        let newImageUrl = await uploadImage();
 
         await axios
             .post(bp.buildPath("api/edit-profile"), {
@@ -87,17 +102,56 @@ function Profile() {
         setUserInfo(user);
     }
 
+    async function changePassword() { 
+        let message
+        if (password.oldPassword === "" || password.newPassword === "") {
+            return
+        }
+        await axios.post(bp.buildPath("api/change-password"), {userId: userInfo.userId, oldPassword: password.oldPassword, newPassword: password.newPassword, jwtToken: userInfo.jwtToken}).then((response) => {
+            if (response.data.error === "") {
+                message = "Successfully changed password."
+            } else {
+                message = response.data.error
+            }
+            setChangePasswordMessage(message)
+        }).catch((error) => {
+            console.log(error)
+        }) 
+    }
+
+    const style = {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 400,
+        bgcolor: "background.paper",
+        border: "2px solid #000",
+        boxShadow: 24,
+        p: 4,
+    };
+
     return (
         <Container alignItems="center">
             <Grid container direction="column" spacing={3}>
                 <Grid item>
                     <img src={userInfo.profilePicture} />
                     {showSaveChangesButton && (
-                            <input type="file" accept="image/*" onChange={(e) => handleImageChange(e)} />
-                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageChange(e)}
+                        />
+                    )}
                 </Grid>
                 <Grid item>
-                    <Grid container alignItems="center" justifyContent="space-between" direction="row" spacing={4}>
+                    <Grid
+                        container
+                        alignItems="center"
+                        justifyContent="space-between"
+                        direction="row"
+                        spacing={4}
+                    >
                         <Grid item xs={5}>
                             <TextField
                                 fullWidth
@@ -149,7 +203,10 @@ function Profile() {
                                 value={userInfo.profileDescription}
                                 disabled={showEditButton}
                                 onChange={(e) =>
-                                    setUserInfo({ ...userInfo, profileDescription: e.target.value })
+                                    setUserInfo({
+                                        ...userInfo,
+                                        profileDescription: e.target.value,
+                                    })
                                 }
                             />
                         </Grid>
@@ -159,7 +216,6 @@ function Profile() {
                                     Edit Profile
                                 </Button>
                             </Grid>
-
                         )}
                         {showSaveChangesButton && (
                             <Grid item>
@@ -167,7 +223,6 @@ function Profile() {
                                     Save Changes
                                 </Button>
                             </Grid>
-
                         )}
                         {showSaveChangesButton && (
                             <Grid item>
@@ -175,12 +230,68 @@ function Profile() {
                                     Cancel Changes
                                 </Button>
                             </Grid>
-
+                        )}
+                        {showEditButton && (
+                            <Grid item>
+                                <Button variant="contained" onClick={handleOpen}>
+                                    Change Password
+                                </Button>
+                                <Modal
+                                    open={open}
+                                    onClose={handleClose}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <Grid container direction="column" spacing={2}>
+                                            <Grid item>
+                                                <TextField
+                                                fullWidth
+                                                    label="Old Password"
+                                                    required
+                                                    variant="outlined"
+                                                    error={password.oldPassword === ""}
+                                                    helperText={
+                                                        password.oldPassword === ""
+                                                            ? "Can't be empty!"
+                                                            : " "
+                                                    }
+                                                    onChange={(e) =>
+                                                        setPassword({ ...password, oldPassword: e.target.value })
+                                                    }
+                                                ></TextField>
+                                            </Grid>
+                                            <Grid item>
+                                                <TextField
+                                                fullWidth
+                                                    label="New Password"
+                                                    required
+                                                    variant="outlined"
+                                                    error={password.newPassword === ""}
+                                                    helperText={
+                                                        password.newPassword === ""
+                                                            ? "Can't be empty!"
+                                                            : " "
+                                                    }
+                                                    onChange={(e) =>
+                                                        setPassword({ ...password, newPassword: e.target.value })
+                                                    }
+                                                ></TextField>
+                                            </Grid>
+                                            <span>{changePasswordMessage}</span>
+                                            <Grid item>
+                                            <Button variant="contained" onClick={async () => await changePassword()}>
+                                                Confirm 
+                                            </Button> 
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </Modal>
+                            </Grid>
                         )}
                     </Grid>
                 </Grid>
             </Grid>
-
         </Container>
     );
 }
