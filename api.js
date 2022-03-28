@@ -33,12 +33,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
   app.post("/api/search-services", async (req, res, next) => {
-    // incoming: search, jwtToken
+    // incoming: search, location, maxDist, jwtToken
     // outgoing: results[], error
 
     var error = "";
   
-    const { search, jwtToken } = req.body;
+    const { search, location, maxDist, jwtToken } = req.body;
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -64,6 +64,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
     for (var i = 0; i < results.length; i++) {
       _ret.push(results[i].Service);
     }
+
+    // Filters services based on distance
+    _ret = getServicesWithinDistance(_ret, convertAddressToCoordinates(location), maxDist);
 
     var refreshedToken = null;
     try {
@@ -140,7 +143,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/login", async (req, res, next) => {
     // incoming: login, password
-    // outgoing: jwtToken, error
 
     let error = "";
     let results;
@@ -182,7 +184,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
         try {
           const token = require("./createJWT.js");
-          ret = { error: "", jwtToken: token.createToken(fn, ln, id)};
+          ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id)};
         } catch (e) {
           ret = { error: e.message, jwtToken: ""};
         }

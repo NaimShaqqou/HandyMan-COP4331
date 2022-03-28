@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@native-base/icons": "^0.0.11",
+    "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/drawer": "^6.3.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "expo": "~44.0.0",
+    "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
     "expo-updates": "~0.11.6",
     "galio-framework": "^0.8.0",
@@ -25,14 +27,13 @@
     "react-native": "0.64.3",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-maps": "0.29.4",
+    "react-native-onboarding-swiper": "^1.2.0",
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
-    "undefined": "@native-base/icons/lib",
-    "expo-splash-screen": "~0.14.1",
-    "@react-native-async-storage/async-storage": "~1.15.0"
+    "undefined": "@native-base/icons/lib"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
