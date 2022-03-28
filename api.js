@@ -478,7 +478,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     try {
       if (token.isExpired(jwtToken)) {
-        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        var r = { requestedServiceId: -1, error: "The JWT is no longer valid", jwtToken: "" };
         res.status(200).json(r);
         return;
       }
