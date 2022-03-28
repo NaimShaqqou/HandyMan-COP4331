@@ -182,7 +182,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
         ln = user.LastName;
 
         if (!user.Verified) {
-          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." })
+          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: ""})
           return;
         }
 
@@ -190,10 +190,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
           const token = require("./createJWT.js");
           ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id)};
         } catch (e) {
-          ret = { error: e.message, jwtToken: ""};
+          ret = { error: e.message, jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: ""};
         }
       } else {
-        ret = { error: "Incorrect credentials", jwtToken: ""};
+        ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: ""};
       }
       res.status(200).json(ret);
     });

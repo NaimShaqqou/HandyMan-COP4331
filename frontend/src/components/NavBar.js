@@ -48,7 +48,6 @@ const ResponsiveAppBar = () => {
   };
 
   const handleCloseUserMenu = (e) => {
-    console.log(e)
     if (e.target.innerHTML === "Login") {
       navigate("../login", { replace: true });
     } else if (e.target.innerHTML === "Profile") {
