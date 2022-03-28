@@ -143,7 +143,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/login", async (req, res, next) => {
     // incoming: login, password
-    // outgoing: jwtToken, error
 
     let error = "";
     let results;
@@ -185,7 +184,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
         try {
           const token = require("./createJWT.js");
-          ret = { error: "", jwtToken: token.createToken(fn, ln, id)};
+          ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id)};
         } catch (e) {
           ret = { error: e.message, jwtToken: ""};
         }
