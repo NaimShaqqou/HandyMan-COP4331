@@ -130,11 +130,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
           } else {
             response = {
               id : user._id.valueOf(),
-              error: "Successfully added user!"
+              error: ""
             };
             verifyEmail(email, user._id.valueOf());
           }
-          console.log("sending it after creating user");
           res.status(200).json(response);
         }
       );
