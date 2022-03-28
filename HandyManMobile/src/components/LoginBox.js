@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
-import AppContext from './AppContext.js'
 import { useNavigation } from '@react-navigation/native'
+
+// react redux imports
+import { useSelector, useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as ActionCreators from '../reducerStore/ActionCreators/index'
 
 import { 
     Button, 
@@ -21,7 +25,10 @@ import { MaterialIcons } from "@native-base/icons"
 //const context = useContext(AppContext)
 
 const LoginBox = () => {
-    const { Login } = React.useContext(AppContext);
+    const user = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+
+    const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
 
     // call the login api
     const doLogin = async (event) => {
@@ -46,7 +53,14 @@ const LoginBox = () => {
                 setValid(true);
                 console.log("login success!");
                 
-                Login({jwtToken: res.jwtToken})
+                updateCurrentUser({
+                    userId: res.userId,
+                    firstName: res.FirstName,
+                    lastName: res.lastName,
+                    profilePicture: res.profilePicture,
+                    profileDescription: res.profileDescription,
+                    jwtToken: res.jwtToken
+                })
             }
             
             setLoading(false);
@@ -93,40 +107,6 @@ const LoginBox = () => {
         <Heading mt="1" fontWeight="medium" size="sm">
           Login to continue! 
         </Heading>
-
-        {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-            <Modal.Content>
-                <Modal.Header>Reset your Password</Modal.Header>
-                <Modal.Body>
-                    <Text>
-                        Please enter the email that is associated with your account.
-                    </Text>
-                    <Text>
-                        After clicking the "Confirm" button, you will receive an email
-                        with instructions on how to reset your password. 
-                    </Text>
-                    <FormControl mt='10px'>
-                        <Input 
-                            variant='underlined' 
-                            placeholder='Email'
-                            InputLeftElement={<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />}
-                            size='xl'
-                            onChangeText={newEmail => setEmail(newEmail)}
-                        />
-                    </FormControl>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button.Group space={2}>
-                        <Button variant="ghost" colorScheme="blueGray" onPress={() => {setShowModal(false)}}>
-                            Cancel
-                        </Button>
-                        <Button onPress={ onForgotPasswordPressed }>
-                            Confirm
-                        </Button>
-                    </Button.Group>
-                </Modal.Footer>
-            </Modal.Content>
-        </Modal> */}
 
         <Center mt={10} w='100%'>
             <FormControl isInvalid={valid? false : true}>
