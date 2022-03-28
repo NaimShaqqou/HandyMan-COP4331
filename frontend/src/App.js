@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 import './App.css';
 
 import LoginPage from './pages/LoginPage';
@@ -13,24 +13,17 @@ function App() {
 
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact>
-          <HomePage />
-        </Route>
-        <Route path="/login" exact>
-          <LoginPage />
-        </Route>
-        <Route path="/test" exact>
-          <TestPage />
-        </Route>
-        <Route path="/image" exact>
-          <TestImagePage />
-        </Route>
-        <Route path="/profile" exact>
-          <ProfilePage />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<HomePage />}/>
+        <Route path="/login" element={<LoginPage/>}/>
+        <Route path="/test" element={<TestPage/>}/>
+        <Route path="/image" element={<TestImagePage/>}/>
+        <Route path="/profile" element={<ProfilePage/>}/>
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+      </Routes>
     </Router>
   );
 }

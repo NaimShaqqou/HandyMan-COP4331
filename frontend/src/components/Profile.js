@@ -36,6 +36,9 @@ function Profile() {
         setNewPasswordValidation(false);
         setOldPasswordValidation(false);
     };
+
+    console.log(user)
+
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
     function editProfile() {
