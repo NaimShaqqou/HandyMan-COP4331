@@ -42,28 +42,20 @@ function LoginBox(props) {
       });
       var res = JSON.parse(await response.text());
 
-      if (res['jwtToken'] != "") {
-        alert('login success!');
+      if (res.error == "") {
         setMessage("Logged in");
         var storage = require("../tokenStorage.js");
-        // var user = jwt_decode(res["jwtToken"]);
-        // localStorage.setItem("jwtToken", user);
-        // localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res["jwtToken"]);
         updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
         navigate("../", { replace: true });
       } else {
-        alert('wrong credentials');
-        setMessage("User/Password combination incorrect");
+        setMessage(res.error);
       }
     } catch (e) {
       console.log(e.toString());
       return; 
     }
   };
-
-  
-  
 
   const [values, setValues] = React.useState({
     username: '',

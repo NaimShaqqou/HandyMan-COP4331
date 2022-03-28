@@ -27,7 +27,7 @@ function RegisterBox() {
       setMessage("Passwords do not match");
       return;
     }
-    
+
     var obj = {
       email: values.email,
       password: values.password,
@@ -48,8 +48,11 @@ function RegisterBox() {
       });
       var res = JSON.parse(await response.text());
 
-      alert('Account Created Successfully!');
-      setMessage("Account Created Successfully!");
+      if (res.error == "") {
+        setMessage("Account Created Successfully! Please check your email to verify.");
+      } else {
+        setMessage(res.error);
+      }
       
       // if ("jwtToken" in res) {
       //   alert('login success!');

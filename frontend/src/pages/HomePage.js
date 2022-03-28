@@ -162,9 +162,6 @@ const top100Films = [
 const HomePage = () =>
 {
   var storage = require("../tokenStorage.js");
-  // storage.storeToken(null);
-
-  // let id = (storage.retrieveToken() == null) ? 'null' : JSON.stringify(jwt_decode(storage.retrieveToken()));
 
   let id = storage.retrieveToken();
 
