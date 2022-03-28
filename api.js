@@ -92,10 +92,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
       if (user != null)
       {
         valid = false;
-        return res.status(200).json({ error: "Username already exists. Please enter a different username." });
+        return res.status(200).json({ id: "-1", error: "Username already exists. Please enter a different username." });
       }
     }).catch(err=>{
-      return res.status(200).json({error: err.message});
+      return res.status(200).json({ id: "-1", error: err.message});
     }) 
 
     if (valid){
@@ -103,10 +103,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
         if (user != null)
         {
           valid = false;
-          return res.status(200).json({ error: "Email already exists. Please enter a different email." });
+          return res.status(200).json({ id: "-1", error: "Email already exists. Please enter a different email." });
         }
       }).catch(err=>{
-        return res.status(200).json({error: err.message});
+        return res.status(200).json({ id: "-1", error: err.message});
       }) 
     }
    
@@ -124,12 +124,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
         function (err, user) {
           if (err) {
             response = {
-              id : "-1",
+              id: "-1",
               error: err.message
             };
           } else {
             response = {
-              id : user._id.valueOf(),
+              id: user._id.valueOf(),
               error: ""
             };
             verifyEmail(email, user._id.valueOf());
