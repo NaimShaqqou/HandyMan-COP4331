@@ -196,7 +196,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   });
 
   app.post("/api/edit-profile", async (req, res, next) => {
-    // incoming: userId, newFirstName, newLastName, newUsername, newEmail, newPassword, newProfileDescription, newProfilePicture, jwtToken
+    // incoming: userId, newFirstName, newLastName, newProfileDescription, newProfilePicture, jwtToken
     // outgoing: userId, error, jwtToken
     var response;
 
@@ -204,9 +204,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       userId,
       newFirstName, 
       newLastName, 
-      newUsername, 
-      newEmail,
-      newPassword,
       newProfileDescription, 
       newProfilePicture,
       jwtToken
@@ -216,9 +213,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       UserId: userId,
       FirstName: newFirstName, 
       LastName: newLastName, 
-      Username: newUsername, 
-      Email: newEmail,
-      Password: newPassword,
       ProfileDescript_: newProfileDescription, 
       ProfilePicture: newProfilePicture 
     }
@@ -459,6 +453,69 @@ exports.setApp = function (app, client, cloudinaryParser) {
         
         res.status(200).json(response);
       });
+  });
+
+  app.post("/api/request-service", async (req, res, next) => {
+    // incoming: requesterId, serviceId, price, date, description, jwtToken
+    // outgoing: requestedServiceId, error, jwtToken
+    var response;
+    let {
+      requesterId, 
+      serviceId, 
+      price, 
+      date, 
+      description,
+      jwtToken,
+    } = req.body;
+
+    let request = {
+      RequesterId: requesterId, 
+      ServiceId: serviceId, 
+      Completion: false,
+      Price: price, 
+      Dates: date,
+      DescriptionFromRequester: description
+    } 
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    let coordinates = await convertAddressToCoordinates(address)
+    userId = ObjectId(userId)
+
+    await RequestedService.create(request,
+      function (err, objectInserted) {
+        if (err) {
+          response = {
+            requestedServiceId: -1,
+            error: err.message,
+            refreshedToken: refreshedToken,
+          };
+        } else {
+          response = {
+            requestedServiceId: objectInserted._id.valueOf(),
+            refreshedToken: refreshedToken,
+            error: "Successfully requested service"
+          };
+        }
+        console.log(objectInserted)
+        res.status(200).json(response);
+      }
+    );
   });
 
   app.post("/api/change-password", async (req, res, next) => {
