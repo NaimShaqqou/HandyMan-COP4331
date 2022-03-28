@@ -4,110 +4,110 @@ import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider, Center } from 'native-base';
 import { ActivityIndicator } from 'react-native';
 
-import { NavigationContainer } from '@react-navigation/native'
-import AuthStack from './src/navigation/AuthStack.js'
-import AppStack from './src/navigation/AppStack.js'
+// navigation
+import Navigation from './src/navigation/navigation'
 
 // Context used to handle jwt things
 import AppContext from './src/components/AppContext.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { Provider } from 'react-redux'
+import { store } from './reducerStore/store'
+
 export default function App() {
-  const initialLoginState = {
-    isLoading: true,
-    userName: null,
-    jwtToken: null,
-  };
+  // const initialLoginState = {
+  //   isLoading: true,
+  //   userName: null,
+  //   jwtToken: null,
+  // };
 
-  const loginReducer = (prevState, action) => {
-    switch( action.type ) {
-      case 'RETRIEVE_TOKEN': 
-        return {
-          ...prevState,
-          jwtToken: action.token,
-          isLoading: false,
-        };
-      case 'LOGIN': 
-        return {
-          ...prevState,
-          //userName: action.id,
-          jwtToken: action.token,
-          isLoading: false,
-        };
-      case 'LOGOUT': 
-        return {
-          ...prevState,
-          //userName: null,
-          jwtToken: null,
-          isLoading: false,
-        };
-      case 'REGISTER': 
-        return {
-          ...prevState,
-          //userName: action.id,
-          jwtToken: action.token,
-          isLoading: false,
-        };
-    }
-  };
+  // const loginReducer = (prevState, action) => {
+  //   switch( action.type ) {
+  //     case 'RETRIEVE_TOKEN': 
+  //       return {
+  //         ...prevState,
+  //         jwtToken: action.token,
+  //         isLoading: false,
+  //       };
+  //     case 'LOGIN': 
+  //       return {
+  //         ...prevState,
+  //         //userName: action.id,
+  //         jwtToken: action.token,
+  //         isLoading: false,
+  //       };
+  //     case 'LOGOUT': 
+  //       return {
+  //         ...prevState,
+  //         //userName: null,
+  //         jwtToken: null,
+  //         isLoading: false,
+  //       };
+  //     case 'REGISTER': 
+  //       return {
+  //         ...prevState,
+  //         //userName: action.id,
+  //         jwtToken: action.token,
+  //         isLoading: false,
+  //       };
+  //   }
+  // };
 
-  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+  // const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
-  const authContext = React.useMemo(() => ({
-    Login: async({ jwtToken }) => {
-      try {
-        await AsyncStorage.setItem('jwtToken', jwtToken)
-      } catch(e) {
-        console.log(e)
-      }
-      dispatch({ type: 'LOGIN', token: jwtToken})
-    },
-    Logout: async() => {
-      try {
-        await AsyncStorage.removeItem('jwtToken')
-      } catch(e) {
-        console.log(e)
-      }
-      dispatch({ type: 'LOGOUT' })
-    },
-    Register: () => {
-      setIsLoading(false);
-    },
-  }), []);
+  // const authContext = React.useMemo(() => ({
+  //   Login: async({ jwtToken }) => {
+  //     try {
+  //       await AsyncStorage.setItem('jwtToken', jwtToken)
+  //     } catch(e) {
+  //       console.log(e)
+  //     }
+  //     dispatch({ type: 'LOGIN', token: jwtToken})
+  //   },
+  //   Logout: async() => {
+  //     try {
+  //       await AsyncStorage.removeItem('jwtToken')
+  //     } catch(e) {
+  //       console.log(e)
+  //     }
+  //     dispatch({ type: 'LOGOUT' })
+  //   },
+  //   Register: () => {
+  //     setIsLoading(false);
+  //   },
+  // }), []);
 
-  useEffect(() => {
-    setTimeout(async() => {
-      let userToken = null
-      try {
-        userToken = await AsyncStorage.getItem('jwtToken')
-      } catch(e) {
-        console.log(e)
-      }
+  // useEffect(() => {
+  //   setTimeout(async() => {
+  //     let userToken = null
+  //     try {
+  //       userToken = await AsyncStorage.getItem('jwtToken')
+  //     } catch(e) {
+  //       console.log(e)
+  //     }
 
-      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken});
-    }, 1000)
-  }, [])
+  //     dispatch({ type: 'RETRIEVE_TOKEN', token: userToken});
+  //   }, 1000)
+  // }, [])
 
-  if ( loginState.isLoading ) {
-    return (
-      <NativeBaseProvider>
-        <Center flex={1}>
-          <ActivityIndicator size="large" />
-        </Center>
-      </NativeBaseProvider>
-    );
-  }
+  // if ( loginState.isLoading ) {
+  //   return (
+  //     <NativeBaseProvider>
+  //       <Center flex={1}>
+  //         <ActivityIndicator size="large" />
+  //       </Center>
+  //     </NativeBaseProvider>
+  //   );
+  // }
 
   return (
-    <AppContext.Provider value={authContext}>
+    <Provider store={store}>
       <NativeBaseProvider>
-        <NavigationContainer>
-          { loginState.jwtToken != null ? <AppStack /> : <AuthStack /> }
-        </NavigationContainer>
+        <Navigation />
 
         <StatusBar style="auto" />
 
       </NativeBaseProvider>
-    </AppContext.Provider>
+    </Provider>
   );
 }

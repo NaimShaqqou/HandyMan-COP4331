@@ -33,6 +33,8 @@
     "react-native-screens": "~3.10.1",
     "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
+    "react-redux": "^7.2.6",
+    "redux-thunk": "^2.4.1",
     "undefined": "@native-base/icons/lib"
   },
   "devDependencies": {

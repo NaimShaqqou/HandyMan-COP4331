@@ -1,6 +1,7 @@
 import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
+import { Button, Icon } from 'native-base'
 import { MaterialIcons } from "@native-base/icons"
 import CustomDrawer from '../components/CustomDrawer.js'
 
@@ -33,7 +34,14 @@ const AppStack = () => {
         <Drawer.Screen name="Profile" component={ProfileScreen} options={{
             drawerIcon: ({color}) => (
                 <MaterialIcons name="person" size={22} color={color} />
-            )
+            ),
+            headerRight: () => (
+                <Button
+                    leftIcon={<Icon as={MaterialIcons} name="edit" size="sm" />}
+                    onPress={() => alert('edit profile' )}
+                    variant='unstyled'
+                />
+            ),
         }} />
     </Drawer.Navigator>
   );

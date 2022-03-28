@@ -38,8 +38,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // outgoing: results[], error
 
     var error = "";
-  
     const { search, location, maxDist, jwtToken } = req.body;
+
+    var _search = search.trim();
+    console.log(_search);
+
+    // Checks if token is expired
     try {
       if (token.isExpired(jwtToken)) {
         var r = { error: "The JWT is no longer valid", jwtToken: "" };
@@ -50,25 +54,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    var _search = search.trim();
-
-    // Looks through the different fields of a service using the specified given search
-    const results = await Service.find({
-      $or: [
-        { Title: _search },
-        { Description: _search },
-        { Category: _search }
-      ]
-    });
-
-    var _ret = [];
-    for (var i = 0; i < results.length; i++) {
-      _ret.push(results[i].Service);
-    }
-
-    // Filters services based on distance
-    _ret = getServicesWithinDistance(_ret, convertAddressToCoordinates(location), maxDist);
-
+    // Generates a new token
     var refreshedToken = null;
     try {
       refreshedToken = token.refresh(jwtToken);
@@ -76,9 +62,28 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    var ret = { results: _ret, error: error, jwtToken: refreshedToken };
+    // Looks through the different fields of a service using the specified given search
+    try {
+      var services = await Service.find({
+        $or: [
+          { Title : { "$regex" : _search, "$options" : "i" } },
+          { Description : { "$regex" : _search, "$options" : "i" } },
+          { Category : { "$regex" : _search, "$options" : "i" } }
+        ]});
 
-    res.status(200).json(ret);
+        // Filters services based on distance
+        if (services.length > 0)
+          services = getServicesWithinDistance(services, convertAddressToCoordinates(location), maxDist);
+
+        response = { results: services, error: error, jwtToken: refreshedToken };
+        res.status(200).json(response);
+    }
+    // If we have problems, we end up here
+    catch (err)
+    {
+      response = { error: err.message, refreshedToken: refreshedToken };
+      res.status(200).json(response);
+    }
   });
 
   app.post("/api/register", async (req, res, next) => {
@@ -178,7 +183,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
         ln = user.LastName;
 
         if (!user.Verified) {
-          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." })
+          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: ""})
           return;
         }
 
@@ -186,10 +191,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
           const token = require("./createJWT.js");
           ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id)};
         } catch (e) {
-          ret = { error: e.message, jwtToken: ""};
+          ret = { error: e.message, jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: ""};
         }
       } else {
-        ret = { error: "Incorrect credentials", jwtToken: ""};
+        ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: ""};
       }
       res.status(200).json(ret);
     });
