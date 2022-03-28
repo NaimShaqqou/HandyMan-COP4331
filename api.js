@@ -242,7 +242,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       } else if (user == null) {
         response = { error: "Incorrect information", refreshedToken: refreshedToken };
       } else {
-        response = { UserId: user._id.valueOf(), error: "Successfully edited profile", refreshedToken: refreshedToken};
+        response = { UserId: user._id.valueOf(), error: "", refreshedToken: refreshedToken};
       }
       res.status(200).json(response);
     });
@@ -321,7 +321,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       } else if (service == null) {
         response = { error: "Incorrect information", refreshedToken: refreshedToken };
       } else {
-        response = { ServiceId: service._id.valueOf(), error: "Successfully edited service", refreshedToken: refreshedToken};
+        response = { ServiceId: service._id.valueOf(), error: "", refreshedToken: refreshedToken};
       }
       res.status(200).json(response);
     });
@@ -493,7 +493,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    let coordinates = await convertAddressToCoordinates(address)
     userId = ObjectId(userId)
 
     await RequestedService.create(request,
@@ -508,7 +507,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           response = {
             requestedServiceId: objectInserted._id.valueOf(),
             refreshedToken: refreshedToken,
-            error: "Successfully requested service"
+            error: ""
           };
         }
         console.log(objectInserted)
