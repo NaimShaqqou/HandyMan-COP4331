@@ -1,6 +1,10 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import { useSelector } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search"
+import SearchBar from "./SearchBar"
+import { useNavigate } from "react-router-dom";
 
 import {
   AppBar,
@@ -8,18 +12,26 @@ import {
   Toolbar,
   IconButton,
   Typography,
+  InputAdornment,
+  TextField,
   Menu,
   Container,
+  Autocomplete,
   Avatar,
   Button,
   Tooltip,
   MenuItem
 } from '@mui/material'
+import axios from 'axios';
 
 const pages = [];
-const settings = ['Profile', 'Logout'];
+const loggedInSettings = ['Home','Profile', 'Services', 'Logout']
 
 const ResponsiveAppBar = () => {
+  let user = useSelector((state) => state.user);
+  const pathname = window.location.pathname
+  const navigate = useNavigate()
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -35,7 +47,15 @@ const ResponsiveAppBar = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (e) => {
+    console.log(e)
+    if (e.target.innerHTML === "Login") {
+      navigate("../login", { replace: true });
+    } else if (e.target.innerHTML === "Profile") {
+      navigate("../profile", { replace: true });
+    } else if (e.target.innerHTML === "Home") {
+      navigate("../", { replace: true });
+    } 
     setAnchorElUser(null);
   };
 
@@ -51,6 +71,11 @@ const ResponsiveAppBar = () => {
           >
             Handler
           </Typography>
+
+          {pathname !== "/" && 
+          <Container maxWidth="sm">
+            <SearchBar />
+          </Container>}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -133,11 +158,14 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {user.userId !== "" && loggedInSettings.map((setting) => (
+                <MenuItem key={setting} onClick={(event) => handleCloseUserMenu(event)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              {user.userId === "" && <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>}
             </Menu>
           </Box>
         </Toolbar>

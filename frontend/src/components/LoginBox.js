@@ -13,11 +13,16 @@ import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
 import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../reducerStore/index";
+import { useNavigate } from "react-router-dom";
 
 function LoginBox(props) {
   var bp = require("./Path.js");
-
-  // console.log(props);
+  const dispatch = useDispatch();
+  const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+  const navigate = useNavigate()
 
   const [message, setMessage] = useState("");
 
@@ -45,7 +50,8 @@ function LoginBox(props) {
         // localStorage.setItem("jwtToken", user);
         // localStorage.setItem("user_data", JSON.stringify(user));
         storage.storeToken(res["jwtToken"]);
-        window.location.href = "/";
+        updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
+        navigate("../", { replace: true });
       } else {
         alert('wrong credentials');
         setMessage("User/Password combination incorrect");
@@ -55,6 +61,9 @@ function LoginBox(props) {
       return; 
     }
   };
+
+  
+  
 
   const [values, setValues] = React.useState({
     username: '',
