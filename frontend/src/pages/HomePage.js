@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import GoogleMapReact from 'google-map-react';
-
+import '../map.css';
 import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
@@ -184,7 +184,10 @@ const HomePage = () =>
       <Container maxWidth="sm">
           <SearchBar />
       </Container>
+      <br /><br />
+      <div className='mapsize'>
       <MapComponent/>
+      </div>
     </div>
     
   );

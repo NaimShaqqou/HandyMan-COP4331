@@ -173,7 +173,7 @@ function LoginBox(props) {
         <br />
         <span>New to Handler?</span>
         <br />
-        <a href="https://www.google.com">Create a New Account!</a>
+        <a href="/register">Create a New Account!</a>
       </form>
     </Box>
     // </div>

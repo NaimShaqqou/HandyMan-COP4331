@@ -70,7 +70,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            Handler
+            <a href="/" style={{textDecoration:'none',color:'white'}}>Handler</a>
           </Typography>
 
           {pathname !== "/" && 
