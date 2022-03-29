@@ -6,6 +6,7 @@ const axios = require('axios');
 // import schema
 const User = require("./models/user.js");
 const Review = require("./models/reviews.js");
+const RequestedService = require("./models/requestedservices.js");
 
 //load card model
 const Card = require("./models/card.js");
@@ -482,7 +483,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     try {
       if (token.isExpired(jwtToken)) {
-        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        var r = { requestedServiceId: -1, error: "The JWT is no longer valid", jwtToken: "" };
         res.status(200).json(r);
         return;
       }
@@ -496,8 +497,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     } catch (e) {
       console.log(e.message);
     }
-
-    userId = ObjectId(userId)
 
     await RequestedService.create(request,
       function (err, objectInserted) {
@@ -518,6 +517,40 @@ exports.setApp = function (app, client, cloudinaryParser) {
         res.status(200).json(response);
       }
     );
+  });
+
+  app.post("/api/requested-service-history", async (req, res, next) => {
+    // incoming: serviceId, jwtToken
+    // outgoing: results[], error, jwtToken
+  
+    const { serviceId, jwtToken } = req.body;
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { results: null, error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    const results = await RequestedService.find({ ServiceId : serviceId });
+
+    var ret;
+    if (results.length == 0)
+      ret = { results: null, error: "No requested services found", jwtToken: refreshedToken };
+    else
+      ret = { results: results, error: "", jwtToken: refreshedToken }; 
+
+    res.status(200).json(ret);
   });
 
   app.post("/api/change-password", async (req, res, next) => {
