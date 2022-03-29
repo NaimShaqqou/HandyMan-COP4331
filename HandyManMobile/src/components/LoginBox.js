@@ -27,7 +27,7 @@ import { MaterialIcons } from "@native-base/icons"
 //const context = useContext(AppContext)
 
 const LoginBox = () => {
-    const { Login } = React.useContext(AppContext)
+    const { authContext } = React.useContext(AppContext)
     // const dispatch = useDispatch();
     // const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
 
@@ -64,7 +64,7 @@ const LoginBox = () => {
                     // jwtToken: res.jwtToken
                 // })
 
-                Login({
+                authContext.Login({
                     userId: res.userId,
                     firstName: res.firstName,
                     lastName: res.lastName,

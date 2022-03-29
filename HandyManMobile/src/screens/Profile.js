@@ -1,7 +1,11 @@
+import AppContext from '../components/AppContext'
 import { Box, Center, Image, Heading, Text } from 'native-base'
 import React from 'react'
 
 const Profile = () => {
+  const { userState } = React.useContext(AppContext)
+
+
   return (
     <Box>
       <Center safeAreaTop>
@@ -10,7 +14,7 @@ const Profile = () => {
           h="150px" w="150px" borderRadius="40"
         />
         <Heading mt={'15px'}>
-          John Doe
+          {userState.firstName + " " + userState.lastName}
         </Heading>
       </Center>
 
@@ -20,7 +24,7 @@ const Profile = () => {
         </Heading>
 
         <Text>
-          This is the description.
+          {userState.profileDescription}
         </Text>
       </Center>
     </Box>

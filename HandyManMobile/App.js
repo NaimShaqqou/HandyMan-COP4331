@@ -18,7 +18,7 @@ import { Provider } from 'react-redux'
 import { store } from './reducerStore/store'
 
 export default function App() {
-  const initialLoginState = {
+  const initialUserState = {
     isLoading: true,
     userId: "",
     firstName: "",
@@ -29,7 +29,7 @@ export default function App() {
     jwtToken: "",
   };
 
-  const loginReducer = (prevState, action) => {
+  const userReducer = (prevState, action) => {
     switch( action.type ) {
       case 'RETRIEVE_TOKEN': 
         return {
@@ -75,7 +75,7 @@ export default function App() {
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+  const [userState, dispatch] = React.useReducer(userReducer, initialUserState);
 
   const authContext = React.useMemo(() => ({
     Login: async (userInfo) => {
@@ -129,7 +129,7 @@ export default function App() {
     }, 1000)
   }, [])
 
-  if ( loginState.isLoading ) {
+  if ( userState.isLoading ) {
     return (
       <NativeBaseProvider>
         <Center flex={1}>
@@ -141,11 +141,11 @@ export default function App() {
 
   return (
     // <Provider store={store}>
-    <AppContext.Provider value={authContext}>
+    <AppContext.Provider value={{authContext, userState}}>
       <NativeBaseProvider>
         {/* <Navigation /> */}
         <NavigationContainer>
-          { loginState.jwtToken != "" ? <AppStack /> : <AuthStack />}
+          { userState.jwtToken != "" ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
 
         <StatusBar style="auto" />
