@@ -546,9 +546,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     var ret;
     if (results.length == 0)
-      ret = { results: null, error: "No requested services found", jwtToken: refreshedToken };
+      ret = { results: null, error: "No requested services found", refreshedToken: refreshedToken };
     else
-      ret = { results: results, error: "", jwtToken: refreshedToken }; 
+      ret = { results: results, error: "", refreshedToken: refreshedToken }; 
 
     res.status(200).json(ret);
   });
