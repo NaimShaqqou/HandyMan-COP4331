@@ -22,6 +22,7 @@ import {
 } from '@mui/material'
 import axios from 'axios';
 
+
 function SearchBar() {
     const [predictions, setPredictions] = useState(new Array())
     const [searchInput, setSearchInput] = useState("")
@@ -32,6 +33,8 @@ function SearchBar() {
           setPredictions(response.data.predictions)
         }).catch(error => console.log(error)) 
       }
+
+
 
     return (
         <Autocomplete
