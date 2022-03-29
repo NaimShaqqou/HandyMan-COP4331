@@ -225,7 +225,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     try {
       if (token.isExpired(jwtToken)) {
-        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        var r = { userId: -1, error: "The JWT is no longer valid", jwtToken: "" };
         res.status(200).json(r);
         return;
       }
@@ -243,9 +243,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
     User.findOneAndUpdate({_id: userId}, update, 
       function(err, user) {
       if (err) {
-        response = { error: err.message, refreshedToken: refreshedToken };
+        response = { userId: -1, error: err.message, refreshedToken: refreshedToken };
       } else if (user == null) {
-        response = { error: "Incorrect information", refreshedToken: refreshedToken };
+        response = { userId: -1, error: "Incorrect information", refreshedToken: refreshedToken };
       } else {
         response = { UserId: user._id.valueOf(), error: "", refreshedToken: refreshedToken};
       }
