@@ -8,8 +8,9 @@ const MapComponent = () => {
   })
   
   const containerStyle = {
-    width: '100%',
-    height: '700px'
+    left:'400px',
+    width: '65%',
+    height: '850px'
   };
 
   const centers = [{
