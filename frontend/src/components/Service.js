@@ -10,7 +10,10 @@ import { Box } from '@mui/material';
 
 export default function Service(props) {
     console.log(props.service)
-  return (
-        "Bruh"
-  );
+
+
+
+    return (
+      "Bruh"    
+    );
 }

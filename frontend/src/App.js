@@ -10,6 +10,7 @@ import TestImagePage from './pages/TestImagePage';
 import ProfilePage from './pages/ProfilePage';
 import ServicesPage from './pages/ServicesPage';
 import ServicePage from './pages/ServicePage';
+import AddServicesPage from './pages/AddServicesPage';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/service" element={<ServicePage/>}/>
         <Route path="/services" element={<ServicesPage/>}/>
+        <Route path="/addService" element={<AddServicesPage/>}/>
         <Route
           path="*"
           element={<Navigate to="/" replace />}
