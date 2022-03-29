@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MyComponent from '../components/gmaps';
+import MapComponent from '../components/gmaps';
 
 import PageTitle from '../components/PageTitle';
 import Title from '../components/Title';
@@ -21,7 +21,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 
 const MyApp = (status) => {
   return (
-    <MyComponent/>
+    <MapComponent/>
   )
 };
 

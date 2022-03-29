@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "google-map-react": "^2.1.10",
+    "google-maps-react": "^2.0.6",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "marker": "^0.1.2",

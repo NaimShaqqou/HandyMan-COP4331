@@ -7,6 +7,7 @@ import { CardActionArea } from '@mui/material';
 import { CardHeader } from '@mui/material';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Container } from "@mui/material";
 
 export default function ServiceCard(props) {
     const service = props.service;
@@ -30,7 +31,8 @@ export default function ServiceCard(props) {
     }
     
   return (
-    <Card sx={{ width: '60%' }}>
+    <Container>
+      <Card sx={{ width: '60%' }}>
       <CardActionArea onClick={() => openService()}>
         <CardMedia
           component="img"
@@ -55,5 +57,7 @@ export default function ServiceCard(props) {
         </CardContent>
       </CardActionArea>
     </Card>
+    </Container>
+    
   );
 }
