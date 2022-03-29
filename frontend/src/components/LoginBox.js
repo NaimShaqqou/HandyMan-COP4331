@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 function LoginBox(props) {
   var bp = require("./Path.js");
   const dispatch = useDispatch();
-  const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+  const { updateCurrentUser, loginServices } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate()
 
   const [message, setMessage] = useState("");
@@ -47,6 +47,7 @@ function LoginBox(props) {
         var storage = require("../tokenStorage.js");
         storage.storeToken(res["jwtToken"]);
         updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
+        loginServices(res.services)
         navigate("../", { replace: true });
       } else {
         setMessage(res.error);

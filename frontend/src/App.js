@@ -8,6 +8,8 @@ import HomePage from './pages/HomePage';
 import TestPage from './pages/TestPage';
 import TestImagePage from './pages/TestImagePage';
 import ProfilePage from './pages/ProfilePage';
+import ServicesPage from './pages/ServicesPage';
+import ServicePage from './pages/ServicePage';
 
 function App() {
 
@@ -19,6 +21,8 @@ function App() {
         <Route path="/test" element={<TestPage/>}/>
         <Route path="/image" element={<TestImagePage/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
+        <Route path="/service" element={<ServicePage/>}/>
+        <Route path="/services" element={<ServicesPage/>}/>
         <Route
           path="*"
           element={<Navigate to="/" replace />}

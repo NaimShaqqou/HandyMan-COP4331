@@ -172,31 +172,30 @@ exports.setApp = function (app, client, cloudinaryParser) {
     filters[parameter] = login
     filters["Password"] = password
 
-    User.findOne(filters, function(err, user) {
-      console.log(user)
-      if (err) {
-        return res.status(200).json({error: err.message});
-      } else if (user) {
-        id = user._id.valueOf();
-        fn = user.FirstName;
-        ln = user.LastName;
+    await User.findOne(filters).then(async (user) => {
+        if (user != null) {
+          id = user._id.valueOf();
+          fn = user.FirstName;
+          ln = user.LastName;
+  
+          if (!user.Verified) {
+            res.status(200).json({ error: "Please verify your email by clicking the email we sent you." , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
+            return;
+          }
+  
+          try {
+            const token = require("./createJWT.js");
+            let services = await Service.find({ UserId: id} ).exec()
 
-        if (!user.Verified) {
-          res.status(200).json({ error: "Please verify your email by clicking the email we sent you." , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: ""})
-          return;
+            ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id), services: services};
+          } catch (e) {
+            ret = { error: e.message, jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", services: new Array()};
+          }
+        } else {
+          ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
         }
-
-        try {
-          const token = require("./createJWT.js");
-          ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id)};
-        } catch (e) {
-          ret = { error: e.message, jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: ""};
-        }
-      } else {
-        ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: ""};
-      }
-      res.status(200).json(ret);
-    });
+        res.status(200).json(ret);
+    }).catch((e) => ret = { error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()}) 
   });
 
   app.post("/api/edit-profile", async (req, res, next) => {

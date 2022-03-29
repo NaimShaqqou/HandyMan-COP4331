@@ -1,0 +1,25 @@
+import { Grid } from "@mui/material";
+import React, { useState } from "react";
+import ServiceCard from "../components/ServiceCard";
+import { Container } from "@mui/material";
+import { Box } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../reducerStore/index";
+
+export default function ServicesPage() {
+  let services = useSelector((state) => state.services);
+  services = services.services; // Annoying
+
+  return (
+    <Container>
+      <Grid container direction="column" spacing={5} justifyContent="center">
+        {services.map((service, index) => (
+          <Grid item>
+            <ServiceCard service={service} />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
+}

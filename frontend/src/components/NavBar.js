@@ -54,6 +54,8 @@ const ResponsiveAppBar = () => {
       navigate("../profile", { replace: true });
     } else if (e.target.innerHTML === "Home") {
       navigate("../", { replace: true });
+    } else if (e.target.innerHTML === "Services") {
+      navigate("../services", { replace: true });
     } 
     setAnchorElUser(null);
   };
