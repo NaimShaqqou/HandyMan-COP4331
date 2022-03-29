@@ -545,7 +545,11 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     const results = await RequestedService.find({ ServiceId : serviceId });
 
-    var ret = { results: results, error: "", jwtToken: refreshedToken };
+    var ret;
+    if (results.length == 0)
+      ret = { results: null, error: "No requested services found", jwtToken: refreshedToken };
+    else
+      ret = { results: results, error: "", jwtToken: refreshedToken }; 
 
     res.status(200).json(ret);
   });
