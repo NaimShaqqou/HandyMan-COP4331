@@ -7,9 +7,13 @@
   text-align: center;
 }
 
-/* .loginDiv {
-  text-align: center;
-} */
+.loginDiv {
+ width: 350px;
+  height: 510px;
+  /*background: #000;*/
+  left:20%;
+  position: relative;
+}
 
 /* .inner {
   position: absolute;

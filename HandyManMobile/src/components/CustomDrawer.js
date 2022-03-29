@@ -1,3 +1,4 @@
+import AppContext from './AppContext'
 import React from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Box, Text, Image, Button, Icon } from 'native-base'
@@ -5,15 +6,17 @@ import { ImageBackground } from 'react-native'
 import { MaterialIcons } from "@native-base/icons"
 
 // redux
-import { useSelector, useDispatch } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import * as ActionCreators from '../reducerStore/ActionCreators/index'
+// import { useSelector, useDispatch } from 'react-redux'
+// import { bindActionCreators } from 'redux'
+// import * as ActionCreators from '../reducerStore/ActionCreators/index'
 
 const CustomDrawer = (props) => {
-    const user = useSelector((state) => state.user);
-    const dispatch = useDispatch();
+    const { authContext, userState } = React.useContext(AppContext)
+    let name = userState.firstName + " " + userState.lastName
 
-    const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
+    // const user = useSelector((state) => state.user);
+    // const dispatch = useDispatch();
+    // const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
 
     return (
         <Box flex="1">
@@ -26,7 +29,7 @@ const CustomDrawer = (props) => {
                         source={require('../../assets/user-profile.jpg')} 
                         h="80px" w="80px" borderRadius="40" mb="10px"
                     />
-                    <Text color={'white'} fontSize={18}>John Doe</Text>
+                    <Text color={'white'} fontSize={18}>{name}</Text>
                 </ImageBackground>
 
                 <Box flex={1} backgroundColor='white' paddingTop='10px'>
@@ -43,7 +46,7 @@ const CustomDrawer = (props) => {
                     }}
                     leftIcon={<Icon as={MaterialIcons} name="logout" />}
                     py='15px'
-                    onPress={() => {logoutUser()}}
+                    onPress={() => {authContext.Logout()}}
                 >
                     Sign Out
                 </Button>

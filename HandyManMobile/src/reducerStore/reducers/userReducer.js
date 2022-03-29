@@ -6,6 +6,7 @@ const reducer = (
     profileDescription: "",
     userId: "",
     jwtToken: "",
+    isLoggedIn: false,
   },
   action
 ) => {
@@ -17,6 +18,7 @@ const reducer = (
             state.profileDescription = action.payload.profileDescription
             state.userId = action.payload.userId
             state.jwtToken = action.payload.jwtToken
+            state.isLoggedIn = true
             return state
         case "logout": 
             state.firstName = ""
@@ -25,6 +27,7 @@ const reducer = (
             state.profileDescription = ""
             state.userId = ""
             state.jwtToken = ""
+            state.isLoggedIn = false
             return state
         default:
             return state

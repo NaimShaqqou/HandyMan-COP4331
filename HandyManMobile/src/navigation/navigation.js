@@ -2,18 +2,18 @@ import { NavigationContainer } from '@react-navigation/native'
 import AuthStack from './AuthStack.js'
 import AppStack from './AppStack.js'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useSelector } from 'react-redux'
-import { store } from '../../reducerStore/store.js'
+
+
 
 const Navigation = () => {
-    const state = useSelector((state) => state)
-    console.log(state)
+    const user = useSelector((state) => state.user)
 
     return (
         <NavigationContainer>
-            { useSelector((state => state)).user.jwtToken != "" ? <AppStack /> : <AuthStack /> }
+            { user.isLoggedIn ? <AppStack /> : <AuthStack /> }
         </NavigationContainer>
     )
 }
