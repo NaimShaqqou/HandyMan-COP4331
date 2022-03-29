@@ -9,25 +9,55 @@ import { NavigationContainer } from '@react-navigation/native'
 import AuthStack from './src/navigation/AuthStack';
 import AppStack from './src/navigation/AppStack';
 
-// Context used to handle jwt things
-// import AppContext from './src/components/AppContext.js'
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { Provider, useSelector } from 'react-redux'
+// Redux
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector, useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as ActionCreators from './reducerStore/ActionCreators/index'
 
 export default function App() {
 
-  // if ( userState.isLoading ) {
-  //   return (
-  //     <NativeBaseProvider>
-  //       <Center flex={1}>
-  //         <ActivityIndicator size="large" />
-  //       </Center>
-  //     </NativeBaseProvider>
-  //   );
-  // }
-
   const user = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+  const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
+  
+  // try to see if user is already logged in
+  useEffect(() => {
+    setTimeout(async() => {
+      let userInfo = null
+      try {
+        userInfo = await AsyncStorage.getItem('userInfo')
+      } catch(e) {
+        console.log(e)
+      }
+      
+      if (userInfo == null) {
+        userInfo = {
+          userId: "",
+          firstName: "",
+          lastName: "",
+          profileDescription: "",
+          profilePicture: "",
+          userName: "",
+          jwtToken: "",
+        }
+      } else {
+        userInfo = JSON.parse(userInfo)
+      }
+
+      dispatch(updateCurrentUser(userInfo));
+    }, 1000)
+  }, [])
+
+  if ( user.isLoading ) {
+    return (
+      <NativeBaseProvider>
+        <Center flex={1}>
+          <ActivityIndicator size="large" />
+        </Center>
+      </NativeBaseProvider>
+    );
+  }
 
   return (
     // <Provider store={store}>
@@ -136,29 +166,6 @@ export default function App() {
   //   },
   // }), []);
 
-  // useEffect(() => {
-  //   setTimeout(async() => {
-  //     let userInfo = null
-  //     try {
-  //       userInfo = await AsyncStorage.getItem('userInfo')
-  //     } catch(e) {
-  //       console.log(e)
-  //     }
-      
-  //     if (userInfo == null) {
-  //       userInfo = {
-  //         userId: "",
-  //         firstName: "",
-  //         lastName: "",
-  //         profileDescription: "",
-  //         profilePicture: "",
-  //         userName: "",
-  //         jwtToken: "",
-  //       }
-  //     } else {
-  //       userInfo = JSON.parse(userInfo)
-  //     }
+ 
 
-  //     dispatch({ type: 'RETRIEVE_TOKEN', payload: userInfo});
-  //   }, 1000)
-  // }, [])
+  

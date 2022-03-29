@@ -21,9 +21,18 @@ import {
     Text
 } from 'native-base'
 import { MaterialIcons } from "@native-base/icons"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // to store user info in global variable
 //const context = useContext(AppContext)
+
+const storeInfo = async (userInfo) => {
+    try {
+        await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 const LoginBox = () => {
     // const { authContext } = React.useContext(AppContext)
@@ -53,14 +62,17 @@ const LoginBox = () => {
                 setValid(true);
                 console.log("login success!");
 
-                updateCurrentUser({
+                const user = {
                     userId: res.userId,
                     firstName: res.firstName,
                     lastName: res.lastName,
                     profilePicture: res.profilePicture,
                     profileDescription: res.profileDescription,
                     jwtToken: res.jwtToken
-                })
+                }
+
+                updateCurrentUser(user) // update redux state
+                storeInfo(user) // store to localstorage
 
                 // authContext.Login({
                 //     userId: res.userId,

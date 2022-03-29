@@ -9,12 +9,26 @@ import { MaterialIcons } from "@native-base/icons"
 import { useSelector, useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as ActionCreators from '../reducerStore/ActionCreators/index'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const deleteInfo = async() => {
+    try {
+        await AsyncStorage.removeItem('userInfo')
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 const CustomDrawer = (props) => {
     // redux state and methods
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
+
+    const doLogout = () => {
+        deleteInfo()
+        logoutUser()
+    }
 
     return (
         <Box flex="1">
@@ -44,7 +58,7 @@ const CustomDrawer = (props) => {
                     }}
                     leftIcon={<Icon as={MaterialIcons} name="logout" />}
                     py='15px'
-                    onPress={logoutUser}
+                    onPress={doLogout}
                 >
                     Sign Out
                 </Button>
