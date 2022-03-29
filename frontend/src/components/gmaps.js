@@ -6,7 +6,7 @@ const MapComponent = () => {
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyADmpMRE8HD7JlV4vQK1V1RjzScFszfMB8"
   })
-  
+
   const containerStyle = {
     left:'400px',
     width: '65%',
