@@ -1,3 +1,4 @@
+import AppContext from '../components/AppContext'
 import React from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Box, Text, Image, Button, Icon } from 'native-base'
@@ -5,15 +6,15 @@ import { ImageBackground } from 'react-native'
 import { MaterialIcons } from "@native-base/icons"
 
 // redux
-import { useSelector, useDispatch } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import * as ActionCreators from '../reducerStore/ActionCreators/index'
+// import { useSelector, useDispatch } from 'react-redux'
+// import { bindActionCreators } from 'redux'
+// import * as ActionCreators from '../reducerStore/ActionCreators/index'
 
 const CustomDrawer = (props) => {
-    const user = useSelector((state) => state.user);
-    const dispatch = useDispatch();
-
-    const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
+    const { Logout } = React.useContext(AppContext)
+    // const user = useSelector((state) => state.user);
+    // const dispatch = useDispatch();
+    // const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
 
     return (
         <Box flex="1">
@@ -43,7 +44,7 @@ const CustomDrawer = (props) => {
                     }}
                     leftIcon={<Icon as={MaterialIcons} name="logout" />}
                     py='15px'
-                    onPress={() => {logoutUser()}}
+                    onPress={() => {Logout()}}
                 >
                     Sign Out
                 </Button>

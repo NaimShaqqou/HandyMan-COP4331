@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+import AppContext from './AppContext'
 import { useNavigation } from '@react-navigation/native'
 
 // react redux imports
-import { useSelector, useDispatch } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import * as ActionCreators from '../reducerStore/ActionCreators/index'
+// import { useSelector, useDispatch } from 'react-redux'
+// import { bindActionCreators } from 'redux'
+// import * as ActionCreators from '../reducerStore/ActionCreators/index'
+// import { loggedIn } from '../navigation/navigation'
 
 import { 
     Button, 
@@ -25,10 +27,9 @@ import { MaterialIcons } from "@native-base/icons"
 //const context = useContext(AppContext)
 
 const LoginBox = () => {
-    const user = useSelector((state) => state.user);
-    const dispatch = useDispatch();
-
-    const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
+    const { Login } = React.useContext(AppContext)
+    // const dispatch = useDispatch();
+    // const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
 
     // call the login api
     const doLogin = async (event) => {
@@ -52,10 +53,20 @@ const LoginBox = () => {
             } else {
                 setValid(true);
                 console.log("login success!");
+
                 
-                updateCurrentUser({
+                // updateCurrentUser({
+                    // userId: res.userId,
+                    // firstName: res.firstName,
+                    // lastName: res.lastName,
+                    // profilePicture: res.profilePicture,
+                    // profileDescription: res.profileDescription,
+                    // jwtToken: res.jwtToken
+                // })
+
+                Login({
                     userId: res.userId,
-                    firstName: res.FirstName,
+                    firstName: res.firstName,
                     lastName: res.lastName,
                     profilePicture: res.profilePicture,
                     profileDescription: res.profileDescription,
@@ -89,14 +100,12 @@ const LoginBox = () => {
     // email: contains the email to reset the password
     const [username, setUsername] = useState('');
     const [pass, setPassword] = useState('');
-    const [email, setEmail] = useState('');
     
     // form things
     const [show, setShow] = useState(false);
     const [valid, setValid] = useState(true);
     const [loading, setLoading] = useState(false);
     const [msg, setMsg] = useState('');
-    const [showModal, setShowModal] = useState(false);
 
 
     return (
@@ -105,7 +114,7 @@ const LoginBox = () => {
           Welcome to Handler
         </Heading>
         <Heading mt="1" fontWeight="medium" size="sm">
-          Login to continue! 
+          Login to continue!
         </Heading>
 
         <Center mt={10} w='100%'>
