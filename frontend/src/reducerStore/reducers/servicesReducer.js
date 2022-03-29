@@ -7,7 +7,7 @@ const reducer = (
     action
   ) => {
       switch (action.type) {
-          case "login":
+          case "loginServices":
               state.services = action.payload.services
               return state
           case "addService": 
@@ -19,7 +19,7 @@ const reducer = (
                 state.services.splice(index, 1, action.payload.service)
               }
               return state
-          case "logout":
+          case "logoutServices":
               state.services = new Array()
               return state
           default:

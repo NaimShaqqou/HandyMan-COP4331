@@ -18,7 +18,7 @@ export const logoutUser = () => {
 export const loginServices = (services) => {
     return (dispatch) => [
         dispatch({
-            type:"login",
+            type:"loginServices",
             payload: {services: services}
         })
     ]
@@ -45,7 +45,7 @@ export const deleteService = (service) => {
 export const logoutServices = () => {
     return (dispatch) => [
         dispatch({
-            type:"logout"
+            type:"logoutServices"
         })
     ]
 }

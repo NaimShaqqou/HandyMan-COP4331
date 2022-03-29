@@ -14,6 +14,7 @@ import Modal from "@mui/material/Modal";
 function Profile() {
     let bp = require("./Path.js");
     let user = useSelector((state) => state.user);
+
     const [open, setOpen] = useState(false);
     const [userInfo, setUserInfo] = useState(user);
     const [showSaveChangesButton, setShowSaveChangesButton] = useState(false);

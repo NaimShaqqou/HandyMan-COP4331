@@ -46,6 +46,7 @@ function LoginBox(props) {
         setMessage("Logged in");
         var storage = require("../tokenStorage.js");
         storage.storeToken(res["jwtToken"]);
+        console.log(res)
         updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
         loginServices(res.services)
         navigate("../", { replace: true });
