@@ -3,10 +3,9 @@ import AppContext from './AppContext'
 import { useNavigation } from '@react-navigation/native'
 
 // react redux imports
-// import { useSelector, useDispatch } from 'react-redux'
-// import { bindActionCreators } from 'redux'
-// import * as ActionCreators from '../reducerStore/ActionCreators/index'
-// import { loggedIn } from '../navigation/navigation'
+import { useSelector, useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as ActionCreators from '../reducerStore/ActionCreators/index'
 
 import { 
     Button, 
@@ -27,9 +26,9 @@ import { MaterialIcons } from "@native-base/icons"
 //const context = useContext(AppContext)
 
 const LoginBox = () => {
-    const { authContext } = React.useContext(AppContext)
-    // const dispatch = useDispatch();
-    // const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
+    // const { authContext } = React.useContext(AppContext)
+    const dispatch = useDispatch();
+    const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
 
     // call the login api
     const doLogin = async (event) => {
@@ -54,17 +53,7 @@ const LoginBox = () => {
                 setValid(true);
                 console.log("login success!");
 
-                
-                // updateCurrentUser({
-                    // userId: res.userId,
-                    // firstName: res.firstName,
-                    // lastName: res.lastName,
-                    // profilePicture: res.profilePicture,
-                    // profileDescription: res.profileDescription,
-                    // jwtToken: res.jwtToken
-                // })
-
-                authContext.Login({
+                updateCurrentUser({
                     userId: res.userId,
                     firstName: res.firstName,
                     lastName: res.lastName,
@@ -72,6 +61,15 @@ const LoginBox = () => {
                     profileDescription: res.profileDescription,
                     jwtToken: res.jwtToken
                 })
+
+                // authContext.Login({
+                //     userId: res.userId,
+                //     firstName: res.firstName,
+                //     lastName: res.lastName,
+                //     profilePicture: res.profilePicture,
+                //     profileDescription: res.profileDescription,
+                //     jwtToken: res.jwtToken
+                // })
             }
             
             setLoading(false);
@@ -79,7 +77,7 @@ const LoginBox = () => {
             console.log(e.toString());
             setLoading(false);
             return; 
-          }
+        }
     }
 
     // to navigate between pages

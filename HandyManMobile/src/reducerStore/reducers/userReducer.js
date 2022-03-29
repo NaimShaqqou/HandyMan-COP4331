@@ -10,28 +10,33 @@ const reducer = (
   },
   action
 ) => {
-    switch (action.type) {
-        case "login":
-            state.firstName = action.payload.firstName
-            state.lastName = action.payload.lastName
-            state.profilePicture = action.payload.profilePicture
-            state.profileDescription = action.payload.profileDescription
-            state.userId = action.payload.userId
-            state.jwtToken = action.payload.jwtToken
-            state.isLoggedIn = true
-            return state
-        case "logout": 
-            state.firstName = ""
-            state.lastName = ""
-            state.profilePicture = ""
-            state.profileDescription = ""
-            state.userId = ""
-            state.jwtToken = ""
-            state.isLoggedIn = false
-            return state
-        default:
-            return state
-    }
+  //Object.assign(state, state)
+  switch (action.type) {
+      case "login":
+        return {
+          ...state,
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName,
+          profilePicture: action.payload.profilePicture,
+          profileDescription: action.payload.profileDescription,
+          userId: action.payload.userId,
+          jwtToken: action.payload.jwtToken,
+          isLoggedIn: true,
+        }
+      case "logout": 
+        return {
+          ...state,
+          firstName: "",
+          lastName: "",
+          profilePicture: "",
+          profileDescription: "",
+          userId: "",
+          jwtToken: "",
+          isLoggedIn: false,
+        }
+      default:
+          return state
+  }
 };
 
 export default reducer

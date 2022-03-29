@@ -6,17 +6,15 @@ import { ImageBackground } from 'react-native'
 import { MaterialIcons } from "@native-base/icons"
 
 // redux
-// import { useSelector, useDispatch } from 'react-redux'
-// import { bindActionCreators } from 'redux'
-// import * as ActionCreators from '../reducerStore/ActionCreators/index'
+import { useSelector, useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as ActionCreators from '../reducerStore/ActionCreators/index'
 
 const CustomDrawer = (props) => {
-    const { authContext, userState } = React.useContext(AppContext)
-    let name = userState.firstName + " " + userState.lastName
-
-    // const user = useSelector((state) => state.user);
-    // const dispatch = useDispatch();
-    // const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
+    // redux state and methods
+    const user = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
 
     return (
         <Box flex="1">
@@ -29,7 +27,7 @@ const CustomDrawer = (props) => {
                         source={require('../../assets/user-profile.jpg')} 
                         h="80px" w="80px" borderRadius="40" mb="10px"
                     />
-                    <Text color={'white'} fontSize={18}>{name}</Text>
+                    <Text color={'white'} fontSize={18}>{user.firstName + " " + user.lastName}</Text>
                 </ImageBackground>
 
                 <Box flex={1} backgroundColor='white' paddingTop='10px'>
@@ -46,7 +44,7 @@ const CustomDrawer = (props) => {
                     }}
                     leftIcon={<Icon as={MaterialIcons} name="logout" />}
                     py='15px'
-                    onPress={() => {authContext.Logout()}}
+                    onPress={logoutUser}
                 >
                     Sign Out
                 </Button>
