@@ -22,19 +22,19 @@ const HomePage = () =>
 
   var storage = require("../tokenStorage.js");
 
-  let id = storage.retrieveToken();
+  let user = storage.retrieveToken();
 
-  if (id == null) {
-    id = 'null';
+  if (user == null) {
+    user = 'null';
   } else {
-    id = JSON.stringify(jwt_decode(id));
+    user = JSON.stringify(jwt_decode(user));
   }
 
   return(
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
-      <h2>Hello userId: {id}</h2>
+      <h2>Hello user: {user}</h2>
 
       <Container maxWidth="md">
         <SearchBar />

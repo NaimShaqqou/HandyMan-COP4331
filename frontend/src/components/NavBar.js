@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search"
 import SearchBar from "./SearchBar"
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 import {
   AppBar,
@@ -59,6 +60,18 @@ const ResponsiveAppBar = () => {
     } 
     setAnchorElUser(null);
   };
+
+  var storage = require("../tokenStorage.js");
+
+  // Set this to the user's full name
+  let avatarAlt = "User Name";
+
+  let userObj = storage.retrieveToken();
+
+  if (userObj != null) {
+    userObj = jwt_decode(userObj);
+    avatarAlt = userObj.firstName + " " + userObj.lastName;
+  }
 
   return (
     <AppBar position="static" elevation='0'>
@@ -139,7 +152,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={avatarAlt} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
 
