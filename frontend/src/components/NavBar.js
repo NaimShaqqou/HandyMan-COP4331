@@ -74,7 +74,7 @@ const ResponsiveAppBar = () => {
           </Typography>
 
           {pathname !== "/" && 
-          <Container maxWidth="sm">
+          <Container maxWidth="md">
             <SearchBar />
           </Container>}
 

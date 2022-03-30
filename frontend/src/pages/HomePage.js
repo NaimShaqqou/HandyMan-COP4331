@@ -181,7 +181,7 @@ const HomePage = () =>
       <h2>Hello userId: {id}</h2>
       {/* <h2>Hello userId: {jwt_decode(retrieveToken())}</h2> */}
 
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
           <SearchBar />
       </Container>
       <br /><br />
