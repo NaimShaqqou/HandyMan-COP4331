@@ -1,5 +1,6 @@
 import Onboarding from 'react-native-onboarding-swiper';
-import { Image, Button, Center } from 'native-base'
+import { Image, Center } from 'native-base'
+import { Button } from 'react-native-paper';
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
@@ -38,15 +39,14 @@ const OnboardingScreen = () => {
           image: <Image source={require('../../assets/OnboardingLogo.png')} />,
           title: 'Get Started Today!',
           subtitle: (
-            <Button.Group direction='column'>
-              <Button w='60%' onPress={() => {navigation.navigate('Register')}}>
+            <>
+              <Button style={{width: '60%'}} mode='contained' onPress={() => {navigation.navigate('Register')}}>
                 Register
               </Button>
-              <Button w='60%' variant='outline' onPress={() => {navigation.navigate('Login')}}>
+              <Button style={{marginTop: 16, width: '60%'}} mode={'outlined'} onPress={() => {navigation.navigate('Login')}}>
                 Login
               </Button>
-
-            </Button.Group>
+            </>
           ),
         },
       ]}

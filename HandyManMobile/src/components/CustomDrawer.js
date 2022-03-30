@@ -1,4 +1,3 @@
-import AppContext from './AppContext'
 import React from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Box, Text, Image, Button, Icon } from 'native-base'

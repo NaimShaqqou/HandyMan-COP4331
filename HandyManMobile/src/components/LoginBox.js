@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import AppContext from './AppContext'
 import { useNavigation } from '@react-navigation/native'
 
 // react redux imports
 import { useSelector, useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as ActionCreators from '../reducerStore/ActionCreators/index'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { 
-    Button, 
     Box,
     Center, 
     Input, 
@@ -20,8 +19,8 @@ import {
     Modal,
     Text
 } from 'native-base'
+import { Button } from 'react-native-paper'
 import { MaterialIcons } from "@native-base/icons"
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // to store user info in global variable
 //const context = useContext(AppContext)
@@ -169,6 +168,29 @@ const LoginBox = () => {
             </Link>
 
             <Button 
+                onPress={doLogin}
+                mode='contained'
+                loading={loading ? true : false}
+                style={{
+                    width: '100%',
+                    marginTop: 20
+                }}
+            >
+                Login
+            </Button>
+
+            <Button 
+                onPress={onRegisterTransition}
+                mode='outlined'
+                style={{
+                    width: '100%',
+                    marginTop: 20
+                }}
+            >
+                Don't have an account?
+            </Button>
+
+            {/* <Button 
                 onPress={ doLogin }
                 size="lg"
                 w="100%"
@@ -183,16 +205,16 @@ const LoginBox = () => {
                 }}
             >
                 Login
-            </Button>
+            </Button> */}
 
-            <Button 
+            {/* <Button 
                 mt={6}
                 variant="outline"
                 onPress={ onRegisterTransition }
                 w="100%"
             >
                 Don't have an account? Register here!
-            </Button>
+            </Button> */}
         </Center>
       </Box>
     );

@@ -1,5 +1,6 @@
 import { React, useState } from 'react'
-import { Button, Box, Center, Input, Icon, Heading, FormControl, WarningOutlineIcon } from 'native-base'
+import { Box, Center, Input, Icon, Heading, FormControl, WarningOutlineIcon } from 'native-base'
+import { Button } from 'react-native-paper'
 
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from "@native-base/icons"
@@ -191,6 +192,29 @@ const RegisterBox = () => {
           </FormControl>
 
           <Button 
+                onPress={doRegister}
+                mode='contained'
+                loading={loading ? true : false}
+                style={{
+                    width: '100%',
+                    marginTop: 20
+                }}
+            >
+                Register
+            </Button>
+
+            <Button 
+                onPress={onLoginTransition}
+                mode='outlined'
+                style={{
+                    width: '100%',
+                    marginTop: 20
+                }}
+            >
+                Already have an account?
+            </Button>
+
+          {/* <Button 
             onPress={ doRegister }
             size="lg"
             w="100%"
@@ -214,7 +238,7 @@ const RegisterBox = () => {
             w="100%"
           >
             Already have an account? Login here!
-          </Button>
+          </Button> */}
         </Center>
       </Box>
   )
