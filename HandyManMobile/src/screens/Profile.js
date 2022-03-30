@@ -2,12 +2,13 @@ import { Center } from 'native-base'
 import React from 'react'
 
 import ProfileComponent from '../components/ProfileComponent'
+import EditProfileComponent from '../components/EditProfileComponent'
 
-const Profile = () => {
 
+const Profile = ({edit}) => {
   return (
     <Center display={'flex'} flex={1} backgroundColor='#fff'>
-      <ProfileComponent />  
+      {edit ? <EditProfileComponent /> : <ProfileComponent /> }
     </Center>
   )
 }
