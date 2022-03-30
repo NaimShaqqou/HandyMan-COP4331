@@ -9,7 +9,7 @@ const Map = (props) => {
 
   const containerStyle = {
     width: '100%',
-    height: '850px'
+    height: '850px',
   };
   
   const markers = [{

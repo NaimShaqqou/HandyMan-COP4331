@@ -8,10 +8,10 @@ import HomePage from './pages/HomePage';
 import TestPage from './pages/TestPage';
 import TestImagePage from './pages/TestImagePage';
 import ProfilePage from './pages/ProfilePage';
+import SearchPage from './pages/SearchPage';
 import ServicesPage from './pages/ServicesPage';
 import ServicePage from './pages/ServicePage';
 import AddServicesPage from './pages/AddServicesPage';
-import RegisterBox from './components/RegisterBox';
 
 function App() {
 
@@ -26,7 +26,7 @@ function App() {
         <Route path="/service" element={<ServicePage/>}/>
         <Route path="/services" element={<ServicesPage/>}/>
         <Route path="/addService" element={<AddServicesPage/>}/>
-        <Route path="/register" element={<RegisterBox/>}/>
+        <Route path="/search" element={<SearchPage/>}/>
         <Route
           path="*"
           element={<Navigate to="/" replace />}

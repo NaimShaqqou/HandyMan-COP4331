@@ -39,30 +39,9 @@ const HomePage = () =>
       <Container maxWidth="md">
         <SearchBar />
       </Container>
-
-      <span>change lat-lng and to re-center map.</span>
-      <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
-      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
-
-      <br /><br />
-
-      <Container maxWidth="lg">
-        <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
-      </Container>
     </div>
     
   );
 }
-
-const classes = {
-  box: {
-    width: 500,
-    // padding: 20,
-    // textAlign: "center",
-    // justifyContent: "center",
-    // backgroundColor: "blue",
-    // color: "black"
-  }
-};
 
 export default HomePage;
