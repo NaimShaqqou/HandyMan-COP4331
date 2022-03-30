@@ -808,7 +808,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       }
     })
     
-    return (filteredServices)
+    return ({filteredServices: filteredServices, searchLocationCoords: { lat: locationInfo.location.lat, lng: locationInfo.location.lng}})
   }
 
   function createPolygonCoordinates(coordinates) {
