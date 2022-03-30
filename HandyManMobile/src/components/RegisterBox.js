@@ -41,7 +41,7 @@ const RegisterBox = () => {
           });
           var res = JSON.parse(await response.text());
 
-          if (res.error == 'Successfully added user!') {
+          if (res.error == '') {
             navigation.navigate('confirmEmail');
           } else if (res.error == 'Username already exists. Please enter a different username.') {
             setUserValid(false);

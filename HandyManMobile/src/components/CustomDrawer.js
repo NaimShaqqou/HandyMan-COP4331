@@ -38,7 +38,7 @@ const CustomDrawer = (props) => {
                     style={{padding: 20}}
                 >
                     <Image 
-                        source={require('../../assets/user-profile.jpg')} 
+                        source={{uri: user.profilePicture}}
                         h="80px" w="80px" borderRadius="40" mb="10px"
                     />
                     <Text color={'white'} fontSize={18}>{user.firstName + " " + user.lastName}</Text>

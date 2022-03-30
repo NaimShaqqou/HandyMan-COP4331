@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider, Center, Text } from 'native-base';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Colors } from 'react-native-paper';
 
 // navigation
 import { NavigationContainer } from '@react-navigation/native'
@@ -63,11 +63,11 @@ export default function App() {
     // <Provider store={store}>
     // <AppContext.Provider value={{authContext, userState}}>
     <NativeBaseProvider>
+      <StatusBar style="auto" />
       <NavigationContainer>
         { user.jwtToken != "" ? <AppStack /> : <AuthStack />}
       </NavigationContainer>
 
-      <StatusBar style="auto" />
     </NativeBaseProvider>
 
     // </AppContext.Provider>

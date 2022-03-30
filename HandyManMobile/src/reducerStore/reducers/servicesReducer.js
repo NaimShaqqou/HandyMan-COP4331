@@ -7,7 +7,7 @@ const reducer = (
     action
 ) => {
     switch (action.type) {
-        case "login":
+        case "loginServices":
             return {
                 ...state,
                 services: action.payload.services

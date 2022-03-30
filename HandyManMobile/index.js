@@ -8,11 +8,24 @@ import { registerRootComponent } from 'expo';
 import App from './App';
 import { store } from './src/reducerStore/store.js'
 import { Provider } from 'react-redux'
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
  
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#67e8f9',
+    accent: '#f1c40f',
+  },
+};
+
+
 const NewRootComponent = () => {
     return (
       <Provider store={store}>
-        <App />
+        <PaperProvider theme={theme}>
+          <App />
+        </PaperProvider>
       </Provider>
     )
 }
