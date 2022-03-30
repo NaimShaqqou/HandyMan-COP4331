@@ -1,22 +1,16 @@
 import React, { useState } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, } from '@react-google-maps/api';
 
-const MapComponent = (props) => {
+const Map = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyADmpMRE8HD7JlV4vQK1V1RjzScFszfMB8"
   })
 
   const containerStyle = {
-    left:'400px',
-    width: '65%',
+    width: '100%',
     height: '850px'
   };
-
-  // const ucf_coords = {
-  //   lat: 28.602,
-  //   lng: -81.200
-  // }
   
   const markers = [{
     position: {
@@ -49,4 +43,4 @@ const MapComponent = (props) => {
   ) : <></>
 }
 
-export default React.memo(MapComponent)
+export default React.memo(Map)

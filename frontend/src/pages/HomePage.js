@@ -3,7 +3,7 @@ import '../map.css';
 import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
 import SearchBar from "../components/SearchBar.js"
-import MapComponent from '../components/gmaps';
+import MapComponent from '../components/Map';
 
 import {
   Container
@@ -37,7 +37,7 @@ const HomePage = () =>
       <h2>Hello userId: {id}</h2>
 
       <Container maxWidth="md">
-          <SearchBar />
+        <SearchBar />
       </Container>
 
       <span>change lat-lng and to re-center map.</span>
@@ -45,9 +45,10 @@ const HomePage = () =>
       <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
 
       <br /><br />
-      <div className='mapsize'>
-      <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
-      </div>
+
+      <Container maxWidth="lg">
+        <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
+      </Container>
     </div>
     
   );
