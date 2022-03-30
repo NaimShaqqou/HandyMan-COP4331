@@ -1,22 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, } from '@react-google-maps/api';
 
-const MapComponent = () => {
+const MapComponent = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyADmpMRE8HD7JlV4vQK1V1RjzScFszfMB8"
   })
-  
+
   const containerStyle = {
     left:'400px',
     width: '65%',
     height: '850px'
   };
 
-  const centers = [{
-    lat: 28.602,
-    lng: -81.200
-  }];
+  // const ucf_coords = {
+  //   lat: 28.602,
+  //   lng: -81.200
+  // }
   
   const markers = [{
     position: {
@@ -33,7 +33,7 @@ const MapComponent = () => {
   return isLoaded ? (
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={centers[0]}
+        center={props.center}
         zoom={15}
         // onLoad={onLoad}
         // onUnmount={onUnmount}
