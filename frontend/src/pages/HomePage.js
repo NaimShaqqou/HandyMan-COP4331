@@ -21,39 +21,39 @@ const HomePage = () =>
     id = JSON.stringify(jwt_decode(id));
   }
 
-  const getCoordinates = async (event) => {
-    event.preventDefault();
+  // const getCoordinates = async (event) => {
+  //   event.preventDefault();
 
-    let path = "http://api.positionstack.com/v1/forward?access_key=2bdf5eb2a856e6ff7e7eab5fd9ff57b8&query=1600%20Pennsylvania%20Ave%20NW,%20Washington%20DC";
+  //   let path = "http://api.positionstack.com/v1/forward?access_key=2bdf5eb2a856e6ff7e7eab5fd9ff57b8&query=1600%20Pennsylvania%20Ave%20NW,%20Washington%20DC";
     
-    var obj = { login: values.username, password: values.password };
-    var js = JSON.stringify(obj);
+  //   var obj = { login: values.username, password: values.password };
+  //   var js = JSON.stringify(obj);
 
-    // alert('click');
+  //   // alert('click');
 
-    try {
-      const response = await fetch(bp.buildPath("api/login"), {
-        method: "POST",
-        body: js,
-        headers: { "Content-Type": "application/json" },
-      });
-      var res = JSON.parse(await response.text());
+  //   try {
+  //     const response = await fetch(bp.buildPath("api/login"), {
+  //       method: "POST",
+  //       body: js,
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     var res = JSON.parse(await response.text());
 
-      if (res.error == "") {
-        setMessage("Logged in");
-        var storage = require("../tokenStorage.js");
-        storage.storeToken(res["jwtToken"]);
-        updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
-        loginServices(res.services)
-        navigate("../", { replace: true });
-      } else {
-        setMessage(res.error);
-      }
-    } catch (e) {
-      console.log(e.toString());
-      return; 
-    }
-  };
+  //     if (res.error == "") {
+  //       setMessage("Logged in");
+  //       var storage = require("../tokenStorage.js");
+  //       storage.storeToken(res["jwtToken"]);
+  //       updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
+  //       loginServices(res.services)
+  //       navigate("../", { replace: true });
+  //     } else {
+  //       setMessage(res.error);
+  //     }
+  //   } catch (e) {
+  //     console.log(e.toString());
+  //     return; 
+  //   }
+  // };
 
   return(
     
