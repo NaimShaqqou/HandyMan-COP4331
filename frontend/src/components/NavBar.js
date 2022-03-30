@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 
 import MenuIcon from '@mui/icons-material/Menu';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../reducerStore/index";
 import SearchIcon from "@mui/icons-material/Search"
 import SearchBar from "./SearchBar"
 import { useNavigate } from "react-router-dom";
@@ -30,6 +32,9 @@ const loggedInSettings = ['Home','Profile', 'Services', 'Logout']
 
 const ResponsiveAppBar = () => {
   let user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { logoutUser } = bindActionCreators(actionCreators, dispatch);
+
   const pathname = window.location.pathname
   const navigate = useNavigate()
 
@@ -58,6 +63,8 @@ const ResponsiveAppBar = () => {
     } else if (e.target.innerHTML === "Services") {
       navigate("../services", { replace: true });
     } else if (e.target.innerHTML === "Logout") {
+      // call the redux function
+      logoutUser();
       navigate("../login", { replace: true });
     } 
     setAnchorElUser(null);
