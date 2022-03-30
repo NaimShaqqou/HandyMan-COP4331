@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search"
 import SearchBar from "./SearchBar"
 import { useNavigate } from "react-router-dom";
-
+import LoggedInName from './LoggedInName';
 import {
   AppBar,
   Box,
@@ -56,6 +56,8 @@ const ResponsiveAppBar = () => {
       navigate("../", { replace: true });
     } else if (e.target.innerHTML === "Services") {
       navigate("../services", { replace: true });
+    } else if (e.target.innerHTML === "Logout") {
+      navigate("../login", { replace: true });
     } 
     setAnchorElUser(null);
   };
