@@ -80,38 +80,17 @@ function LoginBox(props) {
   };
 
   return (
-    // <div className="loginbox">
     <Box style={classes.paper} sx={{
-      // width: {
-      //   mobile: 100,
-      //   laptop: 300,
-      //   desktop: 720,
-      // },
-      // maxHeight: { xs: 500, md: 700 },
-      // height: 1000,
       minHeight: {
         sm: 300,
         md: 400 
       },
-      // maxWidth: 500,
-      // minWidth: 500,
-      // maxWidth: {
-      //   sx: true,
-      //   md: 500
-      // },
       minWidth: {
         sm: 385,
         md: 550
       },
-      // display: 'flex',
-      // flexDirection: { xs: 'column', md: 'row' },
-      // alignItems: 'center',
-      // bgcolor: 'background.paper',
-      // overflow: 'hidden',
-      // borderRadius: '12px',
-      // boxShadow: 1,
-      // fontWeight: 'bold',
-    }}>
+    }}
+    >
 
       <form onSubmit={doLogin}>
         <h3>Login to continue!</h3>

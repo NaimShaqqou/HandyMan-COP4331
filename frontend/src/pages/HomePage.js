@@ -11,6 +11,15 @@ import {
 
 const HomePage = () =>
 {
+  let [center, setCenter] = useState({
+    lat: '28.602',
+    lng: '-81.200'
+  });
+
+  const centerChange = (prop) => (event) => {
+    setCenter({ ...center, [prop]: event.target.value });
+  };
+
   var storage = require("../tokenStorage.js");
 
   let id = storage.retrieveToken();
@@ -21,59 +30,23 @@ const HomePage = () =>
     id = JSON.stringify(jwt_decode(id));
   }
 
-  // const getCoordinates = async (event) => {
-  //   event.preventDefault();
-
-  //   let path = "http://api.positionstack.com/v1/forward?access_key=2bdf5eb2a856e6ff7e7eab5fd9ff57b8&query=1600%20Pennsylvania%20Ave%20NW,%20Washington%20DC";
-    
-  //   var obj = { login: values.username, password: values.password };
-  //   var js = JSON.stringify(obj);
-
-  //   // alert('click');
-
-  //   try {
-  //     const response = await fetch(bp.buildPath("api/login"), {
-  //       method: "POST",
-  //       body: js,
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     var res = JSON.parse(await response.text());
-
-  //     if (res.error == "") {
-  //       setMessage("Logged in");
-  //       var storage = require("../tokenStorage.js");
-  //       storage.storeToken(res["jwtToken"]);
-  //       updateCurrentUser({userId: res.userId, firstName: res.firstName, lastName: res.lastName, profileDescription: res.profileDescription, profilePicture: res.profilePicture, jwtToken: res.jwtToken})
-  //       loginServices(res.services)
-  //       navigate("../", { replace: true });
-  //     } else {
-  //       setMessage(res.error);
-  //     }
-  //   } catch (e) {
-  //     console.log(e.toString());
-  //     return; 
-  //   }
-  // };
-
   return(
-    
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
-      {/* <h2>Hello userId: {((storage.retrieveToken() == null) ? 'null' : JSON.stringify(jwt_decode(storage.retrieveToken())))}</h2> */}
       <h2>Hello userId: {id}</h2>
-      {/* <h2>Hello userId: {jwt_decode(retrieveToken())}</h2> */}
 
       <Container maxWidth="sm">
           <SearchBar />
       </Container>
 
-      <input id="tempInput" type="text" />
-      <button id="tempButton">go</button>
+      <span>change lat-lng and to re-center map.</span>
+      <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
+      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
 
       <br /><br />
       <div className='mapsize'>
-      <MapComponent/>
+      <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
       </div>
     </div>
     
