@@ -55,7 +55,7 @@ function SearchBar() {
 
 
   return (
-    <Paper elevation={3} style={{padding: 10, backgroundColor: "white", width: "100%", textAlign: "center"}}>
+    <Paper elevation={3} style={{padding: 5, backgroundColor: "white", width: "100%", textAlign: "center"}}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Stack
           direction="row"
