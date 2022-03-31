@@ -14,10 +14,11 @@ const ReviewsSchema = new Schema({
             type: Schema.Types.ObjectId, ref: 'Services'
         }
     ,
-    // ProfilePictureOfReviewer: {
-    //     type: Image,
-    //     required: true
-    // },
+    ProfilePictureOfReviewer: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     ReviewText: {
         type: String,
         required: true,
