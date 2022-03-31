@@ -217,7 +217,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       UserId: userId,
       FirstName: newFirstName, 
       LastName: newLastName, 
-      ProfileDescript_: newProfileDescription, 
+      ProfileDescription: newProfileDescription, 
       ProfilePicture: newProfilePicture 
     }
 
