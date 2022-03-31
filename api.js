@@ -608,7 +608,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let {
       userId,
       serviceId,
-      //reviewerProfilePic,
+      reviewerProfilePic,
       reviewText,
       jwtToken,
     } = req.body;
@@ -639,11 +639,11 @@ exports.setApp = function (app, client, cloudinaryParser) {
       ReviewText: reviewText
     })
 
-    await review.save({}, function(err) {
+    await review.save({}, function(err, objectInserted) {
       if(err) {
-        res.send({ error: err, RefreshedToken: refreshedToken })
+        res.send({ reviewId: -1, error: err, RefreshedToken: refreshedToken })
       } else {
-        res.send({ RefreshedToken: refreshedToken });
+        res.send({ reviewId: objectInserted._id.valueOf(), error: "", RefreshedToken: refreshedToken });
       }
     });
 
