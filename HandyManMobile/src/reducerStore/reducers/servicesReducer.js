@@ -1,5 +1,4 @@
 // reducer for services owned by logged in user
-
 const reducer = (
     state = {
         services: new Array()
