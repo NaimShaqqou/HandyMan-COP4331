@@ -697,7 +697,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       if (err) {
         res.send({ error: err, RefreshedToken: refreshedToken });
       } else {
-        res.send({ deletedCount: result.deletedCount, RefreshedToken: refreshedToken });
+        res.send({ error: "", deletedCount: result.deletedCount, RefreshedToken: refreshedToken });
       }
     });
   });
