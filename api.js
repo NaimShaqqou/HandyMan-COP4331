@@ -635,7 +635,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // send request
     const review = new Review({
       UserId: userId, 
-      ReviewerProfilePic: reviewerProfilePic,
+      ProfilePictureOfReviewer: reviewerProfilePic,
       ServiceId: serviceId, 
       ReviewText: reviewText
     })
