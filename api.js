@@ -180,7 +180,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           ln = user.LastName;
   
           if (!user.Verified) {
-            res.status(200).json({ error: "Please verify your email by clicking the email we sent you." , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
+            res.status(200).json({ error: "Account has not been verified!" , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
             return;
           }
   

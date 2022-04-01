@@ -21,7 +21,7 @@ const reducer = (
                 ...state,
                 services: state.services.filter(service => service !== action.payload.service)
             }
-        case "logout":
+        case "logoutServices":
             return {
                 ...state,
                 services: new Array()
