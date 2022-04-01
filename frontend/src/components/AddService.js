@@ -4,11 +4,19 @@ import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { Container } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../reducerStore/index";
 import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
+import { Stack } from "@mui/material";
+import axios from "axios";
+import '../styles.css';
 
 export default function AddService() {
+    let user = useSelector((state) => state.user);
+    const bp = require("./Path");
     const days = [
         "Monday",
         "Tuesday",
@@ -18,9 +26,13 @@ export default function AddService() {
         "Saturday",
         "Sunday",
     ];
-    const categories = ["Baking", "Teaching", "Fixing"];
+    const categories = ["Baking", "Teaching", "Fixing", "Other"];
 
-    const [category, setCategory] = useState();
+    const [images, setImages] = useState([]);
+    const [imageValidation, setImageValidation] = useState(false)
+    const [predictions, setPredictions] = useState(new Array());
+    const [category, setCategory] = useState("");
+    const [categoryValidation, setCategoryValidation] = useState(false);
     const [fileData, setFileData] = useState([]);
     const [title, setTitle] = useState("");
     const [titleValidation, setTitleValidation] = useState(false);
@@ -30,24 +42,124 @@ export default function AddService() {
     const [locationValidation, setLocationValidation] = useState(false);
     const [price, setPrice] = useState("");
     const [priceValidation, setPriceValidation] = useState(false);
+    const [availableDays, setAvailableDays] = useState(new Array())
+    const [availableDaysValidation, setAvailableDaysValidation] = useState(false);
+
+    const dispatch = useDispatch();
+    const { addService, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+
 
     const handleImageChange = ({ target }) => {
+        setImageValidation(false)
+        setImages((array) => [...array, URL.createObjectURL(target.files[0])])
         setFileData((array) => [...array, target.files[0]]);
     };
 
-    function addService() {
-        if (title === "" || description === "" || location === "" || price === "") {
+    async function createService() {
+        if (title === "" || description === "" || location === "" || price === "" || availableDays.length === 0 || category === "" || images.length === 0) {
             if (title === "") setTitleValidation(true);
             if (description === "") setDescriptionalidation(true);
             if (location === "") setLocationValidation(true);
             if (price === "") setPriceValidation(true);
+            if (category === "") setCategoryValidation(true);
+            if (availableDays.length === 0) setAvailableDaysValidation(true)
+            if (images.length === 0) setImageValidation(true)
             return;
         }
+
+        let urlList = await convertToUrls()
+
+        await axios.post(bp.buildPath("api/add-service"), {
+                userId: user.userId,
+                title: title,
+                imageUrls: urlList,
+                address: location,
+                description: description,
+                price: price.toString(),
+                daysAvailable: availableDays,
+                category: category,
+                jwtToken: user.jwtToken
+        }).then((response) => {
+            let insertedService = response.service
+            let refreshedToken = response.refreshedToken
+            updateCurrentUser({...user, jwtToken: refreshedToken})
+            addService(insertedService)
+        }).catch((error) => {
+            console.log(error.message)
+        })
     }
+
+    async function convertToUrls() {
+        let urls = new Array()
+
+        fileData.forEach(async (file) => {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            await axios({
+                method: "post",
+                url: bp.buildPath("api/store-image"),
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+                .then(function (response) {
+                    //handle success
+                    urls.push(response.data.imageUrl);
+                })
+                .catch(function (response) {
+                    //handle error
+                    console.log(response);
+                });
+        })
+
+        return urls
+    }
+
+    function removeImage(imageIndex) {
+        setImages(images.filter((image, index) => {
+            if (index !== imageIndex) return image 
+        }))
+        setFileData(fileData.filter((file, index) => {
+            if (file !== imageIndex) return file 
+        }))
+    }
+
+    function removeAllImages() {
+        setImages([])
+        setFileData([])
+    }
+
+    async function findPredictions() {
+        await axios
+          .post(bp.buildPath("api/autocomplete-address"), { input: location })
+          .then((response) => {
+            setPredictions(response.data.predictions);
+          })
+          .catch((error) => console.log(error));
+      }
 
     return (
         <Container>
-            <Grid container spacing={4} direction="column">
+            <Grid container spacing={3} direction="column">
+                <Grid item>
+                    <Stack direction="row" spacing={2}>
+                    {images.map((image, index) => (
+                    
+                        <div key={index} className="shrink">
+                            <img src={image} key={index} alt="" width="100" onClick={() => removeImage(index)}/>
+                        </div>
+                   
+                    ))}
+                     </Stack>
+                     {imageValidation && <span>Need to set at least one photo for your service!</span> }
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e)}
+                    />
+                    <button onClick={() => removeAllImages()}>Remove all images</button>
+                    
+                </Grid>
                 <Grid item>
                     <TextField
                         fullWidth
@@ -89,22 +201,35 @@ export default function AddService() {
                     />
                 </Grid>
                 <Grid item>
-                    <TextField
-                        fullWidth
-                        required
-                        id="location"
-                        label="Location"
-                        variant="outlined"
-                        error={locationValidation === true}
-                        helperText={
-                            locationValidation === true
-                                ? "Location can't be empty!"
-                                : " "
-                        }
-                        onChange={(e) => {
-                            setLocation(e.target.value)
+                        <Autocomplete
+                        options={predictions.map((prediction) => prediction)}
+                        onChange={(e, value) => {
+                            value === null ? setLocation("") : setLocation(value)
                             setLocationValidation(false);
                         }}
+                        renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Address"
+                            variant="outlined"
+                            fullWidth
+                            InputProps={{
+                                ...params.InputProps,
+                                type: "text"
+                            }}
+                            error={locationValidation === true}
+                            helperText={
+                                locationValidation === true
+                                    ? "Address can't be empty!"
+                                    : " "
+                            }
+                            onChange={async (e) => {
+                                setLocation(e.target.value)
+                                setLocationValidation(false);
+                                await findPredictions();
+                            }}
+                        />
+                    )}
                     />
                 </Grid>
                 <Grid item>
@@ -112,6 +237,7 @@ export default function AddService() {
                         fullWidth
                         required
                         rows={4}
+                        type="number"
                         id="price"
                         label="Price"
                         variant="outlined"
@@ -128,36 +254,59 @@ export default function AddService() {
                     />
                 </Grid>
                 <Grid item>
+                    <Stack direction="row" spacing={7} justifyContent="space-between">
                     <Autocomplete
                         multiple
                         id="tags-outlined"
                         options={days}
                         getOptionLabel={(option) => option}
                         filterSelectedOptions
+                        fullWidth
+                        onChange={(e, value) =>  {
+                            setAvailableDays(value)
+                            setAvailableDaysValidation(false)
+                        }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Available Days to Work"
+                                label="Available Days to Work"     
                                 placeholder="Week Days"
+                                error={availableDaysValidation === true}
+                                helperText={
+                                    availableDaysValidation === true
+                                        ? "Must select at least one day!"
+                                        : " "
+                                }
                             />
                         )}
                     />
-                </Grid>
-                <Grid item>
                     <TextField
                         id="category"
                         select
                         label="Select the category of your service"
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
-                        {categories.map((option) => (
-                            <MenuItem key={option} value={option}>
+                        onChange={(e) =>  {
+                            setCategory(e.target.value)
+                            setCategoryValidation(false)
+                        }}
+                        style={{width: "50%"}}
+                        error={categoryValidation === true}
+                        helperText={
+                            categoryValidation === true
+                                ? "Must select a category!"
+                                : " "
+                        }
+                    >   
+                        {categories.map((option, index) => (
+                            <MenuItem key={index} value={option}>
                                 {option}
                             </MenuItem>
                         ))}
                     </TextField>
+                    </Stack>
                 </Grid>
-                <Button variant="contained" onClick={() => addService()}>Save Service</Button>
+                <Grid item>
+                    <Button variant="contained" onClick={async () => await createService()}>Save Service</Button>
+                </Grid>
             </Grid>
         </Container>
     );

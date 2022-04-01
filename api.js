@@ -385,13 +385,13 @@ exports.setApp = function (app, client, cloudinaryParser) {
       function (err, objectInserted) {
         if (err) {
           response = {
-            serviceId: -1,
+            service: -1,
             error: err.message,
             refreshedToken: refreshedToken,
           };
         } else {
           response = {
-            serviceId: objectInserted._id.valueOf(),
+            service: objectInserted,
             refreshedToken: refreshedToken,
             error: ""
           };
@@ -737,6 +737,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   })
 
+  // This autocompletes for regions
   app.post("/api/autocomplete-place", async (req, res, next) => {
     let input = req.body.input
     let googleUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
@@ -745,6 +746,31 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     input = input.replaceAll(' ', '+')
     googleUrl = googleUrl + input + "&components=country:us&types=(regions)&key=" + apiKey
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = response.data.predictions
+        result.forEach((place) => {
+          predictions.push(place.description)
+        })
+        console.log(predictions)
+        res.status(200).json({predictions: predictions, error: ""})
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({ error: error.message, predictions: predictions})
+      });
+  })
+
+  // This autocompletes for addresses. Should probs join both api into one later since this is just reused code
+  app.post("/api/autocomplete-address", async (req, res, next) => {
+    let input = req.body.input
+    let googleUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
+    let apiKey = process.env.PLACES_API_KEY
+    let predictions = new Array()
+
+    input = input.replaceAll(' ', '+')
+    googleUrl = googleUrl + input + "&components=country:us&types=address&key=" + apiKey
 
     await axios(googleUrl)
       .then((response) => {

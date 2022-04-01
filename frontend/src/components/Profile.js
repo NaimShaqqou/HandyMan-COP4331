@@ -27,7 +27,7 @@ function Profile() {
     const [changePasswordMessage, setChangePasswordMessage] = useState("");
     const [newPasswordValidation, setNewPasswordValidation] = useState(false);
     const [oldPasswordValidation, setOldPasswordValidation] = useState(false);
-    const originalPhoto = userInfo.profilePicture
+    const originalPhoto = user.profilePicture
     const dispatch = useDispatch();
 
     const handleOpen = () => setOpen(true);
@@ -39,7 +39,7 @@ function Profile() {
         setOldPasswordValidation(false);
     };
 
-    console.log(user)
+    //console.log(user)
 
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 

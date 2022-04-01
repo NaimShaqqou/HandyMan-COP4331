@@ -29,7 +29,7 @@ export default function ServicesPage() {
           </Grid>
         ))}
       </Grid>
-      <Button onClick={() => addService()}></Button>
+      <Button onClick={() => addService()}>Add new service</Button>
     </div>
   );
 }
