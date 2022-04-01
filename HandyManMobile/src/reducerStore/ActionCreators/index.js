@@ -14,3 +14,38 @@ export const logoutUser = () => {
         })
     ]
 }
+
+export const loginServices = (services) => {
+    return (dispatch) => [
+        dispatch({
+            type:"loginServices",
+            payload: {services: services}
+        })
+    ]
+}
+
+export const addService = (service) => {
+    return (dispatch) => [
+        dispatch({
+            type:"addService",
+            payload: {service: service}
+        })
+    ]
+}
+
+export const deleteService = (service) => {
+    return (dispatch) => [
+        dispatch({
+            type:"deleteService",
+            payload: {service: service}
+        })
+    ]
+}
+
+export const logoutServices = () => {
+    return (dispatch) => [
+        dispatch({
+            type:"logoutServices"
+        })
+    ]
+}

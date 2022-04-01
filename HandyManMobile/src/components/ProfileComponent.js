@@ -12,6 +12,7 @@ const { width, height } = Dimensions.get("screen");
 
 const ProfileComponent = () => {
     const user = useSelector((state) => state.user)
+    const services = useSelector((state) => state.services)
 
 
     return (
@@ -52,7 +53,8 @@ const ProfileComponent = () => {
                                 </Center>
                                 <Center>
                                     <Text>
-                                        {user.profileDescription}
+                                        {user.profileDescription}{'\n'}
+                                        {JSON.stringify(services)}
                                     </Text>
                                 </Center>
                                     
