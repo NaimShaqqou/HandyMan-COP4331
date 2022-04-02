@@ -16,7 +16,7 @@ export default function ServicesPage() {
   services = services.services; // Annoying
 
   function addService() {
-    navigate("../addService")
+    navigate("../add-service")
   }
 
   return (

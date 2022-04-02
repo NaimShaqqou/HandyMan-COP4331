@@ -26,7 +26,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/service" element={<ServicePage/>}/>
         <Route path="/services" element={<ServicesPage/>}/>
-        <Route path="/addService" element={<AddServicesPage/>}/>
+        <Route path="/add-service" element={<AddServicesPage/>}/>
         <Route path="/search" element={<SearchPage/>}/>
         <Route path="/edit-service" element={<EditServicePage/>}/>
         <Route
