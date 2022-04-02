@@ -8,6 +8,8 @@ import { CardHeader } from '@mui/material';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Container } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import {IconButton} from '@mui/material';
 
 export default function ServiceCard(props) {
     const service = props.service;
@@ -56,6 +58,9 @@ export default function ServiceCard(props) {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <IconButton>
+              <EditIcon onClick={() => navigate('../edit-service', {state: service})}/>
+      </IconButton>
     </Card>
     </Container>
     
