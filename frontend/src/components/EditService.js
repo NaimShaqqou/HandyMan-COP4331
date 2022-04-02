@@ -73,7 +73,8 @@ export default function EditService(props) {
         let urlList = await convertToUrls()
 
         await axios.post(bp.buildPath("api/edit-service"), {
-            serviceId: originalService._id
+            serviceId: originalService._id,
+            jwtToken: user.jwtToken
         }).then((response) => {
             let refreshedToken = response.data.refreshedToken
             updateCurrentUser({...user, jwtToken: refreshedToken})

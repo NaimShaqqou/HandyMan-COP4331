@@ -15,7 +15,7 @@ const reducer = (
           case "deleteService": 
               let deleteIndex = state.services.indexOf(action.payload.service)
               return {...state, services: state.services.filter((service, index) => {
-                    if (index != deleteIndex) return (service)
+                    if (index !== deleteIndex) return (service)
               })}
           case "logoutServices":
               state.services = new Array()

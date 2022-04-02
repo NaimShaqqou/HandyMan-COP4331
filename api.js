@@ -403,10 +403,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
   });
 
   app.post("/api/delete-service", async (req, res, next) => {
-    // incoming: userId, title, jwtToken
-    // outgoing: error, deletedServiceCount, jwtToken
+    // incoming: serviceId, jwtToken
+    // outgoing: error, jwtToken
 
-    let { userId, title, jwtToken } = req.body;
+    let { serviceId, jwtToken } = req.body;
 
     var response;
 
@@ -427,9 +427,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    userId = ObjectId(userId)
-
-    Service.findOneAndDelete({ UserId: userId, Title: title }, function (err, result) {
+    Service.findOneAndDelete({ _id: serviceId}, function (err, result) {
         if (err) {
           response = {
             error: err.message,
