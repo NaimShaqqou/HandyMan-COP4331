@@ -42,6 +42,15 @@ export const deleteService = (service) => {
     ]
 }
 
+export const updateServices = (service) => {
+    return (dispatch) => [
+        dispatch({
+            type:"updateServices",
+            payload: {service: service}
+        })
+    ]
+}
+
 export const logoutServices = () => {
     return (dispatch) => [
         dispatch({

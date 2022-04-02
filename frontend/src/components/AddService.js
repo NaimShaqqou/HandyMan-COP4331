@@ -80,9 +80,10 @@ export default function AddService() {
                 category: category,
                 jwtToken: user.jwtToken
         }).then((response) => {
-            let insertedService = response.service
-            let refreshedToken = response.refreshedToken
+            let insertedService = response.data.service
+            let refreshedToken = response.data.refreshedToken
             updateCurrentUser({...user, jwtToken: refreshedToken})
+            console.log(insertedService)
             addService(insertedService)
         }).catch((error) => {
             console.log(error.message)
@@ -92,7 +93,8 @@ export default function AddService() {
     async function convertToUrls() {
         let urls = new Array()
 
-        fileData.forEach(async (file) => {
+        // Can change to map function to call all promises at the same time
+        for (const file of fileData) {
             const formData = new FormData();
             formData.append("image", file);
 
@@ -110,7 +112,7 @@ export default function AddService() {
                     //handle error
                     console.log(response);
                 });
-        })
+          }
 
         return urls
     }
