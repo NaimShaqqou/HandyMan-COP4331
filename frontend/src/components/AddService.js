@@ -11,10 +11,12 @@ import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import { Stack } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import '../styles.css';
 
 export default function AddService() {
+    const navigate = useNavigate();
     let user = useSelector((state) => state.user);
     const bp = require("./Path");
     const days = [
@@ -85,6 +87,7 @@ export default function AddService() {
             updateCurrentUser({...user, jwtToken: refreshedToken})
             console.log(insertedService)
             addService(insertedService)
+            navigate("../services")
         }).catch((error) => {
             console.log(error.message)
         })
