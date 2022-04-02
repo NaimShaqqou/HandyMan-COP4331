@@ -7,6 +7,7 @@ import CustomDrawer from '../components/CustomDrawer.js'
 
 import HomeScreen from '../screens/Home.js'
 import ProfileScreen from '../screens/Profile.js'
+import Services from '../screens/Services.js'
 
 
 const Drawer = createDrawerNavigator();
@@ -27,6 +28,12 @@ const AppStack = () => {
             }}
         >
             <Drawer.Screen name="Home" component={HomeScreen} options={{
+                drawerIcon: ({color}) => (
+                    <MaterialIcons name="home" size={22} color={color} />
+                )
+            }} />
+
+            <Drawer.Screen name="Services" component={Services} options={{
                 drawerIcon: ({color}) => (
                     <MaterialIcons name="home" size={22} color={color} />
                 )
