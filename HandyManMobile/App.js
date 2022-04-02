@@ -13,20 +13,22 @@ import AppStack from './src/navigation/AppStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as ActionCreators from './reducerStore/ActionCreators/index'
+import * as actionCreators from './src/reducerStore/ActionCreators/index'
 
 export default function App() {
 
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch();
-  const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
+  const { updateCurrentUser, loginServices } = bindActionCreators(actionCreators, dispatch);
   
   // try to see if user is already logged in
   useEffect(() => {
     setTimeout(async() => {
       let userInfo = null
+      let serviceInfo = null
       try {
         userInfo = await AsyncStorage.getItem('userInfo')
+        serviceInfo = await AsyncStorage.getItem('serviceInfo')
       } catch(e) {
         console.log(e)
       }
@@ -45,7 +47,12 @@ export default function App() {
         userInfo = JSON.parse(userInfo)
       }
 
+      serviceInfo = JSON.parse(serviceInfo)
+
+
       dispatch(updateCurrentUser(userInfo));
+      dispatch(loginServices(serviceInfo))
+
     }, 1000)
   }, [])
 

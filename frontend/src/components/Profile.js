@@ -27,6 +27,7 @@ function Profile() {
     const [changePasswordMessage, setChangePasswordMessage] = useState("");
     const [newPasswordValidation, setNewPasswordValidation] = useState(false);
     const [oldPasswordValidation, setOldPasswordValidation] = useState(false);
+    const originalPhoto = user.profilePicture
     const dispatch = useDispatch();
 
     const handleOpen = () => setOpen(true);
@@ -38,7 +39,7 @@ function Profile() {
         setOldPasswordValidation(false);
     };
 
-    console.log(user)
+    //console.log(user)
 
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
@@ -79,8 +80,13 @@ function Profile() {
     }
 
     async function saveChanges() {
-        let newImageUrl = await uploadImage();
-
+        let newImageUrl;
+        if (originalPhoto !== userInfo.profilePicture) {
+            newImageUrl = await uploadImage();
+        } else {
+            newImageUrl = originalPhoto
+        }
+        
         await axios
             .post(bp.buildPath("api/edit-profile"), {
                 userId: user.userId,

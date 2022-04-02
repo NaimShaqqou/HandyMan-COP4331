@@ -12,6 +12,7 @@ import SearchPage from './pages/SearchPage';
 import ServicesPage from './pages/ServicesPage';
 import ServicePage from './pages/ServicePage';
 import AddServicesPage from './pages/AddServicesPage';
+import EditServicePage from './pages/EditServicePage';
 
 function App() {
 
@@ -25,8 +26,9 @@ function App() {
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/service" element={<ServicePage/>}/>
         <Route path="/services" element={<ServicesPage/>}/>
-        <Route path="/addService" element={<AddServicesPage/>}/>
+        <Route path="/add-service" element={<AddServicesPage/>}/>
         <Route path="/search" element={<SearchPage/>}/>
+        <Route path="/edit-service" element={<EditServicePage/>}/>
         <Route
           path="*"
           element={<Navigate to="/" replace />}

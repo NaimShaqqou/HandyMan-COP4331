@@ -22,9 +22,10 @@ const CustomDrawer = (props) => {
     // redux state and methods
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
-    const { logoutUser } = bindActionCreators(ActionCreators, dispatch);
+    const { logoutUser, logoutServices } = bindActionCreators(ActionCreators, dispatch);
 
     const doLogout = () => {
+        logoutServices()
         deleteInfo()
         logoutUser()
     }

@@ -15,7 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import '../styles.css';
 
-export default function AddService() {
+export default function EditService(props) {
+    const originalService = props.service
     const navigate = useNavigate();
     let user = useSelector((state) => state.user);
     const bp = require("./Path");
@@ -30,25 +31,25 @@ export default function AddService() {
     ];
     const categories = ["Baking", "Teaching", "Fixing", "Other"];
 
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState(originalService.Images);
     const [imageValidation, setImageValidation] = useState(false)
     const [predictions, setPredictions] = useState(new Array());
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(originalService.Category);
     const [categoryValidation, setCategoryValidation] = useState(false);
     const [fileData, setFileData] = useState([]);
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState(originalService.Title);
     const [titleValidation, setTitleValidation] = useState(false);
-    const [description, setDescription] = useState("");
+    const [description, setDescription] = useState(originalService.Description);
     const [descriptionValidation, setDescriptionalidation] = useState(false);
-    const [location, setLocation] = useState("");
+    const [location, setLocation] = useState(originalService.Address);
     const [locationValidation, setLocationValidation] = useState(false);
-    const [price, setPrice] = useState("");
+    const [price, setPrice] = useState(originalService.Price);
     const [priceValidation, setPriceValidation] = useState(false);
-    const [availableDays, setAvailableDays] = useState(new Array())
+    const [availableDays, setAvailableDays] = useState(originalService.DaysAvailable)
     const [availableDaysValidation, setAvailableDaysValidation] = useState(false);
 
     const dispatch = useDispatch();
-    const { addService, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+    const { updateServices, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
 
     const handleImageChange = ({ target }) => {
@@ -57,7 +58,7 @@ export default function AddService() {
         setFileData((array) => [...array, target.files[0]]);
     };
 
-    async function createService() {
+    async function editService() {
         if (title === "" || description === "" || location === "" || price === "" || availableDays.length === 0 || category === "" || images.length === 0) {
             if (title === "") setTitleValidation(true);
             if (description === "") setDescriptionalidation(true);
@@ -71,22 +72,13 @@ export default function AddService() {
 
         let urlList = await convertToUrls()
 
-        await axios.post(bp.buildPath("api/add-service"), {
-                userId: user.userId,
-                title: title,
-                imageUrls: urlList,
-                address: location,
-                description: description,
-                price: price.toString(),
-                daysAvailable: availableDays,
-                category: category,
-                jwtToken: user.jwtToken
+        await axios.post(bp.buildPath("api/edit-service"), {
+            serviceId: originalService._id,
+            jwtToken: user.jwtToken
         }).then((response) => {
-            let insertedService = response.data.service
             let refreshedToken = response.data.refreshedToken
             updateCurrentUser({...user, jwtToken: refreshedToken})
-            console.log(insertedService)
-            addService(insertedService)
+            updateServices(response.data.service)
             navigate("../services")
         }).catch((error) => {
             console.log(error.message)
@@ -94,7 +86,7 @@ export default function AddService() {
     }
 
     async function convertToUrls() {
-        let urls = new Array()
+        let urls = images.filter((url) => url.includes("cloudinary"))
 
         // Can change to map function to call all promises at the same time
         for (const file of fileData) {
@@ -121,12 +113,21 @@ export default function AddService() {
     }
 
     function removeImage(imageIndex) {
-        setImages(images.filter((image, index) => {
-            if (index !== imageIndex) return image 
-        }))
-        setFileData(fileData.filter((file, index) => {
-            if (index !== imageIndex) return file 
-        }))
+        if (images.length !== fileData.length) {
+            setImages(images.filter((image, index) => {
+                if (index !== imageIndex) return image 
+            }))
+            setFileData(fileData.filter((file, index) => {
+                if (index !== (imageIndex - images.length)) return file 
+            }))
+        } else {
+            setImages(images.filter((image, index) => {
+                if (index !== imageIndex) return image 
+            }))
+            setFileData(fileData.filter((file, index) => {
+                if (index !== imageIndex) return file 
+            }))
+        }
     }
 
     function removeAllImages() {
@@ -171,6 +172,7 @@ export default function AddService() {
                         required
                         id="title"
                         label="Title"
+                        value={title}
                         variant="outlined"
                         error={titleValidation === true}
                         helperText={
@@ -190,6 +192,7 @@ export default function AddService() {
                         required
                         multiline
                         rows={4}
+                        value={description}
                         id="description"
                         label="Description"
                         variant="outlined"
@@ -208,6 +211,7 @@ export default function AddService() {
                 <Grid item>
                         <Autocomplete
                         options={predictions.map((prediction) => prediction)}
+                        value={location}
                         onChange={(e, value) => {
                             value === null ? setLocation("") : setLocation(value)
                             setLocationValidation(false);
@@ -242,6 +246,7 @@ export default function AddService() {
                         fullWidth
                         required
                         rows={4}
+                        value={price}
                         type="number"
                         id="price"
                         label="Price"
@@ -264,6 +269,7 @@ export default function AddService() {
                         multiple
                         id="tags-outlined"
                         options={days}
+                        value={availableDays} 
                         getOptionLabel={(option) => option}
                         filterSelectedOptions
                         fullWidth
@@ -274,7 +280,7 @@ export default function AddService() {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Available Days to Work"     
+                                label="Available Days to Work"    
                                 placeholder="Week Days"
                                 error={availableDaysValidation === true}
                                 helperText={
@@ -293,6 +299,7 @@ export default function AddService() {
                             setCategory(e.target.value)
                             setCategoryValidation(false)
                         }}
+                        value={category}
                         style={{width: "50%"}}
                         error={categoryValidation === true}
                         helperText={
@@ -310,7 +317,8 @@ export default function AddService() {
                     </Stack>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" onClick={async () => await createService()}>Save Service</Button>
+                    <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
+                    <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>
                 </Grid>
             </Grid>
         </Container>

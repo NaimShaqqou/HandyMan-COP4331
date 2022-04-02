@@ -180,7 +180,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           ln = user.LastName;
   
           if (!user.Verified) {
-            res.status(200).json({ error: "Please verify your email by clicking the email we sent you." , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
+            res.status(200).json({ error: "Account has not been verified!" , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
             return;
           }
   
@@ -217,7 +217,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       UserId: userId,
       FirstName: newFirstName, 
       LastName: newLastName, 
-      ProfileDescript_: newProfileDescription, 
+      ProfileDescription: newProfileDescription, 
       ProfilePicture: newProfilePicture 
     }
 
@@ -385,13 +385,13 @@ exports.setApp = function (app, client, cloudinaryParser) {
       function (err, objectInserted) {
         if (err) {
           response = {
-            serviceId: -1,
+            service: -1,
             error: err.message,
             refreshedToken: refreshedToken,
           };
         } else {
           response = {
-            serviceId: objectInserted._id.valueOf(),
+            service: objectInserted,
             refreshedToken: refreshedToken,
             error: ""
           };
@@ -403,10 +403,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
   });
 
   app.post("/api/delete-service", async (req, res, next) => {
-    // incoming: userId, title, jwtToken
-    // outgoing: error, deletedServiceCount, jwtToken
+    // incoming: serviceId, jwtToken
+    // outgoing: error, jwtToken
 
-    let { userId, title, jwtToken } = req.body;
+    let { serviceId, jwtToken } = req.body;
 
     var response;
 
@@ -427,9 +427,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    userId = ObjectId(userId)
-
-    Service.findOneAndDelete({ UserId: userId, Title: title }, function (err, result) {
+    Service.findOneAndDelete({ _id: serviceId}, function (err, result) {
         if (err) {
           response = {
             error: err.message,
@@ -737,6 +735,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   })
 
+  // This autocompletes for regions
   app.post("/api/autocomplete-place", async (req, res, next) => {
     let input = req.body.input
     let googleUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
@@ -745,6 +744,31 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     input = input.replaceAll(' ', '+')
     googleUrl = googleUrl + input + "&components=country:us&types=(regions)&key=" + apiKey
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = response.data.predictions
+        result.forEach((place) => {
+          predictions.push(place.description)
+        })
+        console.log(predictions)
+        res.status(200).json({predictions: predictions, error: ""})
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({ error: error.message, predictions: predictions})
+      });
+  })
+
+  // This autocompletes for addresses. Should probs join both api into one later since this is just reused code
+  app.post("/api/autocomplete-address", async (req, res, next) => {
+    let input = req.body.input
+    let googleUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
+    let apiKey = process.env.PLACES_API_KEY
+    let predictions = new Array()
+
+    input = input.replaceAll(' ', '+')
+    googleUrl = googleUrl + input + "&components=country:us&types=address&key=" + apiKey
 
     await axios(googleUrl)
       .then((response) => {

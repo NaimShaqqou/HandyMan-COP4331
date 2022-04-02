@@ -25,9 +25,10 @@ import { MaterialIcons } from "@native-base/icons"
 // to store user info in global variable
 //const context = useContext(AppContext)
 
-const storeInfo = async (userInfo) => {
+const storeInfo = async (userInfo, serviceInfo) => {
     try {
         await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
+        await AsyncStorage.setItem('serviceInfo', JSON.stringify(serviceInfo))
     } catch (err) {
         console.log(err)
     }
@@ -36,7 +37,7 @@ const storeInfo = async (userInfo) => {
 const LoginBox = () => {
     // const { authContext } = React.useContext(AppContext)
     const dispatch = useDispatch();
-    const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
+    const { updateCurrentUser, loginServices } = bindActionCreators(ActionCreators, dispatch);
 
     // call the login api
     const doLogin = async (event) => {
@@ -70,8 +71,9 @@ const LoginBox = () => {
                     jwtToken: res.jwtToken
                 }
 
+                loginServices(res.services)
                 updateCurrentUser(user) // update redux state
-                storeInfo(user) // store to localstorage
+                storeInfo(user, res.services) // store to localstorage
 
                 // authContext.Login({
                 //     userId: res.userId,
