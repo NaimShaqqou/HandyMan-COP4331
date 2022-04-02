@@ -49,9 +49,8 @@ export default function App() {
 
       serviceInfo = JSON.parse(serviceInfo)
 
-
-      dispatch(updateCurrentUser(userInfo));
-      dispatch(loginServices(serviceInfo))
+      updateCurrentUser(userInfo);
+      loginServices(serviceInfo);
 
     }, 1000)
   }, [])
