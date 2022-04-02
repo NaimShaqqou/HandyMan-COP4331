@@ -642,9 +642,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     await review.save({}, function(err, objectInserted) {
       if(err) {
-        res.send({ reviewId: -1, error: err, RefreshedToken: refreshedToken })
+        res.send({ reviewId: -1, error: err, refreshedToken: refreshedToken })
       } else {
-        res.send({ reviewId: objectInserted._id.valueOf(), error: "", RefreshedToken: refreshedToken });
+        res.send({ reviewId: objectInserted._id.valueOf(), error: "", refreshedToken: refreshedToken });
       }
     });
 
@@ -695,9 +695,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
       ]
     }, function (err, result) {
       if (err) {
-        res.send({ error: err, RefreshedToken: refreshedToken });
+        res.send({ error: err, refreshedToken: refreshedToken });
       } else {
-        res.send({ error: "", deletedCount: result.deletedCount, RefreshedToken: refreshedToken });
+        res.send({ error: "", deletedCount: result.deletedCount, refreshedToken: refreshedToken });
       }
     });
   });
