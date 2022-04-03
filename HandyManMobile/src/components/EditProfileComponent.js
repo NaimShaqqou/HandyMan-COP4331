@@ -1,20 +1,28 @@
-import { Center, Image, Heading, Text, Box, Flex, ScrollView } from 'native-base'
+import { Center, Image, Heading, Text, Box, Flex, ScrollView, FormControl, Input, Icon, HStack, TextArea } from 'native-base'
 import { Button } from 'react-native-paper'
+import { MaterialIcons } from "@native-base/icons"
 import React from 'react'
-
-import { Dimensions, ImageBackground } from 'react-native';
 
 import { useSelector, useDispatch } from "react-redux";
 import * as ImagePicker from 'expo-image-picker';
+
+import { Dimensions, ImageBackground } from 'react-native';
 const { width, height } = Dimensions.get("screen");
 
 const EditProfileComponent = () => {
+
     const user = useSelector((state) => state.user)
     const services = useSelector((state) => state.services)
 
     const profilePicture = user.profilePicture
 
-    const [image, setImage]= React.useState(profilePicture);
+    const [validName, setValidName] = React.useState(true);
+    
+    // form values
+    const [firstName, setFirstName] = React.useState('')
+    const [lastName, setLastName] = React.useState('')
+    const [description, setDescription] = React.useState('')
+    const [image, setImage] = React.useState(profilePicture);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -29,6 +37,10 @@ const EditProfileComponent = () => {
         if (!result.cancelled) {
             setImage(result.uri)
         }
+    }
+
+    const handleSave = async () => {
+        console.log("savechanges")
     }
 
 
@@ -62,20 +74,49 @@ const EditProfileComponent = () => {
                             <Box display='flex'>
                                 <Center mt={'35px'}>
                                     <Heading>
-                                        {user.firstName + " " + user.lastName}
+                                        Edit your Name
                                     </Heading>
+                                    <FormControl mt={'15px'} isInvalid={validName? false : true} flexDir='row' justifyContent={'space-between'}>
+                                        <Input 
+                                            variant="underlined" 
+                                            defaultValue={user.firstName}
+                                            size="2xl" 
+                                            w="45%" 
+                                            InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
+                                            onChangeText={ newFirstName => setFirstName(newFirstName) }
+                                        />
+                                        <Input 
+                                            variant="underlined" 
+                                            defaultValue={user.lastName}
+                                            size="2xl" 
+                                            w="45%" 
+                                            InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
+                                            onChangeText={ newLastName => setLastName(newLastName) }
+                                        />
+                                    </FormControl>
                                 </Center>
 
                                 <Center mt='30px' mb='16px'>
                                     <Box w='90%' borderWidth={1} borderColor='#E9ECEF' />
                                 </Center>
                                 <Center>
-                                    <Text>
-                                        {user.profileDescription}{'\n'}
-                                        {JSON.stringify(services)}
-                                    </Text>
+                                    <Heading>
+                                        Edit your Description
+                                    </Heading>
+                                    <TextArea 
+                                        mt={'15px'} 
+                                        w='100%' 
+                                        defaultValue={user.profileDescription} 
+                                        onChangeText={ newDescription => setDescription(newDescription)}
+                                    />
                                 </Center>
-                                    
+
+                                <Button 
+                                    mt={'35px'}
+                                    onPress={handleSave}
+                                >
+                                    Save Changes
+                                </Button>  
                             </Box>
 
                     </Flex>
