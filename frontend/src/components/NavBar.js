@@ -70,20 +70,15 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-  var storage = require("../tokenStorage.js");
-
   // Set this to the user's full name
   let avatarAlt = "User Name";
 
-  let userObj = storage.retrieveToken();
-
-  if (userObj != null) {
-    userObj = jwt_decode(userObj);
-    avatarAlt = userObj.firstName + " " + userObj.lastName;
+  if (user.userId != '') {
+    avatarAlt = user.firstName + " " + user.lastName;
   }
 
   return (
-    <AppBar position="static" elevation='0'>
+    <AppBar position="static" elevation={0}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

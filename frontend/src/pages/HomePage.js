@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
 import SearchBar from "../components/SearchBar.js"
 import MapComponent from '../components/Map';
+import { useSelector } from "react-redux";
 
 import {
   Container
@@ -11,30 +12,19 @@ import {
 
 const HomePage = () =>
 {
-  let [center, setCenter] = useState({
-    lat: '28.602',
-    lng: '-81.200'
-  });
+  let user = useSelector((state) => state.user);
+  let msg = 'Welcome, you are not logged in.';
+  console.log(user);
 
-  const centerChange = (prop) => (event) => {
-    setCenter({ ...center, [prop]: event.target.value });
-  };
-
-  var storage = require("../tokenStorage.js");
-
-  let user = storage.retrieveToken();
-
-  if (user == null) {
-    user = 'null';
-  } else {
-    user = JSON.stringify(jwt_decode(user));
+  if (user.userId != '') {
+    msg = 'Hello, ' + user.firstName + " " + user.lastName;
   }
 
   return(
     <div>
       <ResponsiveAppBar />
       <h1>Handler</h1>
-      <h2>Hello user: {user}</h2>
+      <h2 style={{textAlign: 'center'}}>{msg}</h2>
 
       <Container maxWidth="md">
         <SearchBar />
