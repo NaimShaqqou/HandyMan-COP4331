@@ -1,14 +1,35 @@
 import { Center, Image, Heading, Text, Box, Flex, ScrollView } from 'native-base'
+import { Button } from 'react-native-paper'
 import React from 'react'
 
 import { Dimensions, ImageBackground } from 'react-native';
 
 import { useSelector, useDispatch } from "react-redux";
+import * as ImagePicker from 'expo-image-picker';
 const { width, height } = Dimensions.get("screen");
 
 const EditProfileComponent = () => {
-  const user = useSelector((state) => state.user)
+    const user = useSelector((state) => state.user)
     const services = useSelector((state) => state.services)
+
+    const profilePicture = user.profilePicture
+
+    const [image, setImage]= React.useState(profilePicture);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result)
+
+        if (!result.cancelled) {
+            setImage(result.uri)
+        }
+    }
 
 
     return (
@@ -32,9 +53,10 @@ const EditProfileComponent = () => {
                     >
                             <Center position='relative' mt='-80px'>
                                 <Image 
-                                    source={{uri: user.profilePicture}}
+                                    source={{uri: image}}
                                     h="150px" w="150px" borderRadius="40"
                                 />
+                                <Button onPress={pickImage}>edit profile picture</Button>
                             </Center>
 
                             <Box display='flex'>
