@@ -28,11 +28,18 @@ import axios from "axios";
 
 function SearchBar() {
   const [predictions, setPredictions] = useState(new Array());
-  const [searchInput, setSearchInput] = useState("");
-  const [distance, setDistance] = useState("");
-  const [category, setCategory] = useState("");
+  // const [searchInput, setSearchInput] = useState("");
+  // const [distance, setDistance] = useState("");
+  // const [category, setCategory] = useState("");
+  const [search, setSearch] = useState({
+    keyword: '',
+    location: '',
+    distance: '',
+    category: '',
+  });
+
   const bp = require("./Path");
-  const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"]
+  const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"];
   const categories = ["Baking", "Teaching", "Fixing"];
 
   // const Oval = styled(Paper)(({ theme }) => ({
@@ -46,83 +53,134 @@ function SearchBar() {
 
   async function findPredictions() {
     await axios
-      .post(bp.buildPath("api/autocomplete-place"), { input: searchInput })
+      .post(bp.buildPath("api/autocomplete-place"), { input: search.location })
       .then((response) => {
+        setSearch({ ...search, category: response.data.predictions });
         setPredictions(response.data.predictions);
       })
       .catch((error) => console.log(error));
   }
 
+  const user = useSelector((state) => state.user);
+
+  const doSearch = async (e) => {
+    e.preventDefault();
+    console.log(search);
+
+    var obj = {
+      search: search.keyword,
+      location: search.location,
+      maxDist: search.distance,
+      jwtToken: user.jwtToken,
+    };
+  
+    var js = JSON.stringify(obj);
+
+    // // alert('click');
+
+    try {
+      const response = await fetch(bp.buildPath("api/register"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      var res = JSON.parse(await response.text());
+  
+      if (res.error === "") {
+        console.log(res.results);
+        // setMessage("Account Created Successfully! Please check your email to verify.");
+      } else {
+        console.log(res.error);
+        // setMessage(res.error);
+      }
+    } catch (e) {
+      console.log(e.toString());
+      return;
+    }
+  };
+
+  const handleChange = (prop) => (event) => {
+    setSearch({ ...search, [prop]: event.target.value });
+  };
 
   return (
-    <Paper elevation={3} style={{padding: 5, backgroundColor: "white", width: "100%", textAlign: "center"}}>
+    <Paper
+      elevation={3}
+      style={{
+        padding: 5,
+        backgroundColor: "white",
+        width: "100%",
+        textAlign: "center",
+      }}
+    >
       <Stack direction="row" spacing={1} alignItems="center">
         <Stack
           direction="row"
           divider={<Divider orientation="vertical" flexItem />}
           spacing={2}
         >
-          <TextField label="Service" variant="standard"></TextField>
+          <form onSubmit={(event) => doSearch(event)}>
+            <TextField label="Service" variant="standard" value={search.keyword} onChange={handleChange('keyword')}></TextField>
+          </form>
           <Stack direction="row" spacing={2}>
-          <Autocomplete
-            options={predictions.map((prediction) => prediction)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Location"
-                variant="standard"
-                style={{ width: 200 }}
-                InputProps={{
-                  ...params.InputProps,
-                  type: "search"
-                }}
-                onChange={async (e) => {
-                  setSearchInput(e.target.value);
-                  await findPredictions();
-                }}
-                placeholder="Search Services"
-              />
-            )}
-          />
+            <Autocomplete
+              options={predictions.map((prediction) => prediction)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Location"
+                  variant="standard"
+                  style={{ width: 200 }}
+                  InputProps={{
+                    ...params.InputProps,
+                    type: "search",
+                  }}
+                  onChange={async (e) => {
+                    setSearch({ ...search, location: e.target.value });
+                    await findPredictions();
+                  }}
+                  placeholder="Search Services"
+                />
+              )}
+            />
+            <TextField
+              id="distance"
+              select
+              label="Distance"
+              variant="standard"
+              value={search.distance}
+              style={{ width: 150 }}
+              onChange={(e) => setSearch({ ...search, distance: e.target.value })}
+            >
+              {maxDistance.map((distance) => (
+                <MenuItem key={distance} value={distance}>
+                  {distance}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
           <TextField
-          id="distance"
-          select
-          label="Select"
-          variant="standard"
-          value={distance}
-          style={{width: 150}}
-          onChange={(e) => setDistance(e.target.value)}
-        >
-          {maxDistance.map((distance) => (
-            <MenuItem key={distance} value={distance}>
-              {distance}
-            </MenuItem>
-          ))}
-        </TextField>
-        </Stack>
-          
-        <TextField
-          id="category"
-          select
-          label="Select"
-          variant="standard"
-          style={{width: 150}}
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          {categories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
-            </MenuItem>
-          ))}
-        </TextField>
+            id="category"
+            select
+            label="Category"
+            variant="standard"
+            style={{ width: 150 }}
+            value={search.category}
+            onChange={(e) => setSearch({ ...search, category: e.target.value })}
+          >
+            {categories.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </TextField>
         </Stack>
         <IconButton>
           <SearchIcon />
         </IconButton>
       </Stack>
     </Paper>
-    
   );
 }
 
