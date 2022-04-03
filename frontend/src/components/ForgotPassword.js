@@ -21,10 +21,44 @@ export default function ForgotPassword() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [email, setEmail] = React.useState('');
 
-  const doResetPassword = () => {
-
+  const handleChange = () => (event) => {
+    setEmail(event.target.value);
   };
+
+  let bp = require("./Path.js");
+
+  const doResetPassword = async (event) => {
+    event.preventDefault();
+  
+    var obj = {
+      email: email
+    };
+  
+    var js = JSON.stringify(obj);
+  
+    try {
+      const response = await fetch(bp.buildPath("api/forgot-password-email"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      var res = JSON.parse(await response.text());
+  
+      if (res.error === "") {
+        console.log(res.success);
+        // setMessage(res.success);
+      } else {
+        console.log(res.error);
+        // setMessage(res.error);
+      }
+    } catch (e) {
+      console.log(e.toString());
+      return; 
+    }
+  };
+
 
   return (
     <div>
@@ -46,10 +80,11 @@ export default function ForgotPassword() {
             id="outlined-basic"
             label="Email"
             variant="standard" 
+            value={email}
+            onChange={handleChange()}
             InputProps={{endAdornment: <Button onClick={doResetPassword}>Send</Button>}}    
           />
           <br />
-          
         </Box>
       </Modal>
     </div>
