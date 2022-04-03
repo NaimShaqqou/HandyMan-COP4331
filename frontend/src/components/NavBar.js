@@ -28,14 +28,14 @@ import {
 import axios from 'axios';
 
 const pages = [];
-const loggedInSettings = ['Home','Profile', 'Services', 'Logout']
+const loggedInSettings = ['Home','Profile', 'Services', 'Logout'];
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { logoutUser } = bindActionCreators(actionCreators, dispatch);
 
-  const pathname = window.location.pathname
+  const pathname = window.location.pathname;
   const navigate = useNavigate()
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -68,6 +68,11 @@ const ResponsiveAppBar = () => {
     } 
     setAnchorElUser(null);
   };
+
+  const sendToParent = (index) => {
+    props.sendToParent(index);
+  };
+
   // Set this to the user's full name
   let avatarAlt = "User Name";
 
@@ -107,7 +112,7 @@ const ResponsiveAppBar = () => {
 
           {pathname !== "/" && 
           <Container maxWidth="md">
-            <SearchBar />
+            <SearchBar sendToParent={sendToParent}/>
           </Container>}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

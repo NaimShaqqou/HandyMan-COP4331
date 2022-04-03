@@ -76,7 +76,7 @@ const SearchPage = () =>
     }
   ]);
 
-  const sendData = (index) => {
+  const sendToParent = (index) => {
     setResults(index);
   };
 
@@ -85,6 +85,7 @@ const SearchPage = () =>
   };
 
   console.log('in search page');
+  console.log(results);
 
   var storage = require("../tokenStorage.js");
 
@@ -98,7 +99,8 @@ const SearchPage = () =>
 
   return(
     <div>
-      <Navbar sendData={sendData}/>
+      <Navbar sendToParent={sendToParent}/>
+      <br />
       <SearchResults results={results}></SearchResults>
       <span>change lat-lng and to re-center map.</span>
       <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
