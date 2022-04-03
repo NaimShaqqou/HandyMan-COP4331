@@ -11,8 +11,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
-import Box from "@mui/material/Box"
 import { Input } from "@mui/material";
+import Box from "@mui/material/Box"
 
 function RegisterBox() {
   var bp = require("./Path.js");

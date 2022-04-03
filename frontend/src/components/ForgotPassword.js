@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import { Input } from "@mui/material";
 
 const style = {
   position: 'absolute',
@@ -12,7 +14,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '2px solid #0091ff',
   boxShadow: 24,
   p: 4,
 };
@@ -22,6 +24,7 @@ export default function ForgotPassword() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [email, setEmail] = React.useState('');
+  const [message, setMessage] = React.useState('');
 
   const handleChange = () => (event) => {
     setEmail(event.target.value);
@@ -48,10 +51,10 @@ export default function ForgotPassword() {
   
       if (res.error === "") {
         console.log(res.success);
-        // setMessage(res.success);
+        setMessage(res.success);
       } else {
         console.log(res.error);
-        // setMessage(res.error);
+        setMessage(res.error);
       }
     } catch (e) {
       console.log(e.toString());
@@ -70,21 +73,30 @@ export default function ForgotPassword() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Reset Password
+          <form onSubmit={doResetPassword}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Reset Password
+            </Typography>
+            <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+              <TextField
+                id="outlined-basic"
+                label="Email"
+                variant="standard" 
+                value={email}
+                onChange={handleChange()}
+                InputProps={{endAdornment: <Button onClick={doResetPassword}>Send</Button>}}    
+              />
+              {/* <Button onClick={doResetPassword}>Send</Button> */}
+            </FormControl>
+          </form>
+          <Typography
+            id="modal-modal-title"
+            variant="subtitle1"
+            component="h2"
+            style={{paddingLeft: '8px'}}
+          >
+            {message}
           </Typography>
-          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Enter your email to reset your password.
-          </Typography> */}
-          <TextField
-            id="outlined-basic"
-            label="Email"
-            variant="standard" 
-            value={email}
-            onChange={handleChange()}
-            InputProps={{endAdornment: <Button onClick={doResetPassword}>Send</Button>}}    
-          />
-          <br />
         </Box>
       </Modal>
     </div>
