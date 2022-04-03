@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import '../Login.css'
 
+import ForgotPassword from './ForgotPassword';
+
 // Material UI
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton';
@@ -28,7 +30,7 @@ function LoginBox(props) {
 
   const doLogin = async (event) => {
     event.preventDefault();
-    
+
     var obj = { login: values.username, password: values.password };
     var js = JSON.stringify(obj);
 
@@ -146,18 +148,16 @@ function LoginBox(props) {
             }
           />
         </FormControl>
-        <p>
-          <a href="https://www.google.com">Forgot Password?</a>
-        </p>
 
-        <span id="loginResult">{message}</span>
+        <br />
+        <br />
 
-        <p></p>
 
         <Button id="loginButton" variant="contained" type="submit">Log in</Button>
-
         <br />
         <br />
+        <ForgotPassword/>
+        <span id="loginResult">{message}</span>
       </form>
     </Box>
     // </div>
