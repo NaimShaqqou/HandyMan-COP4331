@@ -73,7 +73,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
         // Filters services based on distance
         if (services.length > 0)
-          services = getServicesWithinDistance(services, convertAddressToCoordinates(location), maxDist);
+          services = await getServicesWithinDistance(services, location, maxDist);
 
         response = { results: services, error: error, jwtToken: refreshedToken };
         res.status(200).json(response);
@@ -815,7 +815,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
         }
       }
     })
-    
     return ({filteredServices: filteredServices, searchLocationCoords: { lat: locationInfo.location.lat, lng: locationInfo.location.lng}})
   }
 
@@ -839,9 +838,10 @@ exports.setApp = function (app, client, cloudinaryParser) {
   }
 
   async function convertAddressToCoordinates(address) {
+    console.log()
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
-    address = address.replaceAll(' ', '+')
+    address = address.replace('/ /g', '+')
     googleUrl = googleUrl + address + '&key=' + apiKey;
     let coordinates;
 
