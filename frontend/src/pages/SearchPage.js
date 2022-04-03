@@ -58,7 +58,7 @@ const SearchPage = () =>
     {
       _id: "623a99227131da5da110fa59",
       UserId: "6234c4d39a050a36555a6942",
-      Title: "Bakery2",
+      Title: "Cakery2",
       Images: [
         "image1",
         "image2"
