@@ -4,6 +4,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import { Stack } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 import {
   AppBar,
@@ -37,8 +39,9 @@ function SearchBar() {
     distance: '',
     category: '',
   });
+  let location = useLocation();
 
-  const bp = require("./Path");
+  let bp = require("./Path");
   const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"];
   const categories = ["Baking", "Teaching", "Fixing"];
 
@@ -55,7 +58,7 @@ function SearchBar() {
     await axios
       .post(bp.buildPath("api/autocomplete-place"), { input: search.location })
       .then((response) => {
-        setSearch({ ...search, category: response.data.predictions });
+        // setSearch({ ...search, location: response.data.predictions });
         setPredictions(response.data.predictions);
       })
       .catch((error) => console.log(error));
@@ -66,6 +69,8 @@ function SearchBar() {
   const doSearch = async (e) => {
     e.preventDefault();
     console.log(search);
+    console.log(jwt_decode(user.jwtToken));
+    
 
     var obj = {
       search: search.keyword,
@@ -73,7 +78,7 @@ function SearchBar() {
       maxDist: search.distance,
       jwtToken: user.jwtToken,
     };
-  
+
     var js = JSON.stringify(obj);
 
     // // alert('click');
@@ -99,7 +104,7 @@ function SearchBar() {
     }
   };
 
-  const handleChange = (prop) => (event) => {
+  const handleChange = (prop) => async (event) => {
     setSearch({ ...search, [prop]: event.target.value });
   };
 
@@ -136,6 +141,7 @@ function SearchBar() {
                     type: "search",
                   }}
                   onChange={async (e) => {
+                    // handleChange('location');
                     setSearch({ ...search, location: e.target.value });
                     await findPredictions();
                   }}
@@ -150,7 +156,7 @@ function SearchBar() {
               variant="standard"
               value={search.distance}
               style={{ width: 150 }}
-              onChange={(e) => setSearch({ ...search, distance: e.target.value })}
+              onChange={handleChange('distance')}
             >
               {maxDistance.map((distance) => (
                 <MenuItem key={distance} value={distance}>
@@ -167,7 +173,7 @@ function SearchBar() {
             variant="standard"
             style={{ width: 150 }}
             value={search.category}
-            onChange={(e) => setSearch({ ...search, category: e.target.value })}
+            onChange={handleChange('category')}
           >
             {categories.map((category) => (
               <MenuItem key={category} value={category}>
