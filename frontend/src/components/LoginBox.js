@@ -99,6 +99,9 @@ function LoginBox(props) {
         sm: 385,
         md: 450
       },
+      maxWidth: {
+        lg: 450
+      },
     }}
     >
 

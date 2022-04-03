@@ -101,11 +101,15 @@ function RegisterBox() {
     <Box style={classes.paper} sx={{
       minHeight: {
         sm: 300,
-        md: 400 
+        md: 400
       },
       minWidth: {
         sm: 385,
-        md: 450
+        md: 450,
+        lg: 450
+      },
+      maxWidth: {
+        lg: 450
       },
     }}>
       <div>
