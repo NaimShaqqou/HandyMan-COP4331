@@ -16,6 +16,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import ButtonBase from '@mui/material/ButtonBase';
 
 
 export default function ServiceCard(props) {
@@ -27,18 +31,12 @@ export default function ServiceCard(props) {
     const dispatch = useDispatch();
     const { deleteService, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
-    const styles = {
-        media: {
-            width: "80%",
-            justifyContent: "start",
-            display: "inline-block",
-            maxWidth:230,
-            maxHeight:95,
-            width: "auto",
-            height: "auto",
-            marginRight: 10,
-        }
-    }
+    const Img = styled('img')({
+      margin: 'auto',
+      display: 'block',
+      maxWidth: '100%',
+      maxHeight: '100%',
+    });
 
     function openService() {
         navigate('../service', {state: service})
@@ -60,40 +58,55 @@ export default function ServiceCard(props) {
           console.log(error.message)
       })
     }
+
+    console.log(service)
     
   return (
-    <Container>
-      <Card sx={{ width: '60%' }}>
-      <CardActionArea onClick={() => openService()}>
-        <CardMedia
-          component="img"
-          image={service.Images[0]}
-          alt="photo for service"
-          style={styles.media}
-        />
-        <Box sx={{ float: "none", overflow: "hidden", display: "inline-block", }}> 
-            <CardHeader
-                title={service.Title}
-                sx={{ display: "inline-block" }}
-            />
-        </Box>
-        
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+    <Container >
+      <Paper
+    sx={{
+      p: 2,
+      margin: 'auto',
+      maxWidth: 800,
+      flexGrow: 1,
+      backgroundColor: (theme) =>
+        theme.palette.mode === 'dark' ? '#1A2027' : '#F2F1F0',
+    }}
+  >
+    <Grid container spacing={2}>
+      <Grid item>
+        <ButtonBase sx={{ width: 128, height: 128 }}>
+          <Img alt="complex" src={service.Images === null ? '' : service.Images[0]} />
+        </ButtonBase>
+      </Grid>
+      <Grid item xs={12} md container>
+        <Grid item xs container direction="column" spacing={2}>
+          <Grid item xs>
+            <Typography gutterBottom variant="h6" sx={{fontWeight: "bold"}}component="div">
+              {service.Title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {service.Description}
+            </Typography>
+          </Grid>
+          <Grid item>
+              <IconButton onClick={() => navigate('../edit-service', {state: service})}>
+                    <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => setOpenDialog(true)}>
+                    <DeleteIcon/>
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Typography variant="h6" component="div">
             ${service.Price}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {service.Description}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <IconButton onClick={() => navigate('../edit-service', {state: service})}>
-              <EditIcon />
-      </IconButton>
-      <IconButton onClick={() => setOpenDialog(true)}>
-              <DeleteIcon/>
-      </IconButton>
-    </Card>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Paper>
+      
     <DeleteServiceDialog open={openDialog} setOpen={setOpenDialog} service={service} onConfirm={destroyService}/>
     </Container>
     

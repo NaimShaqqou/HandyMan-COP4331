@@ -74,7 +74,14 @@ export default function EditService(props) {
 
         await axios.post(bp.buildPath("api/edit-service"), {
             serviceId: originalService._id,
-            jwtToken: user.jwtToken
+            jwtToken: user.jwtToken,
+            newTitle: title, 
+            newImages: urlList,
+            newAddress: location, 
+            newDescription: description, 
+            newPrice: price, 
+            newDaysAvailable: availableDays, 
+            newCategory: category,
         }).then((response) => {
             let refreshedToken = response.data.refreshedToken
             updateCurrentUser({...user, jwtToken: refreshedToken})
@@ -317,8 +324,10 @@ export default function EditService(props) {
                     </Stack>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
-                    <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>
+                    <Stack direction="row" spacing={4}>
+                        <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
+                        <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>    
+                    </Stack>
                 </Grid>
             </Grid>
         </Container>

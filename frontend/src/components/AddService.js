@@ -310,7 +310,10 @@ export default function AddService() {
                     </Stack>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" onClick={async () => await createService()}>Save Service</Button>
+                    <Stack direction="row" spacing={4}>
+                        <Button variant="contained" onClick={async () => await createService()}>Save Service</Button>
+                        <Button variant="contained" onClick={() => navigate('../services')}>Cancel</Button>
+                    </Stack>
                 </Grid>
             </Grid>
         </Container>

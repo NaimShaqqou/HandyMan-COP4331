@@ -19,17 +19,21 @@ export default function ServicesPage() {
     navigate("../add-service")
   }
 
+
   return (
     <div>
       <ResponsiveAppBar/>
-      <Grid container direction="column" spacing={5}>
+      <Grid container direction="column" spacing={5}>  
         {services.map((service, index) => (
-          <Grid item>
+          <Grid item key={index}>
             <ServiceCard service={service} />
           </Grid>
         ))}
+        <Grid item>
+          <Button variant="contained" onClick={() => addService()}>Add new service</Button>
+        </Grid>
       </Grid>
-      <Button onClick={() => addService()}>Add new service</Button>
+      
     </div>
   );
 }
