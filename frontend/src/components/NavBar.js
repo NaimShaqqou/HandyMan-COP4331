@@ -37,7 +37,6 @@ const ResponsiveAppBar = () => {
 
   const pathname = window.location.pathname
   const navigate = useNavigate()
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -69,14 +68,29 @@ const ResponsiveAppBar = () => {
     } 
     setAnchorElUser(null);
   };
-
   // Set this to the user's full name
   let avatarAlt = "User Name";
 
   if (user.userId != '') {
     avatarAlt = user.firstName + " " + user.lastName;
   }
-
+  const routeChange = () =>{ 
+    navigate("../", { replace:true });
+  };
+  const titlestyle = {
+    fontFamily: 'Philosopher',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '48px',
+    lineHeight: '54px',
+    textDecoration:'none',
+    color:'white',
+    backgroundColor:'transparent',
+    border:'none',
+    fontSize:'30px',
+    cursor:'pointer'
+  }
+  
   return (
     <AppBar position="static" elevation={0}>
       <Container maxWidth="xl">
@@ -85,9 +99,10 @@ const ResponsiveAppBar = () => {
             variant="h6"
             noWrap
             component="div"
+            onClick={routeChange}
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            <a href="/" style={{textDecoration:'none',color:'white'}}>Handler</a>
+            <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
           </Typography>
 
           {pathname !== "/" && 
