@@ -254,19 +254,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
   });
 
   app.post("/api/edit-service", async (req, res, next) => {
-    // incoming: userId, oldTitle, oldAddress, oldDescription, oldPrice, oldDaysAvailable, oldCategory, 
-    // newTitle, newImages, newAddress, newDescription, newPrice, newDaysAvailable, newCategoryjwtToken
-    // outgoing: serviceId, error, jwtToken
+    // incoming: serviceId, newTitle, newImages, newAddress, newDescription, newPrice, newDaysAvailable, newCategory, jwtToken
+    // outgoing: service, error, jwtToken
     var response;
 
     let {
-      userId,
-      oldTitle, 
-      oldAddress, 
-      oldDescription, 
-      oldPrice, 
-      oldDaysAvailable, 
-      oldCategory,
+      serviceId,
       newTitle, 
       newImages,
       newAddress, 
@@ -277,18 +270,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       jwtToken
     } = req.body;
 
-    let filter = {
-      UserId: userId,
-      Title: oldTitle, 
-      Address: oldAddress,
-      Description: oldDescription, 
-      Price: oldPrice, 
-      DaysAvailable: oldDaysAvailable, 
-      Category: oldCategory
-    }
-
     let coordinates = await convertAddressToCoordinates(newAddress);
-    userId = ObjectId(userId);
 
     let update = {
       Title: newTitle, 
@@ -304,7 +286,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     try {
       if (token.isExpired(jwtToken)) {
-        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        var r = { service: null, error: "The JWT is no longer valid", jwtToken: "" };
         res.status(200).json(r);
         return;
       }
@@ -319,14 +301,15 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
-    Service.findOneAndUpdate(filter, update, 
+    var options = { new : true };
+    Service.findOneAndUpdate( { _id : serviceId }, update, options,
       function(err, service) {
       if (err) {
-        response = { error: err.message, refreshedToken: refreshedToken };
+        response = { service: service, error: err.message, refreshedToken: refreshedToken };
       } else if (service == null) {
-        response = { error: "Incorrect information", refreshedToken: refreshedToken };
+        response = { service: service, error: "Incorrect serviceId", refreshedToken: refreshedToken };
       } else {
-        response = { ServiceId: service._id.valueOf(), error: "", refreshedToken: refreshedToken};
+        response = { service: service, error: "", refreshedToken: refreshedToken};
       }
       res.status(200).json(response);
     });
