@@ -95,7 +95,7 @@ function LoginBox(props) {
       },
       minWidth: {
         sm: 385,
-        md: 550
+        md: 450
       },
     }}
     >
@@ -158,9 +158,6 @@ function LoginBox(props) {
 
         <br />
         <br />
-        <span>New to Handler?</span>
-        <br />
-        <a href="">Create a New Account!</a>
       </form>
     </Box>
     // </div>

@@ -35,6 +35,66 @@ const SearchPage = () =>
     id = JSON.stringify(jwt_decode(id));
   }
 
+  let results = [
+    {
+      _id: "623a99227131da5da110fa58",
+      UserId: "6234c4d39a050a36555a6942",
+      Title: "Bakery1",
+      Images: [
+        "image1",
+        "image2"
+      ],
+      Address: "14330 Alafaya Oak Bend",
+      Longitude: "-81.1705685",
+      Latitude: "28.510048",
+      Description: "My Bakery is so cool",
+      Price: "5",
+      DaysAvailable: [
+        "Monday"
+      ],
+      Category: "Baking",
+      __v: 0
+    },
+    {
+      _id: "623a99227131da5da110fa59",
+      UserId: "6234c4d39a050a36555a6942",
+      Title: "Bakery2",
+      Images: [
+        "image1",
+        "image2"
+      ],
+      Address: "14330 Alafaya Oak Bend",
+      Longitude: "-81.1705685",
+      Latitude: "28.510048",
+      Description: "My Bakery is so cool",
+      Price: "5",
+      DaysAvailable: [
+        "Monday"
+      ],
+      Category: "Baking",
+      __v: 0
+    },
+    {
+      _id: "623a99227131da5da110fa60",
+      UserId: "6234c4d39a050a36555a6942",
+      Title: "Bakery3",
+      Images: [
+        "image1",
+        "image2"
+      ],
+      Address: "14330 Alafaya Oak Bend",
+      Longitude: "-81.1705685",
+      Latitude: "28.510048",
+      Description: "My Bakery is so cool",
+      Price: "5",
+      DaysAvailable: [
+        "Monday"
+      ],
+      Category: "Baking",
+      __v: 0
+    }
+  ];
+
   return(
     <div>
       <ResponsiveAppBar />
@@ -50,7 +110,7 @@ const SearchPage = () =>
 
       <br /><br />
 
-      <SearchResults></SearchResults>
+      <SearchResults results={results}></SearchResults>
 
     </div>
     

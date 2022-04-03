@@ -7,11 +7,39 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
-export default function SearchResults() {
+export default function SearchResults(props) {
+
   return (
-    <div style={{display: 'inline'}}>
+    <div>
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        <ListItem alignItems="flex-start">
+        {props.results.map(listitem => (
+            <div key ={listitem._id}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar alt={listitem.Title} src="https://cdn-icons.flaticon.com/png/512/2202/premium/2202112.png?token=exp=1649000519~hmac=eb9d2f000a439ae396e19b1f74c28e8f" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={listitem.Title}
+                  secondary={
+                    <React.Fragment>
+                      {/* <Typography
+                        sx={{ display: 'inline' }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        Ali Connors
+                      </Typography> */}
+                      {listitem.Description}
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </div>
+        ))}
+
+        {/* <ListItem alignItems="flex-start">
           <ListItemAvatar>
             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
           </ListItemAvatar>
@@ -32,50 +60,7 @@ export default function SearchResults() {
             }
           />
         </ListItem>
-        <Divider variant="inset" component="li" />
-        <ListItem alignItems="flex-start">
-          <ListItemAvatar>
-            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Summer BBQ"
-            secondary={
-              <React.Fragment>
-                <Typography
-                  sx={{ display: 'inline' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  to Scott, Alex, Jennifer
-                </Typography>
-                {" — Wish I could come, but I'm out of town this…"}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-        <Divider variant="inset" component="li" />
-        <ListItem alignItems="flex-start">
-          <ListItemAvatar>
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Oui Oui"
-            secondary={
-              <React.Fragment>
-                <Typography
-                  sx={{ display: 'inline' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  Sandra Adams
-                </Typography>
-                {' — Do you have Paris recommendations? Have you ever…'}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
+        <Divider variant="inset" component="li" /> */}
       </List>
     </div>
   );
