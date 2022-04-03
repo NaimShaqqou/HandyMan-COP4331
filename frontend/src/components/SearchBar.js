@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import { Stack } from "@mui/material";
@@ -8,23 +7,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
 import {
-  AppBar,
-  Box,
-  Toolbar,
   IconButton,
-  Typography,
-  InputAdornment,
   TextField,
-  Menu,
-  Container,
   Autocomplete,
-  Avatar,
-  Button,
-  Tooltip,
   MenuItem,
   Divider,
   Paper,
-  styled,
 } from "@mui/material";
 import axios from "axios";
 
@@ -40,6 +28,7 @@ function SearchBar() {
     category: '',
   });
   let location = useLocation();
+  let navigate = useNavigate();
 
   let bp = require("./Path");
   const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"];
@@ -68,23 +57,32 @@ function SearchBar() {
 
   const doSearch = async (e) => {
     e.preventDefault();
-    console.log(search);
-    console.log(jwt_decode(user.jwtToken));
-    
+
+    // Navigate to search page when searching on homepage
+    // if (location.pathname !== '/search')
+    //   navigate("../search", { replace: true });
+
+    // Convert "15 miles" to 15
+    let maxDist = parseInt(search.distance.split(' ')[0]);
 
     var obj = {
       search: search.keyword,
       location: search.location,
-      maxDist: search.distance,
+      maxDist: maxDist,
       jwtToken: user.jwtToken,
     };
 
+    if (obj.jwtToken == '')
+      obj['jwtToken'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
+    
     var js = JSON.stringify(obj);
+    console.log('obj');
+    console.log(obj);
 
     // // alert('click');
 
     try {
-      const response = await fetch(bp.buildPath("api/register"), {
+      const response = await fetch(bp.buildPath("api/search-services"), {
         method: "POST",
         body: js,
         headers: { "Content-Type": "application/json" },
@@ -136,14 +134,11 @@ function SearchBar() {
                   label="Location"
                   variant="standard"
                   style={{ width: 200 }}
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                  }}
                   onChange={async (e) => {
                     // handleChange('location');
                     setSearch({ ...search, location: e.target.value });
                     await findPredictions();
+                    setSearch({ ...search, location: e.target.value });
                   }}
                   placeholder="Search Services"
                 />
