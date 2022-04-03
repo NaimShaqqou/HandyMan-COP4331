@@ -12,13 +12,21 @@ import {
 
 const HomePage = () =>
 {
+  let [ret, setRet] = useState(null);
   let user = useSelector((state) => state.user);
   let msg = 'Welcome, you are not logged in.';
+  console.log('in homepage: ');
   console.log(user);
+
+  const sendData = (index) => {
+    setRet(index);
+  };
 
   if (user.userId != '') {
     msg = 'Hello, ' + user.firstName + " " + user.lastName;
   }
+
+  console.log(ret);
 
   return(
     <div>
@@ -27,7 +35,7 @@ const HomePage = () =>
       <h2 style={{textAlign: 'center'}}>{msg}</h2>
 
       <Container maxWidth="md">
-        <SearchBar />
+        <SearchBar sendToParent={sendData}/>
       </Container>
     </div>
     

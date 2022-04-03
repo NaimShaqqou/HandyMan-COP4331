@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import '../map.css';
 import jwt_decode from "jwt-decode";
-import ResponsiveAppBar from '../components/NavBar';
-import SearchBar from "../components/SearchBar"
-import SearchResults from "../components/SearchResults"
+import Navbar from '../components/NavBar';
+import SearchResults from "../components/SearchResults";
 import MapComponent from '../components/Map';
-
-import {
-  Paper,
-} from "@mui/material";
 
 import {
   Container
@@ -21,21 +16,7 @@ const SearchPage = () =>
     lng: '-81.200'
   });
 
-  const centerChange = (prop) => (event) => {
-    setCenter({ ...center, [prop]: event.target.value });
-  };
-
-  var storage = require("../tokenStorage.js");
-
-  let id = storage.retrieveToken();
-
-  if (id == null) {
-    id = 'null';
-  } else {
-    id = JSON.stringify(jwt_decode(id));
-  }
-
-  let results = [
+  let [results, setResults] = useState([
     {
       _id: "623a99227131da5da110fa58",
       UserId: "6234c4d39a050a36555a6942",
@@ -93,27 +74,41 @@ const SearchPage = () =>
       Category: "Baking",
       __v: 0
     }
-  ];
+  ]);
+
+  const sendData = (index) => {
+    setResults(index);
+  };
+
+  const centerChange = (prop) => (event) => {
+    setCenter({ ...center, [prop]: event.target.value });
+  };
+
+  console.log('in search page');
+
+  var storage = require("../tokenStorage.js");
+
+  let id = storage.retrieveToken();
+
+  if (id == null) {
+    id = 'null';
+  } else {
+    id = JSON.stringify(jwt_decode(id));
+  }
 
   return(
     <div>
-      <ResponsiveAppBar />
+      <Navbar sendData={sendData}/>
+      <SearchResults results={results}></SearchResults>
+      <span>change lat-lng and to re-center map.</span>
+      <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
+      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
       <div>
         <Container maxWidth="xl">
           <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
         </Container>
       </div>
-
-      <span>change lat-lng and to re-center map.</span>
-      <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
-      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
-
-      <br /><br />
-
-      <SearchResults results={results}></SearchResults>
-
     </div>
-    
   );
 }
 

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-function SearchBar() {
+function SearchBar(props) {
   const [predictions, setPredictions] = useState(new Array());
   // const [searchInput, setSearchInput] = useState("");
   // const [distance, setDistance] = useState("");
@@ -76,7 +76,7 @@ function SearchBar() {
       obj['jwtToken'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
     
     var js = JSON.stringify(obj);
-    console.log('obj');
+    console.log('search input body');
     console.log(obj);
 
     // // alert('click');
@@ -88,7 +88,9 @@ function SearchBar() {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
-  
+
+      props.sendToParent(res);
+
       if (res.error === "") {
         console.log(res.results);
         // setMessage("Account Created Successfully! Please check your email to verify.");

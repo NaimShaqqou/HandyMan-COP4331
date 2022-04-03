@@ -16,7 +16,7 @@ export default function SearchResults(props) {
             <div key ={listitem._id}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                  <Avatar alt={listitem.Title} src="https://cdn-icons.flaticon.com/png/512/2202/premium/2202112.png?token=exp=1649000519~hmac=eb9d2f000a439ae396e19b1f74c28e8f" />
+                  <Avatar alt={listitem.Title} src="https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg" />
                 </ListItemAvatar>
                 <ListItemText
                   primary={listitem.Title}
