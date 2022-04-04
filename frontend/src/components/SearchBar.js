@@ -130,6 +130,9 @@ function SearchBar(props) {
     await findPredictions();
   };
 
+  // TODO: enter to select a dropdown option
+  // TODO: the location dropdown is different from the other two dropdowns
+
   return (
     <Paper
       elevation={3}
@@ -154,15 +157,17 @@ function SearchBar(props) {
               options={predictions.map((prediction) => prediction)}
               onChange={handleChangeLocationDropdown}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Location"
-                  variant="standard"
-                  style={{ width: 200 }}
-                  value={search.location}
-                  onChange={handleChangeLocationText}
-                  placeholder="Search Services"
-                />
+                <form onSubmit={(event) => doSearch(event)}>
+                  <TextField
+                    {...params}
+                    label="Location"
+                    variant="standard"
+                    style={{ width: 200 }}
+                    value={search.location}
+                    onChange={handleChangeLocationText}
+                    placeholder="Search Services"
+                  />
+                </form>
               )}
             />
             <TextField
