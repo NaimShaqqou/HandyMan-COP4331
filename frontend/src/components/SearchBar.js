@@ -163,7 +163,7 @@ function SearchBar(props) {
                     {...params}
                     label="Location"
                     variant="standard"
-                    style={{ width: 200 }}
+                    style={{ width: 250 }}
                     value={search.location}
                     onChange={handleChangeLocationText}
                     placeholder="Search Services"
