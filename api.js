@@ -873,7 +873,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   })
 
   app.get("/api/forgot-password-page", async (req, res, next) => {
-    if (url === 'https://myhandyman1.herokuapp.com/') {
+    if (url === 'https://myhandyman1.herokuapp.com') {
       res.status(200).sendFile('backendHtml/forgotPasswordEmail.html' , { root : __dirname})
     } else {
       res.status(200).sendFile('backendHtml/forgotPasswordEmailDev.html' , { root : __dirname})
