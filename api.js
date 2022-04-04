@@ -38,10 +38,15 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // outgoing: results[], error
 
     var error = "";
-    const { search, location, maxDist, jwtToken } = req.body;
+    const { search, category, location, maxDist, jwtToken } = req.body;
 
     var _search = search.trim();
     console.log(_search);
+
+    // If they select "all categories, make sure we search all categories"
+    // CHANGE THIS WHEN WE KNOW WHAT THE ACTUAL VALUE FOR "All Categories" IS
+    if (category == "")
+      category = "";
 
     // Checks if token is expired
     try {
@@ -65,11 +70,17 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // Looks through the different fields of a service using the specified given search
     try {
       var services = await Service.find({
-        $or: [
-          { Title : { "$regex" : _search, "$options" : "i" } },
-          { Description : { "$regex" : _search, "$options" : "i" } },
-          { Category : { "$regex" : _search, "$options" : "i" } }
-        ]});
+        $and: [
+          // based on partial match
+          { $or: [
+            { Title : { "$regex" : _search, "$options" : "i" } },
+            { Description : { "$regex" : _search, "$options" : "i" } },
+            { Category : { "$regex" : _search, "$options" : "i" } }
+          ]},
+          // category has to be exact
+          { Category : { category } }
+        ]
+      });
 
         // Filters services based on distance
         if (services.length > 0)
