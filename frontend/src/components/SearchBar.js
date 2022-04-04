@@ -138,6 +138,7 @@ function SearchBar(props) {
       elevation={3}
       style={{
         padding: 5,
+        paddingLeft: 20,
         backgroundColor: "white",
         width: "100%",
         textAlign: "center",
@@ -203,7 +204,8 @@ function SearchBar(props) {
             ))}
           </TextField>
         </Stack>
-        <IconButton>
+
+        <IconButton onClick={(event) => doSearch(event)}>
           <SearchIcon />
         </IconButton>
       </Stack>
