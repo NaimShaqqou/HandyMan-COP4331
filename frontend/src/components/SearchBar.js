@@ -47,7 +47,6 @@ function SearchBar(props) {
     await axios
       .post(bp.buildPath("api/autocomplete-place"), { input: search.location })
       .then((response) => {
-        // setSearch({ ...search, location: response.data.predictions });
         setPredictions(response.data.predictions);
       })
       .catch((error) => console.log(error));
@@ -72,17 +71,22 @@ function SearchBar(props) {
       jwtToken: user.jwtToken,
     };
 
+    let js = JSON.stringify(obj);
+    console.log('search input:');
+    console.log(obj);
+  
+    if (obj.location == '')
+      obj.location = 'Orlando, FL';
+
     if (isNaN(obj.maxDist))
       obj['maxDist'] = 15;
 
     if (obj.jwtToken == '')
       obj['jwtToken'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
-    
-    var js = JSON.stringify(obj);
-    console.log('search input body');
-    console.log(obj);
 
-    // // alert('click');
+    js = JSON.stringify(obj);
+    // console.log('sending:');
+    // console.log(obj);
 
     try {
       const response = await fetch(bp.buildPath("api/search-services"), {
@@ -92,6 +96,9 @@ function SearchBar(props) {
       });
       var res = JSON.parse(await response.text());
 
+      console.log(jwt_decode(obj.jwtToken));
+
+      
       props.sendToParent(res);
 
       if (res.error === "") {
@@ -109,6 +116,18 @@ function SearchBar(props) {
 
   const handleChange = (prop) => async (event) => {
     setSearch({ ...search, [prop]: event.target.value });
+  };
+  
+  const handleChangeLocationDropdown = async (event) => {
+    // console.log(typeof(event.target.innerHTML));
+    // console.log(event.target.innerHTML);
+    setSearch({ ...search, location: event.target.innerHTML });
+    await findPredictions();
+  };
+
+  const handleChangeLocationText = async (event) => {
+    setSearch({ ...search, location: event.target.value });
+    await findPredictions();
   };
 
   return (
@@ -133,18 +152,15 @@ function SearchBar(props) {
           <Stack direction="row" spacing={2}>
             <Autocomplete
               options={predictions.map((prediction) => prediction)}
+              onChange={handleChangeLocationDropdown}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Location"
                   variant="standard"
                   style={{ width: 200 }}
-                  onChange={async (e) => {
-                    // handleChange('location');
-                    setSearch({ ...search, location: e.target.value });
-                    await findPredictions();
-                    setSearch({ ...search, location: e.target.value });
-                  }}
+                  value={search.location}
+                  onChange={handleChangeLocationText}
                   placeholder="Search Services"
                 />
               )}
