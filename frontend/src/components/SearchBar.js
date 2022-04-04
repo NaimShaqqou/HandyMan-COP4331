@@ -101,13 +101,11 @@ function SearchBar(props) {
       
       props.sendToParent(res);
 
-      if (res.error === "") {
-        console.log(res.results);
-        // setMessage("Account Created Successfully! Please check your email to verify.");
-      } else {
-        console.log(res.error);
-        // setMessage(res.error);
-      }
+      // if (res.error === "") {
+      //   console.log(res.results);
+      // } else {
+      //   console.log(res.error);
+      // }
     } catch (e) {
       console.log(e.toString());
       return;
