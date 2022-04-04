@@ -203,7 +203,7 @@ function SearchBar(props) {
           </TextField>
         </Stack>
 
-        <IconButton onClick={(event) => doSearch(event)}>
+        <IconButton onClick={(event) => doSearch(event)} color='primary' style={{color: 'white', backgroundColor: '#2196f3'}}>
           <SearchIcon />
         </IconButton>
       </Stack>
