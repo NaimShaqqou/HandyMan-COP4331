@@ -52,7 +52,7 @@ const HomePage = () =>
       <h1>Handler</h1>
       <h2 style={{textAlign: 'center'}}>{msg}</h2>
 
-      <Container maxWidth="md">
+      <Container sx={{ maxWidth: { xs: '500px', md: 'md'} }}>
         <SearchBar sendToParent={sendToParent}/>
       </Container>
     </div>

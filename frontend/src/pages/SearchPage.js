@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import Navbar from '../components/NavBar';
 import SearchResults from "../components/SearchResults";
 import MapComponent from '../components/Map';
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   Container
@@ -79,14 +80,16 @@ const SearchPage = () =>
   const sendToParent = (index) => {
     setResults(index);
   };
-
+  
   const centerChange = (prop) => (event) => {
     setCenter({ ...center, [prop]: event.target.value });
   };
-
+  
   console.log('in search page');
   console.log(results);
-
+  
+  const { state } = useLocation();
+  console.log(state);
   var storage = require("../tokenStorage.js");
 
   let id = storage.retrieveToken();
