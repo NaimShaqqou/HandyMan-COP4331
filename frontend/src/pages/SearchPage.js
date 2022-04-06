@@ -7,7 +7,8 @@ import MapComponent from '../components/Map';
 import { useNavigate, useLocation } from "react-router-dom";
 
 import {
-  Container
+  Container,
+  Grid
 } from "@mui/material";
 
 const SearchPage = () =>
@@ -17,11 +18,13 @@ const SearchPage = () =>
     lng: '-81.200'
   });
 
-  let [results, setResults] = useState([
-    {
-      _id: "623a99227131da5da110fa58",
+  let items = [];
+
+  for (let i = 0; i < 20; i++) {
+    items.push({
+      _id: i.toString(),
       UserId: "6234c4d39a050a36555a6942",
-      Title: "Bakery1",
+      Title: "Bakery" + i,
       Images: [
         "image1",
         "image2"
@@ -36,46 +39,10 @@ const SearchPage = () =>
       ],
       Category: "Baking",
       __v: 0
-    },
-    {
-      _id: "623a99227131da5da110fa59",
-      UserId: "6234c4d39a050a36555a6942",
-      Title: "Cakery2",
-      Images: [
-        "image1",
-        "image2"
-      ],
-      Address: "14330 Alafaya Oak Bend",
-      Longitude: "-81.1705685",
-      Latitude: "28.510048",
-      Description: "My Bakery is so cool",
-      Price: "5",
-      DaysAvailable: [
-        "Monday"
-      ],
-      Category: "Baking",
-      __v: 0
-    },
-    {
-      _id: "623a99227131da5da110fa60",
-      UserId: "6234c4d39a050a36555a6942",
-      Title: "Bakery3",
-      Images: [
-        "image1",
-        "image2"
-      ],
-      Address: "14330 Alafaya Oak Bend",
-      Longitude: "-81.1705685",
-      Latitude: "28.510048",
-      Description: "My Bakery is so cool",
-      Price: "5",
-      DaysAvailable: [
-        "Monday"
-      ],
-      Category: "Baking",
-      __v: 0
-    }
-  ]);
+    })
+  }
+
+  let [results, setResults] = useState(items);
 
   const sendToParent = (index) => {
     setResults(index);
@@ -104,15 +71,19 @@ const SearchPage = () =>
     <div>
       <Navbar sendToParent={sendToParent}/>
       <br />
-      <SearchResults results={results}></SearchResults>
+
+      <Grid container>
+        <Grid item xs={3}>
+          <SearchResults results={results}></SearchResults>
+        </Grid>
+        <Grid item xs={9}>
+          <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
+        </Grid>
+      </Grid>
+
       <span>change lat-lng and to re-center map.</span>
       <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
       <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
-      <div>
-        <Container maxWidth="xl">
-          <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
-        </Container>
-      </div>
     </div>
   );
 }
