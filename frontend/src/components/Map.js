@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, } from '@react-google-maps/api';
 
+// TODO: adjust zoom level to fit all markers
+
 const Map = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
