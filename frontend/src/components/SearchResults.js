@@ -17,11 +17,11 @@ export default function SearchResults(props) {
       <List
         sx={{
           width: '100%',
-          maxWidth: 360,
+          maxWidth: '100%',
           bgcolor: 'background.paper',
           position: 'relative',
           overflow: 'auto',
-          maxHeight: 800,
+          maxHeight: 850,
           '& ul': { padding: 0 },
         }}
         subheader={<li />}
@@ -52,27 +52,5 @@ export default function SearchResults(props) {
         )) : <div></div>}
       </List>
     </div>
-    // <div>
-    //   <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-    //     {props.results.map(listitem => (
-    //         <div key ={listitem._id}>
-    //           <ListItem alignItems="flex-start">
-    //             <ListItemAvatar>
-    //               <Avatar alt={listitem.Title} src="https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg" />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary={listitem.Title}
-    //               secondary={
-    //                 <React.Fragment>
-    //                   {listitem.Description}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //           <Divider variant="inset" component="li" />
-    //         </div>
-    //     ))}
-    //   </List>
-    // </div>
   );
 }

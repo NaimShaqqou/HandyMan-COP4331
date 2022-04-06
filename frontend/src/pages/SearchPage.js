@@ -3,7 +3,7 @@ import '../map.css';
 import jwt_decode from "jwt-decode";
 import Navbar from '../components/NavBar';
 import SearchResults from "../components/SearchResults";
-import MapComponent from '../components/Map';
+import Map from '../components/Map';
 import { useNavigate, useLocation } from "react-router-dom";
 
 import {
@@ -13,10 +13,31 @@ import {
 
 const SearchPage = () =>
 {
-  let [center, setCenter] = useState({
-    lat: '28.602',
-    lng: '-81.200'
-  });
+  const { state } = useLocation();
+
+  // console.log({
+  //   lat: '28.602',
+  //   lng: '-81.200'
+  // });
+  // console.log(state.res.results.searchLocationCoords);
+
+  let center = state ? {
+    lat: state.res.results.searchLocationCoords.lat,
+    lng: state.res.results.searchLocationCoords.lng,
+  } : {
+    lat: 28.602,
+    lng: -81.200,
+  };
+
+  // const [center, setCenter] = useState(stateCoords);
+  // let [center, setCenter] = useState({
+  //     lat: '28.602',
+  //     lng: '-81.200'
+  //   });
+    
+    
+  console.log('in search page');
+  console.log(center);
 
   let items = [];
 
@@ -51,47 +72,32 @@ const SearchPage = () =>
     }
   };
 
-  const centerChange = (prop) => (event) => {
-    setCenter({ ...center, [prop]: event.target.value });
-  };
+  // const centerChange = (prop) => (event) => {
+  //   setCenter({ ...center, [prop]: event.target.value });
+  // };
   
-  console.log('in search page');
-  console.log(results);
 
-  const { state } = useLocation();
+  let res = (state ? state.res : null);
+  let srch = (state ? state.obj : null);
 
-  console.log(state);
-  
-  // if (state != null && state.error === '')
-  //   setResults(state.results.filteredServices);
-
-  var storage = require("../tokenStorage.js");
-
-  let id = storage.retrieveToken();
-
-  if (id == null) {
-    id = 'null';
-  } else {
-    id = JSON.stringify(jwt_decode(id));
-  }
 
   return(
     <div>
-      <Navbar sendToParent={sendToParent}/>
+      <Navbar search={srch} sendToParent={sendToParent}/>
       <br />
 
       <Grid container>
         <Grid item xs={3}>
-          <SearchResults results={state.error == '' ? state.results.filteredServices : results}></SearchResults>
+          <SearchResults results={(res && res.error == '') ? res.results.filteredServices : results}></SearchResults>
         </Grid>
         <Grid item xs={9}>
-          <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>
+          <Map results={(res && res.error == '') ? res.results.filteredServices : results} center={center}/>
         </Grid>
       </Grid>
 
-      <span>change lat-lng and to re-center map.</span>
+      {/* <span>change lat-lng and to re-center map.</span>
       <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
-      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/>
+      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/> */}
     </div>
   );
 }

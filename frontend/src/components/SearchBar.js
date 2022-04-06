@@ -16,6 +16,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+// TODO: enter to select a dropdown option
+// TODO: location dropdown is different from the other two dropdowns
+// TODO: when searching from homepage, contents of search bar should carry on to search page.
+
 // Hook
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
@@ -45,9 +49,6 @@ function useWindowSize() {
 
 function SearchBar(props) {
   const [predictions, setPredictions] = useState(new Array());
-  // const [searchInput, setSearchInput] = useState("");
-  // const [distance, setDistance] = useState("");
-  // const [category, setCategory] = useState("");
   const [search, setSearch] = useState({
     keyword: '',
     location: '',
@@ -70,6 +71,8 @@ function SearchBar(props) {
       })
       .catch((error) => console.log(error));
   }
+
+  console.log('in SearchBar.js');
 
   const user = useSelector((state) => state.user);
 
@@ -112,11 +115,9 @@ function SearchBar(props) {
       });
       var res = JSON.parse(await response.text());
 
-      console.log(jwt_decode(obj.jwtToken));
-
       // props.sendToParent(res);
 
-      navigate("/search", { replace: true, state: res });
+      navigate("/search", { replace: true, state: { obj: search, res: res} });
       // // Navigate to search page to show results when searching from a different page
       // if (location.pathname !== '/search') {
       // }
@@ -141,9 +142,6 @@ function SearchBar(props) {
     setSearch({ ...search, location: event.target.value });
     await findPredictions();
   };
-
-  // TODO: enter to select a dropdown option
-  // TODO: the location dropdown is different from the other two dropdowns
 
   return (
     <Paper

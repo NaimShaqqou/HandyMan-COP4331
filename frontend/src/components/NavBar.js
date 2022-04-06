@@ -95,7 +95,7 @@ const ResponsiveAppBar = (props) => {
     fontSize:'30px',
     cursor:'pointer'
   }
-  
+
   return (
     <AppBar position="static" elevation={0}>
       <Container maxWidth="xl">
@@ -112,7 +112,7 @@ const ResponsiveAppBar = (props) => {
 
           {pathname !== "/" && 
           <Container maxWidth="md">
-            <SearchBar sendToParent={sendToParent}/>
+            <SearchBar search={props.search} sendToParent={sendToParent}/>
           </Container>}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
