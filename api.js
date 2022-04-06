@@ -43,10 +43,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
     var _search = search.trim();
     console.log(_search);
 
-    // If they select "all categories, make sure we search all categories"
+    // Make sure we search all categories if they select that option
     // CHANGE THIS WHEN WE KNOW WHAT THE ACTUAL VALUE FOR "All Categories" IS
-    if (category == "")
-      category = "";
+    var _category = category.trim();
+    if (_category == "")
+      _category = "";
+    
 
     // Checks if token is expired
     try {
@@ -77,8 +79,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
             { Description : { "$regex" : _search, "$options" : "i" } },
             { Category : { "$regex" : _search, "$options" : "i" } }
           ]},
-          // category has to be exact
-          { Category : { category } }
+          // category has to be exact since from drop down
+          { Category : { "$regex" : _category, "$options" : "i" } }
         ]
       });
 
