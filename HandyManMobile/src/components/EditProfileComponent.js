@@ -15,8 +15,11 @@ import {
 import { Button } from "react-native-paper";
 import { MaterialIcons } from "@native-base/icons";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import * as ImagePicker from "expo-image-picker";
 
 import { Dimensions, ImageBackground } from "react-native";
@@ -24,18 +27,23 @@ import axios from "axios";
 const { width, height } = Dimensions.get("screen");
 
 const EditProfileComponent = () => {
+    
   const user = useSelector((state) => state.user);
-  const services = useSelector((state) => state.services);
+  const dispatch = useDispatch();
+  const { updateCurrentUser } = bindActionCreators(
+    ActionCreators,
+    dispatch
+  );
 
-  const profilePicture = user.profilePicture;
+  const navigation = useNavigation()
 
   const [validName, setValidName] = React.useState(true);
 
   // form values
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [image, setImage] = React.useState(profilePicture);
+  const [firstName, setFirstName] = React.useState(user.firstName);
+  const [lastName, setLastName] = React.useState(user.lastName);
+  const [description, setDescription] = React.useState(user.profileDescription);
+  const [image, setImage] = React.useState(user.profilePicture);
   const [imageFile, setImageFile] = React.useState()
 
   // get image from phone
@@ -47,8 +55,6 @@ const EditProfileComponent = () => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
 
         // convert uri to file  
@@ -57,7 +63,6 @@ const EditProfileComponent = () => {
             type: `image/${result.uri.split(".")[1]}`,
             name: `user-profile.${result.uri.split(".")[1]}`,
         })
-      console.log(imageFile);
 
       // set the image on the screen to new image
       setImage(result.uri);
@@ -88,8 +93,10 @@ const EditProfileComponent = () => {
     return imageUrl
   }
 
+  
   // call edit profile api
   const handleSave = async () => {
+
     let newImageUrl;
     if (user.profilePicture !== image) {
       newImageUrl = await handleUpload();
@@ -97,8 +104,66 @@ const EditProfileComponent = () => {
       newImageUrl = user.profilePicture;
     }
 
-    console.log("savechanges");
+    // await axios
+    //     .post("https://myhandyman1.herokuapp.com/api/edit-profile", {
+    //         userId: user.userId,
+    //         newFirstName: firstName,
+    //         newLastName: lastName,
+    //         newProfileDescription: description,
+    //         newProfilePicture: newImageUrl,
+    //         jwtToken: user.jwtToken,
+    //     })
+    //     .then(function (response) {
+    //         updateCurrentUser({
+    //             userId: user.userId,
+    //             firstName: firstName,
+    //             lastName: lastName,
+    //             profileDescription: description,
+    //             profilePicture: newImageUrl,
+    //             jwtToken: response.refreshedToken,
+    //         })
+    //     })
+    //     .catch(function (response) {
+    //         console.log(response)
+    //     })
+
+    var obj = {
+        userId: user.userId,
+        newFirstName: firstName,
+        newLastName: lastName,
+        newProfileDescription: description,
+        newProfilePicture: newImageUrl,
+        jwtToken: user.jwtToken,
+    }
+    var js = JSON.stringify(obj)
+
+    try {
+        const response = await fetch(
+            "https://myhandyman1.herokuapp.com/api/edit-profile",
+            {
+              method: "POST",
+              body: js,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          var res = JSON.parse(await response.text());
+
+          updateCurrentUser({
+            userId: user.userId,
+            firstName: firstName,
+            lastName: lastName,
+            profileDescription: description,
+            profilePicture: newImageUrl,
+            jwtToken: res.refreshedToken,
+        })
+    } catch (error) {
+        console.log(error)
+    }
+
+    navigation.goBack()
   };
+
+  
 
   return (
     <ImageBackground
@@ -109,7 +174,7 @@ const EditProfileComponent = () => {
         padding: 0,
         zIndex: 1,
       }}
-      imageStyle={{ width: width, height: height / 2 }}
+      imageStyle={{ width: width, height: height }}
     >
       <ScrollView showsVerticalScrollIndicator={false} mt="25%" width={width}>
         <Flex

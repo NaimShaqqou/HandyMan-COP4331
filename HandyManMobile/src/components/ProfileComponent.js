@@ -27,7 +27,7 @@ const ProfileComponent = () => {
         padding: 0,
         zIndex: 1,
       }}
-      imageStyle={{ width: width, height: height / 2 }}
+      imageStyle={{ width: width, height: height }}
     >
       <ScrollView showsVerticalScrollIndicator={false} mt="25%" width={width}>
         <Flex
