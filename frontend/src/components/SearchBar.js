@@ -76,13 +76,6 @@ function SearchBar(props) {
   const doSearch = async (e) => {
     e.preventDefault();
 
-    // Navigate to search page to show results when searching from a different page
-    // if (location.pathname !== '/search')
-    // {
-    //   navigate("/search", { replace: true, state: search.keyword });
-    //   return;
-    // }
-
     // Convert "15 miles" to 15
     let maxDist = parseInt(search.distance.split(' ')[0]);
 
@@ -121,9 +114,14 @@ function SearchBar(props) {
 
       console.log(jwt_decode(obj.jwtToken));
 
-      
-      props.sendToParent(res);
 
+      // Navigate to search page to show results when searching from a different page
+      if (location.pathname !== '/search') {
+        navigate("/search", { replace: true, state: res });
+      }
+      else {
+        props.sendToParent(res);
+      }
     } catch (e) {
       console.log(e.toString());
       return;

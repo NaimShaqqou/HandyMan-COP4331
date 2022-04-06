@@ -26,7 +26,7 @@ export default function SearchResults(props) {
         }}
         subheader={<li />}
       >
-        {props.results.map(listitem => (
+        { props.results.map(listitem => (
             <div key ={listitem._id}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
@@ -36,7 +36,13 @@ export default function SearchResults(props) {
                   primary={listitem.Title}
                   secondary={
                     <React.Fragment>
-                      {listitem.Description}
+                      <React.Fragment>
+                        {listitem.Address}
+                      </React.Fragment>
+                      <br />
+                      <React.Fragment>
+                        {listitem.Description}
+                      </React.Fragment>
                     </React.Fragment>
                   }
                 />

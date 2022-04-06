@@ -20,6 +20,7 @@ const SearchPage = () =>
 
   let items = [];
 
+  // add dummy services
   for (let i = 0; i < 20; i++) {
     items.push({
       _id: i.toString(),
@@ -44,19 +45,26 @@ const SearchPage = () =>
 
   let [results, setResults] = useState(items);
 
-  const sendToParent = (index) => {
-    setResults(index);
+  const sendToParent = (state) => {
+    if (state.error === '') {
+      setResults(state.results.filteredServices);
+    }
   };
-  
+
   const centerChange = (prop) => (event) => {
     setCenter({ ...center, [prop]: event.target.value });
   };
   
   console.log('in search page');
   console.log(results);
-  
+
   const { state } = useLocation();
+
   console.log(state);
+  
+  // if (state != null && state.error === '')
+  //   setResults(state.results.filteredServices);
+
   var storage = require("../tokenStorage.js");
 
   let id = storage.retrieveToken();
