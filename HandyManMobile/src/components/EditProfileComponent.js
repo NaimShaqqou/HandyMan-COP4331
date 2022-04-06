@@ -27,15 +27,11 @@ import axios from "axios";
 const { width, height } = Dimensions.get("screen");
 
 const EditProfileComponent = () => {
-    
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const { updateCurrentUser } = bindActionCreators(
-    ActionCreators,
-    dispatch
-  );
+  const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const [validName, setValidName] = React.useState(true);
 
@@ -44,9 +40,8 @@ const EditProfileComponent = () => {
   const [lastName, setLastName] = React.useState(user.lastName);
   const [description, setDescription] = React.useState(user.profileDescription);
   const [image, setImage] = React.useState(user.profilePicture);
-  const [imageFile, setImageFile] = React.useState()
 
-  // get image from phone
+  // get image from phone and upload it
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -56,114 +51,73 @@ const EditProfileComponent = () => {
     });
 
     if (!result.cancelled) {
-
-        // convert uri to file  
-        setImageFile({
-            uri: result.uri,
-            type: `image/${result.uri.split(".")[1]}`,
-            name: `user-profile.${result.uri.split(".")[1]}`,
+      // changes the uri to a file object and uploads it to cloudinary
+      setImage(
+        await handleUpload({
+          uri: result.uri,
+          type: `image/${result.uri.split(".")[1]}`,
+          name: `user-profile.${result.uri.split(".")[1]}`,
         })
-
-      // set the image on the screen to new image
-      setImage(result.uri);
+      );
     }
   };
 
   // upload new image to cloudinary
-  async function handleUpload() {
+  async function handleUpload(imageFile) {
     const data = new FormData();
     data.append("image", imageFile);
 
     let imageUrl;
 
     try {
-        const res = await fetch("https://myhandyman1.herokuapp.com/api/store-image",
+      const res = await fetch(
+        "https://myhandyman1.herokuapp.com/api/store-image",
         {
-            method: "post",
-            body: data,
-            headers: { "Content-Type": "multipart/form-data" },
-        })
-        var response = JSON.parse(await res.text())
+          method: "post",
+          body: data,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      var response = JSON.parse(await res.text());
 
-        imageUrl = response
-    } catch(error) {
-        console.log(error)
+      imageUrl = response.imageUrl;
+      console.log(imageUrl);
+    } catch (error) {
+      console.log(error);
     }
 
-    return imageUrl
+    return imageUrl;
   }
 
-  
   // call edit profile api
   const handleSave = async () => {
+    // TODO: form validation
 
-    let newImageUrl;
-    if (user.profilePicture !== image) {
-      newImageUrl = await handleUpload();
-    } else {
-      newImageUrl = user.profilePicture;
-    }
-
-    // await axios
-    //     .post("https://myhandyman1.herokuapp.com/api/edit-profile", {
-    //         userId: user.userId,
-    //         newFirstName: firstName,
-    //         newLastName: lastName,
-    //         newProfileDescription: description,
-    //         newProfilePicture: newImageUrl,
-    //         jwtToken: user.jwtToken,
-    //     })
-    //     .then(function (response) {
-    //         updateCurrentUser({
-    //             userId: user.userId,
-    //             firstName: firstName,
-    //             lastName: lastName,
-    //             profileDescription: description,
-    //             profilePicture: newImageUrl,
-    //             jwtToken: response.refreshedToken,
-    //         })
-    //     })
-    //     .catch(function (response) {
-    //         console.log(response)
-    //     })
-
-    var obj = {
+    await axios
+      .post("https://myhandyman1.herokuapp.com/api/edit-profile", {
         userId: user.userId,
         newFirstName: firstName,
         newLastName: lastName,
         newProfileDescription: description,
-        newProfilePicture: newImageUrl,
+        newProfilePicture: image,
         jwtToken: user.jwtToken,
-    }
-    var js = JSON.stringify(obj)
+      })
+      .then(function (response) {
+        updateCurrentUser({
+          userId: user.userId,
+          firstName: firstName,
+          lastName: lastName,
+          profileDescription: description,
+          profilePicture: image,
+          jwtToken: response.refreshedToken,
+        });
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
 
-    try {
-        const response = await fetch(
-            "https://myhandyman1.herokuapp.com/api/edit-profile",
-            {
-              method: "POST",
-              body: js,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-          var res = JSON.parse(await response.text());
-
-          updateCurrentUser({
-            userId: user.userId,
-            firstName: firstName,
-            lastName: lastName,
-            profileDescription: description,
-            profilePicture: newImageUrl,
-            jwtToken: res.refreshedToken,
-        })
-    } catch (error) {
-        console.log(error)
-    }
-
-    navigation.goBack()
+    navigation.goBack();
   };
-
-  
 
   return (
     <ImageBackground
