@@ -82,7 +82,7 @@ const SearchPage = () =>
 
       <Grid container>
         <Grid item xs={3}>
-          <SearchResults results={results}></SearchResults>
+          <SearchResults results={state.error == '' ? state.results.filteredServices : results}></SearchResults>
         </Grid>
         <Grid item xs={9}>
           <MapComponent center={{lat: parseFloat(center.lat), lng: parseFloat(center.lng)}}/>

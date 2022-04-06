@@ -114,14 +114,12 @@ function SearchBar(props) {
 
       console.log(jwt_decode(obj.jwtToken));
 
+      // props.sendToParent(res);
 
-      // Navigate to search page to show results when searching from a different page
-      if (location.pathname !== '/search') {
-        navigate("/search", { replace: true, state: res });
-      }
-      else {
-        props.sendToParent(res);
-      }
+      navigate("/search", { replace: true, state: res });
+      // // Navigate to search page to show results when searching from a different page
+      // if (location.pathname !== '/search') {
+      // }
     } catch (e) {
       console.log(e.toString());
       return;

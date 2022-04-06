@@ -26,7 +26,7 @@ export default function SearchResults(props) {
         }}
         subheader={<li />}
       >
-        { props.results.map(listitem => (
+        { props.results ? props.results.map(listitem => (
             <div key ={listitem._id}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
@@ -49,7 +49,7 @@ export default function SearchResults(props) {
               </ListItem>
               <Divider variant="inset" component="li" />
             </div>
-        ))}
+        )) : <div></div>}
       </List>
     </div>
     // <div>
