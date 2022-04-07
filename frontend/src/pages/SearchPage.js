@@ -23,10 +23,7 @@ const SearchPage = () =>
 
   console.log(state);
 
-  let center = state ? {
-    lat: state.res.results.searchLocationCoords.lat,
-    lng: state.res.results.searchLocationCoords.lng,
-  } : {
+  let center = state ? state.res.searchLocationCoords : {
     lat: 28.602,
     lng: -81.200,
   };
@@ -90,10 +87,10 @@ const SearchPage = () =>
 
       <Grid container>
         <Grid item xs={3}>
-          <SearchResults results={(res && res.error == '') ? res.results.filteredServices : results}></SearchResults>
+          <SearchResults results={(res && res.error == '') ? res.results : results}></SearchResults>
         </Grid>
         <Grid item xs={9}>
-          <Map results={(res && res.error == '') ? res.results.filteredServices : results} center={center}/>
+          <Map results={(res && res.error == '') ? res.results : results} center={center}/>
         </Grid>
       </Grid>
 

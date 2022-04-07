@@ -19,7 +19,7 @@ const Map = (props) => {
   }
 
   // console.log(props.center);
-  // console.log(props.results);
+  console.log(props.results);
 
   return isLoaded ? (
       <GoogleMap
