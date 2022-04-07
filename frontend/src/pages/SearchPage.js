@@ -21,6 +21,8 @@ const SearchPage = () =>
   // });
   // console.log(state.res.results.searchLocationCoords);
 
+  console.log(state);
+
   let center = state ? {
     lat: state.res.results.searchLocationCoords.lat,
     lng: state.res.results.searchLocationCoords.lng,

@@ -74,14 +74,21 @@ const ResponsiveAppBar = (props) => {
   };
 
   // Set this to the user's full name
-  let avatarAlt = "User Name";
+  // let avatarAlt = "User Name";
+  let userObj = {
+    fullName: "User Name",
+    profilePicture: "/static/images/avatar/2.jpg",
+  }
 
   if (user.userId != '') {
-    avatarAlt = user.firstName + " " + user.lastName;
+    userObj.fullName = user.firstName + " " + user.lastName;
+    userObj.profilePicture = user.profilePicture;
   }
+
   const routeChange = () =>{ 
     navigate("../", { replace:true });
   };
+
   const titlestyle = {
     fontFamily: 'Philosopher',
     fontStyle: 'normal',
@@ -143,7 +150,7 @@ const ResponsiveAppBar = (props) => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="View Menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={avatarAlt} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
               </IconButton>
             </Tooltip>
 
