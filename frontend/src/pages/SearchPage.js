@@ -15,28 +15,15 @@ const SearchPage = () =>
 {
   const { state } = useLocation();
 
-  // console.log({
-  //   lat: '28.602',
-  //   lng: '-81.200'
-  // });
-  // console.log(state.res.results.searchLocationCoords);
-
   console.log(state);
 
   let center = state ? state.res.searchLocationCoords : {
     lat: 28.602,
     lng: -81.200,
   };
-
-  // const [center, setCenter] = useState(stateCoords);
-  // let [center, setCenter] = useState({
-  //     lat: '28.602',
-  //     lng: '-81.200'
-  //   });
     
-    
-  console.log('in search page');
-  console.log(center);
+  // console.log('in search page');
+  // console.log(center);
 
   let items = [];
 
@@ -63,34 +50,20 @@ const SearchPage = () =>
     })
   }
 
-  let [results, setResults] = useState(items);
-
-  const sendToParent = (state) => {
-    if (state.error === '') {
-      setResults(state.results.filteredServices);
-    }
-  };
-
-  // const centerChange = (prop) => (event) => {
-  //   setCenter({ ...center, [prop]: event.target.value });
-  // };
-  
-
   let res = (state ? state.res : null);
   let srch = (state ? state.obj : null);
 
-
   return(
     <div>
-      <Navbar search={srch} sendToParent={sendToParent}/>
+      <Navbar search={srch}/>
       <br />
 
       <Grid container>
         <Grid item xs={3}>
-          <SearchResults results={(res && res.error == '') ? res.results : results}></SearchResults>
+          <SearchResults results={(res && res.error == '') ? res.results : items}></SearchResults>
         </Grid>
         <Grid item xs={9}>
-          <Map results={(res && res.error == '') ? res.results : results} center={center}/>
+          <Map results={(res && res.error == '') ? res.results : items} center={center}/>
         </Grid>
       </Grid>
 

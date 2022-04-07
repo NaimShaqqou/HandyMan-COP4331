@@ -17,11 +17,37 @@ const HomePage = () =>
 {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
+  const [region, setRegion] = useState(null);
   const [status, setStatus] = useState(null);
   let user = useSelector((state) => state.user);
   let msg = 'Welcome, Guest!';
   console.log('Rendering Homepage: ');
   console.log(user);
+
+  let bp = require("../components/Path");
+
+  const reverseGeocode = async (latt, lngg) => {
+    var obj = { lat: latt, lng: lngg };
+    var js = JSON.stringify(obj);
+
+    console.log(obj);
+
+    try {
+      const response = await fetch(bp.buildPath("api/reverse-geocode"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      var res = JSON.parse(await response.text());
+
+      setRegion(res.location);
+      console.log(res.location);
+
+    } catch (e) {
+      console.log(e.toString());
+      return; 
+    }
+  };
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -32,11 +58,13 @@ const HomePage = () =>
         setStatus(null);
         setLat(position.coords.latitude);
         setLng(position.coords.longitude);
+        reverseGeocode(position.coords.latitude, position.coords.longitude);
       }, () => {
         setStatus('Unable to retrieve your location');
       });
     }
   }
+
 
   if (user.userId != '') {
     msg = 'Hello, ' + user.firstName + " " + user.lastName;
@@ -65,6 +93,7 @@ const HomePage = () =>
           <button onClick={getLocation}>Get Location</button>
           <h1>Coordinates</h1>
           <p>{status}</p>
+          {region && <p>Region: {region}</p>}
           {lat && <p>Latitude: {lat}</p>}
           {lng && <p>Longitude: {lng}</p>}
         </div>

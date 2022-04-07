@@ -68,19 +68,48 @@ function SearchBar(props) {
   const categories = ["Baking", "Teaching", "Fixing"];
   const window = useWindowSize();
 
+  const reverseGeocode = async (latt, lngg) => {
+    var obj = { lat: latt, lng: lngg };
+    var js = JSON.stringify(obj);
+
+    console.log(obj);
+
+    try {
+      const response = await fetch(bp.buildPath("api/reverse-geocode"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      var res = JSON.parse(await response.text());
+
+      if (res.error == '')
+        return res.location;
+      else
+        return 'Orlando, FL';
+    } catch (e) {
+      console.log(e.toString());
+      return; 
+    }
+  };
+
   const getLocation = () => {
+    let loc = null;
     if (!navigator.geolocation) {
-      setStatus('Geolocation is not supported by your browser');
+      console.log('Geolocation is not supported by your browser');
     } else {
-      setStatus('Locating...');
+      console.log('Locating...');
       navigator.geolocation.getCurrentPosition((position) => {
-        setStatus(null);
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
+        loc = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }
+        console.log(loc);
       }, () => {
-        setStatus('Unable to retrieve your location');
+        console.log('Unable to retrieve your location');
       });
     }
+    console.log(loc);
+    return loc;
   }
 
   async function findPredictions() {
@@ -115,11 +144,15 @@ function SearchBar(props) {
   
     if (obj.location == '') {
       obj.location = 'Orlando, FL';
+      let loc = getLocation();
 
-      // getLocation();
-      // if (lat && lng) {
+      console.log(loc);
+      
+      if (loc) {
+        console.log(loc);
 
-      // }
+        // obj.location = reverseGeocode();
+      }
     }
 
     if (isNaN(obj.maxDist))
@@ -153,7 +186,8 @@ function SearchBar(props) {
   };
   
   const handleChangeLocationDropdown = async (event) => {
-    setSearch({ ...search, location: event.target.innerHTML });
+    // console.log(event);
+    setSearch({ ...search, location: (('innerHTML' in event.target && event.target.innerHTML.charAt(0) != '<') ? event.target.innerHTML : '') });
     await findPredictions();
   };
 
@@ -173,6 +207,7 @@ function SearchBar(props) {
         textAlign: "center",
       }}
     >
+    
       <Stack direction="row" spacing={1} alignItems="center">
         <Stack
           direction="row"
