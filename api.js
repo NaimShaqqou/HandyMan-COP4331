@@ -84,7 +84,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       });
 
         // Filters services based on distance
-        if (services.length > 0)
+        // if (services.length > 0)
           services = await getServicesWithinDistance(services, location, maxDist);
 
         response = { searchLocationCoords: services.searchLocationCoords, results: services.filteredServices, error: error, jwtToken: refreshedToken };
