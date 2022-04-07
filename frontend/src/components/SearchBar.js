@@ -128,8 +128,6 @@ function SearchBar(props) {
   };
   
   const handleChangeLocationDropdown = async (event) => {
-    // console.log(typeof(event.target.innerHTML));
-    // console.log(event.target.innerHTML);
     setSearch({ ...search, location: event.target.innerHTML });
     await findPredictions();
   };
