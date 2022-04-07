@@ -1,26 +1,25 @@
-const {PolyUtil, SphericalUtil} = require("node-geometry-library");
-
-const { ObjectId } = require("mongodb");
-const axios = require('axios');
-
-// import schema
-const User = require("./models/user.js");
-const Review = require("./models/reviews.js");
-const RequestedService = require("./models/requestedservices.js");
-
-//load card model
-const Card = require("./models/card.js");
-const Service = require("./models/services.js");
-const { ObjectID } = require("bson");
-const crypto = require('./crypto.js');
-const { listeners } = require("./models/user.js");
-
-require("express");
-require("mongodb");
-require("dotenv")
-
 exports.setApp = function (app, client, cloudinaryParser) {
- 
+  
+  const {PolyUtil, SphericalUtil} = require("node-geometry-library");
+
+  const { ObjectId } = require("mongodb");
+  const axios = require('axios');
+
+  // import schema
+  const User = require("./models/user.js");
+  const Review = require("./models/reviews.js");
+  const RequestedService = require("./models/requestedservices.js");
+
+  //load card model
+  const Card = require("./models/card.js");
+  const Service = require("./models/services.js");
+  const { ObjectID } = require("bson");
+  //const crypto = require('./crypto.js');
+  const { listeners } = require("./models/user.js");
+
+  require("express");
+  require("mongodb");
+  require("dotenv")
 
   let url;
   if (process.env.NODE_ENV === 'production') 
@@ -43,10 +42,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
     var _search = search.trim();
     console.log(_search);
 
-    // If they select "all categories, make sure we search all categories"
+    // Make sure we search all categories if they select that option
     // CHANGE THIS WHEN WE KNOW WHAT THE ACTUAL VALUE FOR "All Categories" IS
-    if (category == "")
-      category = "";
+    var _category = category.trim();
+    if (_category == "")
+      _category = "";
+    
 
     // Checks if token is expired
     try {
@@ -77,8 +78,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
             { Description : { "$regex" : _search, "$options" : "i" } },
             { Category : { "$regex" : _search, "$options" : "i" } }
           ]},
-          // category has to be exact
-          { Category : { category } }
+          // category has to be exact since from drop down
+          { Category : { "$regex" : _category, "$options" : "i" } }
         ]
       });
 
@@ -86,7 +87,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
         if (services.length > 0)
           services = await getServicesWithinDistance(services, location, maxDist);
 
-        response = { results: services, error: error, jwtToken: refreshedToken };
+        response = { searchLocationCoords: services.searchLocationCoords, results: services.filteredServices, error: error, jwtToken: refreshedToken };
         res.status(200).json(response);
     }
     // If we have problems, we end up here
@@ -157,6 +158,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
     } 
   });
 
+
+
   app.post("/api/login", async (req, res, next) => {
     // incoming: login, password
 
@@ -207,7 +210,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
         }
         res.status(200).json(ret);
-    }).catch((e) => ret = { error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()}) 
+    }).catch((e) => res.status(200).json({ error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})) 
   });
 
   app.post("/api/edit-profile", async (req, res, next) => {
@@ -779,6 +782,26 @@ exports.setApp = function (app, client, cloudinaryParser) {
       });
   })
 
+  app.post("/api/reverse-geocode", async (req, res, next) => {
+    let {lat, lng} = req.body;
+    let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+    let apiKey = process.env.GEOCODING_API_KEY
+    
+    googleUrl = googleUrl + lat + ',' + lng + '&result_type=postal_code&key=' + apiKey;
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = response.data.results[0].formatted_address
+        console.log(result)
+        res.status(200).json({location: result, error: ""})
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({location: "", error: error.message})
+      });
+  })
+
+
   // Sends email to verify their account
   function verifyEmail(email, userId) {
 
@@ -849,7 +872,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
   }
 
   async function convertAddressToCoordinates(address) {
-    console.log()
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
     address = address.replace('/ /g', '+')
@@ -891,6 +913,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
   })
 
+  
   app.get("/api/verify-email", async (req, res, next) => {
     let id;
 

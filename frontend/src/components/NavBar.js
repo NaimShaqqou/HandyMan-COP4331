@@ -74,14 +74,21 @@ const ResponsiveAppBar = (props) => {
   };
 
   // Set this to the user's full name
-  let avatarAlt = "User Name";
+  // let avatarAlt = "User Name";
+  let userObj = {
+    fullName: "User Name",
+    profilePicture: "/static/images/avatar/2.jpg",
+  }
 
   if (user.userId != '') {
-    avatarAlt = user.firstName + " " + user.lastName;
+    userObj.fullName = user.firstName + " " + user.lastName;
+    userObj.profilePicture = user.profilePicture;
   }
+
   const routeChange = () =>{ 
     navigate("../", { replace:true });
   };
+
   const titlestyle = {
     fontFamily: 'Philosopher',
     fontStyle: 'normal',
@@ -95,7 +102,7 @@ const ResponsiveAppBar = (props) => {
     fontSize:'30px',
     cursor:'pointer'
   }
-  
+
   return (
     <AppBar position="static" elevation={0}>
       <Container maxWidth="xl">
@@ -105,60 +112,27 @@ const ResponsiveAppBar = (props) => {
             noWrap
             component="div"
             onClick={routeChange}
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
           >
             <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
           </Typography>
 
           {pathname !== "/" && 
           <Container maxWidth="md">
-            <SearchBar sendToParent={sendToParent}/>
+            <SearchBar search={props.search} sendToParent={sendToParent}/>
           </Container>}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
           </Box>
-          
+
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            onClick={routeChange}
+            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
           >
-            LOGO
+            <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -174,9 +148,9 @@ const ResponsiveAppBar = (props) => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="View Menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={avatarAlt} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
               </IconButton>
             </Tooltip>
 

@@ -5,7 +5,8 @@
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
-        "heroku-postbuild": " NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
+        "heroku-postbuild": " NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
+        "test": "NODE_ENV=test jest"
     },
     "author": "",
     "license": "ISC",
@@ -25,5 +26,9 @@
         "node-geometry-library": "^1.2.6",
         "react-native-onboarding-swiper": "^1.2.0",
         "react-router-dom": "^5.2.0"
+    },
+    "devDependencies": {
+        "jest": "^27.5.1",
+        "supertest": "^6.2.2"
     }
 }

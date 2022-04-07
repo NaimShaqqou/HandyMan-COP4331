@@ -7,56 +7,70 @@ import MapComponent from '../components/Map';
 import { useSelector } from "react-redux";
 
 import {
+  Box,
+  Stack,
+  Typography,
   Container
 } from "@mui/material";
 
 const HomePage = () =>
 {
-  let [results, setResults] = useState([{
-    _id: "623a99227131da5da110fa58",
-    UserId: "6234c4d39a050a36555a6942",
-    Title: "Bakery1",
-    Images: [
-      "image1",
-      "image2"
-    ],
-    Address: "14330 Alafaya Oak Bend",
-    Longitude: "-81.1705685",
-    Latitude: "28.510048",
-    Description: "My Bakery is so cool",
-    Price: "5",
-    DaysAvailable: [
-      "Monday"
-    ],
-    Category: "Baking",
-    __v: 0
-  }]);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const [status, setStatus] = useState(null);
   let user = useSelector((state) => state.user);
-  let msg = 'Welcome, you are not logged in.';
-  console.log('in homepage: ');
+  let msg = 'Welcome, Guest!';
+  console.log('Rendering Homepage: ');
   console.log(user);
 
-  const sendToParent = (index) => {
-    setResults(index);
-  };
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setStatus('Geolocation is not supported by your browser');
+    } else {
+      setStatus('Locating...');
+      navigator.geolocation.getCurrentPosition((position) => {
+        setStatus(null);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      }, () => {
+        setStatus('Unable to retrieve your location');
+      });
+    }
+  }
 
   if (user.userId != '') {
     msg = 'Hello, ' + user.firstName + " " + user.lastName;
   }
 
-  console.log(results);
-
   return(
     <div>
       <ResponsiveAppBar />
-      <h1>Handler</h1>
-      <h2 style={{textAlign: 'center'}}>{msg}</h2>
+      <Box sx={{ m: 15 }} />
 
-      <Container maxWidth="md">
-        <SearchBar sendToParent={sendToParent}/>
-      </Container>
+      <Stack spacing={7}>
+        <Typography
+          variant='h2'
+          style={{textAlign: 'center'}}
+        >
+          {msg}
+        </Typography>
+
+        <div>
+          <Container sx={{ maxWidth: { xs: '400px', sm: '500px', md: 'md'} }}>
+            <SearchBar/>
+          </Container>
+        </div>
+
+        <div className="App">
+          <button onClick={getLocation}>Get Location</button>
+          <h1>Coordinates</h1>
+          <p>{status}</p>
+          {lat && <p>Latitude: {lat}</p>}
+          {lng && <p>Longitude: {lng}</p>}
+        </div>
+      </Stack>
     </div>
-    
+
   );
 }
 

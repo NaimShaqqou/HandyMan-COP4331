@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,32 +16,72 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+// TODO: enter to select a dropdown option
+// TODO: location dropdown is different from the other two dropdowns
+// TODO: when searching from homepage, contents of search bar should carry on to search page.
+
+// Hook
+function useWindowSize() {
+  // Initialize state with undefined width/height so server and client renders match
+  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []); // Empty array ensures that effect is only run on mount
+  return windowSize;
+}
+
 function SearchBar(props) {
+  console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
-  // const [searchInput, setSearchInput] = useState("");
-  // const [distance, setDistance] = useState("");
-  // const [category, setCategory] = useState("");
   const [search, setSearch] = useState({
     keyword: '',
     location: '',
     distance: '',
     category: '',
   });
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const [status, setStatus] = useState(null);
+
   let location = useLocation();
   let navigate = useNavigate();
 
   let bp = require("./Path");
   const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"];
   const categories = ["Baking", "Teaching", "Fixing"];
+  const window = useWindowSize();
 
-  // const Oval = styled(Paper)(({ theme }) => ({
-  //   backgroundColor: theme.palette.mode === "white",
-  //   ...theme.typography.body2,
-  //   padding: theme.spacing(1),
-  //   width: "100%",
-  //   textAlign: "center",
-  //   color: theme.palette.text.secondary,
-  // }));
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setStatus('Geolocation is not supported by your browser');
+    } else {
+      setStatus('Locating...');
+      navigator.geolocation.getCurrentPosition((position) => {
+        setStatus(null);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      }, () => {
+        setStatus('Unable to retrieve your location');
+      });
+    }
+  }
 
   async function findPredictions() {
     await axios
@@ -52,20 +92,18 @@ function SearchBar(props) {
       .catch((error) => console.log(error));
   }
 
+
   const user = useSelector((state) => state.user);
 
   const doSearch = async (e) => {
     e.preventDefault();
-
-    // Navigate to search page when searching on homepage
-    // if (location.pathname !== '/search')
-    //   navigate("../search", { replace: true });
 
     // Convert "15 miles" to 15
     let maxDist = parseInt(search.distance.split(' ')[0]);
 
     var obj = {
       search: search.keyword,
+      category: search.category,
       location: search.location,
       maxDist: maxDist,
       jwtToken: user.jwtToken,
@@ -75,14 +113,20 @@ function SearchBar(props) {
     console.log('search input:');
     console.log(obj);
   
-    if (obj.location == '')
+    if (obj.location == '') {
       obj.location = 'Orlando, FL';
 
+      // getLocation();
+      // if (lat && lng) {
+
+      // }
+    }
+
     if (isNaN(obj.maxDist))
-      obj['maxDist'] = 15;
+      obj.maxDist = 15;
 
     if (obj.jwtToken == '')
-      obj['jwtToken'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
+      obj.jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
 
     js = JSON.stringify(obj);
     // console.log('sending:');
@@ -96,16 +140,8 @@ function SearchBar(props) {
       });
       var res = JSON.parse(await response.text());
 
-      console.log(jwt_decode(obj.jwtToken));
+      navigate("/search", { replace: true, state: { obj: search, res: res} });
 
-      
-      props.sendToParent(res);
-
-      // if (res.error === "") {
-      //   console.log(res.results);
-      // } else {
-      //   console.log(res.error);
-      // }
     } catch (e) {
       console.log(e.toString());
       return;
@@ -117,8 +153,6 @@ function SearchBar(props) {
   };
   
   const handleChangeLocationDropdown = async (event) => {
-    // console.log(typeof(event.target.innerHTML));
-    // console.log(event.target.innerHTML);
     setSearch({ ...search, location: event.target.innerHTML });
     await findPredictions();
   };
@@ -127,9 +161,6 @@ function SearchBar(props) {
     setSearch({ ...search, location: event.target.value });
     await findPredictions();
   };
-
-  // TODO: enter to select a dropdown option
-  // TODO: the location dropdown is different from the other two dropdowns
 
   return (
     <Paper
@@ -145,13 +176,21 @@ function SearchBar(props) {
       <Stack direction="row" spacing={1} alignItems="center">
         <Stack
           direction="row"
-          divider={<Divider orientation="vertical" flexItem />}
+          divider={window.width < 900 ? (<div></div>) : (<Divider orientation="vertical" flexItem />)}
           spacing={2}
         >
           <form onSubmit={(event) => doSearch(event)}>
-            <TextField label="Service" variant="standard" value={search.keyword} onChange={handleChange('keyword')}></TextField>
+            <TextField
+              label="Service"
+              variant="standard"
+              // temporary solution, does not work well with navbar:
+              // style={window.width < 900 ? ({ width: 350 }) : ({ width: 170 })}
+              sx={{ width: { xs: '280px', sm: '360px', md: '170px'}}}
+              value={search.keyword}
+              onChange={handleChange('keyword')}
+            />
           </form>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Autocomplete
               options={predictions.map((prediction) => prediction)}
               onChange={handleChangeLocationDropdown}
@@ -194,6 +233,7 @@ function SearchBar(props) {
             style={{ width: 150 }}
             value={search.category}
             onChange={handleChange('category')}
+            sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
           >
             {categories.map((category) => (
               <MenuItem key={category} value={category}>

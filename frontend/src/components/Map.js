@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, } from '@react-google-maps/api';
 
+// TODO: adjust zoom level to fit all markers
+
 const Map = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -11,34 +13,32 @@ const Map = (props) => {
     width: '100%',
     height: '850px',
   };
-  
-  const markers = [{
-    position: {
-      lat: 28.602,
-      lng: -81.200
-    },
-    name: "marker for ucf"
-  }];
 
   const onLoad = marker => {
-    console.log('marker: ', marker)
+    // console.log('marker: ', marker)
   }
+
+  // console.log(props.center);
+  // console.log(props.results);
 
   return isLoaded ? (
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={props.center}
-        zoom={15}
+        zoom={12}
         // onLoad={onLoad}
         // onUnmount={onUnmount}
       >
-        <Marker
-          onLoad={onLoad}
-          position={markers[0].position}
-          clickable={true}
-          label={markers[0].name}
-          onClick={((e) => console.log(e))}
-        />
+        {props.results ? props.results.map(listitem => (
+          <Marker
+            key={listitem._id}
+            onLoad={onLoad}
+            position={{lat: parseFloat(listitem.Latitude), lng: parseFloat(listitem.Longitude)}}
+            clickable={true}
+            label={listitem.Title}
+            onClick={((e) => console.log(e))}
+          />
+        )) : <div></div>}
       </GoogleMap>
   ) : <></>
 }
