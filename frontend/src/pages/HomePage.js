@@ -7,6 +7,9 @@ import MapComponent from '../components/Map';
 import { useSelector } from "react-redux";
 
 import {
+  Box,
+  Stack,
+  Typography,
   Container
 } from "@mui/material";
 
@@ -42,20 +45,30 @@ const HomePage = () =>
   return(
     <div>
       <ResponsiveAppBar />
-      <h1>Handler</h1>
-      <h2 style={{textAlign: 'center'}}>{msg}</h2>
+      <Box sx={{ m: 15 }} />
 
-      <Container sx={{ maxWidth: { xs: '500px', md: 'md'} }}>
-        <SearchBar/>
-      </Container>
+      <Stack spacing={7}>
+        <Typography
+          variant='h2'
+          style={{textAlign: 'center'}}
+        >
+          {msg}
+        </Typography>
 
-      <div className="App">
-        <button onClick={getLocation}>Get Location</button>
-        <h1>Coordinates</h1>
-        <p>{status}</p>
-        {lat && <p>Latitude: {lat}</p>}
-        {lng && <p>Longitude: {lng}</p>}
-      </div>
+        <div>
+          <Container sx={{ maxWidth: { xs: '500px', md: 'md'} }}>
+            <SearchBar/>
+          </Container>
+        </div>
+
+        <div className="App">
+          <button onClick={getLocation}>Get Location</button>
+          <h1>Coordinates</h1>
+          <p>{status}</p>
+          {lat && <p>Latitude: {lat}</p>}
+          {lng && <p>Longitude: {lng}</p>}
+        </div>
+      </Stack>
     </div>
 
   );
