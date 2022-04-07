@@ -39,11 +39,6 @@ const HomePage = () =>
     msg = 'Hello, ' + user.firstName + " " + user.lastName;
   }
 
-  // let navigator = window.navigator;
-  // console.log(navigator.geolocation);
-
-  // console.log(navigator.getCurrentPosition());
-
   return(
     <div>
       <ResponsiveAppBar />

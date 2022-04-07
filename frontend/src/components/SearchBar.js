@@ -56,6 +56,10 @@ function SearchBar(props) {
     distance: '',
     category: '',
   });
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const [status, setStatus] = useState(null);
+
   let location = useLocation();
   let navigate = useNavigate();
 
@@ -63,6 +67,21 @@ function SearchBar(props) {
   const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"];
   const categories = ["Baking", "Teaching", "Fixing"];
   const window = useWindowSize();
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setStatus('Geolocation is not supported by your browser');
+    } else {
+      setStatus('Locating...');
+      navigator.geolocation.getCurrentPosition((position) => {
+        setStatus(null);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      }, () => {
+        setStatus('Unable to retrieve your location');
+      });
+    }
+  }
 
   async function findPredictions() {
     await axios
@@ -94,8 +113,14 @@ function SearchBar(props) {
     console.log('search input:');
     console.log(obj);
   
-    if (obj.location == '')
+    if (obj.location == '') {
       obj.location = 'Orlando, FL';
+
+      // getLocation();
+      // if (lat && lng) {
+
+      // }
+    }
 
     if (isNaN(obj.maxDist))
       obj.maxDist = 15;
