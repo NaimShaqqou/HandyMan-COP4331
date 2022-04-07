@@ -1,26 +1,25 @@
-const {PolyUtil, SphericalUtil} = require("node-geometry-library");
-
-const { ObjectId } = require("mongodb");
-const axios = require('axios');
-
-// import schema
-const User = require("./models/user.js");
-const Review = require("./models/reviews.js");
-const RequestedService = require("./models/requestedservices.js");
-
-//load card model
-const Card = require("./models/card.js");
-const Service = require("./models/services.js");
-const { ObjectID } = require("bson");
-const crypto = require('./crypto.js');
-const { listeners } = require("./models/user.js");
-
-require("express");
-require("mongodb");
-require("dotenv")
-
 exports.setApp = function (app, client, cloudinaryParser) {
- 
+  
+  const {PolyUtil, SphericalUtil} = require("node-geometry-library");
+
+  const { ObjectId } = require("mongodb");
+  const axios = require('axios');
+
+  // import schema
+  const User = require("./models/user.js");
+  const Review = require("./models/reviews.js");
+  const RequestedService = require("./models/requestedservices.js");
+
+  //load card model
+  const Card = require("./models/card.js");
+  const Service = require("./models/services.js");
+  const { ObjectID } = require("bson");
+  //const crypto = require('./crypto.js');
+  const { listeners } = require("./models/user.js");
+
+  require("express");
+  require("mongodb");
+  require("dotenv")
 
   let url;
   if (process.env.NODE_ENV === 'production') 
@@ -159,6 +158,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
     } 
   });
 
+
+
   app.post("/api/login", async (req, res, next) => {
     // incoming: login, password
 
@@ -209,7 +210,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
         }
         res.status(200).json(ret);
-    }).catch((e) => ret = { error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()}) 
+    }).catch((e) => res.status(200).json({ error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})) 
   });
 
   app.post("/api/edit-profile", async (req, res, next) => {
