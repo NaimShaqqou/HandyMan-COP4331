@@ -48,6 +48,7 @@ function useWindowSize() {
 }
 
 function SearchBar(props) {
+  console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
   const [search, setSearch] = useState({
     keyword: '',
@@ -72,7 +73,6 @@ function SearchBar(props) {
       .catch((error) => console.log(error));
   }
 
-  console.log('in SearchBar.js');
 
   const user = useSelector((state) => state.user);
 
@@ -98,10 +98,10 @@ function SearchBar(props) {
       obj.location = 'Orlando, FL';
 
     if (isNaN(obj.maxDist))
-      obj['maxDist'] = 15;
+      obj.maxDist = 15;
 
     if (obj.jwtToken == '')
-      obj['jwtToken'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
+      obj.jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
 
     js = JSON.stringify(obj);
     // console.log('sending:');
