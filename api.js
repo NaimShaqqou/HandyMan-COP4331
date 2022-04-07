@@ -781,6 +781,26 @@ exports.setApp = function (app, client, cloudinaryParser) {
       });
   })
 
+  app.post("/api/reverse-geocode", async (req, res, next) => {
+    let {lat, lng} = req.body;
+    let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+    let apiKey = process.env.GEOCODING_API_KEY
+    
+    googleUrl = googleUrl + lat + ',' + lng + '&result_type=postal_code&key=' + apiKey;
+
+    await axios(googleUrl)
+      .then((response) => {
+        let result = response.data.results[0].formatted_address
+        console.log(result)
+        res.status(200).json({location: result, error: ""})
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({location: "", error: error.message})
+      });
+  })
+
+
   // Sends email to verify their account
   function verifyEmail(email, userId) {
 
@@ -851,7 +871,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
   }
 
   async function convertAddressToCoordinates(address) {
-    console.log()
     let googleUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="
     let apiKey = process.env.GEOCODING_API_KEY
     address = address.replace('/ /g', '+')
@@ -893,6 +912,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
   })
 
+  
   app.get("/api/verify-email", async (req, res, next) => {
     let id;
 
