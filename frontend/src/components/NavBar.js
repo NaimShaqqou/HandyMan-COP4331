@@ -112,7 +112,7 @@ const ResponsiveAppBar = (props) => {
             noWrap
             component="div"
             onClick={routeChange}
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
           >
             <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
           </Typography>
@@ -130,7 +130,7 @@ const ResponsiveAppBar = (props) => {
             noWrap
             component="div"
             onClick={routeChange}
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
           >
             <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
           </Typography>

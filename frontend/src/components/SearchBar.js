@@ -184,7 +184,8 @@ function SearchBar(props) {
               label="Service"
               variant="standard"
               // temporary solution, does not work well with navbar:
-              style={window.width < 900 ? ({ width: 350 }) : ({ width: 170 })}
+              // style={window.width < 900 ? ({ width: 350 }) : ({ width: 170 })}
+              sx={{ width: { xs: '280px', sm: '360px', md: '170px'}}}
               value={search.keyword}
               onChange={handleChange('keyword')}
             />
