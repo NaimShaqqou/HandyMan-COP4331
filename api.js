@@ -88,7 +88,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
         if (services.length > 0)
           services = await getServicesWithinDistance(services, location, maxDist);
 
-        response = { results: services, error: error, jwtToken: refreshedToken };
+        response = { searchLocationCoords: services.searchLocationCoords, results: services.filteredServices, error: error, jwtToken: refreshedToken };
         res.status(200).json(response);
     }
     // If we have problems, we end up here
