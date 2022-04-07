@@ -35,7 +35,7 @@ const ForgotPasswordBox = () => {
                 toast.show({
                     title: "Error",
                     status: "error",
-                    description: "An error has occurred. Please submit again.",
+                    description: res.error,
                     duration: null,
                     w: '90%'
                 })
