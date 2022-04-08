@@ -69,10 +69,6 @@ const ResponsiveAppBar = (props) => {
     setAnchorElUser(null);
   };
 
-  const sendToParent = (index) => {
-    props.sendToParent(index);
-  };
-
   // Set this to the user's full name
   // let avatarAlt = "User Name";
   let userObj = {
@@ -119,7 +115,7 @@ const ResponsiveAppBar = (props) => {
 
           {pathname !== "/" && 
           <Container maxWidth="md">
-            <SearchBar search={props.search} sendToParent={sendToParent}/>
+            <SearchBar search={props.search}/>
           </Container>}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
