@@ -106,7 +106,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let valid = true;
 
     // duplicate username/email
-    await User.findOne({Username : username}).then((user)=>{
+    await User.findOne({Username : username.toLowerCase()}).then((user)=>{
       if (user != null)
       {
         valid = false;
@@ -117,7 +117,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }) 
 
     if (valid){
-      await User.findOne({Email : email}).then((user)=>{
+      await User.findOne({Email : email.toLowerCase()}).then((user)=>{
         if (user != null)
         {
           valid = false;
@@ -134,9 +134,9 @@ exports.setApp = function (app, client, cloudinaryParser) {
         {
           FirstName: firstName, 
           LastName: lastName, 
-          Username: username, 
+          Username: username.toLowerCase(), 
           Password: password, 
-          Email: email,
+          Email: email.toLowerCase(),
           Verified: false
         },
         function (err, user) {
@@ -150,7 +150,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
               id: user._id.valueOf(),
               error: ""
             };
-            verifyEmail(email, user._id.valueOf());
+            verifyEmail(email.toLowerCase(), user._id.valueOf());
           }
           res.status(200).json(response);
         }
@@ -172,7 +172,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     console.log("Given:");
     console.log(req.body);
     
-    if (login.includes("@")) {
+    if (login.toLowerCase().includes("@")) {
       parameter = "Email";
     } else {
       parameter = "Username";
@@ -184,7 +184,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let ret;
 
     let filters = {}
-    filters[parameter] = login
+    filters[parameter] = login.toLowerCase()
     filters["Password"] = password
 
     await User.findOne(filters).then(async (user) => {
@@ -704,11 +704,11 @@ exports.setApp = function (app, client, cloudinaryParser) {
   app.post("/api/forgot-password-email", async (req, res, next) => {
     let email = req.body.email
 
-    User.findOne({Email: email}, function(err, user) {
+    User.findOne({Email: email.toLowerCase()}, function(err, user) {
       if (err) {
         return res.status(200).json({error: err.message, success: ""});
       } else if (user) {
-        encryptedEmail = crypto.encrypt_string(email)
+        encryptedEmail = crypto.encrypt_string(email.toLowerCase())
     
         const sgMail = require('@sendgrid/mail')
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
