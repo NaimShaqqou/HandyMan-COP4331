@@ -36,7 +36,7 @@ export default function ForgotPassword() {
     event.preventDefault();
   
     var obj = {
-      email: email
+      email: email.toLowerCase()
     };
   
     var js = JSON.stringify(obj);

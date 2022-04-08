@@ -29,7 +29,7 @@ function RegisterBox() {
     }
 
     var obj = {
-      email: values.email,
+      email: values.email.toLowerCase(),
       password: values.password,
       firstName: values.firstName,
       lastName: values.lastName,
