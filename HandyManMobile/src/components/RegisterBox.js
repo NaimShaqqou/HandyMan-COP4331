@@ -26,7 +26,7 @@ const RegisterBox = () => {
 
         // call register api
         var obj = { 
-          email: email, 
+          email: email.toLowerCase(), 
           username: username, 
           password: password, 
           firstName: fName, 

@@ -10,7 +10,7 @@ const ForgotPasswordBox = () => {
 
         setLoading(true);
 
-        var obj = { email: email }
+        var obj = { email: email.toLowerCase() }
         var js = JSON.stringify(obj);
 
         try {
