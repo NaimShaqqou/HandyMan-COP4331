@@ -1,30 +1,37 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-
-
 import * as React from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
-import { StyleSheet, View, Text, FlatList, ScrollView} from 'react-native';
+import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView} from 'react-native';
+import { Center, Column } from 'native-base';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
+const { width, height } = Dimensions.get("screen");
+
+//<View style = {styles.viewContainer}>
 const Services = () => {
   const user = useSelector((state) => state.user)
   const services = useSelector((state) => state.services).services;
   
   return (
-    <View>
-      <Button>ADD</Button>
-      <ScrollView>
+    <ImageBackground
+      source={require("../../assets/profile-screen-bg.png")}
+      style={{
+        width: width,
+        height: height,
+        padding: 0,
+        zIndex: 1,
+      }}
+      imageStyle={{ width: width, height: height }}
+      >    
+      <ScrollView contentContainerStyle = {styles.viewContainer}>
         {
           Object.values(services).map(item => (
             <Text>
-              <Card>
+              <Card style = {styles.menuContainer}>
                 <Card.Title 
-                  style={{alignContent:'center'}} 
-                  titleStyle={{color:'rgba(0,0,255,0.9)'}}
+                  titleStyle={{justifyContent:'center', alignItems:'center'}}
                   title = {item.Title} 
                   subtitle = {item.Description}
                 />
@@ -48,11 +55,43 @@ const Services = () => {
             </Text>
           ))
         }
+        <Text>{"\n"}{"\n"}{"\n"}</Text>
       </ScrollView>
-
-    </View>
+    </ImageBackground>
 
   )
 };
+
+const styles = StyleSheet.create({
+  menuContainer:{
+    display: 'flex',
+    padding: 15,
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 20,
+    borderColor: 'blue',
+    borderWidth: 3,
+    elevation: 5,
+    shadowColor: '#470000',
+    shadowRadius: 10,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.4,
+    justifyContent:'center',
+    alignItems: 'stretch',
+    width: width,
+    maxWidth: '100%',
+  },
+
+  viewContainer:{
+    flexDirection: 'column',
+    justifyContent:'space-between',
+    alignItems: 'center',
+    margin: 10,
+  },
+
+  addButton:{
+
+  }
+})
   
 export default Services;
