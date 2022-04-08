@@ -14,7 +14,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   const Card = require("./models/card.js");
   const Service = require("./models/services.js");
   const { ObjectID } = require("bson");
-  //const crypto = require('./crypto.js');
+  const crypto = require('./crypto.js');
   const { listeners } = require("./models/user.js");
 
   require("express");
@@ -703,12 +703,13 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   app.post("/api/forgot-password-email", async (req, res, next) => {
     let email = req.body.email
+    email = email.toLowerCase()
 
     User.findOne({Email: email.toLowerCase()}, function(err, user) {
       if (err) {
         return res.status(200).json({error: err.message, success: ""});
       } else if (user) {
-        encryptedEmail = crypto.encrypt_string(email.toLowerCase())
+        encryptedEmail = crypto.encrypt_string(email)
     
         const sgMail = require('@sendgrid/mail')
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
