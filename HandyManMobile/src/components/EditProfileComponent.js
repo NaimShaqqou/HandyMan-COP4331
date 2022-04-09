@@ -63,8 +63,9 @@ const EditProfileComponent = () => {
     });
 
     if (!result.cancelled) {
-      setLoading(true)
-      console.log(loading)
+      // setLoading(true)
+      // console.log(loading)
+
       // changes the uri to a file object and uploads it to cloudinary
       setImage(
         await handleUpload({
@@ -73,6 +74,8 @@ const EditProfileComponent = () => {
           name: `user-profile.${result.uri.split(".")[1]}`,
         })
       );
+
+      // setLoading(false)
     }
   };
 
