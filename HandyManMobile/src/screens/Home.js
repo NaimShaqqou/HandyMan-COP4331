@@ -19,7 +19,7 @@ const Home = () => {
           <SearchBar mt='20' />
         </Box>
         {/* NEW */}
-        <Box h='1000'>
+        <Box h='25%'>
           <GooglePlacesInput mt='20' />
         </Box>
         {/* NEW */}
