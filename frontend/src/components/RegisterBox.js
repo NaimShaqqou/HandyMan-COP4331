@@ -48,7 +48,7 @@ function RegisterBox() {
       });
       var res = JSON.parse(await response.text());
 
-      if (res.error == "") {
+      if (res.error === "") {
         setMessage("Account Created Successfully! Please check your email to verify.");
       } else {
         setMessage(res.error);
