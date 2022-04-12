@@ -16,3 +16,10 @@
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
   } 
+
+  img
+  {
+    padding-bottom: 3px;
+    width:60px;
+    height:60px;
+  }

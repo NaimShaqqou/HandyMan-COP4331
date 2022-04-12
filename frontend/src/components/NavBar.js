@@ -8,7 +8,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import SearchBar from "./SearchBar"
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-
+import '../Title.css';
 import {
   AppBar,
   Box,
@@ -100,9 +100,11 @@ const ResponsiveAppBar = (props) => {
   }
 
   return (
+   
     <AppBar position="static" elevation={0}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+        <img src="https://tinyimg.io/i/oI5Vz43.png" />
           <Typography
             variant="h6"
             noWrap
