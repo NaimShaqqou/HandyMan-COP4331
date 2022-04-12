@@ -5,7 +5,51 @@ import { PLACES_API_KEY } from "@env"
 const GooglePlacesInput = () => {
 
   const ref = useRef();
+
+  // used to set the filters section of the front end
+  var filters = {
+    search: "",
+    category: "",
+    maxDist: 15
+  }
   
+  function setFilters(filters)
+  {
+    this.filters = filters;
+  }
+
+  const doSearch = async (location, event) => 
+  {
+    try {
+      // call register api
+      var obj = { 
+        search: filters.search, 
+        category: filters.category, 
+        location: location, 
+        maxDist: filters.maxDist, 
+        jwtToken: lName
+      }
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://myhandyman1.herokuapp.com/api/search-services', {
+          method: 'POST',
+          body: js,
+          headers: { "Content-Type": "application/json" }
+      });
+      var res = JSON.parse(await response.text());
+
+      // if (res.error == '') 
+        // send the data to the map and list
+
+    } catch (e) {
+      console.log(e.toString());
+      return; 
+    }
+
+    // if successful navigate to confirm email page
+    // if error, then determine type of error and display it
+  }  
+
   let x = useEffect(() => {
     ref.current?.getAddressText();
   }, []);
@@ -21,24 +65,29 @@ const GooglePlacesInput = () => {
       styles={
         {
           textInput: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#fff',
           height: "100%",
-          width: "80%",
-          borderRadius: 5,
-          paddingVertical: 5,
-          paddingHorizontal: 10,
-          fontSize: 15,
+          width: "90%",
+          borderRadius: 1,
+          borderColor: "blue",
+          paddingTop: 5,
+          paddingRight: 0,
+          paddingBottom: 5,
+          paddingLeft: 0,
+          fontSize: 17,
           flex: 0,
           },
+          textInputContainer: {
+            alignSelf: "center"
+          }
         }}
 
       // DO WHATEVER YOU WANT WITH THE LOCATION ONCE IT IS SELECTED
       // ↓↓↓↓↓↓↓
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
-        console.log(data, details);
-
-        console.log("Now getting the other stuff\n\n\n\n" + x);
+        doSearch(data.description);
+        console.log(data);
       }}
       query={{
         key: PLACES_API_KEY,
