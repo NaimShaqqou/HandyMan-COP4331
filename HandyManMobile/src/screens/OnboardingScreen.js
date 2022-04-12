@@ -17,7 +17,7 @@ const OnboardingScreen = () => {
       onSkip={() => onboardingRef.current.goToPage(3, true)}
       pages={[
         {
-          backgroundColor: '#67e8f9',
+          backgroundColor: '#1876d2',
           image: <Image source={require('../../assets/OnboardingLogo.png')} borderRadius={60} />,
           title: 'Welcome to HandyMan',
           subtitle: 'Scroll through for an introduction to our application.',

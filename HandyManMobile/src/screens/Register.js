@@ -3,11 +3,13 @@ import React from 'react'
 
 import RegisterBox from '../components/RegisterBox.js'
 import Logo from '../components/Logo.js'
+import { useTheme } from 'react-native-paper'
 
-const Register = () => {  
+const Register = () => {
+  const { colors } = useTheme();
 
   return (
-    <Box w='100%' flex={1} safeAreaTop backgroundColor={'primary.300'} >
+    <Box w='100%' flex={1} safeAreaTop backgroundColor={colors.primary} >
       <Center safeAreaY>
         <Logo size="xl" />
       </Center>

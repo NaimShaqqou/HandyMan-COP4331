@@ -1,6 +1,7 @@
 import { Box, Center, Heading, Button } from 'native-base'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useTheme } from 'react-native-paper'
 
 import Logo from '../components/Logo.js'
 
@@ -10,8 +11,10 @@ const ConfirmEmail = () => {
     const onConfirm = () => {
         navigation.navigate('Login');
     }
+
+    const { colors } = useTheme();
   return (
-    <Box w="100%" flex={1} safeAreaTop backgroundColor={'primary.300'}>
+    <Box w="100%" flex={1} safeAreaTop backgroundColor={colors.primary}>
         <Center flexGrow={1} >
             <Logo size="2xl" />
         </Center>

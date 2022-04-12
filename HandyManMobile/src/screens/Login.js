@@ -6,11 +6,13 @@ import { Box, Center } from 'native-base'
 // components
 import LoginBox from "../components/LoginBox.js"
 import Logo from '../components/Logo.js'
+import { useTheme } from 'react-native-paper'
 
 
 const Login = () => {
+  const { colors } = useTheme();
   return (
-    <Box w="100%" flex={1} safeAreaTop backgroundColor={'primary.300'}>
+    <Box w="100%" flex={1} safeAreaTop backgroundColor={colors.primary}>
       <Center flexGrow={1} >
         <Logo size="2xl" />
       </Center>

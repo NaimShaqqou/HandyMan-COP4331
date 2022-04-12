@@ -1,13 +1,15 @@
 import { Center, Box } from 'native-base'
 import React from 'react'
+import { useTheme } from 'react-native-paper'
 
 import ForgotPasswordBox from '../components/ForgotPasswordBox.js'
 import Logo from '../components/Logo.js'
 
 const ForgotPassword = () => {
+    const { colors } = useTheme();
 
     return (
-        <Box w="100%" flex={1} safeAreaTop backgroundColor={'primary.300'}>
+        <Box w="100%" flex={1} safeAreaTop backgroundColor={colors.primary}>
             <Center flexGrow={1} >
                 <Logo size="2xl" />
             </Center>

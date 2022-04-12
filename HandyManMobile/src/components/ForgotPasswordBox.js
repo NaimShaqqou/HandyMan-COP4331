@@ -3,7 +3,6 @@ import { Box, Heading, Center, Icon, FormControl, Input, Button, useToast } from
 import { MaterialIcons } from "@native-base/icons"
 import { useNavigation } from '@react-navigation/native'
 
-
 const ForgotPasswordBox = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -52,6 +51,7 @@ const ForgotPasswordBox = () => {
 
     const navigation = useNavigation();
     const toast = useToast();
+    
 
     return (
         <Box safeArea w="90%" justifyContent='center' >
