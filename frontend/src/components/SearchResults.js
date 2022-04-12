@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   List,
@@ -8,31 +9,50 @@ import {
   ListSubheader,
   ListItemAvatar,
   Avatar,
-  Typography
+  Typography,
+  Box
 } from '@mui/material';
 
 export default function SearchResults(props) {
+
+  let navigate = useNavigate();
+
+  const clickItem = (item) => async (event) => {
+    // alert('clicked ' + item.Title);
+    navigate("/service", { replace: true, state: { service: item } });
+  };
+
   return (
-    <div>
-      <List
-        sx={{
-          width: '100%',
-          maxWidth: '100%',
-          bgcolor: 'background.paper',
-          position: 'relative',
-          overflow: 'auto',
-          maxHeight: 850,
-          '& ul': { padding: 0 },
+    <Box
+      sx={{
+        width: '100%',
+        bgcolor: 'white',
+        overflow: 'auto', // scroll bar
+        height: 850,
+        border: 3,
+        '& ul': {
+          padding: 0,
+          // bgcolor: 'black',
+        },
         }}
-        subheader={<li />}
+    >
+      <List
       >
-        { props.results ? props.results.map(listitem => (
+        { (props.results && props.results.length > 0) ? props.results.map(listitem => (
             <div key ={listitem._id}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
+              <ListItem
+                alignItems="flex-start"
+                sx={{
+                  "&:hover": {
+                    bgcolor: "#9cd4ff"
+                  }
+                }}
+              >
+                <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
                   <Avatar alt={listitem.Title} src="https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg" />
                 </ListItemAvatar>
                 <ListItemText
+                  onClick={clickItem(listitem)}
                   primary={listitem.Title}
                   secondary={
                     <React.Fragment>
@@ -45,12 +65,22 @@ export default function SearchResults(props) {
                       </React.Fragment>
                     </React.Fragment>
                   }
+                  sx={{ cursor: 'pointer' }}
                 />
               </ListItem>
               <Divider variant="inset" component="li" />
             </div>
-        )) : <div></div>}
+        ))
+        :
+        <div>
+          <Typography
+            variant='h4'
+            style={{textAlign: 'center'}}
+          >
+            No results found
+          </Typography>
+        </div>}
       </List>
-    </div>
+    </Box>
   );
 }

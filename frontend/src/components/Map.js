@@ -1,6 +1,18 @@
 import React, { useState } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, } from '@react-google-maps/api';
 
+import {
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
+  ListSubheader,
+  ListItemAvatar,
+  Avatar,
+  Typography,
+  Box
+} from '@mui/material';
+
 // TODO: adjust zoom level to fit all markers
 
 const Map = (props) => {
@@ -22,6 +34,11 @@ const Map = (props) => {
   // console.log(props.results);
 
   return isLoaded ? (
+    <Box
+      sx={{
+        border: 3,
+      }}
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={props.center}
@@ -40,6 +57,7 @@ const Map = (props) => {
           />
         )) : <div></div>}
       </GoogleMap>
+    </Box>
   ) : <></>
 }
 

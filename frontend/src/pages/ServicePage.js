@@ -8,11 +8,11 @@ import { useLocation } from 'react-router-dom';
 
 
 export default function ServicePage() {
-    const { state } = useLocation()
+    const { state } = useLocation();
 
     return (
         <Container>
-            <Service service={state} />
+            <Service service={state.service} />
         </Container>
     )
 }

@@ -9,11 +9,12 @@ import { Box } from '@mui/material';
 
 
 export default function Service(props) {
-    console.log(props.service)
-
-
+    const service = props.service;
 
     return (
-      "Bruh"    
+      <div>
+        <h1>Service Page</h1> 
+        <h2>Service: {service.Title}</h2>
+      </div>
     );
 }
