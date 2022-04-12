@@ -43,10 +43,12 @@ export default function SearchResults(props) {
               <ListItem
                 alignItems="flex-start"
                 sx={{
+                  width: '99%', // so the hover color doesn't overlap the map border
                   "&:hover": {
-                    bgcolor: "#9cd4ff"
+                    bgcolor: "#c9e8ff"
                   }
                 }}
+                divider={true}
               >
                 <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
                   <Avatar alt={listitem.Title} src="https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg" />
@@ -68,7 +70,7 @@ export default function SearchResults(props) {
                   sx={{ cursor: 'pointer' }}
                 />
               </ListItem>
-              <Divider variant="inset" component="li" />
+              {/* <Divider variant="inset" component="li" /> */}
             </div>
         ))
         :
