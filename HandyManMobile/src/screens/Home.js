@@ -1,6 +1,6 @@
-import { Center, Box } from 'native-base'
+import { Center, Box, Button } from 'native-base'
 import React from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import {StyleSheet } from 'react-native'
 
 import Header from '../components/Header.js'
 import ServicesMap from '../components/ServicesMap.js'
@@ -11,28 +11,39 @@ const Home = () => {
 
   return (
     <Center flex={1}>
-      {/* NEW */}
       <ServicesMap />
-      {/* NEW */}
-      <Box w="100%" position={'absolute'} safeAreaTop alignItems='center' top={0} h="25%">
-        <Box h='30%'>
-          <SearchBar mt='20' />
+      <Box w="100%" position={'absolute'} safeAreaTop alignSelf='flex-start' top={-40}>
+        <Box style={styles.searchContainer}>
+          {/* <Box h='30%'>
+            <SearchBar mt='20' />
+          </Box> */}
+          <GooglePlacesInput />
+          <Button style={styles.filterButton} />
         </Box>
-        {/* NEW */}
-        <Box h='25%'>
-          <GooglePlacesInput mt='20' />
-        </Box>
-        {/* NEW */}
       </Box>
     </Center>
   )
 }
 
 const styles = StyleSheet.create({
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+  searchContainer: {
+    alignSelf: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "white",
+    borderRadius: 15,
+    width: "95%",
+    padding: 5
   },
+  filterButton: {
+    alignSelf: "flex-start",
+    flex: 0,
+    height: 25,
+    width: 25,
+    marginTop: 10,
+    marginRight: 10,
+  }
 });
 
 export default Home
