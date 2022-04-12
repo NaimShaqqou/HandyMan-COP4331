@@ -22,11 +22,20 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as ActionCreators from "../reducerStore/ActionCreators/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 
 import { Dimensions, ImageBackground } from "react-native";
 import axios from "axios";
 const { width, height } = Dimensions.get("screen");
+
+const storeInfo = async (userInfo) => {
+  try {
+    await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const EditProfileComponent = () => {
   const user = useSelector((state) => state.user);
@@ -123,14 +132,18 @@ const EditProfileComponent = () => {
         jwtToken: user.jwtToken,
       })
       .then(function (response) {
-        updateCurrentUser({
+        const newUser = {
           userId: user.userId,
           firstName: firstName,
           lastName: lastName,
           profileDescription: description,
           profilePicture: image,
           jwtToken: response.refreshedToken,
-        });
+        };
+        
+        updateCurrentUser(newUser);
+        // async storage
+        storeInfo(newUser); // store to localstorage
       })
       .catch(function (response) {
         console.log(response);
