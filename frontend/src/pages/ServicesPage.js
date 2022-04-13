@@ -30,7 +30,9 @@ export default function ServicesPage() {
           </Grid>
         ))}
         <Grid item>
+          <Box textAlign='center'>
           <Button variant="contained" onClick={() => addService()}>Add new service</Button>
+          </Box>
         </Grid>
       </Grid>
       
