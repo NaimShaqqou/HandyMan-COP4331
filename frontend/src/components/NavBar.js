@@ -104,7 +104,8 @@ const ResponsiveAppBar = (props) => {
     <AppBar position="static" elevation={0}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <img src="https://tinyimg.io/i/oI5Vz43.png" />
+        <a href='./'>
+        <img src="https://tinyimg.io/i/oI5Vz43.png" /></a>
           <Typography
             variant="h6"
             noWrap
