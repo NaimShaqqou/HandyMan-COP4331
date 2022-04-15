@@ -11,11 +11,21 @@ import {
   Grid
 } from "@mui/material";
 
+// TODO: fix how marker titles look
+// TODO: show service image (replace bread image with actual)
+// TODO: customize marker info popup
+// TODO: adjust zoom level to fit all markers
+
 const SearchPage = () =>
 {
   const { state } = useLocation();
+  let [focusItem, setFocusItem] = React.useState('');
 
-  console.log(state);
+  const updateFromChild = (newFocus) => {
+    setFocusItem(newFocus);
+  };
+
+  // console.log(state);
 
   let center = state ? state.res.searchLocationCoords : {
     lat: 28.602,
@@ -58,14 +68,29 @@ const SearchPage = () =>
       <Navbar search={srch}/>
       <br />
 
-      <Grid container>
-        <Grid item xs={3}>
-          <SearchResults results={(res && res.error == '') ? res.results : items}></SearchResults>
+      <Container maxWidth={false} sx={{
+            width: { xl: '80%'},
+            height: '1000px'
+          }}>
+        <Grid container sx={{height: '100%'}}>
+          <Grid item xs={3} sx={{height: '100%'}}>
+            <SearchResults
+              focus={focusItem}
+              updateFocus={updateFromChild}
+              results={(res && res.error == '') ? res.results : items}
+            />
+          </Grid>
+          <Grid item xs={9} sx={{height: '100%'}}>
+            <Map
+              focus={focusItem}
+              updateFocus={updateFromChild}
+              results={(res && res.error == '') ? res.results : items}
+              center={center}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={9}>
-          <Map results={(res && res.error == '') ? res.results : items} center={center}/>
-        </Grid>
-      </Grid>
+      </Container>
+
 
       {/* <span>change lat-lng and to re-center map.</span>
       <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>

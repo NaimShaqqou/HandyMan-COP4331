@@ -58,7 +58,7 @@ export default function ServicePage() {
                             {service.Title}
                 </Typography>
                 <Grid container direction="row" spacing={5}>
-                    <Grid item xs="7.5">
+                    <Grid item xs={7.5}>
                     <Stack
                         direction="column"
                         divider={window.width < 900 ? (<div></div>) : (<Divider orientation="horizontal" flexItem />)}
@@ -87,7 +87,7 @@ export default function ServicePage() {
                         </Typography>
                     </Stack>
                     </Grid>
-                    <Grid item xs="4.5">
+                    <Grid item xs={4.5}>
                         <Paper sx={{p:3,backgroundColor: (theme) =>
                         theme.palette.mode === 'dark' ? '#1A2027' : '#F2F1F0', alignItems:"center"}}>
                         <DateRange
