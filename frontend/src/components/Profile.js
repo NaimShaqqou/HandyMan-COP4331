@@ -181,6 +181,9 @@ function Profile() {
                 spacing={4}
               >
                 <Grid item xs={5}>
+                  <Typography sx={{ pb: 2 }} fontWeight="bold">
+                      First Name:
+                  </Typography>
                   <TextField
                     fullWidth
                     required
@@ -201,6 +204,9 @@ function Profile() {
                   />
                 </Grid>
                 <Grid item xs={5}>
+                  <Typography sx={{ pb: 2 }} fontWeight="bold">
+                      Last Name:
+                  </Typography>
                   <TextField
                     fullWidth
                     required
@@ -223,6 +229,9 @@ function Profile() {
             <Grid item>
               <Grid container justifyContent="flex-start" spacing={4}>
                 <Grid item xs={12}>
+                  <Typography sx={{ pb: 2 }} fontWeight="bold">
+                      Description:
+                  </Typography>
                   <TextField
                     id="description"
                     label="Description"

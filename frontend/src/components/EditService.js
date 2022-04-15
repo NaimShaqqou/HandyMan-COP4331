@@ -284,84 +284,78 @@ export default function EditService(props) {
                         />
                     </Grid>
                     <Grid item>
-                        <Grid container direction="row" >
-                            <Grid item xs={8}>
-                                <Box sx={{ width: "100%" }}>
-                                    <Typography sx={{ pb: 2 }} fontWeight="bold">
-                                        Days Available:
-                                    </Typography>
-                                    <Autocomplete
-                                        multiple
-                                        id="tags-outlined"
-                                        options={days}
-                                        value={availableDays}
-                                        getOptionLabel={(option) => option}
-                                        filterSelectedOptions
-                                        fullWidth
-                                        onChange={(e, value) => {
-                                            setAvailableDays(value)
-                                            setAvailableDaysValidation(false)
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Available Days to Work"
-                                                placeholder="Week Days"
-                                                error={availableDaysValidation === true}
-                                                helperText={
-                                                    availableDaysValidation === true
-                                                        ? "Must select at least one day!"
-                                                        : " "
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </Box>
+                        <Grid container justifyContent="space-between"
+                            direction="row"
+                            spacing={5}>
+                            <Grid item xs={6}>
+                                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                                    Days Available:
+                                </Typography>
+                                <Autocomplete
+                                    multiple
+                                    id="tags-outlined"
+                                    options={days}
+                                    value={availableDays}
+                                    getOptionLabel={(option) => option}
+                                    filterSelectedOptions
+                                    fullWidth
+                                    onChange={(e, value) => {
+                                        setAvailableDays(value)
+                                        setAvailableDaysValidation(false)
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Available Days to Work"
+                                            placeholder="Week Days"
+                                            error={availableDaysValidation === true}
+                                            helperText={
+                                                availableDaysValidation === true
+                                                    ? "Must select at least one day!"
+                                                    : " "
+                                            }
+                                        />
+                                    )}
+                                />
                             </Grid>
-                            <Grid item xs={4}>
-                                <Box sx={{width: "200px", m:0 ,display: 'flex', justifyContent: 'flex-end'}}>
-                                    <div>
-                                        
-                                    <Typography sx={{ pb: 2 }} fontWeight="bold">
-                                        Category:
-                                    </Typography>
-                                    <TextField
-                                        id="category"
-                                        select
-                                        label="Select the category of your service"
-                                        onChange={(e) => {
-                                            setCategory(e.target.value)
-                                            setCategoryValidation(false)
-                                        }}
-                                        value={category}
-                                        style={{ width: "50%" }}
-                                        error={categoryValidation === true}
-                                        helperText={
-                                            categoryValidation === true
-                                                ? "Must select a category!"
-                                                : " "
-                                        }
-                                    >
-                                        {categories.map((option, index) => (
-                                            <MenuItem key={index} value={option}>
-                                                {option}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                    </div>
-                                    
-                                </Box>
+                            <Grid item xs={6}>
+                                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                                    Category:
+                                </Typography>
+                                <TextField
+                                    id="category"
+                                    select
+                                    label="Select the category of your service"
+                                    onChange={(e) => {
+                                        setCategory(e.target.value)
+                                        setCategoryValidation(false)
+                                    }}
+                                    value={category}
+                                    fullWidth
+                                    error={categoryValidation === true}
+                                    helperText={
+                                        categoryValidation === true
+                                            ? "Must select a category!"
+                                            : " "
+                                    }
+                                >
+                                    {categories.map((option, index) => (
+                                        <MenuItem key={index} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                             </Grid>
                         </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="row" spacing={4}>
+                            <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
+                            <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>
+                        </Stack>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Stack direction="row" spacing={4}>
-                        <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
-                        <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>
-                    </Stack>
-                </Grid>
-            </Grid>
-        </Box>
+            </Box>
 
         </Container >
     );

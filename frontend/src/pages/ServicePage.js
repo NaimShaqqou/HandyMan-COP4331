@@ -17,8 +17,6 @@ import { Stack } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import '../styles.css';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 import { Paper } from '@mui/material';
 import { Divider } from '@mui/material';
 import 'react-date-range/dist/styles.css'; // main css file
