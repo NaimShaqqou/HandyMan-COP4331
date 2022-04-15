@@ -3,13 +3,6 @@ import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-map
 import { useNavigate, useLocation } from "react-router-dom";
 
 import {
-  List,
-  ListItem,
-  Divider,
-  ListItemText,
-  ListSubheader,
-  ListItemAvatar,
-  Avatar,
   Typography,
   Box,
   Button
