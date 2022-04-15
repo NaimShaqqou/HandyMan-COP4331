@@ -17,8 +17,6 @@ import {
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function SearchResults(props) {
-  // let [focusItem, setFocusItem] = React.useState('');
-
   let navigate = useNavigate();
 
   const clickItem = (item) => async (event) => {
@@ -29,7 +27,29 @@ export default function SearchResults(props) {
   const clickOpen = (item) => async (event) => {
     navigate("/service", { replace: true, state: { service: item } });
   };
+
+  function checkImage(url) {
+    try {
+      url = new URL(url);
+
+      if (!(url.protocol === "http:" || url.protocol === "https:")) return false;
+      var request = new XMLHttpRequest();
+      request.open("GET", url, true);
+      request.send();
+      let status = false;
+      request.onload = function() {
+        status = (request.status == 200);
+      }
+      console.log(status);
+      return status;
+    } catch (_) {
+      return false;  
+    }
+    // console.log('image: ' + url);
+  }
   // console.log(props.results);
+
+  let breadurl = "https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg";
 
   return (
     <Box
@@ -37,7 +57,7 @@ export default function SearchResults(props) {
         width: '100%',
         bgcolor: 'white',
         overflow: 'auto', // scroll bar
-        height: 850,
+        height: '100%',
         border: 3,
         '& ul': {
           padding: 0,
@@ -55,12 +75,13 @@ export default function SearchResults(props) {
                   width: '99%', // so the hover color doesn't overlap the map border
                   "&:hover": {
                     bgcolor: "#c9e8ff"
-                  }
+                  },
+                  bgcolor: (props.focus === listitem._id ? "#aacce6" : "white")
                 }}
                 divider={true}
               >
                 <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
-                  <Avatar alt={listitem.Title} src="https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg" />
+                  <Avatar alt={listitem.Title} src={breadurl} />
                 </ListItemAvatar>
                 <ListItemText
                   onClick={clickItem(listitem)}
