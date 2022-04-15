@@ -8,7 +8,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   Container,
-  Grid
+  Grid,
+  Box
 } from "@mui/material";
 
 // TODO: fix how marker titles look
@@ -19,7 +20,7 @@ import {
 const SearchPage = () =>
 {
   const { state } = useLocation();
-  let [focusItem, setFocusItem] = React.useState('');
+  let [focusItem, setFocusItem] = React.useState(null);
 
   const updateFromChild = (newFocus) => {
     setFocusItem(newFocus);
@@ -63,8 +64,8 @@ const SearchPage = () =>
   let res = (state ? state.res : null);
   let srch = (state ? state.obj : null);
 
-  return(
-    <div>
+  return (
+    <Box>
       <Navbar search={srch}/>
       <br />
 
@@ -95,7 +96,7 @@ const SearchPage = () =>
       {/* <span>change lat-lng and to re-center map.</span>
       <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
       <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/> */}
-    </div>
+    </Box>
   );
 }
 

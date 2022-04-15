@@ -11,7 +11,10 @@ import {
   Avatar,
   Typography,
   Box,
-  Button
+  Button,
+  Fade,
+  Collapse,
+  Grid
 } from '@mui/material';
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -20,36 +23,38 @@ export default function SearchResults(props) {
   let navigate = useNavigate();
 
   const clickItem = (item) => async (event) => {
-    // setFocusItem(item._id);
-    props.updateFocus(item._id);
+    props.updateFocus(item);
   };
 
   const clickOpen = (item) => async (event) => {
     navigate("/service", { replace: true, state: { service: item } });
   };
 
+  // var request = new XMLHttpRequest();
+  // request.open("GET", url, true);
+  // request.send();
+  // request.onload = function() {
+  //   console.log(request.status == 200);
+  // }
+
   function checkImage(url) {
     try {
       url = new URL(url);
 
       if (!(url.protocol === "http:" || url.protocol === "https:")) return false;
-      var request = new XMLHttpRequest();
-      request.open("GET", url, true);
-      request.send();
-      let status = false;
-      request.onload = function() {
-        status = (request.status == 200);
-      }
-      console.log(status);
-      return status;
+
+      return true;
     } catch (_) {
       return false;  
     }
-    // console.log('image: ' + url);
   }
-  // console.log(props.results);
+  
+  const breadurl = "https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg";
 
-  let breadurl = "https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg";
+  const getImage = (item) => {
+    if (item.Images.length > 0 && checkImage(item.Images[0])) return item.Images[0];
+    return breadurl;
+  };
 
   return (
     <Box
@@ -72,34 +77,47 @@ export default function SearchResults(props) {
               <ListItem
                 alignItems="flex-start"
                 sx={{
-                  width: '99%', // so the hover color doesn't overlap the map border
+                  width: '99%', // so the hover color doesn't overlap the map border, nice number
                   "&:hover": {
                     bgcolor: "#c9e8ff"
                   },
-                  bgcolor: (props.focus === listitem._id ? "#aacce6" : "white")
+                  bgcolor: (props.focus != null && props.focus._id === listitem._id ? "#aacce6" : "white")
                 }}
                 divider={true}
               >
-                <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
-                  <Avatar alt={listitem.Title} src={breadurl} />
-                </ListItemAvatar>
-                <ListItemText
-                  onClick={clickItem(listitem)}
-                  primary={listitem.Title}
-                  secondary={
-                    <React.Fragment>
-                      <React.Fragment>
-                        {listitem.Address}
-                      </React.Fragment>
-                      <br />
-                      <React.Fragment>
-                        {listitem.Description}
-                      </React.Fragment>
-                    </React.Fragment>
-                  }
-                  sx={{ cursor: 'pointer' }}
-                />
-                {props.focus === listitem._id && <Button onClick={clickOpen(listitem)}>Open</Button>}
+                <Collapse in={props.focus != null && props.focus._id === listitem._id} collapsedSize={100} sx={{width: '100%'}}>
+                  <Grid container >
+                    <Grid item xs={3} >
+                      <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
+                        <Avatar alt={listitem.Title} src={getImage(listitem)} />
+                      </ListItemAvatar>
+                    </Grid>
+
+                    <Grid item xs={9} >
+                      <ListItemText
+                        onClick={clickItem(listitem)}
+                        primary={listitem.Title}
+                        secondary={
+                          <React.Fragment>
+                            <React.Fragment>
+                              {listitem.Address}
+                            </React.Fragment>
+                            <br />
+                            <React.Fragment>
+                              {listitem.Description}
+                            </React.Fragment>
+                          </React.Fragment>
+                        }
+                        sx={{ cursor: 'pointer' }}
+                      />
+
+                    </Grid>
+                  </Grid>
+                  
+                  <Fade in={props.focus != null && props.focus._id === listitem._id}>
+                    <Button onClick={clickOpen(listitem)}>Open</Button>
+                  </Fade>
+                </Collapse>
               </ListItem>
               {/* <Divider variant="inset" component="li" /> */}
             </div>

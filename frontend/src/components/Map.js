@@ -26,7 +26,7 @@ const Map = (props) => {
   }
 
   const clickItem = (item) => async (event) => {
-    props.updateFocus(item._id);
+    props.updateFocus(item);
   };
 
   const clickOpen = (item) => async (event) => {
@@ -52,7 +52,7 @@ const Map = (props) => {
       >
         {props.results && props.results.map(listitem => (
           <div key={listitem._id}>
-            {listitem._id == props.focus &&
+            {props.focus != null && listitem._id == props.focus._id &&
             <InfoWindow position={{lat: parseFloat(listitem.Latitude), lng: parseFloat(listitem.Longitude)}}>
               <Box>
                 <Typography>
@@ -69,7 +69,7 @@ const Map = (props) => {
               clickable={true}
               label={listitem.Title}
               onClick={clickItem(listitem)}
-              // icon={listitem._id == props.focus ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/300px-Gull_portrait_ca_usa.jpg' : ''}
+              // icon={listitem && listitem._id == props.focus._id ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/300px-Gull_portrait_ca_usa.jpg' : ''}
             >
 
             </Marker>
