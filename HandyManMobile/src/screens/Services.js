@@ -28,7 +28,7 @@ const Services = () => {
       <ScrollView contentContainerStyle = {styles.viewContainer}>
         {
           Object.values(services).map(item => (
-            <Text>
+            <Text key={item._id}>
               <Card style = {styles.menuContainer}>
                 <Card.Title 
                   titleStyle={{justifyContent:'center', alignItems:'center'}}
