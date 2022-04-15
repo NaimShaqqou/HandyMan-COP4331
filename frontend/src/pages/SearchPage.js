@@ -14,8 +14,13 @@ import {
 const SearchPage = () =>
 {
   const { state } = useLocation();
+  let [focusItem, setFocusItem] = React.useState('');
 
-  console.log(state);
+  const updateFromChild = (newFocus) => {
+    setFocusItem(newFocus);
+  };
+
+  // console.log(state);
 
   let center = state ? state.res.searchLocationCoords : {
     lat: 28.602,
@@ -60,10 +65,19 @@ const SearchPage = () =>
 
       <Grid container>
         <Grid item xs={3}>
-          <SearchResults results={(res && res.error == '') ? res.results : items}></SearchResults>
+          <SearchResults
+            focus={focusItem}
+            updateFocus={updateFromChild}
+            results={(res && res.error == '') ? res.results : items}
+          />
         </Grid>
         <Grid item xs={9}>
-          <Map results={(res && res.error == '') ? res.results : items} center={center}/>
+          <Map
+            focus={focusItem}
+            updateFocus={updateFromChild}
+            results={(res && res.error == '') ? res.results : items}
+            center={center}
+          />
         </Grid>
       </Grid>
 

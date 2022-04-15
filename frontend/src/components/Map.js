@@ -46,7 +46,7 @@ const Map = (props) => {
         // onLoad={onLoad}
         // onUnmount={onUnmount}
       >
-        {props.results ? props.results.map(listitem => (
+        {props.results && props.results.map(listitem => (
           <Marker
             key={listitem._id}
             onLoad={onLoad}
@@ -54,8 +54,9 @@ const Map = (props) => {
             clickable={true}
             label={listitem.Title}
             onClick={((e) => console.log(e))}
+            icon={listitem._id == props.focus ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/300px-Gull_portrait_ca_usa.jpg' : ''}
           />
-        )) : <div></div>}
+        ))}
       </GoogleMap>
     </Box>
   ) : <></>

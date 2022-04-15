@@ -10,17 +10,26 @@ import {
   ListItemAvatar,
   Avatar,
   Typography,
-  Box
+  Box,
+  Button
 } from '@mui/material';
 
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 export default function SearchResults(props) {
+  // let [focusItem, setFocusItem] = React.useState('');
 
   let navigate = useNavigate();
 
   const clickItem = (item) => async (event) => {
-    // alert('clicked ' + item.Title);
+    // setFocusItem(item._id);
+    props.updateFocus(item._id);
+  };
+
+  const clickOpen = (item) => async (event) => {
     navigate("/service", { replace: true, state: { service: item } });
   };
+  // console.log(props.results);
 
   return (
     <Box
@@ -39,7 +48,7 @@ export default function SearchResults(props) {
       <List
       >
         { (props.results && props.results.length > 0) ? props.results.map(listitem => (
-            <div key ={listitem._id}>
+            <div key={listitem._id}>
               <ListItem
                 alignItems="flex-start"
                 sx={{
@@ -69,6 +78,7 @@ export default function SearchResults(props) {
                   }
                   sx={{ cursor: 'pointer' }}
                 />
+                {props.focus === listitem._id && <Button onClick={clickOpen(listitem)}>Open</Button>}
               </ListItem>
               {/* <Divider variant="inset" component="li" /> */}
             </div>
