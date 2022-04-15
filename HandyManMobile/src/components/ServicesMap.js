@@ -53,7 +53,7 @@ export default class ServicesMap extends React.Component {
     }
 
     // Call this to change the services. This will force refresh the render.
-    SetServices(event, newServices)
+    SetServices(newServices)
     {
       this.setState({services: newServices});
     }
