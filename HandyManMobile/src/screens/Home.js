@@ -7,20 +7,25 @@ import { Modal, RadioButton, Text } from "react-native-paper";
 
 import ServicesMap from "../components/ServicesMap.js";
 import GooglePlacesInput from "../components/LocationSearchBar.js";
+import BottomSheet from "../components/BottomSheet.js";
 
 const Home = () => {
+  // to handle opening/closing of filters modal
   const [visible, setVisible] = React.useState(false);
-
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: "white", padding: 20 };
 
+  // filters to use in search api:
+  //  search - contains string of service to search
+  //  category - contains string of category of service
+  //  maxDist - contains string of maximum distance of search results
+  // TODO: get the location from autocomplete search box
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("java");
   const [maxDist, setMaxDist] = React.useState("5");
 
   return (
-    <Center safeAreaTop display={"flex"} flex={1}>
+    <Center safeAreaTop display={"flex"} flex={1} justifyContent={'flex-end'}>
       <ServicesMap />
       <Center w="80%" position={"absolute"} safeAreaTop top={5}>
         <GooglePlacesInput
@@ -36,7 +41,8 @@ const Home = () => {
           }
         />
       </Center>
- 
+      <BottomSheet />
+
       <Modal
         visible={visible}
         onDismiss={hideModal}
@@ -95,6 +101,7 @@ const Home = () => {
           <Picker.Item label="JavaScript" value="js" />
         </Picker>
       </Modal>
+      
 
     </Center>
   );
