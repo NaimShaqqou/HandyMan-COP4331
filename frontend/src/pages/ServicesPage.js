@@ -23,6 +23,7 @@ export default function ServicesPage() {
   return (
     <div>
       <ResponsiveAppBar/>
+      <Box sx={{ pt: 4}}>
       <Grid container direction="column" spacing={5}>  
         {services.map((service, index) => (
           <Grid item key={index}>
@@ -33,6 +34,8 @@ export default function ServicesPage() {
           <Button variant="contained" onClick={() => addService()}>Add new service</Button>
         </Grid>
       </Grid>
+      </Box>
+      
       
     </div>
   );

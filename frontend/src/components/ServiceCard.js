@@ -65,21 +65,18 @@ export default function ServiceCard(props) {
     <Container >
       <Paper
     sx={{
-      p: 2,
       margin: 'auto',
       maxWidth: 800,
       flexGrow: 1,
       backgroundColor: (theme) =>
-        theme.palette.mode === 'dark' ? '#1A2027' : '#F2F1F0',
+        theme.palette.mode === 'dark' ? '#1A2027' : 'white',
     }}
   >
     <Grid container spacing={2}>
-      <Grid item>
-        <ButtonBase sx={{ width: 128, height: 128 }}>
-          <Img alt="complex" src={service.Images === null ? '' : service.Images[0]} />
-        </ButtonBase>
+      <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4'}}>
+            <Img sx={{ width: 128, height: 128 }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
       </Grid>
-      <Grid item xs={12} md container>
+      <Grid item xs={12} md container sx={{ pr: 2}}>
         <Grid item xs container direction="column" spacing={2}>
           <Grid item xs>
             <Typography gutterBottom variant="h6" sx={{fontWeight: "bold"}}component="div">
