@@ -20,9 +20,9 @@ const Home = () => {
   const [maxDist, setMaxDist] = React.useState("5");
 
   return (
-    <Center display={"flex"} flex={1}>
+    <Center safeAreaTop display={"flex"} flex={1}>
       <ServicesMap />
-      <Center w="80%" position={"absolute"} safeAreaTop top={-20}>
+      <Center w="80%" position={"absolute"} safeAreaTop top={5}>
         <GooglePlacesInput
           filterIcon={
             <Button variant="unstyled" px="2" py="0" onPress={showModal}>
