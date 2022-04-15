@@ -83,7 +83,8 @@ export default class ServicesMap extends React.Component {
 
 const styles = StyleSheet.create({
   map: {
+    // ...StyleSheet.absoluteFill,
+    flex: 1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
   },
 });
