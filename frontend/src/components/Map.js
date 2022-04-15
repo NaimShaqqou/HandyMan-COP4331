@@ -22,7 +22,7 @@ const Map = (props) => {
   };
 
   const onLoad = marker => {
-    // console.log('marker: ', marker)
+    // console.log('marker: ', marker) //
   }
 
   const clickItem = (item) => async (event) => {
