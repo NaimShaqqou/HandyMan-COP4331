@@ -19,6 +19,7 @@ import ServicePage from "./pages/ServicePage";
 import AddServicesPage from "./pages/AddServicesPage";
 import EditServicePage from "./pages/EditServicePage";
 import UserRequestedServicesPage from "./pages/UserRequestedServicesPage";
+import RequestedServicesPage from "./pages/RequestedServicesPage";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/edit-service" element={<EditServicePage />} />
           <Route path="/user-requested-services" element={<UserRequestedServicesPage />} />
+          <Route path="/requested-services" element={<RequestedServicesPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

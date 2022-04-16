@@ -1,21 +1,23 @@
 import { Button, Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import ServiceCard from "../components/ServiceCard";
-import { Container } from "@mui/material";
-import { Box, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ResponsiveAppBar from '../components/NavBar';
-import UserRequestedService from "../components/UserRequestedService";
+import RequestedService from "../components/RequestedService"
 import axios from "axios";
 
 
-export default function UserRequestedServices() {
+export default function RequestedServicesPage() {
   let user = useSelector((state) => state.user);
+  const { state } = useLocation()
+  console.log(state)
   const [requestedServices, setRequestedServices] = useState([]);
-  const [fetchedData, setFetchedData] = useState(false)
+  const [fetchedData, setFetchedData] = useState(false);
   let bp = require("../components/Path");
 
   const dispatch = useDispatch();
@@ -24,12 +26,12 @@ export default function UserRequestedServices() {
   useEffect(() => {
     console.log("IN USE EFFECT")
     axios
-        .post(bp.buildPath("api/services-user-booked"), {
-          requesterId: user.userId,
+        .post(bp.buildPath("api/requested-service-history"), {
+          serviceId: state._id,
           jwtToken: user.jwtToken
         })
         .then((response) => {
-          setFetchedData(true)
+            setFetchedData(true)
           if (response.data.error === "") {
             let refreshedToken = response.data.refreshedToken
             setRequestedServices(response.data.results);
@@ -43,14 +45,6 @@ export default function UserRequestedServices() {
         });
   }, []);
 
-
-  async function getRequestedServices() {
-    
-  }
-
-
-
-
   return (
     <div>
       <ResponsiveAppBar/>
@@ -59,13 +53,13 @@ export default function UserRequestedServices() {
         {requestedServices.length === 0 && fetchedData 
             ? 
                 <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography variant="h2">You don't have any bookings</Typography> 
+                    <Typography variant="h2">You don't have any requests</Typography> 
                 </Grid>
-          : requestedServices.map((requestedService, index) => (
-          <Grid item key={index}>
-            <UserRequestedService requestedService={requestedService} />
-          </Grid>
-        ))}
+            : requestedServices.map((requestedService, index) => (
+            <Grid item key={index}>
+                <RequestedService requestedService={requestedService} />
+            </Grid>
+            ))}
       </Grid>
       </Box>
       

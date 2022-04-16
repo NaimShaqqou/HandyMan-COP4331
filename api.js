@@ -844,6 +844,94 @@ exports.setApp = function (app, client, cloudinaryParser) {
     res.status(200).json({ service: service});
   })
 
+  app.post("/api/get-user", async (req, res, next) => {
+    const { userId } = req.body; 
+    
+    let user = await User.findById(userId).exec()
+
+    res.status(200).json({ user: user});
+  })
+
+  app.post("/api/accept-request", async (req, res, next) => {
+    const { requestedServiceId, jwtToken } = req.body; 
+
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+    
+    RequestedService.findByIdAndUpdate(requestedServiceId, {Accepted: true}, function(err, response) {
+      if (response) {
+        res.status(200).json( {result: "Accepted Request", refreshedToken: refreshedToken} )
+      } else {
+        res.status(200).json( {result: "Error Accepting Request", refreshedToken: refreshedToken} )
+      }
+    })
+  })
+
+
+  app.post("/api/deny-request", async (req, res, next) => {
+    const { requestedServiceId, jwtToken } = req.body; 
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    RequestedService.findOneAndDelete({_id: requestedServiceId}, function(err, result) {
+      let response;
+      console.log(response)
+      if (err) {
+        response = {
+          result: err.message,
+          refreshedToken: refreshedToken,
+        };
+      } else {
+        if (result == null) {
+          response = {
+            refreshedToken: refreshedToken,
+            result: "Couldn't deny request"
+          };
+        } else {
+          response = {
+            refreshedToken: refreshedToken,
+            result: "Denied request"
+          };
+      }
+    }
+      res.status(200).json(response);
+    });
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {

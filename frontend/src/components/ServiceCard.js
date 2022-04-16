@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import {IconButton} from '@mui/material';
+import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteServiceDialog from './DeleteServiceDialog'
 import { useSelector, useDispatch } from "react-redux";
@@ -74,7 +75,7 @@ export default function ServiceCard(props) {
   >
     <Grid container spacing={2}>
       <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4'}}>
-            <Img sx={{ width: 128, height: 128 }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
+            <Img sx={{ width: 240, height: 240 }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
       </Grid>
       <Grid item xs={12} md container sx={{ pr: 2}}>
         <Grid item xs container direction="column" spacing={2}>
@@ -92,6 +93,9 @@ export default function ServiceCard(props) {
             </IconButton>
             <IconButton onClick={() => setOpenDialog(true)}>
                     <DeleteIcon/>
+            </IconButton>
+            <IconButton>
+                    <WorkHistoryIcon onClick={() => navigate('../requested-services', {state: service})}/>
             </IconButton>
           </Grid>
         </Grid>
