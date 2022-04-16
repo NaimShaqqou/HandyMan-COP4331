@@ -836,6 +836,14 @@ exports.setApp = function (app, client, cloudinaryParser) {
       });
   })
 
+  app.post("/api/get-service", async (req, res, next) => {
+    const { serviceId } = req.body; 
+    
+    let service = await Service.findById(serviceId).exec()
+
+    res.status(200).json({ service: service});
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {

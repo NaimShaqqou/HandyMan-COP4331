@@ -28,7 +28,7 @@ import {
 import axios from 'axios';
 
 const pages = [];
-const loggedInSettings = ['Home','Profile', 'Services', 'Logout'];
+const loggedInSettings = ['Home','Profile', 'Services', 'Bookings', 'Logout'];
 
 const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
@@ -65,6 +65,8 @@ const ResponsiveAppBar = (props) => {
       // call the redux function
       logoutUser();
       navigate("../login", { replace: true });
+    } else if (e.target.innerHTML === "Bookings") {
+      navigate("../user-requested-services", { replace: true });
     } 
     setAnchorElUser(null);
   };
