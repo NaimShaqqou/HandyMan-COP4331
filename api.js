@@ -541,7 +541,41 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     var ret;
     if (results.length == 0)
-      ret = { results: null, error: "No requested services found", refreshedToken: refreshedToken };
+      ret = { results: [], error: "No requested services found", refreshedToken: refreshedToken };
+    else
+      ret = { results: results, error: "", refreshedToken: refreshedToken }; 
+
+    res.status(200).json(ret);
+  });
+
+  app.post("/api/services-user-booked", async (req, res, next) => {
+    // incoming: requesterId, jwtToken
+    // outgoing: results[], error, jwtToken
+  
+    const { requesterId, jwtToken } = req.body;
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { results: null, error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    const results = await RequestedService.find({ RequesterId : requesterId });
+
+    var ret;
+    if (results.length == 0)
+      ret = { results: [], error: "You have not booked any services", refreshedToken: refreshedToken };
     else
       ret = { results: results, error: "", refreshedToken: refreshedToken }; 
 

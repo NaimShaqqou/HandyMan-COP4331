@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 //Create Schema
 const RequestedServicesSchema = new Schema({
     
-    RequestedId: 
+    RequesterId: 
         {
             type: Schema.Types.ObjectId, ref: 'Users'
         }
@@ -25,6 +25,10 @@ const RequestedServicesSchema = new Schema({
     Dates: {
         type: Date,
         required:true
+    },
+    Accepted: {
+        type: Boolean,
+        default:false
     },
     DescriptionFromRequester: {
         type: String,
