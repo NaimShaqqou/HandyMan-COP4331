@@ -36,7 +36,6 @@ function SearchBar(props) {
   const [region, setRegion] = useState(null);
   const [status, setStatus] = useState(null);
 
-  let location = useLocation();
   let navigate = useNavigate();
 
   let bp = require("./Path");
@@ -56,7 +55,7 @@ function SearchBar(props) {
       var res = JSON.parse(await response.text());
 
       console.log(res.location);
-      setRegion(res.location);
+      setSearch({ ...search, location: res.location });
     } catch (e) {
       console.log(e.toString());
       return; 
@@ -88,8 +87,11 @@ function SearchBar(props) {
       .catch((error) => console.log(error));
   }
 
-
   const user = useSelector((state) => state.user);
+
+  const locationButtonPress = () => {
+    getLocation();
+  }
 
   const doSearch = async (e) => {
     e.preventDefault();
@@ -156,12 +158,14 @@ function SearchBar(props) {
   };
 
   const handleChangeLocationDropdown = async (event, value) => {
+    if (value == null)
+      value = '';
     setSearch({ ...search, location: value });
     await findPredictions();
   };
 
   const handleChangeLocationText = async (event) => {
-    // console.log(224 + " " + event.target.value);
+    console.log(event.target.value);
     setSearch({ ...search, location: event.target.value });
     await findPredictions();
   };
@@ -198,13 +202,14 @@ function SearchBar(props) {
 
           {<Stack direction="row" spacing={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Box mt={1.5}>
-              <IconButton onClick={getLocation}>
+              <IconButton onClick={locationButtonPress}>
                 <MyLocationIcon fontSize='small'  />
               </IconButton>
             </Box>
 
             <Autocomplete
               options={predictions.map((prediction) => prediction)}
+              value={search.location}
               onChange={handleChangeLocationDropdown}
               renderInput={(params) => (
                 <form onSubmit={(event) => doSearch(event)}>
