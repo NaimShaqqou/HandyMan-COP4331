@@ -84,7 +84,7 @@ const HomePage = () =>
         </Typography>
 
         <div>
-          <Container sx={{ maxWidth: { xs: '400px', sm: '500px', md: 'md'} }}>
+          <Container sx={{ maxWidth: { xs: '400px', sm: '500px', md: '960px'} }}>
             <SearchBar/>
           </Container>
         </div>
