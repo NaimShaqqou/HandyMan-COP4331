@@ -11,6 +11,8 @@ import { Container, Divider, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import DeleteServiceDialog from "./DeleteServiceDialog";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -22,12 +24,14 @@ import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
 
 export default function RequestedService(props) {
-    const requestedService = props.requestedService;
+    const [requestedService, setRequestedService] = useState(props.requestedService);
     const [user, setUser] = useState(null);
+    let myUserInfo = useSelector((state) => state.user);
     let bp = require("./Path.js");
 
     useEffect(() => {
-        axios
+        if (requestedService !== null) {
+            axios
             .post(bp.buildPath("api/get-user"), {
                 userId: requestedService.RequesterId,
             })
@@ -37,6 +41,8 @@ export default function RequestedService(props) {
             .catch((error) => {
                 console.log(error);
             });
+        }
+        
     }, [requestedService]);
 
     const Img = styled("img")({
@@ -46,11 +52,43 @@ export default function RequestedService(props) {
         maxHeight: "100%",
     });
 
-    console.log(user);
+    console.log(user)
+
+    async function acceptRequest() {
+        await axios
+            .post(bp.buildPath("api/accept-request"), {
+                requestedServiceId: requestedService._id,
+                jwtToken: myUserInfo.jwtToken
+            })
+            .then((response) => {
+                setUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                setRequestedService({ ...requestedService, Accepted: true})
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    async function denyRequest() {
+        await axios
+            .post(bp.buildPath("api/deny-request"), {
+                requestedServiceId: requestedService._id,
+                jwtToken: myUserInfo.jwtToken
+            })
+            .then((response) => {
+                setUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                setRequestedService(null)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    console.log(requestedService);
 
     return (
         <Container>
-            {user !== null && (
+            {user !== null && requestedService !== null && (
                 <Paper
                     sx={{
                         margin: "auto",
@@ -68,7 +106,7 @@ export default function RequestedService(props) {
 
                             <Grid item xs container direction="column" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }} spacing={1} >
                                 <Stack direction="column" spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
+                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
                                         <Typography
                                             variant="h4"
                                             sx={{ fontWeight: "bold" }}
@@ -77,8 +115,8 @@ export default function RequestedService(props) {
                                             {user.FirstName} {user.LastName}
                                         </Typography>
                                     </Grid>
-                                        
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
+
+                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
                                         <Typography variant="body1">
                                             Their Request: {requestedService.DescriptionFromRequester}
                                         </Typography>
@@ -91,14 +129,24 @@ export default function RequestedService(props) {
                                                 {new Date(requestedService.Dates).toLocaleDateString("en-US")}
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs="6" sx={{ display: 'flex', justifyContent: "center" , alignItems: "center" }}>
+                                        <Grid item xs="6" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
                                             <Typography variant="h5">
                                                 ${requestedService.Price}
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                 </Stack>
+
                             </Grid>
+                            {!requestedService.Accepted ? <Grid item>
+                                <IconButton >
+                                    <CheckIcon color="success" onClick={() => acceptRequest()}/>
+                                </IconButton>
+                                <IconButton >
+                                    <ClearIcon color="warning" onClick={() => denyRequest()}/>
+                                </IconButton>
+
+                            </Grid> : <Typography>Accepted</Typography>}
 
                         </Grid>
                     </Grid>

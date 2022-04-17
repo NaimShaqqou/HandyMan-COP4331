@@ -50,7 +50,7 @@ export default function UserRequestedService(props) {
 
     return (
         <Container>
-            {service !== null && (
+            {service !== null && requestedService.Accepted === true && (
                 <Paper
                     sx={{
                         margin: "auto",
