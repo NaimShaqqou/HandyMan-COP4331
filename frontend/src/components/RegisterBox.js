@@ -104,8 +104,11 @@ function RegisterBox(props) {
       <div>
         <form onSubmit={doRegister}>
           <Typography variant='h5'>
-            Login to continue
+            Create an Account
           </Typography>
+
+          <Box m={2}/>
+
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="registerFirstName"
@@ -188,7 +191,7 @@ function RegisterBox(props) {
 
           
           <br /><br />
-          <Button id="registerButton" variant="contained" type="submit">Register!</Button>
+          <Button id="registerButton" variant="contained" type="submit">Register</Button>
           <br /><br />
           <span id="registerResult">{message}</span>
         </form>

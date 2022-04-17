@@ -62,15 +62,12 @@ const LoginPage = () =>
 
   const boxStyle = {
     height: {
-      sm: 300,
+      sm: 400,
       md: 500 
     },
-    minWidth: {
+    width: {
       sm: 385,
       md: 450
-    },
-    maxWidth: {
-      lg: 450
     },
     display: "flex",
     flexDirection: "column",
@@ -79,8 +76,8 @@ const LoginPage = () =>
 
   const style1 = {
     width: {
-      md: '100%',
-      lg: '65%'
+      lg: '100%',
+      xl: '65%'
     },
     margin: '0 auto',
   }
@@ -110,7 +107,7 @@ const LoginPage = () =>
         <Box m={3}/>
 
         <Container maxWidth={false} sx={{...style1}}>
-            <Grid container spacing={0}>
+            <Grid container spacing={0} wrap='nowrap'>
               <Grid item xs sx={{display:'flex', flexDirection:'row'}}>
                   <Slide direction="right" in={value == 0} mountOnEnter unmountOnExit>
                     <div>
@@ -130,18 +127,6 @@ const LoginPage = () =>
         </Container>
     </div>
   );
-};
-
-const classes = {
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: 20,
-    textAlign: "center",
-    backgroundColor: "white",
-    color: "black"
-  }
 };
 
 export default LoginPage;
