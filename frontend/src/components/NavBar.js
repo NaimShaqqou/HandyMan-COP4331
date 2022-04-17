@@ -23,7 +23,9 @@ import {
   Avatar,
   Button,
   Tooltip,
-  MenuItem
+  MenuItem,
+  createTheme,
+  ThemeProvider
 } from '@mui/material'
 import axios from 'axios';
 
@@ -101,89 +103,102 @@ const ResponsiveAppBar = (props) => {
     cursor:'pointer'
   }
 
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+
   return (
-   
-    <AppBar position="static" elevation={0}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-        <a href='./'>
-        <img src="https://tinyimg.io/i/oI5Vz43.png" /></a>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            onClick={routeChange}
-            sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
-          >
-            <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
-          </Typography>
-
-          {pathname !== "/" && 
-          <Container maxWidth="md">
-            <SearchBar search={props.search}/>
-          </Container>}
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          </Box>
-
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            onClick={routeChange}
-            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
-          >
-            <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="View Menu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
-              </IconButton>
-            </Tooltip>
-
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+    <ThemeProvider theme={theme}>
+      <AppBar position="static" elevation={0}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+          <a href='./'>
+          <img src="https://tinyimg.io/i/oI5Vz43.png" /></a>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              onClick={routeChange}
+              sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
             >
-              {user.userId !== "" && loggedInSettings.map((setting) => (
-                <MenuItem key={setting} onClick={(event) => handleCloseUserMenu(event)}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+              <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
+            </Typography>
+
+            {pathname !== "/" && 
+            <Container sx={{ maxWidth: { xs: '380px', sm: '480px', md: '910px'} }}>
+              <SearchBar search={props.search}/>
+            </Container>}
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            </Box>
+
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              onClick={routeChange}
+              sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
+            >
+              <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page}
+                </Button>
               ))}
-              {user.userId === "" && <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
-                  <Typography textAlign="center">Login</Typography>
-                </MenuItem>}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="View Menu">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
+                </IconButton>
+              </Tooltip>
+
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {user.userId !== "" && loggedInSettings.map((setting) => (
+                  <MenuItem key={setting} onClick={(event) => handleCloseUserMenu(event)}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+                {user.userId === "" && <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
+                    <Typography textAlign="center">Login</Typography>
+                  </MenuItem>}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </ThemeProvider>
   );
 };
 export default ResponsiveAppBar;

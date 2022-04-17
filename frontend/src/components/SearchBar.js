@@ -14,7 +14,8 @@ import {
   MenuItem,
   Divider,
   Paper,
-  Box
+  Box,
+  InputAdornment
 } from "@mui/material";
 import axios from "axios";
 
@@ -186,7 +187,7 @@ function SearchBar(props) {
         <Stack
           direction="row"
           divider={(<Divider orientation="vertical" flexItem />)}
-          spacing={2}
+          spacing={1}
         >
           <form onSubmit={(event) => doSearch(event)}>
             <TextField
@@ -197,13 +198,17 @@ function SearchBar(props) {
               sx={{ width: { xs: '280px', sm: '360px', md: '170px'}}}
               value={search.keyword}
               onChange={handleChange('keyword')}
+              placeholder='Bakery'
             />
           </form>
 
-          {<Stack direction="row" spacing={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          {<Stack direction="row" spacing={1} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Box mt={1.5}>
               <IconButton onClick={locationButtonPress}>
-                <MyLocationIcon fontSize='small'  />
+                <MyLocationIcon
+                  // sx={{ width: 17}}
+                  fontSize='small'
+                />
               </IconButton>
             </Box>
 
@@ -220,9 +225,9 @@ function SearchBar(props) {
                     style={{ width: 250 }}
                     value={search.location}
                     onChange={handleChangeLocationText}
-                    placeholder="Search Services"
+                    placeholder="Orlando, FL"
                     // InputProps={{
-                    //   startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+                    //   endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                     // }}
                   />
                 </form>

@@ -8,6 +8,13 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
+import {
+  Box,
+  Container,
+  createTheme,
+  ThemeProvider
+} from '@mui/material';
+
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
@@ -22,7 +29,20 @@ import UserRequestedServicesPage from "./pages/UserRequestedServicesPage";
 import RequestedServicesPage from "./pages/RequestedServicesPage";
 
 function App() {
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 1000,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+
   return (
+    <ThemeProvider theme={theme}>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -40,6 +60,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
+    </ThemeProvider>
   );
 }
 
