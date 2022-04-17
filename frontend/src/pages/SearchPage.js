@@ -9,7 +9,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
   Grid,
-  Box
+  Box,
+  Paper
 } from "@mui/material";
 
 // TODO: fix how marker titles look
@@ -36,31 +37,6 @@ const SearchPage = () =>
   // console.log('in search page');
   // console.log(center);
 
-  let items = [];
-
-  // add dummy services
-  for (let i = 0; i < 20; i++) {
-    items.push({
-      _id: i.toString(),
-      UserId: "6234c4d39a050a36555a6942",
-      Title: "Bakery" + i,
-      Images: [
-        "image1",
-        "image2"
-      ],
-      Address: "14330 Alafaya Oak Bend",
-      Longitude: "-81.1705685",
-      Latitude: "28.510048",
-      Description: "My Bakery is so cool",
-      Price: "5",
-      DaysAvailable: [
-        "Monday"
-      ],
-      Category: "Baking",
-      __v: 0
-    })
-  }
-
   let res = (state ? state.res : null);
   let srch = (state ? state.obj : null);
 
@@ -70,34 +46,39 @@ const SearchPage = () =>
       <br />
 
       <Container maxWidth={false} sx={{
-            width: { xl: '80%'},
-            height: '1000px'
-          }}>
-        <Grid container sx={{height: '100%'}}>
-          <Grid item xs={3} sx={{height: '100%'}}>
-            <SearchResults
-              focus={focusItem}
-              updateFocus={updateFromChild}
-              results={(res && res.error == '') ? res.results : items}
-            />
+          width: { xl: '80%'},
+          height: '1000px'
+        }}
+      >
+        <Paper
+          elevation={10}
+          sx={{
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          <Grid container sx={{height: '100%'}}>
+            <Grid item xs={3} sx={{height: '100%'}}>
+              <SearchResults
+                focus={focusItem}
+                updateFocus={updateFromChild}
+                results={(res && res.error == '') ? res.results : []}
+              />
+            </Grid>
+            <Grid item xs={9} sx={{height: '100%'}}>
+              <Map
+                focus={focusItem}
+                updateFocus={updateFromChild}
+                results={(res && res.error == '') ? res.results : []}
+                center={center}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={9} sx={{height: '100%'}}>
-            <Map
-              focus={focusItem}
-              updateFocus={updateFromChild}
-              results={(res && res.error == '') ? res.results : items}
-              center={center}
-            />
-          </Grid>
-        </Grid>
+        </Paper>
       </Container>
-
-
-      {/* <span>change lat-lng and to re-center map.</span>
-      <input id="tempInput1" type="text" placeholder='lat' value={center.lat} onChange={centerChange('lat')}/>
-      <input id="tempInput2" type="text" placeholder='lng' value={center.lng} onChange={centerChange('lng')}/> */}
     </Box>
   );
 }
 
 export default SearchPage;
+

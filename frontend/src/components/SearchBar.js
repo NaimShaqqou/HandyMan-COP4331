@@ -172,6 +172,10 @@ function SearchBar(props) {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
+      console.log(res);
+
+      // Sort by title
+      res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
 
       navigate("/search", { replace: true, state: { obj: search, res: res} });
 
