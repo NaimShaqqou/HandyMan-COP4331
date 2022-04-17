@@ -172,7 +172,6 @@ function SearchBar(props) {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
-      console.log(res);
 
       // Sort by title
       res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
@@ -188,14 +187,14 @@ function SearchBar(props) {
   const handleChange = (prop) => async (event) => {
     setSearch({ ...search, [prop]: event.target.value });
   };
-  
-  const handleChangeLocationDropdown = async (event) => {
-    // console.log(event);
-    setSearch({ ...search, location: (('innerHTML' in event.target && event.target.innerHTML.charAt(0) != '<') ? event.target.innerHTML : '') });
+
+  const handleChangeLocationDropdown = async (event, value) => {
+    setSearch({ ...search, location: value });
     await findPredictions();
   };
 
   const handleChangeLocationText = async (event) => {
+    // console.log(224 + " " + event.target.value);
     setSearch({ ...search, location: event.target.value });
     await findPredictions();
   };

@@ -22,7 +22,7 @@ const HomePage = () =>
   let user = useSelector((state) => state.user);
   let msg = 'Welcome, Guest!';
   console.log('Rendering Homepage: ');
-  console.log(user);
+  // console.log(user);
 
   let bp = require("../components/Path");
 
