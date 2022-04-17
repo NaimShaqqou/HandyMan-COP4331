@@ -52,48 +52,22 @@ describe("POST /login", () => {
 
     describe("Logs in valid users using username or email", () => {
 
-        test("Logs in with username", async () => {
-            const actualUsers = [
-                {
-                    login: "naim2",
-                    password: "test"
-                },
-                {
-                    login: "KX",
-                    password: "1"
-                },
-                {
-                    login: "user33",
-                    password: "1234"
-                }
-            ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
-
-            let i = 0
-            for (const user of actualUsers) {
-                await request(app).post("/api/login").send({login: user.login, password: user.password}).expect((res) => {
-                    expect(res.body.userId).toBe(expectedId[i])
-                    i++
-                })
-            }
-        })
-
         test("Logs in with email", async () => {
             const actualUsers = [
                 {
-                    login: "blueflugames@gmail.com",
-                    password: "test"
+                    login: "email@emails",
+                    password: "jesttest1"
                 },
                 {
-                    login: "zxu0416@knights.ucf.edu",
-                    password: "1"
+                    login: "email@email",
+                    password: "jesttest2"
                 },
                 {
-                    login: "user33@gmail.com",
-                    password: "1234"
+                    login: "emails@email",
+                    password: "jesttest3"
                 }
             ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
 
             let i = 0
             for (const user of actualUsers) {
@@ -103,6 +77,34 @@ describe("POST /login", () => {
                 })
             }
         })
+
+        test("Logs in with username", async () => {
+            const actualUsers = [
+                {
+                    login: "jesttest1",
+                    password: "jesttest1"
+                },
+                {
+                    login: "jesttest2",
+                    password: "jesttest2"
+                },
+                {
+                    login: "jesttest3",
+                    password: "jesttest3"
+                }
+            ]
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
+
+            let i = 0
+            for (const user of actualUsers) {
+                await request(app).post("/api/login").send({login: user.login, password: user.password}).expect((res) => {
+                    expect(res.body.userId).toBe(expectedId[i])
+                    i++
+                })
+            }
+        })
+
+        
 
     })
 
@@ -122,7 +124,7 @@ describe("POST /login", () => {
                     password: "1234"
                 }
             ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
 
             let i = 0
             for (const user of actualUsers) {
@@ -138,19 +140,19 @@ describe("POST /login", () => {
         test("Wrong password" , async () => {
             const actualUsers = [
                 {
-                    login: "naim2",
-                    password: "wefgwefwef"
+                    login: "jesttest1",
+                    password: "jesttest2"
                 },
                 {
-                    login: "KX",
-                    password: "wefwefwef"
+                    login: "jesttest2",
+                    password: "jesttest1"
                 },
                 {
-                    login: "user33",
-                    password: "wefwefwefwef"
+                    login: "jesttest3",
+                    password: "jesttest1"
                 }
             ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
 
             let i = 0
             for (const user of actualUsers) {
@@ -164,19 +166,19 @@ describe("POST /login", () => {
         test("Wrong email", async () => {
             const actualUsers = [
                 {
-                    login: "fewjkn@efdnesaf",
-                    password: "test"
+                    login: "email@email",
+                    password: "jesttest1"
                 },
                 {
-                    login: "fksedhfik@lefnlwejf",
-                    password: "1"
+                    login: "email@emails",
+                    password: "jesttest2"
                 },
                 {
-                    login: "jasfolf@eoifje",
-                    password: "1234"
+                    login: "emails@emails",
+                    password: "jesttest3"
                 }
             ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
 
             let i = 0
             for (const user of actualUsers) {
@@ -190,19 +192,19 @@ describe("POST /login", () => {
         test("Wrong username", async () => {
             const actualUsers = [
                 {
-                    login: "fewjkn",
-                    password: "test"
+                    login: "jesttest",
+                    password: "jesttest1"
                 },
                 {
-                    login: "fksedhfik",
-                    password: "1"
+                    login: "jesttet2",
+                    password: "jesttest2"
                 },
                 {
-                    login: "jasfolf",
-                    password: "1234"
+                    login: "jesttest2",
+                    password: "jesttest3"
                 }
             ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
 
             let i = 0
             for (const user of actualUsers) {
@@ -216,19 +218,19 @@ describe("POST /login", () => {
         test("Both credentials are wrong", async () => {
             const actualUsers = [
                 {
-                    login: "wefwefwef",
-                    password: "wefwef"
+                    login: "JestTest1",
+                    password: "JestTest1"
                 },
                 {
-                    login: "segfwserg",
-                    password: "sdfvserg"
+                    login: "JestTest2",
+                    password: "JestTest2"
                 },
                 {
-                    login: "awfsrgb",
-                    password: "awfawef"
+                    login: "JestTest3",
+                    password: "JestTest3"
                 }
             ]
-            const expectedId = ["624e8868c55342be9aa3bb79", "6249d4dd209ec872ed42da6b", "6249b71daf1d6cad242481c3"];
+            const expectedId = ["625b7bef027f784940085b44", "625b7c6d027f784940085b45", "625b7ca5027f784940085b46"];
 
             let i = 0
             for (const user of actualUsers) {
