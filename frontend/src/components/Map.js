@@ -39,7 +39,7 @@ const Map = (props) => {
   return isLoaded ? (
     <Box
       sx={{
-        border: 3,
+        ...props.sx,
         height: '100%'
       }}
     >

@@ -40,6 +40,12 @@ const SearchPage = () =>
   let res = (state ? state.res : null);
   let srch = (state ? state.obj : null);
 
+  const resultsMapStyle = {
+    border: 3,
+    borderColor: 'steelBlue',
+    // borderRadius: 3
+  };
+
   return (
     <Box>
       <Navbar search={srch}/>
@@ -60,6 +66,7 @@ const SearchPage = () =>
           <Grid container sx={{height: '100%'}}>
             <Grid item xs={3} sx={{height: '100%'}}>
               <SearchResults
+                sx={resultsMapStyle}
                 focus={focusItem}
                 updateFocus={updateFromChild}
                 results={(res && res.error == '') ? res.results : []}
@@ -67,6 +74,7 @@ const SearchPage = () =>
             </Grid>
             <Grid item xs={9} sx={{height: '100%'}}>
               <Map
+                sx={resultsMapStyle}
                 focus={focusItem}
                 updateFocus={updateFromChild}
                 results={(res && res.error == '') ? res.results : []}

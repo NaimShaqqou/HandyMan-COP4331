@@ -30,13 +30,6 @@ export default function SearchResults(props) {
     navigate("/service", { replace: true, state: { service: item } });
   };
 
-  // var request = new XMLHttpRequest();
-  // request.open("GET", url, true);
-  // request.send();
-  // request.onload = function() {
-  //   console.log(request.status == 200);
-  // }
-
   function checkImage(url) {
     try {
       url = new URL(url);
@@ -48,7 +41,7 @@ export default function SearchResults(props) {
       return false;  
     }
   }
-  
+
   const breadurl = "https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg";
 
   const getImage = (item) => {
@@ -59,16 +52,15 @@ export default function SearchResults(props) {
   return (
     <Box
       sx={{
+        ...props.sx,
         width: '100%',
         bgcolor: 'white',
         overflow: 'auto', // scroll bar
         height: '100%',
-        border: 3,
         '& ul': {
           padding: 0,
-          // bgcolor: 'black',
         },
-        }}
+      }}
     >
       <List
       >
@@ -121,16 +113,19 @@ export default function SearchResults(props) {
               </ListItem>
               {/* <Divider variant="inset" component="li" /> */}
             </div>
-        ))
-        :
+        )) : (
         <div>
           <Typography
             variant='h4'
-            style={{textAlign: 'center'}}
+            sx={{
+              textAlign: 'center',
+              paddingTop: 5,
+            }}
           >
             No results found
           </Typography>
-        </div>}
+        </div>
+        )}
       </List>
     </Box>
   );
