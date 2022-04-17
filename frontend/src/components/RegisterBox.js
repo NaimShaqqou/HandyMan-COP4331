@@ -3,18 +3,18 @@ import jwt_decode from "jwt-decode";
 import '../Login.css'
 
 // Material UI
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import InputAdornment from '@mui/material/InputAdornment';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import LockIcon from '@mui/icons-material/Lock';
-import FormControl from '@mui/material/FormControl';
-import { Input } from "@mui/material";
-import Box from "@mui/material/Box"
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  Input, 
+  Typography,
+  Box,
+  FormControl,
+  InputAdornment,
+  Button,
+  IconButton
+} from "@mui/material";
 
-function RegisterBox() {
+function RegisterBox(props) {
   var bp = require("./Path.js");
 
   const [message, setMessage] = useState('');
@@ -99,22 +99,13 @@ function RegisterBox() {
 
   return (
     <Box style={classes.paper} sx={{
-      minHeight: {
-        sm: 300,
-        md: 400
-      },
-      minWidth: {
-        sm: 385,
-        md: 450,
-        lg: 450
-      },
-      maxWidth: {
-        lg: 450
-      },
+      ...props.sx,
     }}>
       <div>
         <form onSubmit={doRegister}>
-          <h3>Create an Account</h3>
+          <Typography variant='h5'>
+            Login to continue
+          </Typography>
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
               id="registerFirstName"

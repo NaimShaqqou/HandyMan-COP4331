@@ -5,14 +5,19 @@ import Title from '../components/Title';
 import LoginBox from '../components/LoginBox';
 import RegisterBox from '../components/RegisterBox';
 import ResponsiveAppBar from '../components/NavBar';
-import '../LoginPage.css';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import {
+  Box,
+  Container
+} from '@mui/material';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper"
+import Switch from '@mui/material/Switch';
+import Slide from '@mui/material/Slide';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,11 +60,37 @@ const LoginPage = () =>
     setValue(newValue);
   };
 
+  const boxStyle = {
+    height: {
+      sm: 300,
+      md: 500 
+    },
+    minWidth: {
+      sm: 385,
+      md: 450
+    },
+    maxWidth: {
+      lg: 450
+    },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
+  }
+
+  const style1 = {
+    width: {
+      md: '100%',
+      lg: '65%'
+    },
+    margin: '0 auto',
+  }
+
+  console.log(value);
+
   return(
     <div>
       <ResponsiveAppBar />
-      <div className='loginPageDiv'>
-        {/* <Title /> */}
+      {/* <div className='loginPageDiv'> */}
         <h2 style={{textAlign: 'center'}}>Welcome to Handler</h2>
 
         <Box sx={{ width: '100%' }}>
@@ -76,22 +107,27 @@ const LoginPage = () =>
           </Box>
         </Box>
 
-        <Grid container spacing={0}>
-          
-          <Grid item xs>
-            <TabPanel value={value} index={0}>
-              <LoginBox func={setValue}/>
-            </TabPanel>
-          </Grid>
-          
+        <Box m={3}/>
 
-          <Grid item xs>
-            <TabPanel value={value} index={1}>
-              <RegisterBox />
-            </TabPanel>
-          </Grid>
-        </Grid>
-      </div>
+        <Container maxWidth={false} sx={{...style1}}>
+            <Grid container spacing={0}>
+              <Grid item xs sx={{display:'flex', flexDirection:'row'}}>
+                  <Slide direction="right" in={value == 0} mountOnEnter unmountOnExit>
+                    <div>
+                      <LoginBox sx={boxStyle}/>
+                    </div>
+                  </Slide>
+              </Grid>
+
+              <Grid item xs sx={{display:'flex', flexDirection:'row-reverse'}}>
+                <Slide direction="left" in={value == 1} mountOnEnter unmountOnExit>
+                  <div>
+                    <RegisterBox sx={boxStyle} />
+                  </div>
+                </Slide>
+              </Grid>
+            </Grid>
+        </Container>
     </div>
   );
 };
