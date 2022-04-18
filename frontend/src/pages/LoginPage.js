@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PageTitle from '../components/PageTitle';
-import Title from '../components/Title';
 import LoginBox from '../components/LoginBox';
 import RegisterBox from '../components/RegisterBox';
 import ResponsiveAppBar from '../components/NavBar';
@@ -11,13 +9,13 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import {
   Box,
-  Container
+  Container,
+  styled,
 } from '@mui/material';
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper"
-import Switch from '@mui/material/Switch';
 import Slide from '@mui/material/Slide';
-import FormControlLabel from '@mui/material/FormControlLabel';
+
+import { makeStyles } from '@mui/styles';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,6 +50,85 @@ function a11yProps(index) {
   };
 }
 
+const AntTabs = styled(Tabs)({
+  borderBottom: '1px solid #e8e8e8',
+  '& .MuiTabs-indicator': {
+    backgroundColor: '#1890ff',
+  },
+});
+
+const AntTab = styled((props) => <Tab disableRipple {...props} />)(({ theme }) => ({
+  textTransform: 'none',
+  minWidth: 0,
+  [theme.breakpoints.up('sm')]: {
+    minWidth: 0,
+  },
+  fontWeight: theme.typography.fontWeightRegular,
+  marginRight: theme.spacing(1),
+  color: 'rgba(0, 0, 0, 0.85)',
+  fontFamily: [
+    '-apple-system',
+    'BlinkMacSystemFont',
+    '"Segoe UI"',
+    'Roboto',
+    '"Helvetica Neue"',
+    'Arial',
+    'sans-serif',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(','),
+  '&:hover': {
+    color: '#40a9ff',
+    opacity: 1,
+  },
+  '&.Mui-selected': {
+    color: '#1890ff',
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  '&.Mui-focusVisible': {
+    backgroundColor: '#d1eaff',
+  },
+}));
+
+const StyledTabs = styled((props) => (
+  <Tabs
+    {...props}
+    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+  />
+))({
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    maxWidth: 40,
+    width: '100%',
+    // backgroundColor: '#635ee7',
+    backgroundColor: '#0064ad',
+  },
+});
+
+const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+  ({ theme }) => ({
+    textTransform: 'none',
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(15),
+    marginRight: theme.spacing(1),
+    color: 'steelblue',
+    // color: 'rgba(255, 255, 255, 0.7)',
+    '&.Mui-selected': {
+      // color: '#fff',
+      color: 'cyanblue',
+      fontWeight: theme.typography.fontWeightBold,
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: 'rgba(100, 95, 228, 0.32)',
+    },
+  }),
+);
+
 const LoginPage = () =>
 {
   const [value, setValue] = React.useState(0);
@@ -82,30 +159,47 @@ const LoginPage = () =>
     margin: '0 auto',
   }
 
-  console.log(value);
-
   return(
     <Box>
       <ResponsiveAppBar />
 
-      <Box m={10}/>
+      <Box m={5}/>
 
-      <Typography variant='h5' sx={{ textAlign: 'center' }}>
+      <Typography variant='h4' sx={{ textAlign: 'center', color: '#0064ad', fontWeight: 'bold' }}>
         Welcome to Handler
       </Typography>
 
-      <Box sx={{ width: '100%' }}>
+      <Box m={3}/>
+      {/* <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            centered
-          >
-            <Tab label="Log in" {...a11yProps(0)} />
-            <Tab label="Register" {...a11yProps(1)} />
-          </Tabs>
+        <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="basic tabs example"
+        centered
+        >
+        <Tab label="Log in" {...a11yProps(0)} />
+        <Tab label="Register" {...a11yProps(1)} />
+        </Tabs>
         </Box>
+      </Box> */}
+
+      <Box
+        sx={{
+          // bgcolor: '#2e1534',
+          borderBottom: 1,
+          borderColor: 'divider'
+        }}
+      >
+        <StyledTabs
+          value={value}
+          onChange={handleChange}
+          aria-label="styled tabs example"
+          centered
+        >
+          <StyledTab label="Log in" />
+          <StyledTab label="Register" />
+        </StyledTabs>
       </Box>
 
       <Box m={3}/>
