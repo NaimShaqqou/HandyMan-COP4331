@@ -85,7 +85,7 @@ const ResponsiveAppBar = (props) => {
     userObj.profilePicture = user.profilePicture;
   }
 
-  const routeChange = () =>{ 
+  const goToHomepage = () =>{ 
     navigate("../", { replace:true });
   };
 
@@ -117,28 +117,33 @@ const ResponsiveAppBar = (props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" elevation={0}>
+      <AppBar position="static" elevation={0} sx={{ bgcolor: '#003c80' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <a onClick={(event) => routeChange(event)}>
-              <img
-                src={require('../logo2_500.png')}
-                style={{
-                  height: 30,
-                  width: 30,
-                  cursor:'pointer'
-                }}
-              />
-            </a>
+            <img
+              onClick={(event) => goToHomepage(event)}
+              src={require('../logo2_500.png')}
+              style={{
+                height: 40,
+                width: 40,
+                cursor:'pointer'
+              }}
+            />
+
+            <Box m={1}/>
+
             <Typography
               variant="h6"
               noWrap
               component="div"
-              onClick={routeChange}
-              sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
+              onClick={goToHomepage}
+              sx={{ display: { xs: 'none', sm: 'flex' } }}
+              style={titlestyle}
             >
-              <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
+              Handler
             </Typography>
+
+            <Box m={1}/>
 
             {pathname !== "/" && 
             <Container sx={{ maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
@@ -152,10 +157,10 @@ const ResponsiveAppBar = (props) => {
               variant="h6"
               noWrap
               component="div"
-              onClick={routeChange}
+              onClick={goToHomepage}
               sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
             >
-              <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
+              <button style={titlestyle} onClick={(event) => goToHomepage(event)}>Handler</button>
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
