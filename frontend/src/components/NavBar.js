@@ -108,7 +108,7 @@ const ResponsiveAppBar = (props) => {
       values: {
         xs: 0,
         sm: 600,
-        md: 900,
+        md: 1200,
         lg: 1200,
         xl: 1536,
       },
@@ -133,7 +133,7 @@ const ResponsiveAppBar = (props) => {
             </Typography>
 
             {pathname !== "/" && 
-            <Container sx={{ maxWidth: { xs: '380px', sm: '480px', md: '910px'} }}>
+            <Container sx={{ maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
               <SearchBar search={props.search}/>
             </Container>}
 
@@ -151,7 +151,7 @@ const ResponsiveAppBar = (props) => {
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
+              {/* {pages.map((page) => (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
@@ -159,7 +159,7 @@ const ResponsiveAppBar = (props) => {
                 >
                   {page}
                 </Button>
-              ))}
+              ))} */}
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
