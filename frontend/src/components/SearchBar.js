@@ -23,19 +23,28 @@ import axios from "axios";
 // TODO: location dropdown is different from the other two dropdowns
 // TODO: when searching from homepage, contents of search bar should carry on to search page.
 
+const emptySearch = {
+  keyword: '',
+  location: '',
+  distance: '',
+  category: '',
+};
+
 function SearchBar(props) {
   console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
-  const [search, setSearch] = useState({
-    keyword: '',
-    location: '',
-    distance: '',
-    category: '',
-  });
+  const [search, setSearch] = useState(emptySearch);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [region, setRegion] = useState(null);
   const [status, setStatus] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      setPredictions(new Array());
+      setSearch(emptySearch)
+    }
+  }, []);
 
   let navigate = useNavigate();
 
@@ -114,15 +123,7 @@ function SearchBar(props) {
   
     if (obj.location == '') {
       obj.location = 'Orlando, FL';
-      let loc = getLocation();
-
-      console.log(loc);
-      
-      if (loc) {
-        console.log(loc);
-
-        // obj.location = reverseGeocode();
-      }
+      getLocation();
     }
 
     if (isNaN(obj.maxDist))
