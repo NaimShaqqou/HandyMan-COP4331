@@ -120,8 +120,16 @@ const ResponsiveAppBar = (props) => {
       <AppBar position="static" elevation={0}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-          <a href='./'>
-          <img src="https://tinyimg.io/i/oI5Vz43.png" /></a>
+            <a onClick={(event) => routeChange(event)}>
+              <img
+                src={require('../logo2_500.png')}
+                style={{
+                  height: 30,
+                  width: 30,
+                  cursor:'pointer'
+                }}
+              />
+            </a>
             <Typography
               variant="h6"
               noWrap
