@@ -14,9 +14,12 @@ import {
   Button,
   Fade,
   Collapse,
-  Grid
+  Grid,
+  IconButton,
+  Tooltip
 } from '@mui/material';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function SearchResults(props) {
@@ -73,7 +76,7 @@ export default function SearchResults(props) {
                   "&:hover": {
                     bgcolor: "#c9e8ff"
                   },
-                  bgcolor: (props.focus != null && props.focus._id === listitem._id ? "#aacce6" : "white")
+                  bgcolor: (props.focus != null && props.focus._id === listitem._id ? "#e6efff" : "white")
                 }}
                 divider={true}
               >
@@ -105,10 +108,32 @@ export default function SearchResults(props) {
 
                     </Grid>
                   </Grid>
+                  {/* ArrowForwardIcon */}
+
+                  <Box sx={{display:'flex', flexDirection:'row-reverse'}}>
+                    <Fade in={props.focus != null && props.focus._id === listitem._id}>
+                      {/* <Button onClick={clickOpen(listitem)}>Open</Button> */}
+                      <Tooltip title="Go to Service">
+                        <IconButton
+                          onClick={clickOpen(listitem)}
+                          sx={{
+                            color: 'white',
+                            bgcolor: 'steelblue',
+                            "&:hover": {
+                              bgcolor: "DarkTurquoise"
+                            }
+                          }}
+                        >
+                          <ArrowForwardIcon
+                            // sx={{ width: 17}}
+                            fontSize='large'
+                            aria-label="This is aria label"
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </Fade>
+                  </Box>
                   
-                  <Fade in={props.focus != null && props.focus._id === listitem._id}>
-                    <Button onClick={clickOpen(listitem)}>Open</Button>
-                  </Fade>
                 </Collapse>
               </ListItem>
               {/* <Divider variant="inset" component="li" /> */}
