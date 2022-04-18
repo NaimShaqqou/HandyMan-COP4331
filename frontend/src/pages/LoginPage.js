@@ -85,47 +85,51 @@ const LoginPage = () =>
   console.log(value);
 
   return(
-    <div>
+    <Box>
       <ResponsiveAppBar />
-      {/* <div className='loginPageDiv'> */}
-        <h2 style={{textAlign: 'center'}}>Welcome to Handler</h2>
 
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-              centered
-            >
-              <Tab label="Log in" {...a11yProps(0)} />
-              <Tab label="Register" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
+      <Box m={10}/>
+
+      <Typography variant='h5' sx={{ textAlign: 'center' }}>
+        Welcome to Handler
+      </Typography>
+
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            centered
+          >
+            <Tab label="Log in" {...a11yProps(0)} />
+            <Tab label="Register" {...a11yProps(1)} />
+          </Tabs>
         </Box>
+      </Box>
 
-        <Box m={3}/>
+      <Box m={3}/>
 
-        <Container maxWidth={false} sx={{...style1}}>
-            <Grid container spacing={0} wrap='nowrap'>
-              <Grid item xs sx={{display:'flex', flexDirection:'row'}}>
-                  <Slide direction="right" in={value == 0} mountOnEnter unmountOnExit>
-                    <div>
-                      <LoginBox sx={boxStyle}/>
-                    </div>
-                  </Slide>
-              </Grid>
-
-              <Grid item xs sx={{display:'flex', flexDirection:'row-reverse'}}>
-                <Slide direction="left" in={value == 1} mountOnEnter unmountOnExit>
+      <Container maxWidth={false} sx={{...style1}}>
+          <Grid container spacing={0} wrap='nowrap'>
+            <Grid item xs sx={{display:'flex', flexDirection:'row'}}>
+                <Slide direction="right" in={value == 0} mountOnEnter unmountOnExit>
                   <div>
-                    <RegisterBox sx={boxStyle} />
+                    <LoginBox sx={boxStyle}/>
                   </div>
                 </Slide>
-              </Grid>
             </Grid>
-        </Container>
-    </div>
+
+            <Grid item xs sx={{display:'flex', flexDirection:'row-reverse'}}>
+              <Slide direction="left" in={value == 1} mountOnEnter unmountOnExit>
+                <div>
+                  <RegisterBox sx={boxStyle} />
+                </div>
+              </Slide>
+            </Grid>
+          </Grid>
+      </Container>
+    </Box>
   );
 };
 

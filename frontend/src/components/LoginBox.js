@@ -101,7 +101,7 @@ function LoginBox(props) {
     >
       <form onSubmit={doLogin}>
         <Typography variant='h5'>
-          Login to continue
+          Login to Continue
         </Typography>
 
         <Box m={2}/>

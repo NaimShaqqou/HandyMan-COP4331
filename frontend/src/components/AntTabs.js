@@ -96,6 +96,7 @@ export default function CustomizedTabs() {
         </AntTabs>
         <Box sx={{ p: 3 }} />
       </Box>
+
       <Box sx={{ bgcolor: '#2e1534' }}>
         <StyledTabs
           value={value}
