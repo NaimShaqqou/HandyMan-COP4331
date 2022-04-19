@@ -30,8 +30,11 @@ const HomePage = () =>
       <Stack spacing={7}>
         <Typography
           variant='h2'
-          style={{textAlign: 'center'}}
-          // fontFamily='Comfortaa'
+          sx={{
+            textAlign: 'center',
+            color: '#003c80',
+            // fontFamily: 'Comfortaa',
+          }}
         >
           {msg}
         </Typography>
