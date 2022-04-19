@@ -90,7 +90,7 @@ const ResponsiveAppBar = (props) => {
   };
 
   const titlestyle = {
-    fontFamily: 'Philosopher',
+    fontFamily: 'Comfortaa',
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: '48px',
@@ -140,7 +140,7 @@ const ResponsiveAppBar = (props) => {
               sx={{ display: { xs: 'none', sm: 'flex' } }}
               style={titlestyle}
             >
-              Handler
+              handler
             </Typography>
 
             <Box m={1}/>
