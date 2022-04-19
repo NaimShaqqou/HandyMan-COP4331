@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
-import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView} from 'react-native';
-import { Center, Column } from 'native-base';
+import { Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
+import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { Center, Column, ListItem } from 'native-base';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
@@ -24,9 +25,16 @@ const Services = () => {
         zIndex: 1,
       }}
       imageStyle={{ width: width, height: height }}
-      >    
+      >
+      <Text>{"\n"}</Text>
+      
+      <Button style = {styles.addButton}>
+        <Icon name="add-circle-outline" size = {40} color={"white"} style ={{marginRight: 0}}/>
+      </Button>
+
+
       <ScrollView contentContainerStyle = {styles.viewContainer}>
-        {
+        { 
           Object.values(services).map(item => (
             <Text key={item._id}>
               <Card style = {styles.menuContainer}>
@@ -35,23 +43,31 @@ const Services = () => {
                   title = {item.Title} 
                   subtitle = {item.Description}
                 />
-                <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+                <Card.Cover style = {{ borderRadius: 10}} source={{ uri: 'https://picsum.photos/700' }} />
                 <Card.Content>
                   <Title></Title>
-                  <Paragraph>
-                    <Text> 
-                      Price: {item.Price}{"\n"}
-                      Category: {item.Category}{"\n"}
-                      Days Available: {item.DaysAvailable}{"\n"}
-                      Address: {item.Address}
-                    </Text>
-                  </Paragraph>
+                  <View style = {styles.cardContentView}>
+                    <Icon name="credit-card"  style ={{marginRight: 0, }}/>
+                    <Text>  Price: ${item.Price}</Text>
+                  </View>
+                  <View style = {styles.cardContentView}>
+                    <Icon name="home-repair-service" style ={{marginRight: 0, }}/>
+                    <Text>  Category: {item.Category}</Text>
+                  </View>
+                  <View style = {styles.cardContentView}>
+                    <Icon name="event" style ={{marginRight: 0, }}/>
+                    <Text>  Days Available: {item.DaysAvailable}</Text>
+                  </View>
+                  <View style = {styles.cardContentView}>
+                    <Icon name="place" style ={{marginRight: 0, }}/>
+                    <Text>  Address: {item.Address}</Text>
+                  </View>
                 </Card.Content>
                 <Card.Actions>
                   <Button>Edit</Button>
                   <Button>Delete</Button>
                 </Card.Actions>
-              </Card>
+              </Card>{"\n"}
             </Text>
           ))
         }
@@ -65,7 +81,7 @@ const Services = () => {
 const styles = StyleSheet.create({
   menuContainer:{
     display: 'flex',
-    padding: 15,
+    padding: 10,
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 20,
@@ -88,11 +104,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     width: width,
-    maxWidth: '100%',
+    maxWidth: '95%',
   },
 
   addButton:{
+    alignItems: 'center',
+  },
 
+  cardContentView:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 2,
+    width: width,
+    maxWidth: '95%',
   }
 })
   

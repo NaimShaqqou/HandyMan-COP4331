@@ -9,6 +9,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/ngrok": "^4.1.0",
+    "@gorhom/bottom-sheet": "^4",
     "@native-base/icons": "^0.0.11",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/drawer": "^6.3.1",
@@ -30,6 +32,7 @@
     "react-native": "0.64.3",
     "react-native-dotenv": "^3.3.1",
     "react-native-dropdown-picker": "^5.4.0",
+    "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-google-places-autocomplete": "^2.4.1",
     "react-native-loading-spinner-overlay": "^3.0.0",
@@ -44,8 +47,7 @@
     "react-native-web": "0.17.1",
     "react-redux": "^7.2.6",
     "redux-thunk": "^2.4.1",
-    "undefined": "@native-base/icons/lib",
-    "@gorhom/bottom-sheet": "^4"
+    "undefined": "@native-base/icons/lib"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
