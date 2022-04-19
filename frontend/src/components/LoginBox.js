@@ -14,7 +14,10 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
 import Box from "@mui/material/Box"
-import { Input } from "@mui/material";
+import {
+  Input,
+  Typography
+} from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
@@ -47,16 +50,7 @@ function LoginBox(props) {
       if (res.error == "") {
         setMessage("Logged in " + res.firstName + " " + res.lastName);
         console.log("Logged in " + res.firstName + " " + res.lastName);
-        // var storage = require("../tokenStorage.js");
-        // storage.storeToken(res["jwtToken"]);
-        updateCurrentUser({
-          userId: res.userId, 
-          firstName: res.firstName, 
-          lastName: res.lastName, 
-          profileDescription: res.profileDescription, 
-          profilePicture: res.profilePicture, 
-          jwtToken: res.jwtToken
-        });
+        updateCurrentUser(res);
         loginServices(res.services);
         navigate("../", { replace: true });
       } else {
@@ -90,23 +84,19 @@ function LoginBox(props) {
   };
 
   return (
-    <Box style={classes.paper} sx={{
-      minHeight: {
-        sm: 300,
-        md: 400 
-      },
-      minWidth: {
-        sm: 385,
-        md: 450
-      },
-      maxWidth: {
-        lg: 450
-      },
-    }}
+    <Box
+      sx={{
+        ...classes.paper,
+        ...props.sx,
+      }}
     >
-
       <form onSubmit={doLogin}>
-        <h3>Login to continue!</h3>
+        <Typography variant='h5'>
+          Login to Continue
+        </Typography>
+
+        <Box m={2}/>
+
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
           <Input
@@ -152,13 +142,12 @@ function LoginBox(props) {
           />
         </FormControl>
 
-        <br />
-        <br />
-
+        <Box m={3}/>
 
         <Button id="loginButton" variant="contained" type="submit">Log in</Button>
-        <br />
-        <br />
+
+        <Box m={3}/>
+
         <ForgotPassword/>
         <span id="loginResult">{message}</span>
       </form>

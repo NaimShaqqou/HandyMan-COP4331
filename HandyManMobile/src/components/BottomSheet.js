@@ -2,7 +2,15 @@ import React, { useCallback, useMemo, useRef, Dimensions } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import {
+  Avatar,
+  Button,
+  Card,
+  Title,
+  Paragraph,
+  IconButton,
+  List,
+} from "react-native-paper";
 
 const BottomSheetComponent = () => {
   const services = useSelector((state) => state.services).services;
@@ -27,36 +35,56 @@ const BottomSheetComponent = () => {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
     >
-      {/* <View style={styles.contentContainer}>
-        <Text>Awesome 🎉</Text>
-      </View> */}
       <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
         {/* to map over list of services*/}
         {/* replace "Object.values(services)" with "Object.values(searchResultsArray)" */}
         {Object.values(services).map((item) => (
-          <Card style={styles.menuContainer} key={item.id}>
-            <Card.Title
-              titleStyle={{ justifyContent: "center", alignItems: "center" }}
-              title={item.Title}
-              subtitle={item.Description}
+          <List.Accordion
+            key={item.id}
+            title={item.Title}
+            description={item.Description}
+            left={() => (
+              <Avatar.Image source={{ uri: "https://picsum.photos/700" }} />
+            )}
+            style={styles.list}
+            theme={{ colors: {background: 'white'}}}
+          >
+            <List.Item
+              title={"Price: $" + item.Price}
+              left={() => (
+                <List.Icon
+                  icon="credit-card-outline"
+                  style={{ marginRight: 0 }}
+                />
+              )}
+              style={{ marginVertical: -18 }}
             />
-            <Card.Cover source={{ uri: "https://picsum.photos/700" }} />
-            <Card.Content>
-              <Title></Title>
-              <Paragraph>
-                <Text>
-                  Price: {"$"}
-                  {item.Price}
-                  {"\n"}
-                  Category: {item.Category}
-                  {"\n"}
-                  Days Available: {item.DaysAvailable}
-                  {"\n"}
-                  Address: {item.Address}
-                </Text>
-              </Paragraph>
-            </Card.Content>
-          </Card>
+            <List.Item
+              title={"Category: " + item.Category}
+              left={() => (
+                <List.Icon icon="toolbox-outline" style={{ marginRight: 0 }} />
+              )}
+              style={{ marginVertical: -18 }}
+            />
+            <List.Item
+              title={"Days Available: " + item.DaysAvailable}
+              style={{ marginVertical: -18 }}
+              left={() => (
+                <List.Icon icon="calendar" style={{ marginRight: 0 }} />
+              )}
+            />
+            <List.Item
+              title={"Address: " + item.Address}
+              style={{ marginVertical: -18 }}
+              left={() => (
+                <List.Icon
+                  icon="map-marker-outline"
+                  style={{ marginRight: 0 }}
+                />
+              )}
+            />
+            <Button>Learn More</Button>
+          </List.Accordion>
         ))}
       </BottomSheetScrollView>
     </BottomSheet>
@@ -69,35 +97,26 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     width: "100%",
-    backgroundColor: "grey",
+    // backgroundColor: "grey",
   },
   contentContainer: {
     // flex: 1,
-    // alignItems: "center",
+    // justifyContent: "center",
     backgroundColor: "white",
   },
   itemContainer: {
     padding: 6,
     margin: 6,
-    backgroundColor: "#eee",
+    // backgroundColor: "#eee",
   },
-  menuContainer: {
-    display: "flex",
-    padding: 15,
-    marginLeft: 5,
-    marginRight: 5,
-    borderRadius: 20,
-    borderColor: "blue",
-    borderWidth: 3,
-    elevation: 5,
-    shadowColor: "#470000",
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.4,
-    justifyContent: "center",
-    alignItems: "stretch",
-    // width: Dimensions.get('window').width,
-    maxWidth: "100%",
+  list: {
+    // borderRadius: 35,
+    backgroundColor: "white",
+    marginTop: 16,
+    alignSelf: "center",
+    // borderColor: 'gray',
+    // borderWidth: 1,
+    width: "95%",
   },
 });
 

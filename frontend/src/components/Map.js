@@ -5,7 +5,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   Typography,
   Box,
-  Button
+  Button,
+  createTheme,
+  ThemeProvider
 } from '@mui/material';
 
 const Map = (props) => {
@@ -33,50 +35,65 @@ const Map = (props) => {
     navigate("/service", { replace: true, state: { service: item } });
   };
 
+  const theme = createTheme({
+    typography: {
+      fontFamily: [
+        // 'Comfortaa',
+        'Roboto',
+        '"Helvetica"',
+        'Arial',
+        'sans-serif'
+      ].join(','),
+    }
+  });
+
   // console.log(props.center);
   // console.log(props.results); //
 
   return isLoaded ? (
-    <Box
-      sx={{
-        border: 3,
-        height: '100%'
-      }}
-    >
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={props.center}
-        zoom={12}
-        // onLoad={onLoad}
-        // onUnmount={onUnmount}
+    <ThemeProvider theme={theme}>
+
+      <Box
+        sx={{
+          ...props.sx,
+          height: '100%'
+        }}
       >
-        {props.results && props.results.map(listitem => (
-          <div key={listitem._id}>
-            {props.focus != null && listitem._id == props.focus._id &&
-            <InfoWindow position={{lat: parseFloat(listitem.Latitude), lng: parseFloat(listitem.Longitude)}}>
-              <Box>
-                <Typography>
-                  {listitem.Title}
-                </Typography>
-                <Button onClick={clickOpen(listitem)}>Open</Button>
-              </Box>
-            </InfoWindow>}
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={props.center}
+          zoom={12}
+          // onLoad={onLoad}
+          // onUnmount={onUnmount}
+        >
+          {props.results && props.results.map(listitem => (
+            <div key={listitem._id}>
+              {props.focus != null && listitem._id == props.focus._id &&
+              <InfoWindow position={{lat: parseFloat(listitem.Latitude), lng: parseFloat(listitem.Longitude)}}>
+                <Box fontFamily='Roboto'>
+                  <Typography>
+                    {listitem.Title}
+                  </Typography>
+                  <Button onClick={clickOpen(listitem)}>Open</Button>
+                </Box>
+              </InfoWindow>}
 
-            <Marker
-              key={listitem._id}
-              onLoad={onLoad}
-              position={{lat: parseFloat(listitem.Latitude), lng: parseFloat(listitem.Longitude)}}
-              clickable={true}
-              label={listitem.Title}
-              onClick={clickItem(listitem)}
-              // icon={listitem && listitem._id == props.focus._id ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/300px-Gull_portrait_ca_usa.jpg' : ''}
-            >
+              <Marker
+                key={listitem._id}
+                onLoad={onLoad}
+                position={{lat: parseFloat(listitem.Latitude), lng: parseFloat(listitem.Longitude)}}
+                clickable={true}
+                label={listitem.Title}
+                onClick={clickItem(listitem)}
+                // icon={listitem && listitem._id == props.focus._id ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gull_portrait_ca_usa.jpg/300px-Gull_portrait_ca_usa.jpg' : ''}
+              >
 
-            </Marker>
-          </div>
-        ))}
-      </GoogleMap>
-    </Box>
+              </Marker>
+            </div>
+          ))}
+        </GoogleMap>
+      </Box>
+    </ThemeProvider>
   ) : <h2>google maps not loaded</h2>
 }
 

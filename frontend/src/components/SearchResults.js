@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   List,
@@ -14,10 +14,14 @@ import {
   Button,
   Fade,
   Collapse,
-  Grid
+  Grid,
+  IconButton,
+  Tooltip,
+  createTheme,
+  ThemeProvider
 } from '@mui/material';
 
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function SearchResults(props) {
   let navigate = useNavigate();
@@ -30,13 +34,6 @@ export default function SearchResults(props) {
     navigate("/service", { replace: true, state: { service: item } });
   };
 
-  // var request = new XMLHttpRequest();
-  // request.open("GET", url, true);
-  // request.send();
-  // request.onload = function() {
-  //   console.log(request.status == 200);
-  // }
-
   function checkImage(url) {
     try {
       url = new URL(url);
@@ -48,7 +45,7 @@ export default function SearchResults(props) {
       return false;  
     }
   }
-  
+
   const breadurl = "https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg";
 
   const getImage = (item) => {
@@ -56,82 +53,121 @@ export default function SearchResults(props) {
     return breadurl;
   };
 
+  const theme = createTheme({
+    typography: {
+      fontFamily: [
+        // 'Comfortaa',
+        'Roboto',
+        '"Helvetica"',
+        'Arial',
+        'sans-serif'
+      ].join(','),
+    }
+  });
+
   return (
-    <Box
-      sx={{
-        width: '100%',
-        bgcolor: 'white',
-        overflow: 'auto', // scroll bar
-        height: '100%',
-        border: 3,
-        '& ul': {
-          padding: 0,
-          // bgcolor: 'black',
-        },
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          ...props.sx,
+          width: '100%',
+          bgcolor: 'white',
+          overflow: 'auto', // scroll bar
+          height: '100%',
+          '& ul': {
+            padding: 0,
+          },
         }}
-    >
-      <List
       >
-        { (props.results && props.results.length > 0) ? props.results.map(listitem => (
-            <div key={listitem._id}>
-              <ListItem
-                alignItems="flex-start"
-                sx={{
-                  width: '99%', // so the hover color doesn't overlap the map border, nice number
-                  "&:hover": {
-                    bgcolor: "#c9e8ff"
-                  },
-                  bgcolor: (props.focus != null && props.focus._id === listitem._id ? "#aacce6" : "white")
-                }}
-                divider={true}
-              >
-                <Collapse in={props.focus != null && props.focus._id === listitem._id} collapsedSize={100} sx={{width: '100%'}}>
-                  <Grid container >
-                    <Grid item xs={3} >
-                      <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
-                        <Avatar alt={listitem.Title} src={getImage(listitem)} />
-                      </ListItemAvatar>
-                    </Grid>
+        <List
+        >
+          { (props.results && props.results.length > 0) ? props.results.map(listitem => (
+              <div key={listitem._id}>
+                <ListItem
+                  alignItems="flex-start"
+                  sx={{
+                    width: '99%', // so the hover color doesn't overlap the map border, nice number
+                    "&:hover": {
+                      bgcolor: "#c9e8ff"
+                    },
+                    bgcolor: (props.focus != null && props.focus._id === listitem._id ? "#e6efff" : "white"),
+                    fontFamily: 'Helvetica'
+                  }}
+                  divider={true}
+                >
+                  <Collapse in={props.focus != null && props.focus._id === listitem._id} collapsedSize={100} sx={{width: '100%'}}>
+                    <Grid container >
+                      <Grid item xs={3} >
+                        <ListItemAvatar onClick={clickItem(listitem)} sx={{ cursor: 'pointer' }}>
+                          <Avatar alt={listitem.Title} src={getImage(listitem)} />
+                        </ListItemAvatar>
+                      </Grid>
 
-                    <Grid item xs={9} >
-                      <ListItemText
-                        onClick={clickItem(listitem)}
-                        primary={listitem.Title}
-                        secondary={
-                          <React.Fragment>
+                      <Grid item xs={9} >
+                        <ListItemText
+                          onClick={clickItem(listitem)}
+                          primary={listitem.Title}
+                          secondary={
                             <React.Fragment>
-                              {listitem.Address}
+                              <React.Fragment>
+                                {listitem.Address}
+                              </React.Fragment>
+                              <br />
+                              <React.Fragment>
+                                {listitem.Description}
+                              </React.Fragment>
                             </React.Fragment>
-                            <br />
-                            <React.Fragment>
-                              {listitem.Description}
-                            </React.Fragment>
-                          </React.Fragment>
-                        }
-                        sx={{ cursor: 'pointer' }}
-                      />
+                          }
+                          sx={{ cursor: 'pointer' }}
+                        />
 
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  
-                  <Fade in={props.focus != null && props.focus._id === listitem._id}>
-                    <Button onClick={clickOpen(listitem)}>Open</Button>
-                  </Fade>
-                </Collapse>
-              </ListItem>
-              {/* <Divider variant="inset" component="li" /> */}
-            </div>
-        ))
-        :
-        <div>
-          <Typography
-            variant='h4'
-            style={{textAlign: 'center'}}
-          >
-            No results found
-          </Typography>
-        </div>}
-      </List>
-    </Box>
+                    {/* ArrowForwardIcon */}
+
+                    <Box sx={{display:'flex', flexDirection:'row-reverse'}}>
+                      <Fade in={props.focus != null && props.focus._id === listitem._id}>
+                        {/* <Button onClick={clickOpen(listitem)}>Open</Button> */}
+                        <Tooltip title="Go to Service">
+                          <IconButton
+                            onClick={clickOpen(listitem)}
+                            sx={{
+                              color: 'white',
+                              bgcolor: 'steelblue',
+                              "&:hover": {
+                                bgcolor: "DarkTurquoise"
+                              }
+                            }}
+                          >
+                            <ArrowForwardIcon
+                              // sx={{ width: 17}}
+                              fontSize='large'
+                              aria-label="This is aria label"
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </Fade>
+                    </Box>
+                    
+                  </Collapse>
+                </ListItem>
+                {/* <Divider variant="inset" component="li" /> */}
+              </div>
+          )) : (
+          <div>
+            <Typography
+              variant='h4'
+              sx={{
+                textAlign: 'center',
+                paddingTop: 5,
+              }}
+            >
+              No results found
+            </Typography>
+          </div>
+          )}
+        </List>
+      </Box>
+    </ThemeProvider>
   );
 }

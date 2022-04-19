@@ -1,4 +1,5 @@
 // Reducer for services owned by logged in user
+// do NOT modify state argument. make and return a new copy instead
 
 const reducer = (
     state = {
@@ -8,8 +9,7 @@ const reducer = (
   ) => {
       switch (action.type) {
           case "loginServices":
-              state.services = action.payload.services
-              return state
+            return {...state, services: action.payload.services}
           case "addService": 
               return {...state, services: [...state.services, action.payload.service]}
           case "deleteService": 
@@ -18,8 +18,7 @@ const reducer = (
                     if (index !== deleteIndex) return (service)
               })}
           case "logoutServices":
-              state.services = new Array()
-              return state
+              return {...state, services: new Array() }
           case "updateServices":
             const index = state.services.findIndex(service => service._id === action.payload.service._id);
 

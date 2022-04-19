@@ -23,7 +23,10 @@ import {
   Avatar,
   Button,
   Tooltip,
-  MenuItem
+  MenuItem,
+  createTheme,
+  ThemeProvider,
+  Grid
 } from '@mui/material'
 import axios from 'axios';
 
@@ -74,21 +77,25 @@ const ResponsiveAppBar = (props) => {
   // Set this to the user's full name
   // let avatarAlt = "User Name";
   let userObj = {
-    fullName: "User Name",
-    profilePicture: "/static/images/avatar/2.jpg",
+    username: "guest",
+    fullName: "Guest",
+    profilePicture: "",
   }
 
   if (user.userId != '') {
+    userObj.username = user.username;
     userObj.fullName = user.firstName + " " + user.lastName;
-    userObj.profilePicture = user.profilePicture;
+    userObj.profilePicture = user.profilePicture != "" ? user.profilePicture : "/static/images/avatar/2.jpg";
   }
 
-  const routeChange = () =>{ 
+  console.log(user);
+
+  const goToHomepage = () =>{ 
     navigate("../", { replace:true });
   };
 
   const titlestyle = {
-    fontFamily: 'Philosopher',
+    fontFamily: 'Comfortaa',
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: '48px',
@@ -101,89 +108,147 @@ const ResponsiveAppBar = (props) => {
     cursor:'pointer'
   }
 
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 1200,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+    typography: {
+      fontFamily: [
+        'Comfortaa',
+        'Roboto',
+        '"Helvetica"',
+        'Arial',
+        'sans-serif'
+      ].join(','),
+    }
+  });
+
   return (
-   
-    <AppBar position="static" elevation={0}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-        <a href='./'>
-        <img src="https://tinyimg.io/i/oI5Vz43.png" /></a>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            onClick={routeChange}
-            sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
-          >
-            <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
-          </Typography>
-
-          {pathname !== "/" && 
-          <Container maxWidth="md">
-            <SearchBar search={props.search}/>
-          </Container>}
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          </Box>
-
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            onClick={routeChange}
-            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
-          >
-            <button style={titlestyle} onClick={(event) => routeChange(event)}>Handler</button>
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="View Menu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
-              </IconButton>
-            </Tooltip>
-
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+    <ThemeProvider theme={theme}>
+      <AppBar position="static" elevation={0} sx={{ bgcolor: '#003c80' }}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <img
+              onClick={(event) => goToHomepage(event)}
+              src={require('../logo2_500.png')}
+              style={{
+                height: 40,
+                width: 40,
+                cursor:'pointer'
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+            />
+
+            <Box m={1}/>
+
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              onClick={goToHomepage}
+              sx={{ display: { xs: 'none', sm: 'flex' } }}
+              style={titlestyle}
             >
-              {user.userId !== "" && loggedInSettings.map((setting) => (
-                <MenuItem key={setting} onClick={(event) => handleCloseUserMenu(event)}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-              {user.userId === "" && <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
-                  <Typography textAlign="center">Login</Typography>
-                </MenuItem>}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              handler
+            </Typography>
+
+            <Box m={1}/>
+
+            {pathname !== "/" && 
+            <Container sx={{ maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
+              <SearchBar search={props.search}/>
+            </Container>}
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            </Box>
+
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              onClick={goToHomepage}
+              sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
+            >
+              <button style={titlestyle} onClick={(event) => goToHomepage(event)}>Handler</button>
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {/* {pages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page}
+                </Button>
+              ))} */}
+            </Box>
+
+            <Box
+              sx={{
+                flexGrow: 0,
+                width: '150px',
+                height: '45px',
+                bgcolor: 'divider',
+                borderRadius: 5
+              }}
+              direction="column"
+            >
+              <Grid container>
+                <Grid item xs={4}>
+                  <Tooltip  title="View Menu">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
+                    </IconButton>
+                  </Tooltip>
+
+                </Grid>
+                
+                <Grid item xs={8}>
+                  <Typography variant='h6'>
+                    {userObj.username}
+                  </Typography>
+
+                </Grid>
+              </Grid>
+
+
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {user.userId !== "" && loggedInSettings.map((setting) => (
+                  <MenuItem key={setting} onClick={(event) => handleCloseUserMenu(event)}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+                {user.userId === "" && <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
+                    <Typography textAlign="center">Login</Typography>
+                  </MenuItem>}
+              </Menu>
+            </Box>
+
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </ThemeProvider>
   );
 };
 export default ResponsiveAppBar;
