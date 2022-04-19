@@ -194,7 +194,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           ln = user.LastName;
   
           if (!user.Verified) {
-            res.status(200).json({ error: "Account has not been verified!" , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
+            res.status(200).json({ error: "Account has not been verified!" , username: "",firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
             return;
           }
   
@@ -202,15 +202,15 @@ exports.setApp = function (app, client, cloudinaryParser) {
             const token = require("./createJWT.js");
             let services = await Service.find({ UserId: id} ).exec()
 
-            ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id), services: services};
+            ret = { error: "", username: user.Username, firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id), services: services};
           } catch (e) {
-            ret = { error: e.message, jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", services: new Array()};
+            ret = { error: e.message, username: "", jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", services: new Array()};
           }
         } else {
-          ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
+          ret = { error: "Incorrect credentials", username: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
         }
         res.status(200).json(ret);
-    }).catch((e) => res.status(200).json({ error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})) 
+    }).catch((e) => res.status(200).json({ error: e.message, username: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})) 
   });
 
   app.post("/api/edit-profile", async (req, res, next) => {
