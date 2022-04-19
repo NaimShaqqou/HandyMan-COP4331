@@ -31,6 +31,7 @@ const HomePage = () =>
         <Typography
           variant='h2'
           style={{textAlign: 'center'}}
+          // fontFamily='Comfortaa'
         >
           {msg}
         </Typography>

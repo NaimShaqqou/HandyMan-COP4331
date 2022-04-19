@@ -113,6 +113,15 @@ const ResponsiveAppBar = (props) => {
         xl: 1536,
       },
     },
+    typography: {
+      fontFamily: [
+        'Comfortaa',
+        'Roboto',
+        '"Helvetica"',
+        'Arial',
+        'sans-serif'
+      ].join(','),
+    }
   });
 
   return (

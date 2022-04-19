@@ -165,8 +165,16 @@ const LoginPage = () =>
 
       <Box m={5}/>
 
-      <Typography variant='h4' sx={{ textAlign: 'center', color: '#0064ad', fontWeight: 'bold' }}>
-        Welcome to Handler
+      <Typography 
+        variant='h4' 
+        sx={{ 
+          textAlign: 'center', 
+          color: '#0064ad', 
+          fontWeight: 'bold',
+          fontFamily: 'Comfortaa'
+        }}
+      >
+        welcome to handler
       </Typography>
 
       <Box m={3}/>
