@@ -50,16 +50,7 @@ function LoginBox(props) {
       if (res.error == "") {
         setMessage("Logged in " + res.firstName + " " + res.lastName);
         console.log("Logged in " + res.firstName + " " + res.lastName);
-        // var storage = require("../tokenStorage.js");
-        // storage.storeToken(res["jwtToken"]);
-        updateCurrentUser({
-          userId: res.userId, 
-          firstName: res.firstName, 
-          lastName: res.lastName, 
-          profileDescription: res.profileDescription, 
-          profilePicture: res.profilePicture, 
-          jwtToken: res.jwtToken
-        });
+        updateCurrentUser(res);
         loginServices(res.services);
         navigate("../", { replace: true });
       } else {

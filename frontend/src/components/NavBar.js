@@ -25,7 +25,8 @@ import {
   Tooltip,
   MenuItem,
   createTheme,
-  ThemeProvider
+  ThemeProvider,
+  Grid
 } from '@mui/material'
 import axios from 'axios';
 
@@ -76,14 +77,18 @@ const ResponsiveAppBar = (props) => {
   // Set this to the user's full name
   // let avatarAlt = "User Name";
   let userObj = {
-    fullName: "User Name",
-    profilePicture: "/static/images/avatar/2.jpg",
+    username: "guest",
+    fullName: "Guest",
+    profilePicture: "",
   }
 
   if (user.userId != '') {
+    userObj.username = user.username;
     userObj.fullName = user.firstName + " " + user.lastName;
-    userObj.profilePicture = user.profilePicture;
+    userObj.profilePicture = user.profilePicture != "" ? user.profilePicture : "/static/images/avatar/2.jpg";
   }
+
+  console.log(user);
 
   const goToHomepage = () =>{ 
     navigate("../", { replace:true });
@@ -184,12 +189,34 @@ const ResponsiveAppBar = (props) => {
               ))} */}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="View Menu">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
-                </IconButton>
-              </Tooltip>
+            <Box
+              sx={{
+                flexGrow: 0,
+                width: '150px',
+                height: '45px',
+                bgcolor: 'divider',
+                borderRadius: 5
+              }}
+              direction="column"
+            >
+              <Grid container>
+                <Grid item xs={4}>
+                  <Tooltip  title="View Menu">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
+                    </IconButton>
+                  </Tooltip>
+
+                </Grid>
+                
+                <Grid item xs={8}>
+                  <Typography variant='h6'>
+                    {userObj.username}
+                  </Typography>
+
+                </Grid>
+              </Grid>
+
 
               <Menu
                 sx={{ mt: '45px' }}
@@ -217,6 +244,7 @@ const ResponsiveAppBar = (props) => {
                   </MenuItem>}
               </Menu>
             </Box>
+
           </Toolbar>
         </Container>
       </AppBar>
