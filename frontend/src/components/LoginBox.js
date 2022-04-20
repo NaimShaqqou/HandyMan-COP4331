@@ -37,8 +37,6 @@ function LoginBox(props) {
     var obj = { login: values.username, password: values.password };
     var js = JSON.stringify(obj);
 
-    // alert('click');
-
     try {
       const response = await fetch(bp.buildPath("api/login"), {
         method: "POST",
@@ -55,6 +53,7 @@ function LoginBox(props) {
         navigate("../", { replace: true });
       } else {
         setMessage(res.error);
+        console.log(res.error);
       }
     } catch (e) {
       console.log(e.toString());

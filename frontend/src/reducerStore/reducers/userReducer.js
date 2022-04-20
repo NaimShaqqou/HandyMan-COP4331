@@ -2,6 +2,7 @@
 
 const reducer = (
   state = {
+    username: "",
     firstName: "",
     lastName: "",
     profilePicture: "",
@@ -14,6 +15,7 @@ const reducer = (
     switch (action.type) {
         case "login":
             return {
+              username: action.payload.username,
               firstName: action.payload.firstName,
               lastName: action.payload.lastName,
               profilePicture: action.payload.profilePicture,
@@ -23,6 +25,7 @@ const reducer = (
             }
         case "logout": 
             return {
+              username: "",
               firstName: "",
               lastName: "",
               profilePicture: "",

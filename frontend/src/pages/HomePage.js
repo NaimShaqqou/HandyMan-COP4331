@@ -17,6 +17,7 @@ const HomePage = () =>
   let user = useSelector((state) => state.user);
   let msg = 'Welcome, Guest!';
   console.log('Rendering Homepage: ');
+  console.log(user);
 
   if (user.userId != '') {
     msg = 'Hello, ' + user.firstName + " " + user.lastName;

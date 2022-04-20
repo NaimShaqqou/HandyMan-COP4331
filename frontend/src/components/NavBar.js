@@ -88,7 +88,7 @@ const ResponsiveAppBar = (props) => {
     userObj.profilePicture = user.profilePicture != "" ? user.profilePicture : "/static/images/avatar/2.jpg";
   }
 
-  console.log(user);
+  // console.log(user);
 
   const goToHomepage = () =>{ 
     navigate("../", { replace:true });
@@ -192,34 +192,36 @@ const ResponsiveAppBar = (props) => {
             <Box
               sx={{
                 flexGrow: 0,
-                width: '150px',
+                width: (userObj.username.length > 6 ? (150 + (userObj.username.length - 6) * 20) : 150).toString() + 'px',
                 height: '45px',
-                bgcolor: 'divider',
-                borderRadius: 5
+                bgcolor: 'rgba(0, 0, 0, 0.5)',
+                // bgcolor: 'green',
+                borderRadius: 5,
+                // pt: 0.2
+                // display: "flex",
+                // flexDirection: "column",
+                // justifyContent: "center"
               }}
               direction="column"
             >
-              <Grid container>
-                <Grid item xs={4}>
+              <Grid container sx={{pt: 0.4}}>
+                <Grid item xs={3} sx={{ pl: 0.7 }} >
                   <Tooltip  title="View Menu">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                       <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
                     </IconButton>
                   </Tooltip>
-
                 </Grid>
                 
-                <Grid item xs={8}>
-                  <Typography variant='h6'>
+                <Grid item xs={9} sx={{ textAlign: 'center', pt: 0.2, pl: 1 }}>
+                  <Typography variant='h6' sx={{paddingRight: 2}}>
                     {userObj.username}
                   </Typography>
-
                 </Grid>
               </Grid>
 
-
               <Menu
-                sx={{ mt: '45px' }}
+                sx={{ mt: '50px', ml: 11 }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
