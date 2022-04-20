@@ -122,14 +122,14 @@ export default function RequestedService(props) {
                                         </Typography>
                                     </Grid>
                                     <Grid item container direction="row" xs>
-                                        <Grid item xs="6" sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                        <Grid item xs={6} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
                                             <Typography
                                                 variant="h5"
                                             >
                                                 {new Date(requestedService.Dates).toLocaleDateString("en-US")}
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs="6" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                        <Grid item xs={6} sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
                                             <Typography variant="h5">
                                                 ${requestedService.Price}
                                             </Typography>
@@ -139,11 +139,11 @@ export default function RequestedService(props) {
 
                             </Grid>
                             {!requestedService.Accepted ? <Grid item>
-                                <IconButton >
-                                    <CheckIcon color="success" onClick={() => acceptRequest()}/>
+                                <IconButton onClick={() => acceptRequest()}>
+                                    <CheckIcon color="success" />
                                 </IconButton>
-                                <IconButton >
-                                    <ClearIcon color="warning" onClick={() => denyRequest()}/>
+                                <IconButton onClick={() => denyRequest()}>
+                                    <ClearIcon color="warning" />
                                 </IconButton>
 
                             </Grid> : <Typography>Accepted</Typography>}
