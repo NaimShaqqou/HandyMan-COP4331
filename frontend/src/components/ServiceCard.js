@@ -92,10 +92,10 @@ export default function ServiceCard(props) {
                     <EditIcon />
             </IconButton>
             <IconButton onClick={() => setOpenDialog(true)}>
-                    <DeleteIcon/>
+                    <DeleteIcon />
             </IconButton>
-            <IconButton>
-                    <WorkHistoryIcon onClick={() => navigate('../requested-services', {state: service})}/>
+            <IconButton onClick={() => navigate('../requested-services', {state: service})}>
+                    <WorkHistoryIcon />
             </IconButton>
           </Grid>
         </Grid>

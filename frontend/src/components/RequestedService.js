@@ -86,6 +86,8 @@ export default function RequestedService(props) {
 
     console.log(requestedService);
 
+    // sx={{bgcolor: 'green'}}
+
     return (
         <Container>
             {user !== null && requestedService !== null && (
@@ -104,49 +106,83 @@ export default function RequestedService(props) {
                         </Grid>
                         <Grid item xs={12} md container >
 
-                            <Grid item xs container direction="column" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }} spacing={1} >
-                                <Stack direction="column" spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ fontWeight: "bold" }}
-                                            component="div"
-                                        >
-                                            {user.FirstName} {user.LastName}
-                                        </Typography>
-                                    </Grid>
+                            <Grid item xs sx={{display: 'flex', justifyContent: "center", alignItems: "center" }} >
+                                <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
 
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                  <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>
+                                    {!requestedService.Accepted ? 
+                                    <Box>
+                                      <IconButton onClick={() => acceptRequest()}>
+                                          <CheckIcon color="success" />
+                                      </IconButton>
+                                      <IconButton onClick={() => denyRequest()}>
+                                          <ClearIcon color="warning" />
+                                      </IconButton>
+
+                                    </Box>
+
+                                    : <Typography>Accepted</Typography>}
+                                  </Box>
+
+                                  <Box m={2} />
+
+                                  <Container sx={{ display: 'flex', justifyContent: "center" }}>
+                                    <Stack direction="column" sx={{ textAlign: 'center', maxWidth: '65%' }}  spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
+                                        <Container sx={{ display: 'flex', justifyContent: "center" }}>
+
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ fontWeight: "bold" }}
+                                                component="div"
+                                            >
+                                                {user.FirstName} {user.LastName}
+                                            </Typography>
+                                        </Container>
+
                                         <Typography variant="body1">
                                             Their Request: {requestedService.DescriptionFromRequester}
                                         </Typography>
-                                    </Grid>
-                                    <Grid item container direction="row" xs>
-                                        <Grid item xs="6" sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                            <Typography
-                                                variant="h5"
-                                            >
-                                                {new Date(requestedService.Dates).toLocaleDateString("en-US")}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs="6" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                            <Typography variant="h5">
-                                                ${requestedService.Price}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
+
+                                        <Stack
+                                          sx={{ display: 'flex', justifyContent: "center" }} 
+                                          direction="row" 
+                                          spacing={1} 
+                                          divider={<Divider orientation="vertical" flexItem />}
+                                        >
+                                          <Typography
+                                              variant="h5"
+                                          >
+                                              {new Date(requestedService.Dates).toLocaleDateString("en-US")}
+                                          </Typography>
+                                          <Typography variant="h5" >
+                                              ${requestedService.Price}
+                                          </Typography>
+                                        </Stack>
+                                    </Stack>
+
+                                  </Container>
                                 </Stack>
 
-                            </Grid>
-                            {!requestedService.Accepted ? <Grid item>
-                                <IconButton >
-                                    <CheckIcon color="success" onClick={() => acceptRequest()}/>
-                                </IconButton>
-                                <IconButton >
-                                    <ClearIcon color="warning" onClick={() => denyRequest()}/>
-                                </IconButton>
 
-                            </Grid> : <Typography>Accepted</Typography>}
+                            </Grid>
+
+                            {/* <Grid item >
+                              <Box>
+                                {!requestedService.Accepted ? 
+                                <Box>
+                                  <IconButton onClick={() => acceptRequest()}>
+                                      <CheckIcon color="success" />
+                                  </IconButton>
+                                  <IconButton onClick={() => denyRequest()}>
+                                      <ClearIcon color="warning" />
+                                  </IconButton>
+
+                                </Box>
+
+                                : <Typography>Accepted</Typography>}
+                                <Box m={6}/>
+                              </Box>
+                            </Grid> */}
 
                         </Grid>
                     </Grid>

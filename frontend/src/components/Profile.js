@@ -162,10 +162,20 @@ function Profile() {
 
   return (
       <Container>
-          <Grid container direction="column" spacing={3}>
+          <Grid container direction="column">
+            <Grid item sx={{ height: 150 }} >
+              <img
+                src={userInfo.profilePicture}
+                style={{
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'contain' 
+                }}
+              />
+            </Grid>
+
             <Grid item>
-              <img src={userInfo.profilePicture} />
-              {showSaveChangesButton && (
+            {showSaveChangesButton && (
                 <input
                   type="file"
                   accept="image/*"
@@ -173,7 +183,8 @@ function Profile() {
                 />
               )}
             </Grid>
-            <Grid item>
+
+            <Grid item mt={3}>
               <Grid
                 container
                 alignItems="center"

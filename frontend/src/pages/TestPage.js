@@ -2,6 +2,7 @@ import React from 'react';
 
 import AppBarSearch from '../components/TestAppBarWithSearch';
 import AntTabs from '../components/AntTabs';
+import TestDragNDrop from '../components/TestDragNDrop';
 import '../LoginPage.css';
 
 import {
@@ -19,8 +20,10 @@ const MyApp = (status) => {
     <div>
       <AppBarSearch></AppBarSearch>
       
-      <AntTabs></AntTabs>
+      {/* <AntTabs></AntTabs> */}
 
+
+      <TestDragNDrop/>
     </div>
   )
 };
