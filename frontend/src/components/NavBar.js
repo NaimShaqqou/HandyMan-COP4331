@@ -134,25 +134,25 @@ const ResponsiveAppBar = (props) => {
       <AppBar position="static" elevation={0} sx={{ bgcolor: '#003c80' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <img
-              onClick={(event) => goToHomepage(event)}
-              src={require('../logo2_500.png')}
-              style={{
-                height: 40,
-                width: 40,
-                cursor:'pointer'
-              }}
-            />
+            <a href='/'>
+              <img
+                src={require('../logo2_500.png')}
+                style={{
+                  height: 40,
+                  width: 40,
+                  cursor:'pointer'
+                }}
+              />
+            </a>
 
             <Box m={1}/>
 
             <Typography
+              href='/'
               variant="h6"
               noWrap
-              component="div"
-              onClick={goToHomepage}
-              sx={{ display: { xs: 'none', sm: 'flex' } }}
-              style={titlestyle}
+              component="a"
+              sx={{ ...titlestyle, display: { xs: 'none', sm: 'flex' } }}
             >
               handler
             </Typography>
@@ -168,13 +168,13 @@ const ResponsiveAppBar = (props) => {
             </Box>
 
             <Typography
+              href='/'
               variant="h6"
               noWrap
-              component="div"
-              onClick={goToHomepage}
-              sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
+              component="a"
+              sx={{ ...titlestyle, display: { xs: 'flex', sm: 'none' }, textDecoration: 'none', flexGrow: 1 }}
             >
-              <button style={titlestyle} onClick={(event) => goToHomepage(event)}>Handler</button>
+              handler
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -241,7 +241,9 @@ const ResponsiveAppBar = (props) => {
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
-                {user.userId === "" && <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
+                
+                {user.userId === "" &&
+                  <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
                     <Typography textAlign="center">Login</Typography>
                   </MenuItem>}
               </Menu>

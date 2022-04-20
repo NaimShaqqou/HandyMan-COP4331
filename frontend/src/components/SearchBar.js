@@ -15,7 +15,8 @@ import {
   Divider,
   Paper,
   Box,
-  InputAdornment
+  InputAdornment,
+  Tooltip
 } from "@mui/material";
 import axios from "axios";
 
@@ -205,12 +206,15 @@ function SearchBar(props) {
 
           {<Stack direction="row" spacing={1} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Box mt={1.5}>
-              <IconButton onClick={locationButtonPress}>
-                <MyLocationIcon
-                  // sx={{ width: 17}}
-                  fontSize='small'
-                />
-              </IconButton>
+              <Tooltip  title="Use my location">
+                <IconButton onClick={locationButtonPress}>
+                  <MyLocationIcon
+                    // sx={{ width: 17}}
+                    fontSize='small'
+                  />
+                </IconButton>
+
+              </Tooltip>
             </Box>
 
             <Autocomplete
@@ -269,12 +273,14 @@ function SearchBar(props) {
           </TextField>
         </Stack>
 
-        <IconButton
-          onClick={(event) => doSearch(event)}
-          color='primary'
-          style={{color: 'white', backgroundColor: '#003c80'}}>
-          <SearchIcon />
-        </IconButton>
+        <Tooltip  title="Search">
+          <IconButton
+            onClick={(event) => doSearch(event)}
+            color='primary'
+            style={{color: 'white', backgroundColor: '#003c80'}}>
+            <SearchIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
     </Paper>
   );
