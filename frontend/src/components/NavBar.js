@@ -113,8 +113,8 @@ const ResponsiveAppBar = (props) => {
       values: {
         xs: 0,
         sm: 600,
-        md: 1200,
-        lg: 1200,
+        md: 1300,
+        lg: 1300,
         xl: 1536,
       },
     },
