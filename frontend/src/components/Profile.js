@@ -100,6 +100,7 @@ function Profile() {
       .then(function (response) {
         updateCurrentUser({
           userId: user.userId,
+          username: userInfo.username,
           firstName: userInfo.firstName,
           lastName: userInfo.lastName,
           profileDescription: userInfo.profileDescription,
@@ -160,7 +161,7 @@ function Profile() {
   };
 
   return (
-      <Container alignItems="center">
+      <Container>
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <img src={userInfo.profilePicture} />

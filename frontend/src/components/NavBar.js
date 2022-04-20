@@ -192,7 +192,7 @@ const ResponsiveAppBar = (props) => {
             <Box
               sx={{
                 flexGrow: 0,
-                width: (userObj.username.length > 6 ? (150 + (userObj.username.length - 6) * 20) : 150).toString() + 'px',
+                width: (userObj.username && userObj.username.length > 6 ? (150 + (userObj.username.length - 6) * 20) : 150).toString() + 'px',
                 height: '45px',
                 bgcolor: 'rgba(0, 0, 0, 0.5)',
                 // bgcolor: 'green',
