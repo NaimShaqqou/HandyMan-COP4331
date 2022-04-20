@@ -1,28 +1,15 @@
-import { Grid, ImageList, ImageListItem } from '@mui/material';
 import React, { useState } from 'react';
-import ServiceCard from '../components/ServiceCard'
-import { Container } from "@mui/material";
-import { Box } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import ResponsiveAppBar from "../components/NavBar";
-import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
-import { Autocomplete } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import { actionCreators } from "../reducerStore/index";
-import { MenuItem } from "@mui/material";
-import { Button } from "@mui/material";
-import { Stack } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 import '../styles.css';
-import { Paper } from '@mui/material';
-import { Divider } from '@mui/material';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
-import { DateRange } from 'react-date-range';
-import { addDays, format } from 'date-fns';
+import {
+  Paper, Divider, Button, Stack, TextField, Typography,
+  Container, Box, Grid, ImageList, ImageListItem,
+  IconButton, Alert, Collapse
+} from '@mui/material';
+import { format } from 'date-fns';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -34,16 +21,12 @@ export default function ServicePage() {
     const { state } = useLocation();
     const [value, setValue] = useState(null);
     const [msg, setMsg] = useState('');
-    let user = useSelector((state) => state.user);
-    let service = state.service;
+    const [successMsg, setSuccessMsg] = useState(false);
+    const user = useSelector((state) => state.user);
+    const service = state.service;
 
-    console.log(value);
-    if (value)
-      console.log(format(value, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"));
     async function doBook(event) {
       event.preventDefault();
-      alert("Booked an appointment!");
-      // console.log()
   
       let obj = {
         requesterId: user.userId,
@@ -65,29 +48,16 @@ export default function ServicePage() {
 
         console.log(res);
   
-        // if (res.error == "") {
+        if (res.error == "") {
+          setSuccessMsg(true);
+        } else {
           
-        // } else {
-          
-        // }
+        }
       } catch (e) {
         console.log(e.toString());
         return; 
       }
     }
-
-    // const [date, setDate] = useState([
-    //     {
-    //       startDate: new Date(),
-    //       endDate: null,
-    //       key: 'selection'
-    //     }
-    //   ]);
-      
-    // function disableDates(activeStartDate,date,view)
-    // {
-    //     console.log(date.getDay());
-    // }
     
     console.log(service);
     
@@ -121,7 +91,7 @@ export default function ServicePage() {
                               </ImageListItem>
                               ))}
                           </ImageList>
-                          <Typography  variant='h3'>
+                          <Typography  variant='h5'>
                               {service.Description}
                           </Typography>
                           {/* <Typography  variant='h3'>
@@ -138,33 +108,74 @@ export default function ServicePage() {
                             theme.palette.mode === 'dark' ? '#1A2027' : '#F2F1F0', alignItems:"center"
                           }}
                         >
-                        {/* <DateRange
-                            editableDateInputs={true}
-                            onChange={item => setDate([item.selection])}
-                            moveRangeOnFirstSelection={false}
-                            ranges={date}
-                            disableDates={d}
-                        /> */}
-                        <TextField
+                          <TextField
                             value={msg}
                             onChange={(event) => { setMsg(event.target.value); }}
                             placeholder="Message to Handler"
                             multiline
                             maxRows={4}
+                            sx={{ width: '100%' }}
                           />
 
-                        <Box m={3} />
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <DateTimePicker
-                            label="Schedule Appointment"
-                            value={value}
-                            onChange={(newValue) => { setValue(newValue);}}
-                            renderInput={(params) => <TextField {...params} />}
-                          />
-                        </LocalizationProvider>     
-                        <Box textAlign='center' sx={{pt:3}}>
-                            <Button align="center"color="primary" size="large" type="submit" variant="contained" onClick={doBook}>Book!</Button>
-                        </Box>
+                          <Box m={3} />
+
+                          <Grid container>
+                            <Grid item xs={8}>
+                              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DateTimePicker
+                                  label="Schedule Appointment"
+                                  value={value}
+                                  onChange={(newValue) => { setValue(newValue);}}
+                                  renderInput={(params) => <TextField {...params} />}
+                                />
+                              </LocalizationProvider>     
+
+                            </Grid>
+                            
+                            <Grid item xs={4} >
+                              <Box textAlign='center' sx={{ height: '100%' }}>
+                                  <Button
+                                    align="center"
+                                    color="primary"
+                                    // size="large"
+                                    type="submit"
+                                    variant="contained"
+                                    onClick={doBook}
+                                    sx={{ height: '100%' }}
+                                  >
+                                    Book!
+                                  </Button>
+                              </Box>
+
+                            </Grid>
+
+                          </Grid>
+
+
+                          <Box m={3} />
+
+                          <Box sx={{ width: '100%' }}>
+                            <Collapse in={successMsg}>
+                              <Alert
+                                action={
+                                  <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                      setSuccessMsg(false);
+                                    }}
+                                  >
+                                    <CloseIcon fontSize="inherit" />
+                                  </IconButton>
+                                }
+                                sx={{ mb: 2 }}
+                              >
+                                Appointment successfully booked!
+                              </Alert>
+                            </Collapse>
+                          </Box>
+
                         </Paper>
                     </Grid>   
                 </Grid>  
