@@ -30,13 +30,13 @@ export default function ServicesPage() {
             <ServiceCard service={service} />
           </Grid>
         ))}
-        <div style={{padding:80}}>
+        <Box sx={{ pt: 4}} />
+        
         <Grid item>
           <Box textAlign='center'>
           <Button variant="contained" onClick={() => addService()}>Add new service</Button>
           </Box>
         </Grid>
-        </div>
       </Grid>
       </Box>
       

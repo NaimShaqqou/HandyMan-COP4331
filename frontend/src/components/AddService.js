@@ -52,7 +52,10 @@ export default function AddService() {
 
 
     const handleImageChange = ({ target }) => {
+        if (!(target && target.files && target.files.length > 0))
+          return;
         setImageValidation(false)
+        console.log(target.files[0]);
         setImages((array) => [...array, URL.createObjectURL(target.files[0])])
         setFileData((array) => [...array, target.files[0]]);
     };

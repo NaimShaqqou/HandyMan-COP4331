@@ -1,8 +1,7 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Box } from "@mui/material";
 import React, { useState } from "react";
 import ServiceCard from "../components/ServiceCard";
 import { Container } from "@mui/material";
-import { Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
@@ -15,6 +14,7 @@ export default function AddServicesPage() {
   return (
     <div>
       <ResponsiveAppBar />
+      <Box m={5}/>
       <AddService />
     </div>
   );
