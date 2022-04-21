@@ -4,14 +4,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
 import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
-import { Icon } from 'react-native-elements';
+import { colors, Icon } from 'react-native-elements';
 import { Center, Column, ListItem } from 'native-base';
+import { useTheme } from "react-native-paper";
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
 const { width, height } = Dimensions.get("screen");
 
 const Services = () => {
+  const { colors } = useTheme();
+
   const user = useSelector((state) => state.user)
   const services = useSelector((state) => state.services).services;
 
@@ -42,8 +45,8 @@ const Services = () => {
       >
       <Text>{"\n"}</Text>
       
-      <Button onPress={onAddServiceTransition} mode ='contained' style = {styles.addButton}>
-        <Icon name="add-circle-outline" size = {40} color={"white"} style ={{marginRight: 0}}/>
+      <Button onPress={onAddServiceTransition} mode ='outlined' style = {styles.addButton}>
+        <Icon name="add-circle-outline" size = {40} color={"white"} style ={{margin:0}}/>
       </Button>
 
 
@@ -57,7 +60,7 @@ const Services = () => {
                   title = {item.Title} 
                   subtitle = {item.Description}
                 />
-                <Card.Cover style = {{ borderRadius: 10 }} source={{ uri: 'https://picsum.photos/700' }} />
+                <Card.Cover style = {{ borderRadius: 13}} source={{ uri: 'https://picsum.photos/700' }} />
                 <Card.Content>
                   <Title></Title>
                   <View style = {styles.cardContentView}>
@@ -106,8 +109,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 20,
-    borderColor: 'blue',
-    borderWidth: 3,
+    borderColor: colors.primary,
+    borderWidth: 5,
     elevation: 5,
     shadowColor: '#470000',
     shadowRadius: 10,

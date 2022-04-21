@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
 import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
-import { Icon } from 'react-native-elements';
+import { colors, Icon } from 'react-native-elements';
 import { Center, Column, ListItem } from 'native-base';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
@@ -45,7 +45,7 @@ const Services = () => {
       >
       <Text>{"\n"}</Text>
       
-      <Button onPress={onAddServiceTransition} mode ='contained' style = {styles.addButton}>
+      <Button onPress={onAddServiceTransition} mode ='outlined' style = {styles.addButton}>
         <Icon name="add-circle-outline" size = {40} color={"white"} style ={{marginRight: 0}}/>
       </Button>
 
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 20,
-    borderColor: 'blue',
+    borderColor: colors.primary,
     borderWidth: 3,
     elevation: 5,
     shadowColor: '#470000',
