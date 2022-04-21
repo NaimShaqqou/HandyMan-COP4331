@@ -5,6 +5,8 @@ import ResponsiveAppBar from '../components/NavBar';
 import SearchBar from "../components/SearchBar.js"
 import { useSelector } from "react-redux";
 
+import { motion } from 'framer-motion';
+
 import {
   Box,
   Stack,
@@ -29,16 +31,31 @@ const HomePage = () =>
       <Box sx={{ m: 15 }} />
 
       <Stack spacing={7}>
-        <Typography
-          variant='h2'
-          sx={{
-            textAlign: 'center',
-            color: '#003c80',
-            // fontFamily: 'Comfortaa',
-          }}
-        >
-          {msg}
-        </Typography>
+
+        <motion.div initial='hidden' animate='visible' variants={{
+          hidden: {
+            scale: .8,
+            opacity: 0
+          },
+          visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+              delay: .4
+            }
+          }
+        }}>
+          <Typography
+            variant='h2'
+            sx={{
+              textAlign: 'center',
+              color: '#003c80',
+              // fontFamily: 'Comfortaa',
+            }}
+          >
+            {msg}
+          </Typography>
+        </motion.div>
 
         <div>
           <Container sx={{ maxWidth: { xs: '380px', sm: '480px', md: '910px'} }}>

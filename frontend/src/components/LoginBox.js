@@ -23,6 +23,8 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from "react-router-dom";
 
+import { motion } from 'framer-motion';
+
 function LoginBox(props) {
   var bp = require("./Path.js");
   const dispatch = useDispatch();

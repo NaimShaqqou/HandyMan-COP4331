@@ -153,7 +153,8 @@ const LoginPage = () =>
 
   const style1 = {
     width: {
-      lg: '100%',
+      md: '90%',
+      lg: '80%',
       xl: '65%'
     },
     margin: '0 auto',
