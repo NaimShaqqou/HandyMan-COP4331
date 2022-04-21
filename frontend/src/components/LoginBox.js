@@ -15,21 +15,22 @@ import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
 import Box from "@mui/material/Box"
 import {
-  Input,
-  Typography
+  Input, Alert,
+  Typography, Grid
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from "react-router-dom";
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function LoginBox(props) {
   var bp = require("./Path.js");
   const dispatch = useDispatch();
   const { updateCurrentUser, loginServices } = bindActionCreators(actionCreators, dispatch);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
 
   const [message, setMessage] = useState("");
 
@@ -53,8 +54,11 @@ function LoginBox(props) {
         updateCurrentUser(res);
         loginServices(res.services);
         navigate("../", { replace: true });
-      } else {
+      } else if (res.error == "Incorrect credentials") {
+        setInvalidCredentials(true);
         setMessage(res.error);
+        console.log(res.error);
+      } else {
         console.log(res.error);
       }
     } catch (e) {
@@ -70,6 +74,7 @@ function LoginBox(props) {
   });
 
   const handleChange = (prop) => (event) => {
+    if (invalidCredentials) setInvalidCredentials(false);
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -91,6 +96,7 @@ function LoginBox(props) {
         ...props.sx,
       }}
     >
+      <Box m={10}/>
       <form onSubmit={doLogin}>
         <Typography variant='h5'>
           Login to Continue
@@ -101,6 +107,7 @@ function LoginBox(props) {
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
           <Input
+            error={invalidCredentials}
             id="loginUsername"
             type='text'
             value={values.username}
@@ -119,6 +126,7 @@ function LoginBox(props) {
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
           <Input
+            error={invalidCredentials}
             id="loginPassword"
             type={values.showPassword ? 'text' : 'password'}
             value={values.password}
@@ -152,7 +160,6 @@ function LoginBox(props) {
           whileHover={{
             scale: 0.9,
             backgroundColor: '#003c80',
-            color: 'white'
           }}
           // onHoverStart={e => {}}
           // onHoverEnd={e => {}}
@@ -170,15 +177,51 @@ function LoginBox(props) {
             Log in
           </Typography>
         </motion.button>
-
-
         <Box m={3}/>
 
         <ForgotPassword/>
-        <span id="loginResult">{message}</span>
+        {/* <span id="loginResult">{message}</span> */}
       </form>
+
+      <AnimatePresence
+        intial={false}
+        exitBeforeEnter={true}
+        onExitComplete={() => null}
+      >
+
+        {invalidCredentials &&
+        <motion.div
+          initial='hidden' 
+          animate='visible'
+          exit='exit'
+          variants={{
+            hidden: {
+              scale: .8,
+              opacity: 0
+            },
+            visible: {
+              scale: 1,
+              opacity: 1,
+            },
+            exit: {
+              scale: 0,
+              opacity: 0
+            }
+          }}
+        >
+
+          <Box m={3}>
+            <Alert
+              severity='error'
+              sx={{ mb: 2 }}
+            >
+              Invalid Credentials
+            </Alert>
+          </Box>
+        </motion.div>}
+      </AnimatePresence>
+
     </Box>
-    // </div>
   );
 }
 

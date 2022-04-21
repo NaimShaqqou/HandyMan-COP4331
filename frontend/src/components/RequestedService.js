@@ -106,7 +106,7 @@ export default function RequestedService(props) {
                         </Grid>
                         <Grid item xs={12} md container >
 
-                            <Grid item xs sx={{display: 'flex', justifyContent: "center", alignItems: "center" }} >
+                            <Grid item xs >
                                 <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
 
                                   <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>

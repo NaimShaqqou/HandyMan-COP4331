@@ -146,9 +146,7 @@ const LoginPage = () =>
       sm: 385,
       md: 450
     },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center"
+    // pt: 10
   }
 
   const style1 = {
@@ -179,19 +177,6 @@ const LoginPage = () =>
       </Typography>
 
       <Box m={3}/>
-      {/* <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-        value={value}
-        onChange={handleChange}
-        aria-label="basic tabs example"
-        centered
-        >
-        <Tab label="Log in" {...a11yProps(0)} />
-        <Tab label="Register" {...a11yProps(1)} />
-        </Tabs>
-        </Box>
-      </Box> */}
 
       <Box
         sx={{
