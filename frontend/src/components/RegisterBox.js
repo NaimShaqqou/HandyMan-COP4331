@@ -21,7 +21,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 function RegisterBox(props) {
   var bp = require("./Path.js");
 
-  const [errorMsg, setErrorMsg] = useState({ msg: '', show: false });
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [errorHighlight, setErrorHighlight] = useState('');
 
   // validate email using regex
@@ -37,29 +38,29 @@ function RegisterBox(props) {
     event.preventDefault();
 
     setErrorHighlight('');
-    setErrorMsg({ msg: '', show: false });
+    setErrorMsg('');
 
     if (values.firstName == '' || values.lastName == '') {
       setErrorHighlight('name');
-      setErrorMsg({ msg: 'Please enter a first and last name.', show: true });
+      setErrorMsg('Please enter a first and last name.');
       return;
     }
     
     if (values.username.length < 4) {
       setErrorHighlight('username');
-      setErrorMsg({ msg: 'Username must be at least 4 characters.', show: true });
+      setErrorMsg('Username must be at least 4 characters.');
       return;
     }
 
     if (!validateEmail(values.email)) {
       setErrorHighlight('email');
-      setErrorMsg({ msg: 'Please enter a valid email.', show: true });
+      setErrorMsg('Please enter a valid email.');
       return;
     }
 
     if (values.password !== values.rpassword) {
       setErrorHighlight('pass');
-      setErrorMsg({ msg: 'Passwords do not match.', show: true });
+      setErrorMsg('Passwords do not match.');
       return;
     }
 
@@ -83,15 +84,16 @@ function RegisterBox(props) {
 
       if (res.error === "") {
         console.log('account created');
+        setSuccessMsg('Account successfully created. You must verify your email before you can log in.');
       } else {
         console.log(res.error);
 
         if (res.error.startsWith('Username already exists.')) {
-          setErrorMsg({ msg: 'Username already exists.', show: true });
+          setErrorMsg('Username already exists.');
           setErrorHighlight('username');
         }
         else if (res.error.startsWith('Email already exists.')) {
-          setErrorMsg({ msg: 'Email already exists.', show: true });
+          setErrorMsg('Email already exists.');
           setErrorHighlight('email');
         }
       }
@@ -113,6 +115,7 @@ function RegisterBox(props) {
   });
 
   const handleChange = (prop) => (event) => {
+    setSuccessMsg('');
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -267,7 +270,39 @@ function RegisterBox(props) {
           </motion.button>
 
           <AnimatePresence>
-            {errorMsg.show &&
+            {successMsg != '' &&
+            <motion.div
+              initial='hidden' 
+              animate='visible'
+              exit='exit'
+              variants={{
+                hidden: {
+                  scale: .8,
+                  opacity: 0
+                },
+                visible: {
+                  scale: 1,
+                  opacity: 1,
+                },
+                exit: {
+                  scale: 0,
+                  opacity: 0
+                }
+              }}
+            >
+              <Box m={3}>
+                <Alert
+                  severity='success'
+                  sx={{ mb: 2 }}
+                >
+                  {successMsg}
+                </Alert>
+              </Box>
+            </motion.div>}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {errorMsg != '' &&
             <motion.div
               initial='hidden' 
               animate='visible'
@@ -292,7 +327,7 @@ function RegisterBox(props) {
                   severity='error'
                   sx={{ mb: 2 }}
                 >
-                  {errorMsg.msg}
+                  {errorMsg}
                 </Alert>
               </Box>
             </motion.div>}
