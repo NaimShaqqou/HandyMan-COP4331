@@ -4,53 +4,9 @@ import { PLACES_API_KEY } from "@env"
 import { Icon, Input } from 'native-base';
 import { MaterialIcons } from "@native-base/icons";
 
-const GooglePlacesInput = ({filterIcon}) => {
+const GooglePlacesInput = (props) => {
 
   const ref = useRef();
-
-  // used to set the filters section of the front end
-  var filters = {
-    search: "",
-    category: "",
-    maxDist: 15
-  }
-  
-  function setFilters(filters)
-  {
-    this.filters = filters;
-  }
-
-  const doSearch = async (location, event) => 
-  {
-    try {
-      // call register api
-      var obj = { 
-        search: filters.search, 
-        category: filters.category, 
-        location: location, 
-        maxDist: filters.maxDist, 
-        jwtToken: lName
-      }
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://myhandyman1.herokuapp.com/api/search-services', {
-          method: 'POST',
-          body: js,
-          headers: { "Content-Type": "application/json" }
-      });
-      var res = JSON.parse(await response.text());
-
-      // if (res.error == '') 
-        // send the data to the map and list
-
-    } catch (e) {
-      console.log(e.toString());
-      return; 
-    }
-
-    // if successful navigate to confirm email page
-    // if error, then determine type of error and display it
-  }  
 
   let x = useEffect(() => {
     ref.current?.getAddressText();
@@ -67,7 +23,8 @@ const GooglePlacesInput = ({filterIcon}) => {
       textInputProps={{
         InputComp: Input,
         InputLeftElement: <Icon size="6" ml="2" as={<MaterialIcons name="search" />} Color="muted.400" />,
-        InputRightElement: filterIcon,
+        InputRightElement: props.clearButton,
+        InputRightElement: props.filterIcon,
         w: '100%',
         h: '50',
         variant: 'filled',
@@ -98,8 +55,10 @@ const GooglePlacesInput = ({filterIcon}) => {
       // ↓↓↓↓↓↓↓
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
-        doSearch(data.description);
-        console.log(data);
+
+        // Set the location in the parent
+        props.passLocation(data.description);
+        // props.doSearch(data.description);
       }}
       query={{
         key: PLACES_API_KEY,
