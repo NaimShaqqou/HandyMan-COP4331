@@ -113,6 +113,7 @@ const ResponsiveAppBar = (props) => {
       values: {
         xs: 0,
         sm: 600,
+        s900: 900,
         md: 1300,
         lg: 1300,
         xl: 1536,
@@ -160,7 +161,7 @@ const ResponsiveAppBar = (props) => {
             <Box m={1}/>
 
             {pathname !== "/" && 
-            <Container sx={{ maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
+            <Container sx={{ display: { xs: 'none', sm: 'none', s900: 'flex' }, maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
               <SearchBar search={props.search}/>
             </Container>}
 
