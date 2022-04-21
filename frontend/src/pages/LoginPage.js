@@ -17,6 +17,8 @@ import Slide from '@mui/material/Slide';
 
 import { makeStyles } from '@mui/styles';
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -199,9 +201,18 @@ const LoginPage = () =>
           <Grid container spacing={0} wrap='nowrap'>
             <Grid item xs sx={{display:'flex', flexDirection:'row'}}>
                 <Slide direction="right" in={value == 0} mountOnEnter unmountOnExit>
-                  <div>
+                  <motion.div 
+                    // uncomment the following for fun mode:
+                    // drag
+                    // dragConstraints={{
+                    //   top: 0,
+                    //   left: 0,
+                    //   right: 0,
+                    //   bottom: 0,
+                    // }}
+                  >
                     <LoginBox sx={boxStyle}/>
-                  </div>
+                  </motion.div>
                 </Slide>
             </Grid>
 
