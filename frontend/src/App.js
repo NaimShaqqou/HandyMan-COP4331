@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 
 import {
-  BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
+  useLocation
 } from "react-router-dom";
 import "./App.css";
 
 import {
   Box,
-  Container,
   createTheme,
   ThemeProvider
 } from '@mui/material';
 
+import ResponsiveAppBar from './components/NavBar';
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
@@ -28,7 +28,11 @@ import EditServicePage from "./pages/EditServicePage";
 import UserRequestedServicesPage from "./pages/UserRequestedServicesPage";
 import RequestedServicesPage from "./pages/RequestedServicesPage";
 
+import { AnimatePresence, motion } from 'framer-motion';
+
 function App() {
+  const location = useLocation();
+
   const theme = createTheme({
     breakpoints: {
       values: {
@@ -49,26 +53,63 @@ function App() {
       ].join(','),
     }
   });
+
+  const animations = {
+    initial: { opacity: 0,  y: -100},
+    animate: { opacity: 1,  y: 0},
+    exit: { opacity: 0, y: 100},
+  }
   
+  const AnimatedPage = ({children}) => {
+
+    return (
+      <motion.div 
+        variants={animations} 
+        initial='initial' 
+        animate='animate' 
+        exit='exit' 
+        transition={{duration: 0.3}}
+      >
+        {children}
+      </motion.div>
+    )
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/test" element={<TestPage />} />
-          <Route path="/image" element={<TestImagePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/service" element={<ServicePage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/add-service" element={<AddServicesPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/edit-service" element={<EditServicePage />} />
-          <Route path="/user-requested-services" element={<UserRequestedServicesPage />} />
-          <Route path="/requested-services" element={<RequestedServicesPage />} />
+      <AnimatePresence exitBeforeEnter>
+        <Routes key={location.pathname} location={location}>
+          <Route 
+            path="/" 
+            // element={
+            //   <Box
+            //     sx={{
+            //       position: 'sticky',
+            //       top: 0,
+            //       zIndex: 100,
+            //     }}
+            //   >
+
+            //     <ResponsiveAppBar />
+            //   </Box>
+            // }
+          >
+            <Route path="" element={<AnimatedPage><HomePage /></AnimatedPage>} />
+            <Route path="login" element={<AnimatedPage><LoginPage /></AnimatedPage>} />
+            <Route path="test" element={<AnimatedPage><TestPage /></AnimatedPage>} />
+            <Route path="image" element={<AnimatedPage><TestImagePage /></AnimatedPage>} />
+            <Route path="profile" element={ <AnimatedPage><ProfilePage /></AnimatedPage>} />
+            <Route path="service" element={<AnimatedPage><ServicePage /></AnimatedPage>} />
+            <Route path="services" element={<AnimatedPage><ServicesPage /></AnimatedPage>} />
+            <Route path="add-service" element={<AnimatedPage><AddServicesPage /></AnimatedPage>} />
+            <Route path="search" element={<AnimatedPage><SearchPage /></AnimatedPage>} />
+            <Route path="edit-service" element={<AnimatedPage><EditServicePage /></AnimatedPage>} />
+            <Route path="user-requested-services" element={<AnimatedPage><UserRequestedServicesPage /></AnimatedPage>} />
+            <Route path="requested-services" element={<AnimatedPage><RequestedServicesPage /></AnimatedPage>} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
+      </AnimatePresence>
     </ThemeProvider>
   );
 }
