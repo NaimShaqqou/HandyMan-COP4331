@@ -1,10 +1,13 @@
 import React from "react";
 import { MaterialIcons } from "@native-base/icons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 import HomeScreen from "../screens/Home.js";
 import ProfileStack from "./ProfileStack.js";
 import ServicesScreen from "../screens/Services.js";
+import BookingsScreen from "../screens/Bookings.js";
+
 
 import { useTheme } from "react-native-paper";
 
@@ -32,6 +35,15 @@ const BottomTab = () => {
         options={{
           tabBarIcon: () => (
             <MaterialIcons name="business-center" size={26} color={"white"} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Bookings"
+        component={BookingsScreen}
+        options={{
+          tabBarIcon: () => (
+            <FontAwesome5 name="airbnb" size={26} color={"white"} />
           ),
         }}
       />
