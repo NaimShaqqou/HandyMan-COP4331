@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { motion } from 'framer-motion';
 
 import {
-  Box,
+  Box, Paper,
   Stack,
   Typography,
   Container
@@ -23,6 +23,12 @@ const HomePage = () =>
 
   if (user.userId != '') {
     msg = 'Hello, ' + user.firstName + " " + user.lastName;
+  }
+
+  const verticallyCenter = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   }
 
   return(
@@ -63,6 +69,24 @@ const HomePage = () =>
           </Container>
         </div>
       </Stack>
+
+      <Box m={20}/>
+
+      <Box>
+        <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+        <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
+
+        <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
+          <Container>
+            <Typography variant='h4'>
+              Handle Style
+            </Typography>
+          </Container>
+        </Paper>
+        </Container>
+      </Box>
+
+
     </div>
 
   );
