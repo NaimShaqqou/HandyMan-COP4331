@@ -138,10 +138,7 @@ const LoginPage = () =>
   };
 
   const boxStyle = {
-    height: {
-      sm: 400,
-      md: 500 
-    },
+    minHeight: '450px',
     width: {
       sm: 385,
       md: 450

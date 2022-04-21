@@ -11,22 +11,55 @@ import {
   FormControl,
   InputAdornment,
   Button,
-  IconButton
+  IconButton,
+  Alert,
+  FormHelperText
 } from "@mui/material";
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function RegisterBox(props) {
   var bp = require("./Path.js");
 
-  const [message, setMessage] = useState('');
+  const [errorMsg, setErrorMsg] = useState({ msg: '', show: false });
+  const [errorHighlight, setErrorHighlight] = useState('');
+
+  // validate email using regex
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
   const doRegister = async (event) => {
     event.preventDefault();
 
+    setErrorHighlight('');
+    setErrorMsg({ msg: '', show: false });
+
+    if (values.firstName == '' || values.lastName == '') {
+      setErrorHighlight('name');
+      setErrorMsg({ msg: 'Please enter a first and last name.', show: true });
+      return;
+    }
+    
+    if (values.username.length < 4) {
+      setErrorHighlight('username');
+      setErrorMsg({ msg: 'Username must be at least 4 characters.', show: true });
+      return;
+    }
+
+    if (!validateEmail(values.email)) {
+      setErrorHighlight('email');
+      setErrorMsg({ msg: 'Please enter a valid email.', show: true });
+      return;
+    }
+
     if (values.password !== values.rpassword) {
-      alert("Passwords do not match");
-      setMessage("Passwords do not match");
+      setErrorHighlight('pass');
+      setErrorMsg({ msg: 'Passwords do not match.', show: true });
       return;
     }
 
@@ -40,8 +73,6 @@ function RegisterBox(props) {
 
     var js = JSON.stringify(obj);
 
-    // alert('click');
-
     try {
       const response = await fetch(bp.buildPath("api/register"), {
         method: "POST",
@@ -51,9 +82,18 @@ function RegisterBox(props) {
       var res = JSON.parse(await response.text());
 
       if (res.error === "") {
-        setMessage("Account Created Successfully! Please check your email to verify.");
+        console.log('account created');
       } else {
-        setMessage(res.error);
+        console.log(res.error);
+
+        if (res.error.startsWith('Username already exists.')) {
+          setErrorMsg({ msg: 'Username already exists.', show: true });
+          setErrorHighlight('username');
+        }
+        else if (res.error.startsWith('Email already exists.')) {
+          setErrorMsg({ msg: 'Email already exists.', show: true });
+          setErrorHighlight('email');
+        }
       }
     } catch (e) {
       console.log(e.toString());
@@ -100,10 +140,13 @@ function RegisterBox(props) {
   };
 
   return (
-    <Box style={classes.paper} sx={{
-      ...props.sx,
-    }}>
-      <div>
+    <Box
+      style={classes.paper}
+      sx={{
+        ...props.sx,
+      }}
+    >
+      <Box m={3}/>
         <form onSubmit={doRegister}>
           <Typography variant='h5'>
             Create an Account
@@ -113,45 +156,49 @@ function RegisterBox(props) {
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
-              id="registerFirstName"
+              error={errorHighlight == 'name'}
               type='text'
               value={values.firstName}
               onChange={handleChange('firstName')}
               placeholder="First Name"
             />
+            {errorHighlight == 'name' && <FormHelperText sx={{color: 'error.main'}}>First Name</FormHelperText>}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
-              id="registerLastName"
+              error={errorHighlight == 'name'}
               type='text'
               value={values.lastname}
               onChange={handleChange('lastName')}
               placeholder="Last Name"
             />
+            {errorHighlight == 'name' && <FormHelperText sx={{color: 'error.main'}}>Last Name</FormHelperText>}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
-              id="registerUsername"
+              error={errorHighlight == 'username'}
               type='text'
               value={values.username}
               onChange={handleChange('username')}
               placeholder="Username"
             />
+            {errorHighlight == 'username' && <FormHelperText sx={{color: 'error.main'}}>Username</FormHelperText>}
           </FormControl>
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
-              id="registerEmail"
+              error={errorHighlight == 'email'}
               type='text'
               value={values.email}
               onChange={handleChange('email')}
               placeholder="Email"
             />
+            {errorHighlight == 'email' && <FormHelperText sx={{color: 'error.main'}}>Email</FormHelperText>}
           </FormControl>
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
-              id="loginPassword"
+              error={errorHighlight == 'pass'}
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
               onChange={handleChange('password')}
@@ -168,10 +215,12 @@ function RegisterBox(props) {
                 </InputAdornment>
               }
             />
+            {errorHighlight == 'pass' && <FormHelperText sx={{color: 'error.main'}}>Password</FormHelperText>}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
             <Input
+              error={errorHighlight == 'pass'}
               id="rloginPassword"
               type={values.rshowPassword ? 'text' : 'password'}
               value={values.rpassword}
@@ -189,8 +238,8 @@ function RegisterBox(props) {
                 </InputAdornment>
               }
             />
+            {errorHighlight == 'pass' && <FormHelperText sx={{color: 'error.main'}}>Repeat password</FormHelperText>}
           </FormControl>
-
           
           <br /><br />
           {/* <Button id="registerButton" variant="contained" type="submit">Register</Button> */}
@@ -199,7 +248,6 @@ function RegisterBox(props) {
             whileHover={{
               scale: 0.9,
               backgroundColor: '#003c80',
-              color: 'white'
             }}
             // onHoverStart={e => {}}
             // onHoverEnd={e => {}}
@@ -214,13 +262,43 @@ function RegisterBox(props) {
             }}
           >
             <Typography sx={{ fontSize: 17 }}>
-              Log in
+              Register
             </Typography>
           </motion.button>
-          <br /><br />
-          <span id="registerResult">{message}</span>
+
+          <AnimatePresence>
+            {errorMsg.show &&
+            <motion.div
+              initial='hidden' 
+              animate='visible'
+              exit='exit'
+              variants={{
+                hidden: {
+                  scale: .8,
+                  opacity: 0
+                },
+                visible: {
+                  scale: 1,
+                  opacity: 1,
+                },
+                exit: {
+                  scale: 0,
+                  opacity: 0
+                }
+              }}
+            >
+              <Box m={3}>
+                <Alert
+                  severity='error'
+                  sx={{ mb: 2 }}
+                >
+                  {errorMsg.msg}
+                </Alert>
+              </Box>
+            </motion.div>}
+          </AnimatePresence>
+          {/* <span id="registerResult">{message}</span> */}
         </form>
-      </div>
     </Box>
   );
 }
