@@ -32,8 +32,17 @@ const HomePage = () =>
   }
 
   return(
-    <div>
-      <ResponsiveAppBar />
+    <Box>
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+        }}
+      >
+        <ResponsiveAppBar />
+
+      </Box>
       <Box sx={{ m: 15 }} />
 
       <Stack spacing={7}>
@@ -87,7 +96,7 @@ const HomePage = () =>
       </Box>
 
 
-    </div>
+    </Box>
 
   );
 }
