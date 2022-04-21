@@ -145,7 +145,32 @@ function LoginBox(props) {
 
         <Box m={3}/>
 
-        <Button id="loginButton" variant="contained" type="submit">Log in</Button>
+        {/* <Button id="loginButton" variant="contained" type="submit">
+          Log in
+        </Button> */}
+        <motion.button
+          whileHover={{
+            scale: 0.9,
+            backgroundColor: '#003c80',
+            color: 'white'
+          }}
+          // onHoverStart={e => {}}
+          // onHoverEnd={e => {}}
+          style={{
+            width: 100,
+            height: 45,
+            borderRadius: 10,
+            borderWidth: 0,
+            backgroundColor: '#005cc4',
+            color: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          <Typography sx={{ fontSize: 17 }}>
+            Log in
+          </Typography>
+        </motion.button>
+
 
         <Box m={3}/>
 

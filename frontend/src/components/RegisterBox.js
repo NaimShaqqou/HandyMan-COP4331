@@ -14,6 +14,8 @@ import {
   IconButton
 } from "@mui/material";
 
+import { motion } from 'framer-motion';
+
 function RegisterBox(props) {
   var bp = require("./Path.js");
 
@@ -191,7 +193,30 @@ function RegisterBox(props) {
 
           
           <br /><br />
-          <Button id="registerButton" variant="contained" type="submit">Register</Button>
+          {/* <Button id="registerButton" variant="contained" type="submit">Register</Button> */}
+
+          <motion.button
+            whileHover={{
+              scale: 0.9,
+              backgroundColor: '#003c80',
+              color: 'white'
+            }}
+            // onHoverStart={e => {}}
+            // onHoverEnd={e => {}}
+            style={{
+              width: 100,
+              height: 45,
+              borderRadius: 10,
+              borderWidth: 0,
+              backgroundColor: '#005cc4',
+              color: 'white',
+              cursor: 'pointer',
+            }}
+          >
+            <Typography sx={{ fontSize: 17 }}>
+              Log in
+            </Typography>
+          </motion.button>
           <br /><br />
           <span id="registerResult">{message}</span>
         </form>
