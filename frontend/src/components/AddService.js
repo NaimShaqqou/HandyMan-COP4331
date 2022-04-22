@@ -90,7 +90,7 @@ export default function AddService() {
             updateCurrentUser({ ...user, jwtToken: refreshedToken })
             console.log(insertedService)
             addService(insertedService)
-            navigate("../services")
+            navigate(-1)
         }).catch((error) => {
             console.log(error.message)
         })
@@ -341,7 +341,7 @@ export default function AddService() {
                 <Grid item>
                     <Stack direction="row" spacing={4}>
                         <Button variant="contained" onClick={async () => await createService()}>Save Service</Button>
-                        <Button variant="contained" onClick={() => navigate('../services')}>Cancel</Button>
+                        <Button variant="contained" onClick={() => navigate(-1)}>Cancel</Button>
                     </Stack>
                 </Grid>
             </Grid>

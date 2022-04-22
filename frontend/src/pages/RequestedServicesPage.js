@@ -10,6 +10,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import ResponsiveAppBar from '../components/NavBar';
 import RequestedService from "../components/RequestedService"
 import axios from "axios";
+import { motion, Variants } from "framer-motion";
 
 
 export default function RequestedServicesPage() {
@@ -25,26 +26,60 @@ export default function RequestedServicesPage() {
 
   useEffect(() => {
     console.log("IN USE EFFECT")
+    let mounted = true;
     axios
         .post(bp.buildPath("api/requested-service-history"), {
           serviceId: state._id,
           jwtToken: user.jwtToken
         })
         .then((response) => {
+          if (mounted) {
             setFetchedData(true)
-          if (response.data.error === "") {
-            let refreshedToken = response.data.refreshedToken
-            setRequestedServices(response.data.results);
-            updateCurrentUser({ ...user, jwtToken: refreshedToken })
-          } else {
-            console.log(response.data.error)
+            if (response.data.error === "") {
+              let refreshedToken = response.data.refreshedToken
+              setRequestedServices(response.data.results);
+              updateCurrentUser({ ...user, jwtToken: refreshedToken })
+            } else {
+              console.log(response.data.error)
+            }
           }
+            
         })
         .catch((error) => {
           console.log(error);
         });
+        return () => mounted = false;
   }, []);
 
+  const cardVariants = {
+    offscreen: {
+      y: 300
+    },
+    onscreen: {
+      y: 50,
+      transition: {
+        type: "spring",
+        bounce: 0.4,
+        duration: 0.8
+      }
+    }
+  };
+
+  function Card({serviceCard}) {
+  
+    return (
+      <motion.div
+        initial="offscreen"
+        whileInView="onscreen"
+        viewport={{ once: true, amount: 0.8 }}
+      >
+        <motion.div  variants={cardVariants}>
+          {serviceCard}
+        </motion.div>
+      </motion.div>
+    );
+  }
+  console.log(requestedServices)
   return (
     <div>
       {/* <ResponsiveAppBar/> */}
@@ -57,7 +92,7 @@ export default function RequestedServicesPage() {
                 </Grid>
             : requestedServices.map((requestedService, index) => (
             <Grid item key={index}>
-                <RequestedService requestedService={requestedService} />
+                <Card serviceCard={<RequestedService requestedService={requestedService} />}/>
             </Grid>
             ))}
       </Grid>

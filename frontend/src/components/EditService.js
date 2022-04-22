@@ -16,7 +16,7 @@ import axios from "axios";
 import '../styles.css';
 
 export default function EditService(props) {
-    const originalService = props.service
+    let originalService = props.service
     const navigate = useNavigate();
     let user = useSelector((state) => state.user);
     const bp = require("./Path");
@@ -31,8 +31,10 @@ export default function EditService(props) {
     ];
     const categories = ["Baking", "Teaching", "Fixing", "Other"];
 
-    const [images, setImages] = useState(originalService.Images);
+    originalService = originalService ? originalService : {Images: "", Category: "", Title: "", Description: "", Address: "", Price: "", DaysAvailable: ""};
+   
     const [imageValidation, setImageValidation] = useState(false)
+    const [images, setImages] = useState(originalService.Images);
     const [predictions, setPredictions] = useState(new Array());
     const [category, setCategory] = useState(originalService.Category);
     const [categoryValidation, setCategoryValidation] = useState(false);
@@ -86,7 +88,7 @@ export default function EditService(props) {
             let refreshedToken = response.data.refreshedToken
             updateCurrentUser({ ...user, jwtToken: refreshedToken })
             updateServices(response.data.service)
-            navigate("../services")
+            navigate(-1)
         }).catch((error) => {
             console.log(error.message)
         })
@@ -351,7 +353,7 @@ export default function EditService(props) {
                     <Grid item>
                         <Stack direction="row" spacing={4}>
                             <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
-                            <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>
+                            <Button variant="contained" onClick={() => navigate(-1)}>Cancel Changes</Button>
                         </Stack>
                     </Grid>
                 </Grid>

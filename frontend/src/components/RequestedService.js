@@ -30,19 +30,22 @@ export default function RequestedService(props) {
     let bp = require("./Path.js");
 
     useEffect(() => {
+        let mounted = true;
         if (requestedService !== null) {
             axios
             .post(bp.buildPath("api/get-user"), {
                 userId: requestedService.RequesterId,
             })
             .then((response) => {
-                setUser(response.data.user);
+                if (mounted) {
+                    setUser(response.data.user);
+                }
             })
             .catch((error) => {
                 console.log(error);
             });
         }
-        
+        return () => mounted = false;
     }, [requestedService]);
 
     const Img = styled("img")({

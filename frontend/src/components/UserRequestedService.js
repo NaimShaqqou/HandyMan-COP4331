@@ -27,17 +27,22 @@ export default function UserRequestedService(props) {
     let bp = require("./Path.js");
 
     useEffect(() => {
+        console.log("IN USER REQUEST CARD USE EFFECT")
+        let mounted = true;
         axios
             .post(bp.buildPath("api/get-service"), {
                 serviceId: requestedService.ServiceId,
             })
             .then((response) => {
-                setService(response.data.service);
+                if (mounted) {
+                    setService(response.data.service);
+                }
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [requestedService]);
+        return () => mounted = false;
+    }, []);
 
     const Img = styled("img")({
         margin: "auto",
@@ -46,75 +51,74 @@ export default function UserRequestedService(props) {
         maxHeight: "100%",
     });
 
-    console.log(service);
 
     return (
-        <Container>
-            {service !== null && requestedService.Accepted === true && (
-                <Paper
-                    sx={{
-                        margin: "auto",
-                        maxWidth: 800,
-                        flexGrow: 1,
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === "dark" ? "#1A2027" : "white",
-                    }}
-                >
-                    <Grid container spacing={2}>
-                        <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
-                            <Img sx={{ width: 256, height: 256 }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
-                        </Grid>
-                        <Grid item xs={12} md container >
-
-                            <Grid item xs container direction="column" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }} spacing={1} >
-                                <Stack direction="column" spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
-                                        <Typography
-                                            variant="h4"
-                                            sx={{ fontWeight: "bold" }}
-                                            component="div"
-                                        >
-                                            {service.Title}
-                                        </Typography>
-                                    </Grid>
-                                        
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
-                                        <Typography variant="body1">
-                                            Service Description: {service.Description}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item container direction="row" xs>
-                                        <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                            <Typography
-                                                variant="h5"
-                                            >
-                                                {new Date(requestedService.Dates).toLocaleDateString("en-US")}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center" , alignItems: "center" }}>
-                                            <Typography variant="h5">
-                                                ${requestedService.Price}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                            <Typography variant="h5" >
-                                                {service.Address}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
-                                        Your request: {requestedService.DescriptionFromRequester}
-                                    </Grid>
-                                </Stack>
+                    <Container>
+                    {service !== null && requestedService.Accepted === true && (
+                    <Paper
+                        sx={{
+                            margin: "auto",
+                            maxWidth: 800,
+                            flexGrow: 1,
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === "dark" ? "#1A2027" : "white",
+                        }}
+                    >
+                        <Grid container spacing={2}>
+                            <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
+                                <Img sx={{ width: 256, height: 256 }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
                             </Grid>
-
+                            <Grid item xs={12} md container >
+    
+                                <Grid item xs container direction="column" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }} spacing={1} >
+                                    <Stack direction="column" spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
+                                        <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
+                                            <Typography
+                                                variant="h4"
+                                                sx={{ fontWeight: "bold" }}
+                                                component="div"
+                                            >
+                                                {service.Title}
+                                            </Typography>
+                                        </Grid>
+                                            
+                                        <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
+                                            <Typography variant="body1">
+                                                Service Description: {service.Description}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item container direction="row" xs>
+                                            <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                <Typography
+                                                    variant="h5"
+                                                >
+                                                    {new Date(requestedService.Dates).toLocaleDateString("en-US")}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center" , alignItems: "center" }}>
+                                                <Typography variant="h5">
+                                                    ${requestedService.Price}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={4} sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                <Typography variant="h5" >
+                                                    {service.Address}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
+                                            Your request: {requestedService.DescriptionFromRequester}
+                                        </Grid>
+                                    </Stack>
+                                </Grid>
+    
+                            </Grid>
                         </Grid>
-                    </Grid>
-
-
-                </Paper>
-            )
-            }
-        </Container >
+    
+    
+                    </Paper>
+                    )
+                }
+            </Container >
     );
 }

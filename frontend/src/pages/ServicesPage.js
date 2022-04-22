@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/NavBar';
+import { motion, Variants } from "framer-motion";
 
 
 export default function ServicesPage() {
@@ -19,6 +20,35 @@ export default function ServicesPage() {
     navigate("../add-service")
   }
 
+  const cardVariants = {
+    offscreen: {
+      y: 500
+    },
+    onscreen: {
+      y: 50,
+      transition: {
+        type: "spring",
+        bounce: 0.4,
+        duration: 0.8
+      }
+    }
+  };
+
+  function Card({serviceCard}) {
+  
+    return (
+      <motion.div
+        initial="offscreen"
+        whileInView="onscreen"
+        viewport={{ once: true, amount: 0.8 }}
+      >
+        <motion.div  variants={cardVariants}>
+          {serviceCard}
+        </motion.div>
+      </motion.div>
+    );
+  }
+
 
   return (
     <div>
@@ -27,7 +57,7 @@ export default function ServicesPage() {
       <Grid container direction="column" spacing={5}>  
         {services.map((service, index) => (
           <Grid item key={index}>
-            <ServiceCard service={service} />
+            <Card serviceCard={<ServiceCard service={service} />}/>
           </Grid>
         ))}
         <Box sx={{ pt: 4}} />
