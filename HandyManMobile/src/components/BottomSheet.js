@@ -2,13 +2,11 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { Avatar, Button, Divider, List } from "react-native-paper";
+import { Avatar, Button, Divider, List, Subheading } from "react-native-paper";
 
 import { FlatList } from "react-native-gesture-handler";
 
-const BottomSheetComponent = () => {
-  const services = useSelector((state) => state.services).services;
-
+const BottomSheetComponent = ({ searchResults }) => {
   // ref
   const bottomSheetRef = useRef(null);
 
@@ -19,6 +17,11 @@ const BottomSheetComponent = () => {
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
   }, []);
+
+  React.useEffect(() => {
+    if (searchResults == "") bottomSheetRef.current.snapToIndex(0);
+    else bottomSheetRef.current.snapToIndex(2);
+  }, [searchResults]);
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -68,15 +71,19 @@ const BottomSheetComponent = () => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={1}
+      index={-1}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
     >
-      <FlatList
-        data={services}
-        renderItem={renderItem}
-        ItemSeparatorComponent={() => <Divider />}
-      />
+      {searchResults == "" ? (
+        <Subheading>No search results found</Subheading>
+      ) : (
+        <FlatList
+          data={searchResults}
+          renderItem={renderItem}
+          ItemSeparatorComponent={() => <Divider />}
+        />
+      )}
     </BottomSheet>
   );
 };
