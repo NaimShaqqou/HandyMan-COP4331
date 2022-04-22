@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/NavBar';
 import UserRequestedService from "../components/UserRequestedService";
 import axios from "axios";
+import { motion, Variants } from "framer-motion";
 
 
 export default function UserRequestedServices() {
@@ -22,33 +23,64 @@ export default function UserRequestedServices() {
   const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
   useEffect(() => {
-    console.log("IN USE EFFECT")
+    console.log("IN USE EFFECT OF PAGE")
+    let mounted = true;
     axios
         .post(bp.buildPath("api/services-user-booked"), {
           requesterId: user.userId,
           jwtToken: user.jwtToken
         })
         .then((response) => {
-          setFetchedData(true)
-          if (response.data.error === "") {
-            let refreshedToken = response.data.refreshedToken
-            setRequestedServices(response.data.results);
-            updateCurrentUser({ ...user, jwtToken: refreshedToken })
-          } else {
-            console.log(response.data.error)
+          if (mounted) {
+            setFetchedData(true)
+            
+            if (response.data.error === "") {
+              let refreshedToken = response.data.refreshedToken
+              setRequestedServices(response.data.results);
+              updateCurrentUser({ ...user, jwtToken: refreshedToken })
+            } else {
+              console.log(response.data.error)
+            }
           }
+          
         })
         .catch((error) => {
           console.log(error);
         });
+        return () => mounted = false;
   }, []);
 
 
-  async function getRequestedServices() {
-    
+  const cardVariants = {
+    offscreen: {
+      y: 300
+    },
+    onscreen: {
+      y: 50,
+      transition: {
+        type: "spring",
+        bounce: 0.4,
+        duration: 0.8
+      }
+    }
+  };
+
+  function Card({serviceCard}) {
+  
+    return (
+      <motion.div
+        initial="offscreen"
+        whileInView="onscreen"
+        viewport={{ once: true, amount: 1, fallback: fetchedData ? true : false}}
+      >
+        <motion.div  variants={cardVariants}>
+          {serviceCard}
+        </motion.div>
+      </motion.div>
+    );
   }
 
-
+  console.log(requestedServices)
 
 
   return (
@@ -56,16 +88,16 @@ export default function UserRequestedServices() {
       {/* <ResponsiveAppBar/> */}
       <Box sx={{ pt: 4}}>
       <Grid container direction="column" spacing={5}>  
-        {requestedServices.length === 0 && fetchedData 
+        {requestedServices.length === 0 && fetchedData
             ? 
                 <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
                     <Typography variant="h2">You don't have any bookings</Typography> 
                 </Grid>
-          : requestedServices.map((requestedService, index) => (
+          : requestedServices.map((requestedService, index) => requestedService.Accepted ? (
           <Grid item key={index}>
-            <UserRequestedService requestedService={requestedService} />
+            <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>
           </Grid>
-        ))}
+        ) : "")}
       </Grid>
       </Box>
       
