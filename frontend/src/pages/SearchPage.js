@@ -108,7 +108,7 @@ const SearchPage = () =>
         maxWidth='100%'
         sx={{ 
           height: '80vh',
-          mt: '-50%',
+          mt: '-85vh',
           ml: '3%',
           zIndex: 98,
           // bgcolor: 'green',
