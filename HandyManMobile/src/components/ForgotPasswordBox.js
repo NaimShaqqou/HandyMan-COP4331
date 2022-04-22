@@ -17,6 +17,11 @@ const ForgotPasswordBox = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    setLoading(true);
+
+    var obj = { email: email.toLowerCase() };
+    var js = JSON.stringify(obj);
+
     setValid(true);
     setLoading(true);
 
@@ -109,7 +114,7 @@ const ForgotPasswordBox = () => {
 
         <Button
           onPress={onSubmit}
-          mode="contained"
+          mode="contained"          
           loading={loading}
           disabled={loading}
           style={{
