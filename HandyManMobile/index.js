@@ -3,31 +3,30 @@
 // the environment is set up appropriately
 //registerRootComponent(App);
 
-import React from 'react'
-import { registerRootComponent } from 'expo';
-import App from './App';
-import { store } from './src/reducerStore/store.js'
-import { Provider } from 'react-redux'
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
- 
+import React from "react";
+import { registerRootComponent } from "expo";
+import App from "./App";
+import { store } from "./src/reducerStore/store.js";
+import { Provider } from "react-redux";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#1876d2',
-    accent: '#f1c40f',
+    primary: "#1876d2",
+    accent: "#f1c40f",
   },
 };
 
-
 const NewRootComponent = () => {
-    return (
-      <Provider store={store}>
-        <PaperProvider theme={theme}>
-          <App />
-        </PaperProvider>
-      </Provider>
-    )
-}
- 
+  return (
+    <Provider store={store}>
+      <PaperProvider theme={theme}>
+        <App />
+      </PaperProvider>
+    </Provider>
+  );
+};
+
 export default registerRootComponent(NewRootComponent);

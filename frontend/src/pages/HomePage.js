@@ -3,11 +3,12 @@ import '../map.css';
 import jwt_decode from "jwt-decode";
 import ResponsiveAppBar from '../components/NavBar';
 import SearchBar from "../components/SearchBar.js"
-import MapComponent from '../components/Map';
 import { useSelector } from "react-redux";
 
+import { motion } from 'framer-motion';
+
 import {
-  Box,
+  Box, Paper,
   Stack,
   Typography,
   Container
@@ -15,90 +16,87 @@ import {
 
 const HomePage = () =>
 {
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [region, setRegion] = useState(null);
-  const [status, setStatus] = useState(null);
   let user = useSelector((state) => state.user);
   let msg = 'Welcome, Guest!';
   console.log('Rendering Homepage: ');
-  console.log(user);
-
-  let bp = require("../components/Path");
-
-  const reverseGeocode = async (latt, lngg) => {
-    var obj = { lat: latt, lng: lngg };
-    var js = JSON.stringify(obj);
-
-    console.log(obj);
-
-    try {
-      const response = await fetch(bp.buildPath("api/reverse-geocode"), {
-        method: "POST",
-        body: js,
-        headers: { "Content-Type": "application/json" },
-      });
-      var res = JSON.parse(await response.text());
-
-      setRegion(res.location);
-      console.log(res.location);
-
-    } catch (e) {
-      console.log(e.toString());
-      return; 
-    }
-  };
-
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setStatus('Geolocation is not supported by your browser');
-    } else {
-      setStatus('Locating...');
-      navigator.geolocation.getCurrentPosition((position) => {
-        setStatus(null);
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
-        reverseGeocode(position.coords.latitude, position.coords.longitude);
-      }, () => {
-        setStatus('Unable to retrieve your location');
-      });
-    }
-  }
-
+  console.log(user)
 
   if (user.userId != '') {
     msg = 'Hello, ' + user.firstName + " " + user.lastName;
   }
 
+  const verticallyCenter = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
+  }
+
   return(
-    <div>
-      <ResponsiveAppBar />
+    <Box>
+      {/* <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+        }}
+      >
+        <ResponsiveAppBar />
+
+      </Box> */}
       <Box sx={{ m: 15 }} />
 
       <Stack spacing={7}>
-        <Typography
-          variant='h2'
-          style={{textAlign: 'center'}}
-        >
-          {msg}
-        </Typography>
+
+        <motion.div initial='hidden' animate='visible' variants={{
+          hidden: {
+            scale: .8,
+            opacity: 0
+          },
+          visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+              delay: .4
+            }
+          }
+        }}>
+          <Typography
+            variant='h2'
+            sx={{
+              textAlign: 'center',
+              color: '#003c80',
+              // fontFamily: 'Comfortaa',
+            }}
+          >
+            {msg}
+          </Typography>
+        </motion.div>
 
         <div>
-          <Container sx={{ maxWidth: { xs: '400px', sm: '500px', md: 'md'} }}>
+          <Container sx={{ maxWidth: { xs: '380px', sm: '480px', md: '910px'} }}>
             <SearchBar/>
           </Container>
         </div>
-
-        <div className="App">
-          <button onClick={getLocation}>Get Location</button>
-          <h1>Coordinates</h1>
-          <p>{status}</p>
-          {region && <p>Region: {region}</p>}
-          {lat && <p>Latitude: {lat}</p>}
-          {lng && <p>Longitude: {lng}</p>}
-        </div>
       </Stack>
-    </div>
+
+      <Box m={20}/>
+
+      <Box>
+        <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+        <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
+
+        <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
+          <Container>
+            <Typography variant='h4'>
+              Handle Style
+            </Typography>
+          </Container>
+        </Paper>
+        </Container>
+      </Box>
+
+
+    </Box>
 
   );
 }

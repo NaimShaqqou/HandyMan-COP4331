@@ -10,7 +10,7 @@ const ProfilePage = () =>
 
     return(
         <div>
-            <ResponsiveAppBar />
+            {/* <ResponsiveAppBar /> */}
             <Box  sx={{ p: 5 }}> 
                 <Profile />
             </Box>

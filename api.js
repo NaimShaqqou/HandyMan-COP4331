@@ -194,7 +194,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
           ln = user.LastName;
   
           if (!user.Verified) {
-            res.status(200).json({ error: "Account has not been verified!" , firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
+            res.status(200).json({ error: "Account has not been verified!" , username: "",firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})
             return;
           }
   
@@ -202,15 +202,15 @@ exports.setApp = function (app, client, cloudinaryParser) {
             const token = require("./createJWT.js");
             let services = await Service.find({ UserId: id} ).exec()
 
-            ret = { error: "", firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id), services: services};
+            ret = { error: "", username: user.Username, firstName: fn, lastName: ln, profileDescription: user.ProfileDescription, profilePicture: user.ProfilePicture, userId: id, jwtToken: token.createToken(fn, ln, id), services: services};
           } catch (e) {
-            ret = { error: e.message, jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", services: new Array()};
+            ret = { error: e.message, username: "", jwtToken: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", services: new Array()};
           }
         } else {
-          ret = { error: "Incorrect credentials", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
+          ret = { error: "Incorrect credentials", username: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()};
         }
         res.status(200).json(ret);
-    }).catch((e) => res.status(200).json({ error: e.message, firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})) 
+    }).catch((e) => res.status(200).json({ error: e.message, username: "", firstName: "", lastName: "", profileDescription: "", profilePicture: "", userId: "", jwtToken: "", services: new Array()})) 
   });
 
   app.post("/api/edit-profile", async (req, res, next) => {
@@ -541,7 +541,41 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     var ret;
     if (results.length == 0)
-      ret = { results: null, error: "No requested services found", refreshedToken: refreshedToken };
+      ret = { results: [], error: "No requested services found", refreshedToken: refreshedToken };
+    else
+      ret = { results: results, error: "", refreshedToken: refreshedToken }; 
+
+    res.status(200).json(ret);
+  });
+
+  app.post("/api/services-user-booked", async (req, res, next) => {
+    // incoming: requesterId, jwtToken
+    // outgoing: results[], error, jwtToken
+  
+    const { requesterId, jwtToken } = req.body;
+
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { results: null, error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    const results = await RequestedService.find({ RequesterId : requesterId });
+
+    var ret;
+    if (results.length == 0)
+      ret = { results: [], error: "You have not booked any services", refreshedToken: refreshedToken };
     else
       ret = { results: results, error: "", refreshedToken: refreshedToken }; 
 
@@ -800,6 +834,102 @@ exports.setApp = function (app, client, cloudinaryParser) {
         console.log(error);
         res.status(200).json({location: "", error: error.message})
       });
+  })
+
+  app.post("/api/get-service", async (req, res, next) => {
+    const { serviceId } = req.body; 
+    
+    let service = await Service.findById(serviceId).exec()
+
+    res.status(200).json({ service: service});
+  })
+
+  app.post("/api/get-user", async (req, res, next) => {
+    const { userId } = req.body; 
+    
+    let user = await User.findById(userId).exec()
+
+    res.status(200).json({ user: user});
+  })
+
+  app.post("/api/accept-request", async (req, res, next) => {
+    const { requestedServiceId, jwtToken } = req.body; 
+
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+    
+    RequestedService.findByIdAndUpdate(requestedServiceId, {Accepted: true}, function(err, response) {
+      if (response) {
+        res.status(200).json( {result: "Accepted Request", refreshedToken: refreshedToken} )
+      } else {
+        res.status(200).json( {result: "Error Accepting Request", refreshedToken: refreshedToken} )
+      }
+    })
+  })
+
+
+  app.post("/api/deny-request", async (req, res, next) => {
+    const { requestedServiceId, jwtToken } = req.body; 
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    RequestedService.findOneAndDelete({_id: requestedServiceId}, function(err, result) {
+      let response;
+      console.log(response)
+      if (err) {
+        response = {
+          result: err.message,
+          refreshedToken: refreshedToken,
+        };
+      } else {
+        if (result == null) {
+          response = {
+            refreshedToken: refreshedToken,
+            result: "Couldn't deny request"
+          };
+        } else {
+          response = {
+            refreshedToken: refreshedToken,
+            result: "Denied request"
+          };
+      }
+    }
+      res.status(200).json(response);
+    });
   })
 
 

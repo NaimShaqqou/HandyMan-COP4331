@@ -14,17 +14,23 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import FormControl from '@mui/material/FormControl';
 import Box from "@mui/material/Box"
-import { Input } from "@mui/material";
+import {
+  Input, Alert,
+  Typography, Grid
+} from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from "react-router-dom";
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 function LoginBox(props) {
   var bp = require("./Path.js");
   const dispatch = useDispatch();
   const { updateCurrentUser, loginServices } = bindActionCreators(actionCreators, dispatch);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
 
   const [message, setMessage] = useState("");
 
@@ -33,8 +39,6 @@ function LoginBox(props) {
 
     var obj = { login: values.username, password: values.password };
     var js = JSON.stringify(obj);
-
-    // alert('click');
 
     try {
       const response = await fetch(bp.buildPath("api/login"), {
@@ -47,20 +51,15 @@ function LoginBox(props) {
       if (res.error == "") {
         setMessage("Logged in " + res.firstName + " " + res.lastName);
         console.log("Logged in " + res.firstName + " " + res.lastName);
-        // var storage = require("../tokenStorage.js");
-        // storage.storeToken(res["jwtToken"]);
-        updateCurrentUser({
-          userId: res.userId, 
-          firstName: res.firstName, 
-          lastName: res.lastName, 
-          profileDescription: res.profileDescription, 
-          profilePicture: res.profilePicture, 
-          jwtToken: res.jwtToken
-        });
+        updateCurrentUser(res);
         loginServices(res.services);
         navigate("../", { replace: true });
-      } else {
+      } else if (res.error == "Incorrect credentials") {
+        setInvalidCredentials(true);
         setMessage(res.error);
+        console.log(res.error);
+      } else {
+        console.log(res.error);
       }
     } catch (e) {
       console.log(e.toString());
@@ -75,6 +74,7 @@ function LoginBox(props) {
   });
 
   const handleChange = (prop) => (event) => {
+    if (invalidCredentials) setInvalidCredentials(false);
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -90,26 +90,24 @@ function LoginBox(props) {
   };
 
   return (
-    <Box style={classes.paper} sx={{
-      minHeight: {
-        sm: 300,
-        md: 400 
-      },
-      minWidth: {
-        sm: 385,
-        md: 450
-      },
-      maxWidth: {
-        lg: 450
-      },
-    }}
+    <Box
+      sx={{
+        ...classes.paper,
+        ...props.sx,
+      }}
     >
-
+      <Box m={10}/>
       <form onSubmit={doLogin}>
-        <h3>Login to continue!</h3>
+        <Typography variant='h5'>
+          Login to Continue
+        </Typography>
+
+        <Box m={2}/>
+
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
           <Input
+            error={invalidCredentials}
             id="loginUsername"
             type='text'
             value={values.username}
@@ -128,6 +126,7 @@ function LoginBox(props) {
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
           <Input
+            error={invalidCredentials}
             id="loginPassword"
             type={values.showPassword ? 'text' : 'password'}
             value={values.password}
@@ -152,18 +151,77 @@ function LoginBox(props) {
           />
         </FormControl>
 
-        <br />
-        <br />
+        <Box m={3}/>
 
+        {/* <Button id="loginButton" variant="contained" type="submit">
+          Log in
+        </Button> */}
+        <motion.button
+          whileHover={{
+            scale: 0.9,
+            backgroundColor: '#003c80',
+          }}
+          // onHoverStart={e => {}}
+          // onHoverEnd={e => {}}
+          style={{
+            width: 100,
+            height: 45,
+            borderRadius: 10,
+            borderWidth: 0,
+            backgroundColor: '#005cc4',
+            color: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          <Typography sx={{ fontSize: 17 }}>
+            Log in
+          </Typography>
+        </motion.button>
+        <Box m={3}/>
 
-        <Button id="loginButton" variant="contained" type="submit">Log in</Button>
-        <br />
-        <br />
         <ForgotPassword/>
-        <span id="loginResult">{message}</span>
+        {/* <span id="loginResult">{message}</span> */}
       </form>
+
+      <AnimatePresence
+        intial={false}
+        exitBeforeEnter={true}
+        onExitComplete={() => null}
+      >
+
+        {invalidCredentials &&
+        <motion.div
+          initial='hidden' 
+          animate='visible'
+          exit='exit'
+          variants={{
+            hidden: {
+              scale: .8,
+              opacity: 0
+            },
+            visible: {
+              scale: 1,
+              opacity: 1,
+            },
+            exit: {
+              scale: 0,
+              opacity: 0
+            }
+          }}
+        >
+
+          <Box m={3}>
+            <Alert
+              severity='error'
+              sx={{ mb: 2 }}
+            >
+              Invalid Credentials
+            </Alert>
+          </Box>
+        </motion.div>}
+      </AnimatePresence>
+
     </Box>
-    // </div>
   );
 }
 

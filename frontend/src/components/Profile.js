@@ -100,6 +100,7 @@ function Profile() {
       .then(function (response) {
         updateCurrentUser({
           userId: user.userId,
+          username: userInfo.username,
           firstName: userInfo.firstName,
           lastName: userInfo.lastName,
           profileDescription: userInfo.profileDescription,
@@ -160,11 +161,21 @@ function Profile() {
   };
 
   return (
-      <Container alignItems="center">
-          <Grid container direction="column" spacing={3}>
+      <Container>
+          <Grid container direction="column">
+            <Grid item sx={{ height: 150 }} >
+              <img
+                src={userInfo.profilePicture}
+                style={{
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'contain' 
+                }}
+              />
+            </Grid>
+
             <Grid item>
-              <img src={userInfo.profilePicture} />
-              {showSaveChangesButton && (
+            {showSaveChangesButton && (
                 <input
                   type="file"
                   accept="image/*"
@@ -172,7 +183,8 @@ function Profile() {
                 />
               )}
             </Grid>
-            <Grid item>
+
+            <Grid item mt={3}>
               <Grid
                 container
                 alignItems="center"
@@ -181,6 +193,9 @@ function Profile() {
                 spacing={4}
               >
                 <Grid item xs={5}>
+                  <Typography sx={{ pb: 2 }} fontWeight="bold">
+                      First Name:
+                  </Typography>
                   <TextField
                     fullWidth
                     required
@@ -201,6 +216,9 @@ function Profile() {
                   />
                 </Grid>
                 <Grid item xs={5}>
+                  <Typography sx={{ pb: 2 }} fontWeight="bold">
+                      Last Name:
+                  </Typography>
                   <TextField
                     fullWidth
                     required
@@ -223,6 +241,9 @@ function Profile() {
             <Grid item>
               <Grid container justifyContent="flex-start" spacing={4}>
                 <Grid item xs={12}>
+                  <Typography sx={{ pb: 2 }} fontWeight="bold">
+                      Description:
+                  </Typography>
                   <TextField
                     id="description"
                     label="Description"

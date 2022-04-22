@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { Stack } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -13,6 +14,9 @@ import {
   MenuItem,
   Divider,
   Paper,
+  Box,
+  InputAdornment,
+  Tooltip
 } from "@mui/material";
 import axios from "axios";
 
@@ -20,59 +24,38 @@ import axios from "axios";
 // TODO: location dropdown is different from the other two dropdowns
 // TODO: when searching from homepage, contents of search bar should carry on to search page.
 
-// Hook
-function useWindowSize() {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
-  return windowSize;
-}
+const emptySearch = {
+  keyword: '',
+  location: '',
+  distance: '',
+  category: '',
+};
 
 function SearchBar(props) {
   console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
-  const [search, setSearch] = useState({
-    keyword: '',
-    location: '',
-    distance: '',
-    category: '',
-  });
+  const [search, setSearch] = useState(emptySearch);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
+  const [region, setRegion] = useState(null);
   const [status, setStatus] = useState(null);
 
-  let location = useLocation();
+  useEffect(() => {
+    return () => {
+      setPredictions(new Array());
+      setSearch(emptySearch)
+    }
+  }, []);
+
   let navigate = useNavigate();
 
   let bp = require("./Path");
   const maxDistance = ["1 mile", "5 miles", "10 miles", "15 miles"];
   const categories = ["Baking", "Teaching", "Fixing"];
-  const window = useWindowSize();
 
   const reverseGeocode = async (latt, lngg) => {
     var obj = { lat: latt, lng: lngg };
     var js = JSON.stringify(obj);
-
-    console.log(obj);
 
     try {
       const response = await fetch(bp.buildPath("api/reverse-geocode"), {
@@ -82,10 +65,8 @@ function SearchBar(props) {
       });
       var res = JSON.parse(await response.text());
 
-      if (res.error == '')
-        return res.location;
-      else
-        return 'Orlando, FL';
+      console.log(res.location);
+      setSearch({ ...search, location: res.location });
     } catch (e) {
       console.log(e.toString());
       return; 
@@ -93,23 +74,19 @@ function SearchBar(props) {
   };
 
   const getLocation = () => {
-    let loc = null;
     if (!navigator.geolocation) {
-      console.log('Geolocation is not supported by your browser');
+      setStatus('Geolocation is not supported by your browser');
     } else {
-      console.log('Locating...');
+      setStatus('Locating...');
       navigator.geolocation.getCurrentPosition((position) => {
-        loc = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        }
-        console.log(loc);
+        setStatus(null);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+        reverseGeocode(position.coords.latitude, position.coords.longitude);
       }, () => {
-        console.log('Unable to retrieve your location');
+        setStatus('Unable to retrieve your location');
       });
     }
-    console.log(loc);
-    return loc;
   }
 
   async function findPredictions() {
@@ -121,8 +98,11 @@ function SearchBar(props) {
       .catch((error) => console.log(error));
   }
 
-
   const user = useSelector((state) => state.user);
+
+  const locationButtonPress = () => {
+    getLocation();
+  }
 
   const doSearch = async (e) => {
     e.preventDefault();
@@ -144,15 +124,7 @@ function SearchBar(props) {
   
     if (obj.location == '') {
       obj.location = 'Orlando, FL';
-      let loc = getLocation();
-
-      console.log(loc);
-      
-      if (loc) {
-        console.log(loc);
-
-        // obj.location = reverseGeocode();
-      }
+      getLocation();
     }
 
     if (isNaN(obj.maxDist))
@@ -173,6 +145,9 @@ function SearchBar(props) {
       });
       var res = JSON.parse(await response.text());
 
+      // Sort by title
+      res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
+
       navigate("/search", { replace: true, state: { obj: search, res: res} });
 
     } catch (e) {
@@ -184,14 +159,16 @@ function SearchBar(props) {
   const handleChange = (prop) => async (event) => {
     setSearch({ ...search, [prop]: event.target.value });
   };
-  
-  const handleChangeLocationDropdown = async (event) => {
-    // console.log(event);
-    setSearch({ ...search, location: (('innerHTML' in event.target && event.target.innerHTML.charAt(0) != '<') ? event.target.innerHTML : '') });
+
+  const handleChangeLocationDropdown = async (event, value) => {
+    if (value == null)
+      value = '';
+    setSearch({ ...search, location: value });
     await findPredictions();
   };
 
   const handleChangeLocationText = async (event) => {
+    console.log(event.target.value);
     setSearch({ ...search, location: event.target.value });
     await findPredictions();
   };
@@ -211,8 +188,8 @@ function SearchBar(props) {
       <Stack direction="row" spacing={1} alignItems="center">
         <Stack
           direction="row"
-          divider={window.width < 900 ? (<div></div>) : (<Divider orientation="vertical" flexItem />)}
-          spacing={2}
+          divider={(<Divider orientation="vertical" flexItem />)}
+          spacing={1}
         >
           <form onSubmit={(event) => doSearch(event)}>
             <TextField
@@ -223,11 +200,26 @@ function SearchBar(props) {
               sx={{ width: { xs: '280px', sm: '360px', md: '170px'}}}
               value={search.keyword}
               onChange={handleChange('keyword')}
+              placeholder='Bakery'
             />
           </form>
-          <Stack direction="row" spacing={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+          {<Stack direction="row" spacing={1} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Box mt={1.5}>
+              <Tooltip  title="Use my location">
+                <IconButton onClick={locationButtonPress}>
+                  <MyLocationIcon
+                    // sx={{ width: 17}}
+                    fontSize='small'
+                  />
+                </IconButton>
+
+              </Tooltip>
+            </Box>
+
             <Autocomplete
               options={predictions.map((prediction) => prediction)}
+              value={search.location}
               onChange={handleChangeLocationDropdown}
               renderInput={(params) => (
                 <form onSubmit={(event) => doSearch(event)}>
@@ -238,7 +230,10 @@ function SearchBar(props) {
                     style={{ width: 250 }}
                     value={search.location}
                     onChange={handleChangeLocationText}
-                    placeholder="Search Services"
+                    placeholder="Orlando, FL"
+                    // InputProps={{
+                    //   endAdornment: <InputAdornment position="end">kg</InputAdornment>,
+                    // }}
                   />
                 </form>
               )}
@@ -258,7 +253,7 @@ function SearchBar(props) {
                 </MenuItem>
               ))}
             </TextField>
-          </Stack>
+          </Stack>}
 
           <TextField
             id="category"
@@ -278,9 +273,14 @@ function SearchBar(props) {
           </TextField>
         </Stack>
 
-        <IconButton onClick={(event) => doSearch(event)} color='primary' style={{color: 'white', backgroundColor: '#2196f3'}}>
-          <SearchIcon />
-        </IconButton>
+        <Tooltip  title="Search">
+          <IconButton
+            onClick={(event) => doSearch(event)}
+            color='primary'
+            style={{color: 'white', backgroundColor: '#003c80'}}>
+            <SearchIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
     </Paper>
   );

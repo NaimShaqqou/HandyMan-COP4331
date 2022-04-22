@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import {IconButton} from '@mui/material';
+import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteServiceDialog from './DeleteServiceDialog'
 import { useSelector, useDispatch } from "react-redux";
@@ -65,21 +66,18 @@ export default function ServiceCard(props) {
     <Container >
       <Paper
     sx={{
-      p: 2,
       margin: 'auto',
       maxWidth: 800,
       flexGrow: 1,
       backgroundColor: (theme) =>
-        theme.palette.mode === 'dark' ? '#1A2027' : '#F2F1F0',
+        theme.palette.mode === 'dark' ? '#1A2027' : 'white',
     }}
   >
     <Grid container spacing={2}>
-      <Grid item>
-        <ButtonBase sx={{ width: 128, height: 128 }}>
-          <Img alt="complex" src={service.Images === null ? '' : service.Images[0]} />
-        </ButtonBase>
+      <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4'}}>
+            <Img sx={{ width: 240, height: 240 }} alt="complex" src={service.Images && service.Images != null && service.Images.length > 0 ? service.Images[0]: '' } />
       </Grid>
-      <Grid item xs={12} md container>
+      <Grid item xs={12} md container sx={{ pr: 2}}>
         <Grid item xs container direction="column" spacing={2}>
           <Grid item xs>
             <Typography gutterBottom variant="h6" sx={{fontWeight: "bold"}}component="div">
@@ -94,7 +92,10 @@ export default function ServiceCard(props) {
                     <EditIcon />
             </IconButton>
             <IconButton onClick={() => setOpenDialog(true)}>
-                    <DeleteIcon/>
+                    <DeleteIcon />
+            </IconButton>
+            <IconButton onClick={() => navigate('../requested-services', {state: service})}>
+                    <WorkHistoryIcon />
             </IconButton>
           </Grid>
         </Grid>

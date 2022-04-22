@@ -1,5 +1,8 @@
+// do NOT modify state argument. make and return a new copy instead
+
 const reducer = (
   state = {
+    username: "",
     firstName: "",
     lastName: "",
     profilePicture: "",
@@ -11,21 +14,25 @@ const reducer = (
 ) => {
     switch (action.type) {
         case "login":
-            state.firstName = action.payload.firstName
-            state.lastName = action.payload.lastName
-            state.profilePicture = action.payload.profilePicture
-            state.profileDescription = action.payload.profileDescription
-            state.userId = action.payload.userId
-            state.jwtToken = action.payload.jwtToken
-            return state
+            return {
+              username: action.payload.username,
+              firstName: action.payload.firstName,
+              lastName: action.payload.lastName,
+              profilePicture: action.payload.profilePicture,
+              profileDescription: action.payload.profileDescription,
+              userId: action.payload.userId,
+              jwtToken: action.payload.jwtToken
+            }
         case "logout": 
-            state.firstName = ""
-            state.lastName = ""
-            state.profilePicture = ""
-            state.profileDescription = ""
-            state.userId = ""
-            state.jwtToken = ""
-            return state
+            return {
+              username: "",
+              firstName: "",
+              lastName: "",
+              profilePicture: "",
+              profileDescription: "",
+              userId: "",
+              jwtToken: ""
+            }
         default:
             return state
     }

@@ -7,16 +7,45 @@ import {
   Flex,
   ScrollView,
 } from "native-base";
+import { Button } from "react-native-paper";
 import React from "react";
 
 import { Dimensions, ImageBackground } from "react-native";
-
-import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as ActionCreators from "../reducerStore/ActionCreators/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("screen");
 
+import { useTheme } from "react-native-paper";
+
+const deleteInfo = async () => {
+  try {
+    await AsyncStorage.removeItem("userInfo");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const ProfileComponent = () => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { logoutUser, logoutServices } = bindActionCreators(
+    ActionCreators,
+    dispatch
+  );
+
+  const navigation = useNavigation();
+
+  const doLogout = () => {
+    logoutServices();
+    deleteInfo();
+    logoutUser();
+  };
+
+  const { colors } = useTheme();
 
   return (
     <ImageBackground
@@ -59,6 +88,23 @@ const ProfileComponent = () => {
                 {user.profileDescription}
                 {"\n"}
               </Text>
+            </Center>
+            <Center>
+              <Button
+                mode="contained"
+                onPress={() => navigation.navigate("EditProfile")}
+                style={{ marginTop: 16 }}
+              >
+                Edit Profile
+              </Button>
+              <Button
+                mode="outlined"
+                color={colors.error}
+                onPress={doLogout}
+                style={{ marginTop: 16 }}
+              >
+                Logout
+              </Button>
             </Center>
           </Box>
         </Flex>

@@ -7,6 +7,7 @@ import {
   FormControl,
   Input,
   useToast,
+  WarningOutlineIcon,
 } from "native-base";
 import { Button } from "react-native-paper";
 import { MaterialIcons } from "@native-base/icons";
@@ -17,6 +18,18 @@ const ForgotPasswordBox = () => {
     event.preventDefault();
 
     setLoading(true);
+
+    var obj = { email: email.toLowerCase() };
+    var js = JSON.stringify(obj);
+
+    setValid(true);
+    setLoading(true);
+
+    if (email == "") {
+      setValid(false);
+      setLoading(false);
+      return;
+    }
 
     var obj = { email: email.toLowerCase() };
     var js = JSON.stringify(obj);
@@ -89,17 +102,24 @@ const ForgotPasswordBox = () => {
                 color="muted.400"
               />
             }
-            onChangeText={(newEmail) => setEmail(newEmail)}
+            onChangeText={(newEmail) => {
+              setEmail(newEmail);
+              setValid(true);
+            }}
           />
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+            You must enter an email to continue.
+          </FormControl.ErrorMessage>
         </FormControl>
 
         <Button
           onPress={onSubmit}
-          mode="contained"
-          loading={loading ? true : false}
+          mode="contained"          
+          loading={loading}
+          disabled={loading}
           style={{
             width: "100%",
-            marginTop: 30,
+            marginTop: 24,
           }}
         >
           Submit
@@ -111,7 +131,7 @@ const ForgotPasswordBox = () => {
           }}
           style={{
             width: "100%",
-            marginTop: 12,
+            marginTop: 16,
           }}
         >
           Back to Login

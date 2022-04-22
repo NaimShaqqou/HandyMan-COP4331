@@ -1,0 +1,24 @@
+  let items = [];
+
+  // add dummy services
+  for (let i = 0; i < 20; i++) {
+    items.push({
+      _id: i.toString(),
+      UserId: "6234c4d39a050a36555a6942",
+      Title: "Bakery" + i,
+      Images: [
+        "image1",
+        "image2"
+      ],
+      Address: "14330 Alafaya Oak Bend",
+      Longitude: "-81.1705685",
+      Latitude: "28.510048",
+      Description: "My Bakery is so cool",
+      Price: "5",
+      DaysAvailable: [
+        "Monday"
+      ],
+      Category: "Baking",
+      __v: 0
+    })
+  }

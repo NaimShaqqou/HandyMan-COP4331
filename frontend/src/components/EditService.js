@@ -16,7 +16,7 @@ import axios from "axios";
 import '../styles.css';
 
 export default function EditService(props) {
-    const originalService = props.service
+    let originalService = props.service
     const navigate = useNavigate();
     let user = useSelector((state) => state.user);
     const bp = require("./Path");
@@ -31,8 +31,10 @@ export default function EditService(props) {
     ];
     const categories = ["Baking", "Teaching", "Fixing", "Other"];
 
-    const [images, setImages] = useState(originalService.Images);
+    originalService = originalService ? originalService : {Images: "", Category: "", Title: "", Description: "", Address: "", Price: "", DaysAvailable: ""};
+   
     const [imageValidation, setImageValidation] = useState(false)
+    const [images, setImages] = useState(originalService.Images);
     const [predictions, setPredictions] = useState(new Array());
     const [category, setCategory] = useState(originalService.Category);
     const [categoryValidation, setCategoryValidation] = useState(false);
@@ -75,18 +77,18 @@ export default function EditService(props) {
         await axios.post(bp.buildPath("api/edit-service"), {
             serviceId: originalService._id,
             jwtToken: user.jwtToken,
-            newTitle: title, 
+            newTitle: title,
             newImages: urlList,
-            newAddress: location, 
-            newDescription: description, 
-            newPrice: price, 
-            newDaysAvailable: availableDays, 
+            newAddress: location,
+            newDescription: description,
+            newPrice: price,
+            newDaysAvailable: availableDays,
             newCategory: category,
         }).then((response) => {
             let refreshedToken = response.data.refreshedToken
-            updateCurrentUser({...user, jwtToken: refreshedToken})
+            updateCurrentUser({ ...user, jwtToken: refreshedToken })
             updateServices(response.data.service)
-            navigate("../services")
+            navigate(-1)
         }).catch((error) => {
             console.log(error.message)
         })
@@ -114,7 +116,7 @@ export default function EditService(props) {
                     //handle error
                     console.log(response);
                 });
-          }
+        }
 
         return urls
     }
@@ -122,17 +124,17 @@ export default function EditService(props) {
     function removeImage(imageIndex) {
         if (images.length !== fileData.length) {
             setImages(images.filter((image, index) => {
-                if (index !== imageIndex) return image 
+                if (index !== imageIndex) return image
             }))
             setFileData(fileData.filter((file, index) => {
-                if (index !== (imageIndex - images.length)) return file 
+                if (index !== (imageIndex - images.length)) return file
             }))
         } else {
             setImages(images.filter((image, index) => {
-                if (index !== imageIndex) return image 
+                if (index !== imageIndex) return image
             }))
             setFileData(fileData.filter((file, index) => {
-                if (index !== imageIndex) return file 
+                if (index !== imageIndex) return file
             }))
         }
     }
@@ -144,192 +146,219 @@ export default function EditService(props) {
 
     async function findPredictions() {
         await axios
-          .post(bp.buildPath("api/autocomplete-address"), { input: location })
-          .then((response) => {
-            setPredictions(response.data.predictions);
-          })
-          .catch((error) => console.log(error));
-      }
+            .post(bp.buildPath("api/autocomplete-address"), { input: location })
+            .then((response) => {
+                setPredictions(response.data.predictions);
+            })
+            .catch((error) => console.log(error));
+    }
 
     return (
         <Container>
-            <Grid container spacing={3} direction="column">
-                <Grid item>
-                    <Stack direction="row" spacing={2}>
-                    {images.map((image, index) => (
-                    
-                        <div key={index} className="shrink">
-                            <img src={image} key={index} alt="" width="100" onClick={() => removeImage(index)}/>
-                        </div>
-                   
-                    ))}
-                     </Stack>
-                     {imageValidation && <span>Need to set at least one photo for your service!</span> }
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e)}
-                    />
-                    <button onClick={() => removeAllImages()}>Remove all images</button>
-                    
-                </Grid>
-                <Grid item>
-                    <TextField
-                        fullWidth
-                        required
-                        id="title"
-                        label="Title"
-                        value={title}
-                        variant="outlined"
-                        error={titleValidation === true}
-                        helperText={
-                            titleValidation === true
-                                ? "Title can't be empty!"
-                                : " "
-                        }
-                        onChange={(e) => {
-                            setTitle(e.target.value)
-                            setTitleValidation(false)
-                        }}
-                    />
-                </Grid>
-                <Grid item>
-                    <TextField
-                        fullWidth
-                        required
-                        multiline
-                        rows={4}
-                        value={description}
-                        id="description"
-                        label="Description"
-                        variant="outlined"
-                        error={descriptionValidation === true}
-                        helperText={
-                            descriptionValidation === true
-                                ? "Description can't be empty!"
-                                : " "
-                        }
-                        onChange={(e) => {
-                            setDescription(e.target.value)
-                            setDescriptionalidation(false);
-                        }}
-                    />
-                </Grid>
-                <Grid item>
-                        <Autocomplete
-                        options={predictions.map((prediction) => prediction)}
-                        value={location}
-                        onChange={(e, value) => {
-                            value === null ? setLocation("") : setLocation(value)
-                            setLocationValidation(false);
-                        }}
-                        renderInput={(params) => (
+            <Box sx={{ pt: 3 }}>
+                <Grid container spacing={2} direction="column">
+                    <Grid item>
+                        <Stack direction="row" spacing={2}>
+                            {images.map((image, index) => (
+
+                                <div key={index} className="shrink">
+                                    <img src={image} key={index} alt="" width="100" onClick={() => removeImage(index)} />
+                                </div>
+
+                            ))}
+                        </Stack>
+                        {imageValidation && <span>Need to set at least one photo for your service!</span>}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageChange(e)}
+                        />
+                        <button onClick={() => removeAllImages()}>Remove all images</button>
+
+                    </Grid>
+                    <Grid item>
+                        <Typography sx={{ pb: 2 }} fontWeight="bold">
+                            Title:
+                        </Typography>
                         <TextField
-                            {...params}
-                            label="Address"
-                            variant="outlined"
                             fullWidth
-                            InputProps={{
-                                ...params.InputProps,
-                                type: "text"
-                            }}
-                            error={locationValidation === true}
+                            required
+                            id="title"
+                            label="Title"
+                            value={title}
+                            variant="outlined"
+                            error={titleValidation === true}
                             helperText={
-                                locationValidation === true
-                                    ? "Address can't be empty!"
+                                titleValidation === true
+                                    ? "Title can't be empty!"
                                     : " "
                             }
-                            onChange={async (e) => {
-                                setLocation(e.target.value)
-                                setLocationValidation(false);
-                                await findPredictions();
+                            onChange={(e) => {
+                                setTitle(e.target.value)
+                                setTitleValidation(false)
                             }}
                         />
-                    )}
-                    />
+                    </Grid>
+                    <Grid item>
+                        <Typography sx={{ pb: 2 }} fontWeight="bold">
+                            Description:
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            required
+                            multiline
+                            rows={4}
+                            value={description}
+                            id="description"
+                            label="Description"
+                            variant="outlined"
+                            error={descriptionValidation === true}
+                            helperText={
+                                descriptionValidation === true
+                                    ? "Description can't be empty!"
+                                    : " "
+                            }
+                            onChange={(e) => {
+                                setDescription(e.target.value)
+                                setDescriptionalidation(false);
+                            }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Typography sx={{ pb: 2 }} fontWeight="bold">
+                            Location:
+                        </Typography>
+                        <Autocomplete
+                            options={predictions.map((prediction) => prediction)}
+                            value={location}
+                            onChange={(e, value) => {
+                                value === null ? setLocation("") : setLocation(value)
+                                setLocationValidation(false);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Address"
+                                    variant="outlined"
+                                    fullWidth
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: "text"
+                                    }}
+                                    error={locationValidation === true}
+                                    helperText={
+                                        locationValidation === true
+                                            ? "Address can't be empty!"
+                                            : " "
+                                    }
+                                    onChange={async (e) => {
+                                        setLocation(e.target.value)
+                                        setLocationValidation(false);
+                                        await findPredictions();
+                                    }}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Typography sx={{ pb: 2 }} fontWeight="bold">
+                            Price:
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            required
+                            rows={4}
+                            value={price}
+                            type="number"
+                            id="price"
+                            label="Price"
+                            variant="outlined"
+                            error={priceValidation === true}
+                            helperText={
+                                priceValidation === true
+                                    ? "Price can't be empty!"
+                                    : " "
+                            }
+                            onChange={(e) => {
+                                setPrice(e.target.value)
+                                setPriceValidation(false);
+                            }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Grid container justifyContent="space-between"
+                            direction="row"
+                            spacing={5}>
+                            <Grid item xs={6}>
+                                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                                    Days Available:
+                                </Typography>
+                                <Autocomplete
+                                    multiple
+                                    id="tags-outlined"
+                                    options={days}
+                                    value={availableDays}
+                                    getOptionLabel={(option) => option}
+                                    filterSelectedOptions
+                                    fullWidth
+                                    onChange={(e, value) => {
+                                        setAvailableDays(value)
+                                        setAvailableDaysValidation(false)
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Available Days to Work"
+                                            placeholder="Week Days"
+                                            error={availableDaysValidation === true}
+                                            helperText={
+                                                availableDaysValidation === true
+                                                    ? "Must select at least one day!"
+                                                    : " "
+                                            }
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                                    Category:
+                                </Typography>
+                                <TextField
+                                    id="category"
+                                    select
+                                    label="Select the category of your service"
+                                    onChange={(e) => {
+                                        setCategory(e.target.value)
+                                        setCategoryValidation(false)
+                                    }}
+                                    value={category}
+                                    fullWidth
+                                    error={categoryValidation === true}
+                                    helperText={
+                                        categoryValidation === true
+                                            ? "Must select a category!"
+                                            : " "
+                                    }
+                                >
+                                    {categories.map((option, index) => (
+                                        <MenuItem key={index} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="row" spacing={4}>
+                            <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
+                            <Button variant="contained" onClick={() => navigate(-1)}>Cancel Changes</Button>
+                        </Stack>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <TextField
-                        fullWidth
-                        required
-                        rows={4}
-                        value={price}
-                        type="number"
-                        id="price"
-                        label="Price"
-                        variant="outlined"
-                        error={priceValidation === true}
-                        helperText={
-                            priceValidation === true
-                                ? "Price can't be empty!"
-                                : " "
-                        }
-                        onChange={(e) => {
-                            setPrice(e.target.value)
-                            setPriceValidation(false);
-                        }}
-                    />
-                </Grid>
-                <Grid item>
-                    <Stack direction="row" spacing={7} justifyContent="space-between">
-                    <Autocomplete
-                        multiple
-                        id="tags-outlined"
-                        options={days}
-                        value={availableDays} 
-                        getOptionLabel={(option) => option}
-                        filterSelectedOptions
-                        fullWidth
-                        onChange={(e, value) =>  {
-                            setAvailableDays(value)
-                            setAvailableDaysValidation(false)
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Available Days to Work"    
-                                placeholder="Week Days"
-                                error={availableDaysValidation === true}
-                                helperText={
-                                    availableDaysValidation === true
-                                        ? "Must select at least one day!"
-                                        : " "
-                                }
-                            />
-                        )}
-                    />
-                    <TextField
-                        id="category"
-                        select
-                        label="Select the category of your service"
-                        onChange={(e) =>  {
-                            setCategory(e.target.value)
-                            setCategoryValidation(false)
-                        }}
-                        value={category}
-                        style={{width: "50%"}}
-                        error={categoryValidation === true}
-                        helperText={
-                            categoryValidation === true
-                                ? "Must select a category!"
-                                : " "
-                        }
-                    >   
-                        {categories.map((option, index) => (
-                            <MenuItem key={index} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    </Stack>
-                </Grid>
-                <Grid item>
-                    <Stack direction="row" spacing={4}>
-                        <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
-                        <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>    
-                    </Stack>
-                </Grid>
-            </Grid>
-        </Container>
+            </Box>
+
+        </Container >
     );
 }

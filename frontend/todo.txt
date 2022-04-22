@@ -1,0 +1,32 @@
+change password on profile page needs:
+- repeat password
+- show password
+
+move "add new service" button on services page higher
+
+add crop to square function for uploaded images (to maintain consistent aspect ratio)
+
+drag n drop images
+
+jwt token expirations
+
+possibly remove searchbar from navbar. put it on the page instead.
+
+
+homepage decoration
+
+framer motion: page transitions
+
+links:
+
+https://www.framer.com/docs/animate-shared-layout/#syncing-layout-animations
+
+https://www.framer.com/docs/layout-group/
+
+https://github.com/1000ship/react-scroll-motion
+
+https://www.youtube.com/watch?v=q9tpBtvTTz8
+
+https://www.youtube.com/watch?v=YxLMAk2H3ns
+
+https://codesandbox.io/s/material-ui-usescrolltrigger-963ov

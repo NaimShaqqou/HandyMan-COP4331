@@ -1,18 +1,29 @@
 import React from 'react';
 
-import AppBarSearch from '../components/TestAppBarWithSearch';
-import '../LoginPage.css';
-
 import {
+  Select,
+  MenuItem,
   Grid,
   Typography,
+  FormControl,
+  InputLabel,
+  Box,
+  Container,
+  Stack
 } from "@mui/material";
 
 const MyApp = (status) => {
+  
   return (
-    <div>
-      <AppBarSearch></AppBarSearch>
-    </div>
+    <Box
+      // maxWidth={false}
+      // direction='row'
+      // sx={{
+      //   // bgcolor: 'green',
+      // }}
+    >
+
+    </Box>
   )
 };
 
