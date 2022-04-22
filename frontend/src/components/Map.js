@@ -55,8 +55,7 @@ const Map = (props) => {
 
       <Box
         sx={{
-          ...props.sx,
-          height: '100%'
+          ...props.sx
         }}
       >
         <GoogleMap

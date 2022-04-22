@@ -10,8 +10,12 @@ import {
   Container,
   Grid,
   Box,
-  Paper
+  Paper,
+  Stack,
+  Button
 } from "@mui/material";
+
+import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'framer-motion';
 
 // TODO: fix how marker titles look
 // TODO: show service image (replace bread image with actual)
@@ -21,7 +25,8 @@ import {
 const SearchPage = () =>
 {
   const { state } = useLocation();
-  let [focusItem, setFocusItem] = React.useState(null);
+  let [showResults, setShowResults] = useState(true);
+  let [focusItem, setFocusItem] = useState(null);
 
   const updateFromChild = (newFocus) => {
     setFocusItem(newFocus);
@@ -40,50 +45,151 @@ const SearchPage = () =>
   let res = (state ? state.res : null);
   let srch = (state ? state.obj : null);
 
-  const resultsMapStyle = {
-    border: 3,
-    borderColor: 'steelBlue',
-    // borderRadius: 3
+  const mapStyle = {
+    // border: 3,
+    // borderColor: 'steelBlue',
+    // borderRadius: 3,
+    height: '100%',
   };
 
   return (
-    <Box>
-      {/* <Navbar search={srch}/> */}
-      <br />
-
-      <Container maxWidth={false} sx={{
-          width: { xl: '80%'},
-          height: '1000px'
+    <Box 
+      sx={{
+        width: '100%',
+        height: '95vh',
+      }}
+    >
+      {/* <Paper
+        elevation={10}
+        sx={{
+          width: '100%',
+          height: '100%'
         }}
       >
-        <Paper
-          elevation={10}
+        <Grid container sx={{height: '100%'}}>
+          <Grid item xs={3} sx={{height: '100%'}}>
+            <SearchResults
+              sx={resultsMapStyle}
+              focus={focusItem}
+              updateFocus={updateFromChild}
+              results={(res && res.error == '') ? res.results : []}
+            />
+            </Grid>
+            <Grid item xs={9} sx={{height: '100%'}}>
+            <Map
+            sx={resultsMapStyle}
+            focus={focusItem}
+              updateFocus={updateFromChild}
+              results={(res && res.error == '') ? res.results : []}
+              center={center}
+              />
+              </Grid>
+              </Grid>
+            </Paper> */}
+
+
+
+      <Box
+        sx={{
+          ...mapStyle,
+        }}
+      >
+        <Map
+          sx={mapStyle}
+          focus={focusItem}
+          updateFocus={updateFromChild}
+          results={(res && res.error == '') ? res.results : []}
+          center={center}
+        />
+      </Box>
+
+      <Box
+        // elevation={5}
+        maxWidth='100%'
+        sx={{ 
+          height: '80vh',
+          mt: '-50%',
+          ml: '3%',
+          zIndex: 98,
+          // bgcolor: 'green',
+          position: 'sticky',
+          // borderRadius: 5
+          pointerEvents: 'none',
+        }}
+      >
+        <Stack direction='row'
+          maxWidth='100%'
           sx={{
-            width: '100%',
+            // bgcolor: 'green',
             height: '100%'
           }}
         >
-          <Grid container sx={{height: '100%'}}>
-            <Grid item xs={3} sx={{height: '100%'}}>
-              <SearchResults
-                sx={resultsMapStyle}
-                focus={focusItem}
-                updateFocus={updateFromChild}
-                results={(res && res.error == '') ? res.results : []}
-              />
-            </Grid>
-            <Grid item xs={9} sx={{height: '100%'}}>
-              <Map
-                sx={resultsMapStyle}
-                focus={focusItem}
-                updateFocus={updateFromChild}
-                results={(res && res.error == '') ? res.results : []}
-                center={center}
-              />
-            </Grid>
-          </Grid>
-        </Paper>
-      </Container>
+          {/* <LayoutGroup> */}
+            {/* <AnimatePresence
+              intial={false}
+              exitBeforeEnter={true}
+              onExitComplete={() => null}
+            > */}
+              {showResults &&
+              <motion.div
+                layout
+                initial='hidden' 
+                animate='visible'
+                exit='exit'
+                variants={{
+                  hidden: {
+                    x: -100,
+                    opacity: 0
+                  },
+                  visible: {
+                    x: 0,
+                    opacity: 1,
+                  },
+                  exit: {
+                    x: -100,
+                    opacity: 0
+                  }
+                }}
+              >
+                <Box
+                  sx={{ 
+                    width: '30vh',
+                    height: '100%',
+                    bgcolor: 'white',
+                    pointerEvents: 'auto',
+                  }}
+                >
+                  <SearchResults
+                    focus={focusItem}
+                    updateFocus={updateFromChild}
+                    results={(res && res.error == '') ? res.results : []}
+                  />
+                </Box>
+              </motion.div>}
+            {/* </AnimatePresence> */}
+
+            <motion.div layout>
+              <Button
+                sx={{
+                  width: '30px',
+                  height: '100%',
+                  bgcolor: 'white',
+                  pointerEvents: 'auto',
+                }}
+                onClick={() => {
+                  setShowResults(prevState => {
+                    console.log(prevState);
+                    return !prevState;
+                  });
+                }}
+              >
+                Go
+              </Button>
+            </motion.div>
+          {/* </LayoutGroup> */}
+        </Stack>
+      </Box>
+
     </Box>
   );
 }

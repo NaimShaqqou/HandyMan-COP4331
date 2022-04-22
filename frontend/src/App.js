@@ -15,7 +15,7 @@ import {
   ThemeProvider
 } from '@mui/material';
 
-import ResponsiveAppBar from './components/NavBar';
+import Navbar from './components/NavBar';
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
@@ -76,10 +76,6 @@ function App() {
     )
   }
 
-  const Potato = () => {
-    return <h2>potato</h2>
-  }
-
   return (
     <ThemeProvider theme={theme}>
       <AnimatePresence exitBeforeEnter>
@@ -87,20 +83,20 @@ function App() {
           <Route 
             path="/" 
             element={
-              <Box
-                sx={{
-                  position: 'sticky',
-                  top: 0,
-                  zIndex: 100,
-                }}
-              >
-
-                <ResponsiveAppBar />
+              <Box>
+                <Box
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 100,
+                  }}
+                >
+                  <Navbar />
+                </Box>
                 <Outlet />
               </Box>
             }
           >
-            {/* <Route path="potato" element={<Potato />} /> */}
 
             <Route path="" element={<AnimatedPage><HomePage /></AnimatedPage>} />
             <Route path="login" element={<AnimatedPage><LoginPage /></AnimatedPage>} />

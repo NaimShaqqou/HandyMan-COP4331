@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector, useDispatch } from "react-redux";
@@ -28,7 +28,8 @@ import {
   ThemeProvider,
   Grid
 } from '@mui/material'
-import axios from 'axios';
+
+import { motion, AnimatePresence } from 'framer-motion';
 
 const pages = [];
 const loggedInSettings = ['Home','Profile', 'Services', 'Bookings', 'Logout'];
@@ -88,11 +89,9 @@ const ResponsiveAppBar = (props) => {
     userObj.profilePicture = user.profilePicture != "" ? user.profilePicture : "/static/images/avatar/2.jpg";
   }
 
-  // console.log(user);
-
-  const goToHomepage = () =>{ 
-    navigate("../", { replace:true });
-  };
+  useEffect(() => {
+    console.log('mounting NavBar.js');
+  }, []);
 
   const titlestyle = {
     fontFamily: 'Comfortaa',
@@ -160,10 +159,35 @@ const ResponsiveAppBar = (props) => {
 
             <Box m={1}/>
 
-            {pathname !== "/" && 
-            <Container sx={{ display: { xs: 'none', sm: 'none', s900: 'flex' }, maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
-              <SearchBar search={props.search}/>
-            </Container>}
+            <AnimatePresence exitBeforeEnter>
+              {pathname !== "/" && 
+              <motion.div
+                initial='hidden'
+                animate='visible'
+                exit='exit'
+                variants={{
+                  hidden: {
+                    y: -100,
+                    opacity: 0
+                  },
+                  visible: {
+                    y: 0,
+                    opacity: 1,
+                  },
+                  exit: {
+                    y: -100,
+                    opacity: 0
+                  }
+                }}
+                transition={{
+                  duration: 0.5
+                }}
+              >
+                <Container sx={{ display: { xs: 'none', sm: 'none', s900: 'flex' }, maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
+                  <SearchBar/>
+                </Container>
+              </motion.div>}
+            </AnimatePresence>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             </Box>

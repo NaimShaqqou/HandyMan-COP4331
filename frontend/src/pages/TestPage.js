@@ -12,19 +12,31 @@ import {
   Typography,
   FormControl,
   InputLabel,
+  Box,
+  Container,
+  Stack
 } from "@mui/material";
 
 const MyApp = (status) => {
   
   return (
-    <div>
-      {/* <AppBarSearch></AppBarSearch> */}
-      
-      {/* <AntTabs></AntTabs> */}
+    <Stack
+      // maxWidth={false}
+      direction='row'
+      sx={{
+        bgcolor: 'green',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'inline-block',
+          bgcolor: 'blue'
+        }}
+      >
+        hello
+      </Box>
 
-
-      <TestDragNDrop/>
-    </div>
+    </Stack>
   )
 };
 

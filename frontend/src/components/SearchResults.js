@@ -69,14 +69,14 @@ export default function SearchResults(props) {
     <ThemeProvider theme={theme}>
       <Box
         sx={{
-          ...props.sx,
-          width: '100%',
-          bgcolor: 'white',
+          // ...props.sx,
+          // width: '100%',
+          // bgcolor: 'white',
           overflow: 'auto', // scroll bar
           height: '100%',
-          '& ul': {
-            padding: 0,
-          },
+          // '& ul': {
+          //   padding: 0,
+          // },
         }}
       >
         <List
