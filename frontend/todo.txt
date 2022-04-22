@@ -4,6 +4,10 @@ change password on profile page needs:
 
 move "add new service" button on services page higher
 
+add crop to square function for uploaded images (to maintain consistent aspect ratio)
+
+drag n drop images
+
 jwt token expirations
 
 possibly remove searchbar from navbar. put it on the page instead.
