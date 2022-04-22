@@ -10,6 +10,9 @@ import { store } from "./src/reducerStore/store.js";
 import { Provider } from "react-redux";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['NativeBase:']);
+
 const theme = {
   ...DefaultTheme,
   colors: {
