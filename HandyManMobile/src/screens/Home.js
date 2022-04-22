@@ -44,14 +44,14 @@ const Home = () => {
       return; 
     }
   }
-
-  const childCompRef = React.useRef(null);
-
+  
+  const mapViewRef = React.useRef(null);
+  
   doSearchHelper = () => {
     // We don't do a search unless a location is specified.
     // Everything else is optional
     if (location == "") return;
-
+    
     doSearch(
       { search: search, 
         category: category, 
@@ -59,40 +59,41 @@ const Home = () => {
         maxDist: maxDist
       })
       .then((data) => {
-
-        childCompRef.current.setServices(data.results);
-
+        
+        mapViewRef.current.setServices(data.results);
+        
         // ***********************************
         // SEND THE DATA TO THE LIST
         // ***********************************
       });
-  }
-  
-  const user = useSelector((state) => state.user);
-
-  // to handle opening/closing of filters modal
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-
-  // filters to use in search api:
-  //  search - contains string of service to search
-  //  category - contains string of category of service
-  //  maxDist - contains string of maximum distance of search results
-  // TODO: get the location from autocomplete search box
-  const [search, setSearch] = useState("");
-  const [location, setLocation] = useState("");
-  const [category, setCategory] = useState("");
-  const [maxDist, setMaxDist] = React.useState("5");
-
-  // When any of the listed filters change, execute a search
-  useEffect(() => {
-    doSearchHelper();
-  }, [search, category, maxDist, location]);
-
-  return (
+    }
+    
+    const user = useSelector((state) => state.user);
+    
+    // to handle opening/closing of filters modal
+    const [visible, setVisible] = React.useState(false);
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+    
+    // filters to use in search api:
+    //  search - contains string of service to search
+    //  location - the place where we search for services
+    //  category - contains string of category of service
+    //  maxDist - contains string of maximum distance of search results
+    // TODO: get the location from autocomplete search box
+    const [search, setSearch] = useState("");
+    const [location, setLocation] = useState("");
+    const [category, setCategory] = useState("");
+    const [maxDist, setMaxDist] = React.useState("5");
+    
+    // When any of the listed filters change, execute a search
+    useEffect(() => {
+      doSearchHelper();
+    }, [search, category, maxDist, location]);
+    
+    return (
     <Center safeAreaTop display={"flex"} flex={1} justifyContent={'flex-end'}>
-      <ServicesMap ref={childCompRef}/>
+      <ServicesMap ref={mapViewRef}/>
       <Center w="80%" position={"absolute"} safeAreaTop top={5}>
         <GooglePlacesInput doSearch={this.doSearchHelper} passLocation={setLocation}
           filterIcon={
