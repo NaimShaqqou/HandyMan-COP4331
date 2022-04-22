@@ -75,7 +75,15 @@ export default function ServiceCard(props) {
   >
     <Grid container spacing={2}>
       <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4'}}>
-            <Img sx={{ width: 240, height: 240 }} alt="complex" src={service.Images && service.Images != null && service.Images.length > 0 ? service.Images[0]: '' } />
+            <Img
+              sx={{ 
+                width: 240, 
+                height: 240,
+                objectFit: 'cover',
+              }} 
+              alt="complex" 
+              src={service.Images && service.Images != null && service.Images.length > 0 ? service.Images[0]: '' } 
+            />
       </Grid>
       <Grid item xs={12} md container sx={{ pr: 2}}>
         <Grid item xs container direction="column" spacing={2}>
