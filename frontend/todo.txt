@@ -2,6 +2,8 @@ change password on profile page needs:
 - repeat password
 - show password
 
+move "add new service" button on services page higher
+
 jwt token expirations
 
 possibly remove searchbar from navbar. put it on the page instead.
