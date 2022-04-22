@@ -33,7 +33,7 @@ const HomePage = () =>
 
   return(
     <Box>
-      <Box
+      {/* <Box
         sx={{
           position: 'sticky',
           top: 0,
@@ -42,7 +42,7 @@ const HomePage = () =>
       >
         <ResponsiveAppBar />
 
-      </Box>
+      </Box> */}
       <Box sx={{ m: 15 }} />
 
       <Stack spacing={7}>

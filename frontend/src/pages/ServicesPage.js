@@ -22,7 +22,7 @@ export default function ServicesPage() {
 
   return (
     <div>
-      <ResponsiveAppBar/>
+      {/* <ResponsiveAppBar/> */}
       <Box sx={{ pt: 4}}>
       <Grid container direction="column" spacing={5}>  
         {services.map((service, index) => (

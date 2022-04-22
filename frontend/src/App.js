@@ -4,7 +4,8 @@ import {
   Route,
   Routes,
   Navigate,
-  useLocation
+  useLocation,
+  Outlet
 } from "react-router-dom";
 import "./App.css";
 
@@ -75,29 +76,35 @@ function App() {
     )
   }
 
+  const Potato = () => {
+    return <h2>potato</h2>
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <AnimatePresence exitBeforeEnter>
         <Routes key={location.pathname} location={location}>
           <Route 
             path="/" 
-            // element={
-            //   <Box
-            //     sx={{
-            //       position: 'sticky',
-            //       top: 0,
-            //       zIndex: 100,
-            //     }}
-            //   >
+            element={
+              <Box
+                sx={{
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 100,
+                }}
+              >
 
-            //     <ResponsiveAppBar />
-            //   </Box>
-            // }
+                <ResponsiveAppBar />
+                <Outlet />
+              </Box>
+            }
           >
+            {/* <Route path="potato" element={<Potato />} /> */}
+
             <Route path="" element={<AnimatedPage><HomePage /></AnimatedPage>} />
             <Route path="login" element={<AnimatedPage><LoginPage /></AnimatedPage>} />
             <Route path="test" element={<AnimatedPage><TestPage /></AnimatedPage>} />
-            <Route path="image" element={<AnimatedPage><TestImagePage /></AnimatedPage>} />
             <Route path="profile" element={ <AnimatedPage><ProfilePage /></AnimatedPage>} />
             <Route path="service" element={<AnimatedPage><ServicePage /></AnimatedPage>} />
             <Route path="services" element={<AnimatedPage><ServicesPage /></AnimatedPage>} />
