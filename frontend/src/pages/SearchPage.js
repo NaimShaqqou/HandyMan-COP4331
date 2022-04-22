@@ -15,6 +15,9 @@ import {
   Button
 } from "@mui/material";
 
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'framer-motion';
 
 // TODO: fix how marker titles look
@@ -22,8 +25,7 @@ import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'frame
 // TODO: customize marker info popup
 // TODO: adjust zoom level to fit all markers
 
-const SearchPage = () =>
-{
+const SearchPage = () => {
   const { state } = useLocation();
   let [showResults, setShowResults] = useState(true);
   let [focusItem, setFocusItem] = useState(null);
@@ -38,64 +40,27 @@ const SearchPage = () =>
     lat: 28.602,
     lng: -81.200,
   };
-    
+
   // console.log('in search page');
   // console.log(center);
 
   let res = (state ? state.res : null);
   let srch = (state ? state.obj : null);
 
-  const mapStyle = {
-    // border: 3,
-    // borderColor: 'steelBlue',
-    // borderRadius: 3,
-    height: '100%',
-  };
-
   return (
-    <Box 
+    <Box
       sx={{
         width: '100%',
         height: '95vh',
       }}
     >
-      {/* <Paper
-        elevation={10}
+      <Box
         sx={{
-          width: '100%',
           height: '100%'
         }}
       >
-        <Grid container sx={{height: '100%'}}>
-          <Grid item xs={3} sx={{height: '100%'}}>
-            <SearchResults
-              sx={resultsMapStyle}
-              focus={focusItem}
-              updateFocus={updateFromChild}
-              results={(res && res.error == '') ? res.results : []}
-            />
-            </Grid>
-            <Grid item xs={9} sx={{height: '100%'}}>
-            <Map
-            sx={resultsMapStyle}
-            focus={focusItem}
-              updateFocus={updateFromChild}
-              results={(res && res.error == '') ? res.results : []}
-              center={center}
-              />
-              </Grid>
-              </Grid>
-            </Paper> */}
-
-
-
-      <Box
-        sx={{
-          ...mapStyle,
-        }}
-      >
         <Map
-          sx={mapStyle}
+          sx={{ height: '100%' }}
           focus={focusItem}
           updateFocus={updateFromChild}
           results={(res && res.error == '') ? res.results : []}
@@ -103,10 +68,21 @@ const SearchPage = () =>
         />
       </Box>
 
+      {/* <Paper
+        elevation={10}
+        sx={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        
+      </Paper> */}
+
+
       <Box
         // elevation={5}
         maxWidth='100%'
-        sx={{ 
+        sx={{
           height: '80vh',
           mt: '-85vh',
           ml: '3%',
@@ -120,39 +96,34 @@ const SearchPage = () =>
         <Stack direction='row'
           maxWidth='100%'
           sx={{
-            // bgcolor: 'green',
+            // bgcolor: 'blue',
             height: '100%'
           }}
         >
-          {/* <LayoutGroup> */}
-            {/* <AnimatePresence
-              intial={false}
-              exitBeforeEnter={true}
-              onExitComplete={() => null}
-            > */}
-              {showResults &&
+          <AnimatePresence
+            // intial={false}
+            exitBeforeEnter={true}
+          // onExitComplete={() => null}
+          >
+            {showResults &&
               <motion.div
+                key='results'
                 layout
-                initial='hidden' 
-                animate='visible'
-                exit='exit'
-                variants={{
-                  hidden: {
-                    x: -100,
-                    opacity: 0
-                  },
-                  visible: {
-                    x: 0,
-                    opacity: 1,
-                  },
-                  exit: {
-                    x: -100,
-                    opacity: 0
-                  }
+                initial={{
+                  x: -100,
+                  opacity: 0
+                }}
+                animate={{
+                  x: 0,
+                  opacity: 1,
+                }}
+                exit={{
+                  x: -300,
+                  opacity: 0
                 }}
               >
                 <Box
-                  sx={{ 
+                  sx={{
                     width: '30vh',
                     height: '100%',
                     bgcolor: 'white',
@@ -166,15 +137,60 @@ const SearchPage = () =>
                   />
                 </Box>
               </motion.div>}
-            {/* </AnimatePresence> */}
 
-            <motion.div layout>
-              <Button
-                sx={{
-                  width: '30px',
-                  height: '100%',
+            <motion.div
+              key='button'
+              layout
+              // initial={false}
+              // animate={false}
+              // exit={false}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                paddingLeft: '5px',
+              }}
+            >
+
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  // height: '90%',
+                  backgroundColor: '#429bff',
+                }}
+                // initial={{
+                //   // x: -100,
+                //   opacity: 1
+                // }}
+                // animate={{
+                //   // x: 0,
+                //   opacity: 1,
+                // }}
+                // exit={{
+                //   // x: -100,
+                //   opacity: 1
+                // }}
+                drag
+                dragConstraints={{
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+                // onHoverStart={e => {}}
+                // onHoverEnd={e => {}}
+                style={{
+                  borderRadius: 10,
+                  borderWidth: 0,
+                  backgroundColor: 'white',
+                  // backgroundColor: '#005cc4',
+                  color: 'black',
+                  cursor: 'pointer',
+                  width: '40px',
+                  height: '20%',
                   bgcolor: 'white',
                   pointerEvents: 'auto',
+                  boxShadow: '0 3px 10px rgb(0 0 0 / 0.2)',
                 }}
                 onClick={() => {
                   setShowResults(prevState => {
@@ -183,10 +199,14 @@ const SearchPage = () =>
                   });
                 }}
               >
-                Go
-              </Button>
+                {showResults ? 
+                <ArrowBackIosIcon sx={{ color: '#003c80'}} /> 
+                : 
+                <ArrowForwardIosIcon sx={{ color: '#003c80'}}/>}
+                
+              </motion.button>
             </motion.div>
-          {/* </LayoutGroup> */}
+          </AnimatePresence>
         </Stack>
       </Box>
 
