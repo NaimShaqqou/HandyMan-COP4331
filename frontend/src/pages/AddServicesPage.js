@@ -13,7 +13,7 @@ import AddService from "../components/AddService";
 export default function AddServicesPage() {
   return (
     <div>
-      <ResponsiveAppBar />
+      {/* <ResponsiveAppBar /> */}
       <Box m={5}/>
       <AddService />
     </div>

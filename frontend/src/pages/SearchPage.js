@@ -27,9 +27,9 @@ const SearchPage = () =>
     setFocusItem(newFocus);
   };
 
-  // console.log(state);
+  console.log(state);
 
-  let center = state ? state.res.searchLocationCoords : {
+  let center = state && state.res ? state.res.searchLocationCoords : {
     lat: 28.602,
     lng: -81.200,
   };
@@ -48,7 +48,7 @@ const SearchPage = () =>
 
   return (
     <Box>
-      <Navbar search={srch}/>
+      {/* <Navbar search={srch}/> */}
       <br />
 
       <Container maxWidth={false} sx={{

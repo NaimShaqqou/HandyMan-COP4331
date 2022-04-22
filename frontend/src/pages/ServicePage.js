@@ -25,6 +25,10 @@ export default function ServicePage() {
     const user = useSelector((state) => state.user);
     const service = state.service;
 
+    if (!service) {
+      return <></>
+    }
+
     async function doBook(event) {
       event.preventDefault();
   
@@ -63,7 +67,7 @@ export default function ServicePage() {
     
     return (
         <div>
-            <ResponsiveAppBar />
+            {/* <ResponsiveAppBar /> */}
             <Container>
                 <Box sx={{pt:5}}></Box>
                 <Typography variant='h2'>

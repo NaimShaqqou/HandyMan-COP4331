@@ -159,7 +159,7 @@ const LoginPage = () =>
 
   return(
     <Box>
-      <ResponsiveAppBar />
+      {/* <ResponsiveAppBar /> */}
 
       <Box m={5}/>
 

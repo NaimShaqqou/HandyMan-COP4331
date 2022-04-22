@@ -47,7 +47,7 @@ export default function RequestedServicesPage() {
 
   return (
     <div>
-      <ResponsiveAppBar/>
+      {/* <ResponsiveAppBar/> */}
       <Box sx={{ pt: 4}}>
       <Grid container direction="column" spacing={5}>  
         {requestedServices.length === 0 && fetchedData 

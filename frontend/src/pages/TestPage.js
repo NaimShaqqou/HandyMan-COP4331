@@ -18,7 +18,7 @@ const MyApp = (status) => {
   
   return (
     <div>
-      <AppBarSearch></AppBarSearch>
+      {/* <AppBarSearch></AppBarSearch> */}
       
       {/* <AntTabs></AntTabs> */}
 
