@@ -138,7 +138,7 @@ const ResponsiveAppBar = (props) => {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             {
-              location.pathname !== "/" && location.pathname !== "/login" ? <BackButton/> : ""
+              location.pathname !== "/" && location.pathname !== "/login" && location.pathname !== "/service" ? <BackButton/> : ""
             } 
           
             <a href='/'>
