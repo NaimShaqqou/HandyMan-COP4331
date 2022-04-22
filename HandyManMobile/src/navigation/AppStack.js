@@ -17,7 +17,7 @@ const AppStackTest = () => {
             <Stack.Screen
                 name="EditProfile"
                 component={EditProfile}
-                options={{headerShown: true}}
+                options={{headerShown: true, headerLeft: () => null}}
             />
         </Stack.Navigator>
     )
