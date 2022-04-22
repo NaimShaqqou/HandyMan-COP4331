@@ -86,7 +86,7 @@ export default function EditService(props) {
             let refreshedToken = response.data.refreshedToken
             updateCurrentUser({ ...user, jwtToken: refreshedToken })
             updateServices(response.data.service)
-            navigate("../services")
+            navigate(-1)
         }).catch((error) => {
             console.log(error.message)
         })
@@ -351,7 +351,7 @@ export default function EditService(props) {
                     <Grid item>
                         <Stack direction="row" spacing={4}>
                             <Button variant="contained" onClick={async () => await editService()}>Update Service</Button>
-                            <Button variant="contained" onClick={() => navigate('../services')}>Cancel Changes</Button>
+                            <Button variant="contained" onClick={() => navigate(-1)}>Cancel Changes</Button>
                         </Stack>
                     </Grid>
                 </Grid>

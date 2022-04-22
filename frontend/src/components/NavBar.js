@@ -6,7 +6,8 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import SearchIcon from "@mui/icons-material/Search"
 import SearchBar from "./SearchBar"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import BackButton from "./BackButton"
 import jwt_decode from "jwt-decode";
 import '../Title.css';
 import {
@@ -37,6 +38,7 @@ const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { logoutUser } = bindActionCreators(actionCreators, dispatch);
+  let location = useLocation()
 
   const pathname = window.location.pathname;
   const navigate = useNavigate()
@@ -135,6 +137,10 @@ const ResponsiveAppBar = (props) => {
       <AppBar position="static" elevation={0} sx={{ bgcolor: '#003c80' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {
+              location.pathname !== "/" && location.pathname !== "/login" ? <BackButton/> : ""
+            } 
+          
             <a href='/'>
               <img
                 src={require('../logo2_500.png')}
