@@ -33,7 +33,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 const pages = [];
-const loggedInSettings = ['Home','Profile', 'Services', 'Bookings', 'Logout'];
+const loggedInSettings = ['Home', 'Search', 'Profile', 'Services', 'Bookings', 'Logout'];
 
 const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
@@ -43,19 +43,10 @@ const ResponsiveAppBar = (props) => {
 
   const pathname = window.location.pathname;
   const navigate = useNavigate()
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (e) => {
@@ -65,7 +56,10 @@ const ResponsiveAppBar = (props) => {
       navigate("../profile", { replace: true });
     } else if (e.target.innerHTML === "Home") {
       navigate("../", { replace: true });
-    } else if (e.target.innerHTML === "Services") {
+    } else if (e.target.innerHTML === "Search") {
+      navigate("../search", { replace: true });
+    }
+    else if (e.target.innerHTML === "Services") {
       navigate("../services", { replace: true });
     } else if (e.target.innerHTML === "Logout") {
       // call the redux function

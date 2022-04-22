@@ -1,10 +1,5 @@
 import React from 'react';
 
-import AppBarSearch from '../components/TestAppBarWithSearch';
-import AntTabs from '../components/AntTabs';
-import TestDragNDrop from '../components/TestDragNDrop';
-import '../LoginPage.css';
-
 import {
   Select,
   MenuItem,
@@ -20,23 +15,15 @@ import {
 const MyApp = (status) => {
   
   return (
-    <Stack
+    <Box
       // maxWidth={false}
-      direction='row'
-      sx={{
-        bgcolor: 'green',
-      }}
+      // direction='row'
+      // sx={{
+      //   // bgcolor: 'green',
+      // }}
     >
-      <Box
-        sx={{
-          display: 'inline-block',
-          bgcolor: 'blue'
-        }}
-      >
-        hello
-      </Box>
 
-    </Stack>
+    </Box>
   )
 };
 
