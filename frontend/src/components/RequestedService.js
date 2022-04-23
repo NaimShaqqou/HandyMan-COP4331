@@ -134,7 +134,7 @@ export default function RequestedService(props) {
                                                 Refuse
                                             </Button>
                                         </Box>
-                                    : requestedService.Completion ? <Button variant="contained" sx={{pointerEvents: "none", cursor: "default" }} color="success">Completed</Button> : <Button variant="outlined" color="success" onClick={() => completeRequest()}>Complete</Button>}
+                                    : requestedService.Completion ? <Button variant="contained" sx={{pointerEvents: "none", cursor: "default" }} color="success">Completed</Button> : <Button variant="outlined" onClick={() => completeRequest()}>Complete</Button>}
                                     
                                     {!requestedService.Accepted ? 
                                     <Box sx={{ pr: 2 }}>

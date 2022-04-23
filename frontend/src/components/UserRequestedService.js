@@ -120,7 +120,7 @@ export default function UserRequestedService(props) {
 
                                         <Box>
                                             {requestedService.Accepted ? requestedService.Completion ? <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }} color="success">Complete</Button> : <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }}>In Progress</Button>
-                                                : <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }} color="error">Not Accepted</Button>}
+                                                : <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }} color="error">Hasn't Been Accepted</Button>}
                                         </Box>
                                         {requestedService.Reviewed ?
                                             <Box sx={{ pr: 2 }}>
