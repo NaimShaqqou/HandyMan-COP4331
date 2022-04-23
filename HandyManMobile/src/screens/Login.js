@@ -1,7 +1,7 @@
 import React from 'react'
 
 // native-base
-import { Box, Center } from 'native-base'
+import { Box, Center, KeyboardAvoidingView  } from 'native-base'
 
 // components
 import LoginBox from "../components/LoginBox.js"
@@ -12,6 +12,7 @@ import { useTheme } from 'react-native-paper'
 const Login = () => {
   const { colors } = useTheme();
   return (
+      <KeyboardAvoidingView behavior='padding' flex={1} w='100%' alignItems={'center'} >
     <Box w="100%" flex={1} safeAreaTop backgroundColor={colors.primary}>
       <Center flexGrow={1} >
         <Logo size="2xl" />
@@ -26,6 +27,7 @@ const Login = () => {
         <LoginBox />
       </Box>
     </Box>
+    </KeyboardAvoidingView>
   )
 }
 
