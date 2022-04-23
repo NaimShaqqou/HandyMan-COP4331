@@ -71,7 +71,7 @@ export default function UserRequestedServices() {
       <motion.div
         initial="offscreen"
         whileInView="onscreen"
-        viewport={{ once: true, amount: 1, fallback: fetchedData ? true : false}}
+        viewport={{ once: true, amount: 0.8}}
       >
         <motion.div  variants={cardVariants}>
           {serviceCard}

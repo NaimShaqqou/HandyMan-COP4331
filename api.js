@@ -932,6 +932,38 @@ exports.setApp = function (app, client, cloudinaryParser) {
     });
   })
 
+  app.post("/api/complete-request", async (req, res, next) => {
+    const { requestedServiceId, jwtToken } = req.body; 
+
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+    
+    RequestedService.findByIdAndUpdate(requestedServiceId, {Completion: true}, function(err, response) {
+      if (response) {
+        res.status(200).json( {result: "Completed Request", refreshedToken: refreshedToken} )
+      } else {
+        res.status(200).json( {result: "Error Completing Request", refreshedToken: refreshedToken} )
+      }
+    })
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {
