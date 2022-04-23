@@ -444,9 +444,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
             // Delete reviews associated with service
             axios.post(url + '/api/delete-review', {
-              serviceId: result._id,
+              serviceId: serviceId,
               jwtToken: refreshedToken
             })
+
+            RequestedService.deleteMany({ ServiceId: serviceId }).exec()
+            
           }
         }
         

@@ -30,6 +30,10 @@ const RequestedServicesSchema = new Schema({
         type: Boolean,
         default:false
     },
+    Reviewed: {
+        type: Boolean,
+        default:false
+    },
     DescriptionFromRequester: {
         type: String,
         required:true
