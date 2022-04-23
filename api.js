@@ -993,6 +993,32 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   })
 
+  app.post("/api/refresh-token", async (req, res, next) => {
+    const { jwtToken } = req.body; 
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", refreshedToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+    
+    res.status(200).json( {refreshedToken: refreshedToken, error: ""} )
+
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {
