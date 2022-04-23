@@ -1001,6 +1001,15 @@ exports.setApp = function (app, client, cloudinaryParser) {
     })
   })
 
+  app.post("/api/get-reviews", async (req, res, next) => {
+    const { serviceId } = req.body; 
+
+    let reviews = await Review.find({ ServiceId: serviceId } ).exec()
+    
+    res.status(200).json( {reviews: reviews} )
+
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {
