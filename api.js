@@ -1122,5 +1122,17 @@ exports.setApp = function (app, client, cloudinaryParser) {
     })
   })
 
+  //------------- This is to be used by jest for cleaning up testing --------------------
+  
+  app.post("/api/cleanupRegisterTest", async (req, res, next) => {
+    // incoming: userId
+
+    let { userId } = req.body;
+
+
+    User.findOneAndDelete({ _id: userId}, function (err, result) {
+        res.status(200).json({ response: "Deleted user" });
+      });
+  });
 
 };

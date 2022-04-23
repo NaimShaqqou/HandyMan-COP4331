@@ -243,3 +243,65 @@ describe("POST /login", () => {
     })
 
 })
+
+
+describe("POST /register", () => { 
+    let deleteUserId;
+
+    describe("Succesfully registers a user", () => {
+
+        test("Registers user", async () => {
+            const newUser = {
+                email: "jesttestregister@gmail.com",
+                password: "test",
+                firstName: "jest",
+                lastName: "test",
+                username: "jesttestregister"
+            }
+
+            await request(app).post("/api/register").send( newUser ).expect((res) => {
+                expect(res.body.id).not.toBe("-1")
+                deleteUserId = res.body.id
+            })
+        })
+
+    })
+
+    describe("Fails to register user", () => {
+
+        test("Fails because username is taken", async () => {
+            const newUser = {
+                email: "jesttestregisterusernametaken@gmail.com",
+                password: "test",
+                firstName: "jest",
+                lastName: "test",
+                username: "jesttestregister"
+            }
+
+            await request(app).post("/api/register").send( newUser ).expect((res) => {
+                expect(res.body.id).toBe("-1")
+            })
+        })
+
+        test("Fails because email is taken", async () => {
+            const newUser = {
+                email: "jesttestregister@gmail.com",
+                password: "test",
+                firstName: "jest",
+                lastName: "test",
+                username: "jesttestregisteremailtaken"
+            }
+        
+            await request(app).post("/api/register").send( newUser ).expect((res) => {
+                expect(res.body.id).toBe("-1")
+            })
+
+            // Cleanup by deleting user that was created
+            await request(app).post("/api/cleanupRegisterTest").send( { userId: deleteUserId } ).expect((res) => {
+                expect(res.body.response).toBe("Deleted user")
+            })
+            
+        })
+    })
+
+})
