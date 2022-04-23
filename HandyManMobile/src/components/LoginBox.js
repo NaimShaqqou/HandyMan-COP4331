@@ -17,10 +17,16 @@ import {
   Link,
   WarningOutlineIcon,
   Modal,
-  Text,
+  useTheme,
 } from "native-base";
-import { Button } from "react-native-paper";
-import { MaterialIcons } from "@native-base/icons";
+import {
+  Button,
+  Headline,
+  Subheading,
+  TextInput,
+  Text,
+} from "react-native-paper";
+import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 
 // to store user info in global variable
 //const context = useContext(AppContext)
@@ -35,7 +41,7 @@ const storeInfo = async (userInfo, serviceInfo) => {
 };
 
 const LoginBox = () => {
-  // const { authContext } = React.useContext(AppContext)
+  const { colors } = useTheme();
   const dispatch = useDispatch();
   const { updateCurrentUser, loginServices } = bindActionCreators(
     ActionCreators,
@@ -80,15 +86,6 @@ const LoginBox = () => {
         loginServices(res.services);
         updateCurrentUser(user); // update redux state
         storeInfo(user, res.services); // store to localstorage
-
-        // authContext.Login({
-        //     userId: res.userId,
-        //     firstName: res.firstName,
-        //     lastName: res.lastName,
-        //     profilePicture: res.profilePicture,
-        //     profileDescription: res.profileDescription,
-        //     jwtToken: res.jwtToken
-        // })
       }
 
       setLoading(false);
@@ -126,128 +123,80 @@ const LoginBox = () => {
 
   return (
     <Box w="90%" p="2" py="8" justifyContent="center">
-      <Heading size="xl" fontWeight="600">
+      <Headline style={{ fontFamily: "ComfortaaBold" }}>
         Welcome to Handler
-      </Heading>
-      <Heading mt="1" fontWeight="medium" size="sm">
-        Login to continue!
-      </Heading>
+      </Headline>
+      <Subheading>Login to continue!</Subheading>
 
-      <Center mt={10} w="100%">
-        <FormControl isInvalid={valid ? false : true}>
-          <Input
-            variant="underlined"
-            placeholder="Username"
-            size="2xl"
-            w="100%"
-            InputLeftElement={
-              <Icon
-                as={<MaterialIcons name="person" />}
-                size={5}
-                ml="2"
-                color="muted.400"
-              />
-            }
-            onChangeText={(newUsername) => setUsername(newUsername)}
-          />
-        </FormControl>
+      <Center mt={"32px"} w="100%">
+          <FormControl isInvalid={valid ? false : true}>
+            <TextInput
+              error={!valid}
+              onChangeText={(newUsername) => setUsername(newUsername)}
+              label="Username"
+              left={<TextInput.Icon name="account" />}
+            />
+          </FormControl>
 
-        <FormControl mt={8} isInvalid={valid ? false : true}>
-          <Input
-            variant="underlined"
-            placeholder="Password"
-            size="2xl"
-            w="100%"
-            type={show ? "text" : "password"}
-            InputRightElement={
-              <Icon
-                as={
-                  <MaterialIcons
-                    name={show ? "visibility" : "visibility-off"}
-                  />
-                }
-                size={5}
-                mr="2"
-                color="muted.400"
-                onPress={() => setShow(!show)}
-              />
-            }
-            InputLeftElement={
-              <Icon
-                as={<MaterialIcons name="lock" />}
-                size={5}
-                ml="2"
-                color="muted.400"
-              />
-            }
-            onChangeText={(newPassword) => setPassword(newPassword)}
-          />
+          <FormControl mt={"16px"} isInvalid={valid ? false : true}>
+            <TextInput
+              error={!valid}
+              onChangeText={(newPassword) => setPassword(newPassword)}
+              label="Password"
+              secureTextEntry={show ? false : true}
+              left={<TextInput.Icon name="lock" />}
+              right={
+                <TextInput.Icon
+                  name={show ? "eye" : "eye-off"}
+                  forceTextInputFocus={false}
+                  onPress={() => setShow(!show)}
+                />
+              }
+            />
 
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {msg}
-          </FormControl.ErrorMessage>
-        </FormControl>
-
-        <Link
-          _text={{
-            fontWeight: "500",
-            color: "secondary.500",
-          }}
-          alignSelf="flex-end"
-          mt="1"
-          onPress={onForgotPasswordPressed}
-        >
-          Forgot Password?
-        </Link>
-
-        <Button
-          onPress={doLogin}
-          mode="contained"
-          loading={loading ? true : false}
-          style={{
-            width: "100%",
-            marginTop: 20,
-          }}
-        >
-          Login
-        </Button>
-
-        <Button
-          onPress={onRegisterTransition}
-          mode="outlined"
-          style={{
-            width: "100%",
-            marginTop: 20,
-          }}
-        >
-          Don't have an account?
-        </Button>
-
-        {/* <Button 
-                onPress={ doLogin }
-                size="lg"
-                w="100%"
-                mt={6}
-                isLoading={loading ? true : false}
-                isLoadingText='Logging in...'
-                _loading={{
-                    bg: "primary.400:alpha.70",
-                    _text: {
-                      color: "coolGray.700"
-                    }
-                }}
+            <FormControl.ErrorMessage
+              _text={{ fontFamily: "ComfortaaRegular" }}
+              leftIcon={<WarningOutlineIcon size="xs" />}
             >
-                Login
-            </Button> */}
+              {msg}
+            </FormControl.ErrorMessage>
+          </FormControl>
 
-        {/* <Button 
-                mt={6}
-                variant="outline"
-                onPress={ onRegisterTransition }
-                w="100%"
-            >
-                Don't have an account? Register here!
-            </Button> */}
+          <Link
+            _text={{
+              fontWeight: "500",
+              fontFamily: "ComfortaaBold",
+              color: "secondary.500",
+            }}
+            alignSelf="flex-end"
+            mt="1"
+            onPress={onForgotPasswordPressed}
+          >
+            Forgot Password?
+          </Link>
+
+          <Button
+            onPress={doLogin}
+            mode="contained"
+            loading={loading ? true : false}
+            style={{
+              width: "100%",
+              marginTop: 20,
+            }}
+          >
+            Login
+          </Button>
+
+          <Button
+            onPress={onRegisterTransition}
+            mode="outlined"
+            style={{
+              width: "100%",
+              marginTop: 20,
+            }}
+          >
+            Don't have an account?
+          </Button>
       </Center>
     </Box>
   );
