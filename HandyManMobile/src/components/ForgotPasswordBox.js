@@ -8,7 +8,6 @@ import {
   WarningOutlineIcon,
 } from "native-base";
 import { Button, TextInput, Headline, Subheading } from "react-native-paper";
-import { MaterialIcons } from "@native-base/icons";
 import { useNavigation } from "@react-navigation/native";
 
 const ForgotPasswordBox = () => {
@@ -16,9 +15,6 @@ const ForgotPasswordBox = () => {
     event.preventDefault();
 
     setLoading(true);
-
-    var obj = { email: email.toLowerCase() };
-    var js = JSON.stringify(obj);
 
     setValid(true);
     setLoading(true);
@@ -53,6 +49,7 @@ const ForgotPasswordBox = () => {
             "We have sent an email to the address you provided with instructions on how to reset your password.",
           duration: null,
           width: "90%",
+          fontFamily: "ComfortaaRegular",
         });
       } else {
         toast.show({
@@ -61,6 +58,9 @@ const ForgotPasswordBox = () => {
           description: res.error,
           duration: null,
           w: "90%",
+          textStyle: {
+            fontFamily: "ComfortaaRegular",
+          }
         });
       }
     } catch (e) {

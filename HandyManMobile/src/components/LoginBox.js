@@ -170,7 +170,8 @@ const LoginBox = () => {
           <Button
             onPress={doLogin}
             mode="contained"
-            loading={loading ? true : false}
+            loading={loading}
+            disabled={loading}
             style={{
               width: "100%",
               marginTop: 20,
