@@ -46,7 +46,7 @@ var api = require('./api.js')
 api.setApp( app, mongoose , parser );
 
 
-
+const testJwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDgxNjM2MzR9.Zq_Qzyfvayih54ggotiV1DYRCFlk8EV_ApaS1d3iDNg"
 
 describe("POST /login", () => {
 
@@ -302,6 +302,70 @@ describe("POST /register", () => {
             })
             
         })
+    })
+
+})
+
+describe("POST /change-password", () => { 
+
+    describe("Successfully changes password", () => {
+        test("Changes password", async () => {
+            const payload = {
+                userId: "625b7bef027f784940085b44",
+                oldPassword: "jesttest1",
+                newPassword: "newTestPassword",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/change-password").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("")
+            })
+        })
+
+    })
+
+    describe("Fails to change password", () => {
+        test("Fail because passwords are the same", async () => {
+            const payload = {
+                userId: "625b7bef027f784940085b44",
+                oldPassword: "newTestPassword",
+                newPassword: "newTestPassword",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/change-password").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("Passwords can't be the same")
+            })
+        })
+
+        test("Fail because old password is wrong", async () => {
+            const payload = {
+                userId: "625b7bef027f784940085b44",
+                oldPassword: "jesttest2",
+                newPassword: "newTestPassword",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/change-password").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("Wrong password")
+            })
+        })
+    })
+
+    describe("Successfully change password back", () => {
+        test("Changes password", async () => {
+            const payload = {
+                userId: "625b7bef027f784940085b44",
+                oldPassword: "newTestPassword",
+                newPassword: "jesttest1",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/change-password").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("")
+            })
+        })
+
     })
 
 })
