@@ -108,20 +108,11 @@ const Home = () => {
           doSearch={doSearchHelper}
           passLocation={setLocation}
           filterIcon={
-            // <Button
-            //   variant="unstyled"
-            //   px="2"
-            //   py="0"
-            //   onPress={handlePresentModalPress}
-            // >
-            //   <Icon
-            //     size="6"
-            //     ml="0"
-            //     as={<MaterialIcons name="filter-list" />}
-            //     Color="muted.400"
-            //   />
-            // </Button>
-            <TextInput.Icon name="filter-variant" forceTextInputFocus={false} onPress={handlePresentModalPress}/>
+            <TextInput.Icon
+              name="filter-variant"
+              forceTextInputFocus={false}
+              onPress={handlePresentModalPress}
+            />
           }
         />
       </Center>

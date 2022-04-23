@@ -2,12 +2,11 @@ import {
   Center,
   Image,
   Heading,
-  Text,
   Box,
   Flex,
   ScrollView,
 } from "native-base";
-import { Button } from "react-native-paper";
+import { Button, Headline, Text, useTheme } from "react-native-paper";
 import React from "react";
 
 import { Dimensions, ImageBackground } from "react-native";
@@ -18,8 +17,6 @@ import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("screen");
-
-import { useTheme } from "react-native-paper";
 
 const deleteInfo = async () => {
   try {
@@ -77,7 +74,7 @@ const ProfileComponent = () => {
 
           <Box display="flex">
             <Center mt={"35px"}>
-              <Heading>{user.firstName + " " + user.lastName}</Heading>
+              <Headline style={{fontFamily: "ComfortaaBold"}}>{user.firstName + " " + user.lastName}</Headline>
             </Center>
 
             <Center mt="30px" mb="16px">
