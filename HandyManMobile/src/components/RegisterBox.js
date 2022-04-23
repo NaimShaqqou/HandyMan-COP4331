@@ -1,247 +1,244 @@
-import { React, useState } from 'react'
-import { Box, Center, Input, Icon, Heading, FormControl, WarningOutlineIcon } from 'native-base'
-import { Button } from 'react-native-paper'
+import { React, useState } from "react";
+import {
+  Box,
+  Center,
+  Heading,
+  FormControl,
+  WarningOutlineIcon,
+} from "native-base";
+import { Button, TextInput, Headline, Subheading } from "react-native-paper";
 
-import { useNavigation } from '@react-navigation/native'
-import { MaterialIcons } from "@native-base/icons"
+import { useNavigation } from "@react-navigation/native";
 
 const RegisterBox = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
-    const doRegister = async (event) => {
-        event.preventDefault();
-        setIsLoading(true);
-        setValid(true);
-        setPassValid(true);
-        setUserValid(true);
-        setEmailValid(true);
+  const doRegister = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setValid(true);
+    setPassValid(true);
+    setUserValid(true);
+    setEmailValid(true);
 
-        if (password != passwordRepeat)
+    if (password != passwordRepeat) {
+      setPassValid(false);
+      setMsg("Passwords do not match.");
+      setIsLoading(false);
+      return;
+    }
+
+    // call register api
+    var obj = {
+      email: email.toLowerCase(),
+      username: username,
+      password: password,
+      firstName: fName,
+      lastName: lName,
+    };
+    var js = JSON.stringify(obj);
+
+    try {
+      const response = await fetch(
+        "https://myhandyman1.herokuapp.com/api/register",
         {
-          setPassValid(false);
-          setMsg("Passwords do not match.");
-          setIsLoading(false);
-          return;
+          method: "POST",
+          body: js,
+          headers: { "Content-Type": "application/json" },
         }
+      );
+      var res = JSON.parse(await response.text());
 
-        // call register api
-        var obj = { 
-          email: email.toLowerCase(), 
-          username: username, 
-          password: password, 
-          firstName: fName, 
-          lastName: lName
-        }
-        var js = JSON.stringify(obj);
-
-        try {
-          const response = await fetch('https://myhandyman1.herokuapp.com/api/register', {
-              method: 'POST',
-              body: js,
-              headers: { "Content-Type": "application/json" }
-          });
-          var res = JSON.parse(await response.text());
-
-          if (res.error == '') {
-            navigation.navigate('confirmEmail');
-          } else if (res.error == 'Username already exists. Please enter a different username.') {
-            setUserValid(false);
-            setUserMsg(res.error);
-            setIsLoading(false);
-          } else if (res.error == 'Email already exists. Please enter a different email.') {
-            setEmailValid(false);
-            setEmailMsg(res.error);
-            setIsLoading(false);
-          } else {
-            // everything invalid 
-            setEmailValid(false);
-            setUserValid(false);
-            setValid(false);
-            setMsg(res.error)
-          }
-
-        } catch (e) {
-          console.log(e.toString());
-          setLoading(false);
-          return; 
-        }
-
-        // if successful navigate to confirm email page
-        // if error, then determine type of error and display it
+      if (res.error == "") {
+        navigation.navigate("confirmEmail");
+      } else if (
+        res.error ==
+        "Username already exists. Please enter a different username."
+      ) {
+        setUserValid(false);
+        setUserMsg(res.error);
+      } else if (
+        res.error == "Email already exists. Please enter a different email."
+      ) {
+        setEmailValid(false);
+        setEmailMsg(res.error);
+      } else {
+        // everything invalid
+        setEmailValid(false);
+        setUserValid(false);
+        setPassValid(false);
+        setValid(false);
+        setMsg(res.error);
+      }
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e.toString());
+      setLoading(false);
+      return;
     }
 
-    const onLoginTransition = () => {
-        navigation.navigate('Login');
-    }
-    
-    // email: email the user inputs
-    // username: username the user inputs
-    // password: password the user inputs
-    // passwordRepeat: repeated password the user inputs
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordRepeat, setPasswordRepeat] = useState('');
-    const [fName, setFName] = useState('');
-    const [lName, setLName] = useState('');
+    // if successful navigate to confirm email page
+    // if error, then determine type of error and display it
+  };
 
-    // logic for forms
-    const [showPass, setShowPass] = useState(false);
-    const [showRepeat, setShowRepeat] = useState(false);
-    const [loading, setIsLoading] = useState(false);
-    const [userValid, setUserValid] = useState(true);
-    const [emailValid, setEmailValid] = useState(true);
-    const [valid, setValid] = useState(true);
-    const [passValid, setPassValid] = useState(true);
-    const [msg, setMsg] = useState('');
-    const [userMsg, setUserMsg] = useState('');
-    const [emailMsg, setEmailMsg] = useState('');
+  const onLoginTransition = () => {
+    navigation.navigate("Login");
+  };
 
-  
-    return (
-        <Box  w="90%" p="2" py="8" justifyContent='center' >
-        
+  // email: email the user inputs
+  // username: username the user inputs
+  // password: password the user inputs
+  // passwordRepeat: repeated password the user inputs
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
 
-        <Heading size="xl" fontWeight="600">
-          Welcome to Handler
-        </Heading>
-        <Heading mt="1" fontWeight="medium" size="sm">
-          Register to continue! 
-        </Heading>
-        
-        <Center mt={10} w='100%'>
-        <FormControl flexDir={'row'} isInvalid={valid? false : true}>
-            <Input 
-              variant="underlined" 
-              placeholder="First Name" 
-              size="2xl" 
-              w="50%" 
-              InputLeftElement={<Icon as={<MaterialIcons name="contact-mail" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={newFName => setFName(newFName)}
-            />
-            <Input 
-              variant="underlined" 
-              placeholder="Last Name" 
-              size="2xl" 
-              w="50%" 
-              InputLeftElement={<Icon as={<MaterialIcons name="contact-mail" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={newLName => setLName(newLName)}
-            />
-          </FormControl>
+  // logic for forms
+  const [showPass, setShowPass] = useState(false);
+  const [showRepeat, setShowRepeat] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+  const [userValid, setUserValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [valid, setValid] = useState(true);
+  const [passValid, setPassValid] = useState(true);
+  const [msg, setMsg] = useState("");
+  const [userMsg, setUserMsg] = useState("");
+  const [emailMsg, setEmailMsg] = useState("");
 
-          <FormControl mt={8} isInvalid={emailValid ? false : true}>
-            <Input 
-              variant="underlined" 
-              placeholder="Email" 
-              size="2xl" 
-              w="100%" 
-              InputLeftElement={<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={newEmail => setEmail(newEmail)}
-            />
+  return (
+    <Box w="90%" p="2" py="8" justifyContent="center">
+      <Headline style={{ fontFamily: "ComfortaaBold" }}>
+        Welcome to Handler
+      </Headline>
+      <Subheading>
+        Register to continue!
+      </Subheading>
 
-            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-              { emailMsg }
-            </FormControl.ErrorMessage>
-          </FormControl>
+      <Center mt={"32px"} w="100%">
+        <FormControl isInvalid={!valid}>
+          <TextInput
+            error={!valid}
+            onChangeText={(newFName) => setFName(newFName)}
+            label="First Name"
+            placeholder="John"
+            left={<TextInput.Icon name="account" />}
+          />
+          <TextInput
+            error={!valid}
+            onChangeText={(newLName) => setLName(newLName)}
+            label="Last Name"
+            placeholder="Doe"
+            left={<TextInput.Icon name="account" />}
+            style={{ marginTop: 16 }}
+          />
+        </FormControl>
 
-          <FormControl mt={8} isInvalid={userValid ? false : true}>
-            <Input 
-              variant="underlined" 
-              placeholder="Username" 
-              size="2xl" 
-              w="100%" 
-              InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={newUsername => setUsername(newUsername)}
-            />
-
-            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-              { userMsg }
-            </FormControl.ErrorMessage>
-          </FormControl>
-
-          <FormControl mt={8} isInvalid={passValid? false : true}>
-            <Input 
-              variant="underlined" 
-              placeholder="Password" 
-              size="2xl" 
-              w="100%" 
-              type={showPass ? "text" : "password"}
-              InputRightElement={<Icon as={<MaterialIcons name={showPass ? "visibility" : "visibility-off"} />} 
-                size={5} mr="2" color="muted.400" onPress={() => setShowPass(!showPass)} />}
-              InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={newPassword => setPassword(newPassword)}
-            />
-          </FormControl>
-
-          <FormControl mt={8} isInvalid={passValid? false : true}>
-            <Input 
-              variant="underlined" 
-              placeholder="Confirm Password" 
-              size="2xl" 
-              w="100%" 
-              type={showRepeat ? "text" : "password"}
-              InputRightElement={<Icon as={<MaterialIcons name={showRepeat ? "visibility" : "visibility-off"} />} 
-                size={5} mr="2" color="muted.400" onPress={() => setShowRepeat(!showRepeat)} />}
-              InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} ml="2" color="muted.400" />}
-              onChangeText={newPasswordRepeat => setPasswordRepeat(newPasswordRepeat)}
-            />
-
-            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-              { msg }
-            </FormControl.ErrorMessage>
-          </FormControl>
-
-          <Button 
-                onPress={doRegister}
-                mode='contained'
-                loading={loading ? true : false}
-                style={{
-                    width: '100%',
-                    marginTop: 20
-                }}
-            >
-                Register
-            </Button>
-
-            <Button 
-                onPress={onLoginTransition}
-                mode='outlined'
-                style={{
-                    width: '100%',
-                    marginTop: 20
-                }}
-            >
-                Already have an account?
-            </Button>
-
-          {/* <Button 
-            onPress={ doRegister }
-            size="lg"
-            w="100%"
-            mt={8}
-            isLoading={loading ? true : false}
-            isLoadingText='Registering...'
-            _loading={{
-                bg: "primary.400:alpha.70",
-                _text: {
-                  color: "coolGray.700"
-                }
+        <FormControl mt={"16px"} isInvalid={!emailValid}>
+          <TextInput
+            error={!emailValid}
+            label="Email"
+            placeholder="johndoe@mail.com"
+            left={<TextInput.Icon name="email" />}
+            onChangeText={(newEmail) => {
+              setEmail(newEmail);
             }}
+          />
+          <FormControl.ErrorMessage
+            _text={{ fontFamily: "ComfortaaRegular" }}
+            leftIcon={<WarningOutlineIcon size="xs" />}
           >
-            Register
-          </Button>
+            {emailMsg}
+          </FormControl.ErrorMessage>
+        </FormControl>
 
-          <Button 
-            mt={6}
-            variant="outline"
-            onPress={onLoginTransition}
-            w="100%"
+        <FormControl mt={"16px"} isInvalid={!userValid}>
+          <TextInput
+            error={!userValid}
+            onChangeText={(newUsername) => setUsername(newUsername)}
+            label="Username"
+            placeholder={"johnnyboi69"}
+            left={<TextInput.Icon name="account" />}
+          />
+          <FormControl.ErrorMessage
+            _text={{ fontFamily: "ComfortaaRegular" }}
+            leftIcon={<WarningOutlineIcon size="xs" />}
           >
-            Already have an account? Login here!
-          </Button> */}
-        </Center>
-      </Box>
-  )
-}
+            {userMsg}
+          </FormControl.ErrorMessage>
+        </FormControl>
 
-export default RegisterBox
+        <FormControl mt={"16px"} isInvalid={!passValid}>
+          <TextInput
+            error={!passValid}
+            onChangeText={(newPassword) => setPassword(newPassword)}
+            label="Password"
+            secureTextEntry={showPass ? false : true}
+            left={<TextInput.Icon name="lock" />}
+            right={
+              <TextInput.Icon
+                name={showPass ? "eye" : "eye-off"}
+                forceTextInputFocus={false}
+                onPress={() => setShowPass(!showPass)}
+              />
+            }
+          />
+        </FormControl>
+
+        <FormControl mt={"16px"} isInvalid={!passValid}>
+          <TextInput
+            error={!passValid}
+            onChangeText={(newPasswordRepeat) =>
+              setPasswordRepeat(newPasswordRepeat)
+            }
+            label="Confirm Password"
+            secureTextEntry={!showRepeat}
+            left={<TextInput.Icon name="lock" />}
+            right={
+              <TextInput.Icon
+                name={showRepeat ? "eye" : "eye-off"}
+                forceTextInputFocus={false}
+                onPress={() => setShowRepeat(!showRepeat)}
+              />
+            }
+          />
+
+          <FormControl.ErrorMessage
+            _text={{ fontFamily: "ComfortaaRegular" }}
+            leftIcon={<WarningOutlineIcon size="xs" />}
+          >
+            {msg}
+          </FormControl.ErrorMessage>
+        </FormControl>
+
+        <Button
+          onPress={doRegister}
+          mode="contained"
+          disabled={loading}
+          loading={loading}
+          style={{
+            width: "100%",
+            marginTop: 20,
+          }}
+        >
+          Register
+        </Button>
+
+        <Button
+          onPress={onLoginTransition}
+          mode="outlined"
+          style={{
+            width: "100%",
+            marginTop: 20,
+          }}
+        >
+          Already have an account?
+        </Button>
+      </Center>
+    </Box>
+  );
+};
+
+export default RegisterBox;

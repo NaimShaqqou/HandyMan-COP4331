@@ -9,7 +9,7 @@ const Logo = ( { size } ) => {
             alt="Handyman Logo" 
             resizeMode={"contain"}
             size={ size }
-            borderRadius={150}
+            // borderRadius={150}
         />
     </Center>
   )
