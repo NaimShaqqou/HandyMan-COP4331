@@ -5,7 +5,7 @@ const Logo = ( { size } ) => {
   return (
     <Center>
         <Image 
-            source={ require('../../assets/Logo.jpg') }
+            source={ require('../../assets/Logo.png') }
             alt="Handyman Logo" 
             resizeMode={"contain"}
             size={ size }
