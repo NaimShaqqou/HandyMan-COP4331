@@ -81,6 +81,9 @@ function Profile() {
   }
 
   async function saveChanges() {
+    if (userInfo.firstName === "" || userInfo.lastName === "") {
+      return;
+    }
     let newImageUrl;
     if (originalPhoto !== userInfo.profilePicture) {
       newImageUrl = await uploadImage();

@@ -642,6 +642,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       serviceId,
       reviewerProfilePic,
       reviewText,
+      rating,
       jwtToken,
     } = req.body;
 
@@ -669,7 +670,8 @@ exports.setApp = function (app, client, cloudinaryParser) {
       UserId: userId, 
       ProfilePictureOfReviewer: reviewerProfilePic,
       ServiceId: serviceId, 
-      ReviewText: reviewText
+      ReviewText: reviewText,
+      Rating: rating
     })
 
     await review.save({}, function(err, objectInserted) {
@@ -963,6 +965,38 @@ exports.setApp = function (app, client, cloudinaryParser) {
         res.status(200).json( {result: "Completed Request", refreshedToken: refreshedToken} )
       } else {
         res.status(200).json( {result: "Error Completing Request", refreshedToken: refreshedToken} )
+      }
+    })
+  })
+
+  app.post("/api/reviewed-request", async (req, res, next) => {
+    const { requestedServiceId, jwtToken } = req.body; 
+
+
+    // check jwt
+    try {
+      if (token.isExpired(jwtToken)) {
+        var r = { error: "The JWT is no longer valid", jwtToken: "" };
+        res.status(200).json(r);
+        return;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // refresh token
+    var refreshedToken = null;
+    try {
+      refreshedToken = token.refresh(jwtToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+    
+    RequestedService.findByIdAndUpdate(requestedServiceId, {Reviewed: true}, function(err, response) {
+      if (response) {
+        res.status(200).json( {result: "Set request as reviewed", refreshedToken: refreshedToken} )
+      } else {
+        res.status(200).json( {result: "Error setting request as reviewed", refreshedToken: refreshedToken} )
       }
     })
   })
