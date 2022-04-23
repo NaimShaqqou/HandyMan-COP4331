@@ -1,4 +1,4 @@
-import { Center, Box } from 'native-base'
+import { Center, Box, KeyboardAvoidingView } from 'native-base'
 import React from 'react'
 import { useTheme } from 'react-native-paper'
 
@@ -9,6 +9,12 @@ const ForgotPassword = () => {
     const { colors } = useTheme();
 
     return (
+        <KeyboardAvoidingView
+      behavior="padding"
+      flex={1}
+      w="100%"
+      alignItems={"center"}
+    >
         <Box w="100%" flex={1} safeAreaTop backgroundColor={colors.primary}>
             <Center flexGrow={1} >
                 <Logo size="2xl" />
@@ -23,6 +29,8 @@ const ForgotPassword = () => {
                 <ForgotPasswordBox />
             </Box>
         </Box>
+    </KeyboardAvoidingView>
+
     )
 }
 
