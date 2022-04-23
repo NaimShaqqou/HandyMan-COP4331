@@ -115,7 +115,6 @@ function SearchBar(props) {
       category: search.category,
       location: search.location,
       maxDist: maxDist,
-      jwtToken: user.jwtToken,
     };
 
     let js = JSON.stringify(obj);
@@ -129,9 +128,6 @@ function SearchBar(props) {
 
     if (isNaN(obj.maxDist))
       obj.maxDist = 15;
-
-    if (obj.jwtToken == '')
-      obj.jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI';
 
     js = JSON.stringify(obj);
     // console.log('sending:');

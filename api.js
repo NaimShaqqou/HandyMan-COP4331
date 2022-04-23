@@ -33,7 +33,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
   var token = require("./createJWT.js");
 
   app.post("/api/search-services", async (req, res, next) => {
-    // incoming: search, location, maxDist, jwtToken
+    // incoming: search, location, maxDist
     // outgoing: results[], error
 
     var error = "";
@@ -47,26 +47,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
     var _category = category.trim();
     if (_category == "")
       _category = "";
-    
-
-    // Checks if token is expired
-    try {
-      if (token.isExpired(jwtToken)) {
-        var r = { error: "The JWT is no longer valid", jwtToken: "" };
-        res.status(200).json(r);
-        return;
-      }
-    } catch (e) {
-      console.log(e.message);
-    }
-
-    // Generates a new token
-    var refreshedToken = null;
-    try {
-      refreshedToken = token.refresh(jwtToken);
-    } catch (e) {
-      console.log(e.message);
-    }
 
     // Looks through the different fields of a service using the specified given search
     try {
@@ -87,13 +67,13 @@ exports.setApp = function (app, client, cloudinaryParser) {
         // if (services.length > 0)
           services = await getServicesWithinDistance(services, location, maxDist);
 
-        response = { searchLocationCoords: services.searchLocationCoords, results: services.filteredServices, error: error, jwtToken: refreshedToken };
+        response = { searchLocationCoords: services.searchLocationCoords, results: services.filteredServices, error: error };
         res.status(200).json(response);
     }
     // If we have problems, we end up here
     catch (err)
     {
-      response = { error: err.message, refreshedToken: refreshedToken };
+      response = { error: err.message };
       res.status(200).json(response);
     }
   });
