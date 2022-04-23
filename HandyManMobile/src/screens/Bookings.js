@@ -4,8 +4,8 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
-import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView } from 'react-native';
+import { Avatar, Button, Card, Title, Paragraph, Text, useTheme} from 'react-native-paper';
+import { ImageBackground, Dimensions, StyleSheet, View, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { colors, Icon } from 'react-native-elements';
 import { Center, Column, ListItem } from 'native-base';
@@ -15,6 +15,7 @@ const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 const { width, height } = Dimensions.get("screen");
 
 const Services = () => {
+  const { colors } = useTheme();
   const user = useSelector((state) => state.user)
   const services = useSelector((state) => state.services).services;
 
@@ -86,7 +87,7 @@ const Services = () => {
                     Edit
                   </Button>
 
-                  <Button color = {"red"}>
+                  <Button color = {colors.error}>
                     Delete
                   </Button>
 

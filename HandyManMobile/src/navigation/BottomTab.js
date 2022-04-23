@@ -7,6 +7,7 @@ import HomeScreen from "../screens/Home.js";
 import ProfileStack from "./ProfileStack.js";
 import ServicesScreen from "../screens/Services.js";
 import BookingsScreen from "../screens/Bookings.js";
+import ServiceInfo from "../screens/ServiceInfo.js"
 
 
 import { useTheme } from "react-native-paper";
@@ -21,11 +22,20 @@ const BottomTab = () => {
       barStyle={{ backgroundColor: colors.primary }}
     >
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Testing"
+        component={ServiceInfo}
         options={{
           tabBarIcon: () => (
             <MaterialIcons name="home" size={26} color={"white"} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: () => (
+            <MaterialIcons name="search" size={26} color={"white"} />
           ),
         }}
       />

@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
-import { ImageBackground, Dimensions, StyleSheet, View, Text, FlatList, ScrollView } from 'react-native';
+import { Avatar, Button, Card, Title, Paragraph, useTheme, Text} from 'react-native-paper';
+import { ImageBackground, Dimensions, StyleSheet, View, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { colors, Icon } from 'react-native-elements';
 import { Center, Column, ListItem } from 'native-base';
-import { useTheme } from "react-native-paper";
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
@@ -86,7 +85,7 @@ const Services = () => {
                     Edit
                   </Button>
 
-                  <Button color = {"red"}>
+                  <Button color = {colors.error}>
                     Delete
                   </Button>
 

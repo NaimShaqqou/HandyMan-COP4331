@@ -14,7 +14,7 @@ import {
   WarningOutlineIcon,
 } from "native-base";
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, useTheme, ActivityIndicator } from "react-native-paper";
+import { Button, useTheme, ActivityIndicator, TextInput, Headline, Divider } from "react-native-paper";
 import { MaterialIcons } from "@native-base/icons";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -194,72 +194,57 @@ const EditProfileComponent = () => {
 
           <Box display="flex">
             <Center mt={"35px"}>
-              <Heading>Edit your Name</Heading>
-              <FormControl mt={"15px"} isInvalid={validName ? false : true}>
+              <Headline style={{fontFamily: "ComfortaaBold"}}>Edit your Name</Headline>
+              <FormControl mt={"15px"} isInvalid={!validName}>
                 <Center
                   display="flex"
                   flexDir={"row"}
                   justifyContent={"space-between"}
                 >
-                  <Input
-                    variant="underlined"
+                  <TextInput 
                     defaultValue={user.firstName}
-                    size="2xl"
-                    w="45%"
-                    InputLeftElement={
-                      <Icon
-                        as={<MaterialIcons name="person" />}
-                        size={5}
-                        ml="2"
-                        color="muted.400"
-                      />
-                    }
+                    left={<TextInput.Icon name="account" />}
                     onChangeText={(newFirstName) => setFirstName(newFirstName)}
+                    style={{width: '48%'}}
+                    label={"First Name"}
+                    error={!validName}
                   />
-                  <Input
-                    variant="underlined"
+                  <TextInput 
                     defaultValue={user.lastName}
-                    size="2xl"
-                    w="45%"
-                    InputLeftElement={
-                      <Icon
-                        as={<MaterialIcons name="person" />}
-                        size={5}
-                        ml="2"
-                        color="muted.400"
-                      />
-                    }
                     onChangeText={(newLastName) => setLastName(newLastName)}
+                    style={{width: '48%'}}
+                    left={<TextInput.Icon name="account" />}
+                    label={"Last Name"}
+                    error={!validName}
                   />
                 </Center>
                 <FormControl.ErrorMessage
                   leftIcon={<WarningOutlineIcon size="xs" />}
+                  _text={{fontFamily: "ComfortaaRegular"}}
                 >
                   First name and last name cannot be empty.
                 </FormControl.ErrorMessage>
               </FormControl>
             </Center>
 
-            <Center mt="30px" mb="16px">
+            {/* <Center mt="30px" mb="16px">
               <Box w="90%" borderWidth={1} borderColor="#E9ECEF" />
-            </Center>
-            <Center>
-              <Heading>Edit your Description</Heading>
-              <TextArea
-                mt={"15px"}
-                w="100%"
-                defaultValue={user.profileDescription}
-                onChangeText={(newDescription) =>
+            </Center> */}
+            <Divider style={{marginTop: 32, marginBottom: 16}}/>
+            <Box alignItems={'center'}>
+              <Headline style={{fontFamily: "ComfortaaBold"}}>Edit your Description</Headline>
+                
+              <TextInput label="Description" multiline={true} defaultValue={user.profileDescription} onChangeText={(newDescription) =>
                   setDescription(newDescription)
-                }
-              />
-            </Center>
+                } style={{marginTop: 16, width: '100%'}}/>
+              
+            </Box>
 
             <Center
               display={"flex"}
               flexDir={"row"}
               justifyContent={"space-between"}
-              mt={'16px'}
+              mt={'32px'}
             >
               <Button
                 compact
