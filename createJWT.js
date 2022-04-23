@@ -13,9 +13,8 @@ exports.decodeToken = function (token) {
 
 _createToken = function (fn, ln, id) {
   try {
-    const expiration = new Date();
     const user = { userId: id, firstName: fn, lastName: ln };
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
     // In order to expire with a value other than the default, use the
     // following
     /*
@@ -36,6 +35,7 @@ exports.isExpired = function (token) {
     token,
     process.env.ACCESS_TOKEN_SECRET,
     (err, verifiedJwt) => {
+      console.log(verifiedJwt)
       if (err) {
         return true;
       } else {
