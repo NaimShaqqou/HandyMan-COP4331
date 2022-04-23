@@ -37,7 +37,9 @@ export default function RequestedServicesPage() {
             setFetchedData(true)
             if (response.data.error === "") {
               let refreshedToken = response.data.refreshedToken
-              setRequestedServices(response.data.results);
+              let array = response.data.results
+              // sort array by dates
+              setRequestedServices(array);
               updateCurrentUser({ ...user, jwtToken: refreshedToken })
             } else {
               console.log(response.data.error)

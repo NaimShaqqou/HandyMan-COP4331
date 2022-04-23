@@ -9,10 +9,10 @@ import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Container, Divider, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteServiceDialog from "./DeleteServiceDialog";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -72,6 +72,21 @@ export default function RequestedService(props) {
             });
     }
 
+    async function completeRequest() {
+        await axios
+            .post(bp.buildPath("api/complete-request"), {
+                requestedServiceId: requestedService._id,
+                jwtToken: myUserInfo.jwtToken
+            })
+            .then((response) => {
+                setUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                setRequestedService({ ...requestedService, Completion: true})
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     async function denyRequest() {
         await axios
             .post(bp.buildPath("api/deny-request"), {
@@ -116,15 +131,15 @@ export default function RequestedService(props) {
                                     {!requestedService.Accepted ? 
                                     <Box>
                                       <IconButton onClick={() => acceptRequest()}>
-                                          <CheckIcon color="success" />
+                                          <CheckCircleIcon color="success" />
                                       </IconButton>
                                       <IconButton onClick={() => denyRequest()}>
-                                          <ClearIcon color="warning" />
+                                          <DeleteForeverIcon color="warning" />
                                       </IconButton>
 
                                     </Box>
 
-                                    : <Typography>Accepted</Typography>}
+                                    : requestedService.Completion ? <Button variant="contained" sx={{pointerEvents: "none", cursor: "default" }} color="success">Completed</Button> : <Button variant="outlined" color="success" onClick={() => completeRequest()}>Complete</Button>}
                                   </Box>
 
                                   <Box m={2} />
