@@ -22,7 +22,7 @@ const Home = () => {
   const { colors } = useTheme();
 
   // Can be called to actually call the search api
-  const doSearch = async (filters, event) => {
+  const doSearch = async (filters, _event) => {
     try {
       // call register api
       var obj = {
@@ -108,19 +108,20 @@ const Home = () => {
           doSearch={doSearchHelper}
           passLocation={setLocation}
           filterIcon={
-            <Button
-              variant="unstyled"
-              px="2"
-              py="0"
-              onPress={handlePresentModalPress}
-            >
-              <Icon
-                size="6"
-                ml="0"
-                as={<MaterialIcons name="filter-list" />}
-                Color="muted.400"
-              />
-            </Button>
+            // <Button
+            //   variant="unstyled"
+            //   px="2"
+            //   py="0"
+            //   onPress={handlePresentModalPress}
+            // >
+            //   <Icon
+            //     size="6"
+            //     ml="0"
+            //     as={<MaterialIcons name="filter-list" />}
+            //     Color="muted.400"
+            //   />
+            // </Button>
+            <TextInput.Icon name="filter-variant" forceTextInputFocus={false} onPress={handlePresentModalPress}/>
           }
         />
       </Center>
@@ -136,26 +137,6 @@ const Home = () => {
         >
           <Box flex={1} p={"16px"}>
             <Headline>Search Service</Headline>
-            {/* <Input
-              placeholder="I need..."
-              w="100%"
-              h="50px"
-              borderRadius="4"
-              InputLeftElement={
-                <Icon
-                  size="5"
-                  ml="2"
-                  as={<MaterialIcons name="search" />}
-                  Color="muted.400"
-                />
-              }
-              variant="outline"
-              fontSize={14}
-              backgroundColor={"white"}
-              onChangeText={(newSearch) => setSearch(newSearch)}
-              defaultValue={search}
-              mt={"16px"}
-            /> */}
             <TextInput
               label="Service"
               placeholder="Bakery"

@@ -93,7 +93,7 @@ const LoginBox = () => {
   const navigation = useNavigation();
 
   // sends a reset password email to the user
-  const onForgotPasswordPressed = async (event) => {
+  const onForgotPasswordPressed = async () => {
     navigation.navigate("forgotPassword");
   };
 
