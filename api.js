@@ -383,7 +383,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     // incoming: serviceId, jwtToken
     // outgoing: error, jwtToken
 
-    let { serviceId, jwtToken } = req.body;
+    let { serviceId, jwtToken, test } = req.body;
 
     var response;
 
@@ -422,11 +422,14 @@ exports.setApp = function (app, client, cloudinaryParser) {
               error: ""
             };
 
-            // Delete reviews associated with service
-            axios.post(url + '/api/delete-review', {
-              serviceId: serviceId,
-              jwtToken: refreshedToken
-            })
+            // Delete reviews associated with service. Avoid this endpoint if doing testing
+            if (test === null) {
+              axios.post(url + '/api/delete-review', {
+                serviceId: serviceId,
+                jwtToken: refreshedToken
+              })
+            }
+            
 
             RequestedService.deleteMany({ ServiceId: serviceId }).exec()
             

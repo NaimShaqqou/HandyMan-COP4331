@@ -369,3 +369,98 @@ describe("POST /change-password", () => {
     })
 
 })
+
+let createdService;
+
+describe("POST /add-service", () => { 
+    describe("Creates new service", () => {
+        test("Created service", async () => {
+            const payload = {
+                userId: "625b7bef027f784940085b44",
+                title: "TESTING",
+                imageUrls: [ "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650606134/images/kli8ahfh70ugfruswy3f.jpg" ],
+                address: "Orlando, Fl",
+                description: "TESTING",
+                price: "1",
+                daysAvailable: ["Monday"],
+                category: "Testing",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/add-service").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("")
+                createdService = res.body.service
+            })
+        })
+    })
+})
+
+describe("POST /edit-service", () => { 
+    describe("Edits new service", () => {
+        test("Succesfully edits service", async () => {
+            const payload = {
+                serviceId: createdService._id,
+                newTitle: "NEWTESTING", 
+                newImages: [ "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650606134/images/kli8ahfh70ugfruswy3f.jpg" ],
+                newAddress: "Orlando, Fl", 
+                newDescription: "NEWTESTING", 
+                newPrice: "2", 
+                newDaysAvailable: ["Tuesday"],
+                newCategory: "NEWTESTING",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/edit-service").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("")
+            })
+        })
+
+        test("Fails to edit service", async () => {
+            const payload = {
+                serviceId: "6234c4d39a050a36555a6949",
+                newTitle: "NEWTESTING", 
+                newImages: [ "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650606134/images/kli8ahfh70ugfruswy3f.jpg" ],
+                newAddress: "Orlando, Fl", 
+                newDescription: "NEWTESTING", 
+                newPrice: "2", 
+                newDaysAvailable: ["Tuesday"],
+                newCategory: "NEWTESTING",
+                jwtToken: testJwtToken
+            }
+
+            await request(app).post("/api/edit-service").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("Incorrect serviceId")
+            })
+        })
+    })
+})
+
+describe("POST /delete-service", () => { 
+    describe("Deletes service", () => {
+        test("Succesfully deletes service", async () => {
+            const payload = {
+                serviceId: createdService._id,
+                jwtToken: testJwtToken,
+                test: true
+            }
+
+            await request(app).post("/api/delete-service").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("")
+            })
+            
+        })
+
+        test("Fails to delete service", async () => {
+            const payload = {
+                serviceId: createdService._id,
+                jwtToken: testJwtToken,
+                test: true
+            }
+
+            await request(app).post("/api/delete-service").send( payload ).expect((res) => {
+                expect(res.body.error).toBe("Couldn't delete service.")
+            })
+            
+        })
+    })
+})
