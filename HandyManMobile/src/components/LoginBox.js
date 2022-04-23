@@ -130,7 +130,7 @@ const LoginBox = () => {
             />
           </FormControl>
 
-          <FormControl mt={"16px"} isInvalid={valid ? false : true}>
+          <FormControl mt={"16px"} isInvalid={!valid}>
             <TextInput
               error={!valid}
               onChangeText={(newPassword) => setPassword(newPassword)}

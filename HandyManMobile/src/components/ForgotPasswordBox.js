@@ -3,13 +3,11 @@ import {
   Box,
   Heading,
   Center,
-  Icon,
   FormControl,
-  Input,
   useToast,
   WarningOutlineIcon,
 } from "native-base";
-import { Button } from "react-native-paper";
+import { Button, TextInput, Headline, Subheading } from "react-native-paper";
 import { MaterialIcons } from "@native-base/icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -80,41 +78,34 @@ const ForgotPasswordBox = () => {
 
   return (
     <Box safeArea w="90%" justifyContent="center">
-      <Heading size="xl" fontWeight="600">
+      <Headline style={{ fontFamily: "ComfortaaBold" }}>
         Reset your Password
-      </Heading>
-      <Heading mt="1" fontWeight="medium" size="sm">
-        Please enter your email below to continue.
-      </Heading>
+      </Headline>
+      <Subheading>Please enter your email below to continue.</Subheading>
 
       <Center mt={10} w="100%">
-        <FormControl isInvalid={valid ? false : true}>
-          <Input
-            variant="underlined"
-            placeholder="Email"
-            size="2xl"
-            w="100%"
-            InputLeftElement={
-              <Icon
-                as={<MaterialIcons name="email" />}
-                size={5}
-                ml="2"
-                color="muted.400"
-              />
-            }
+        <FormControl isInvalid={!valid}>
+          <TextInput
+            error={!valid}
+            label="Email"
+            left={<TextInput.Icon name="email" />}
             onChangeText={(newEmail) => {
               setEmail(newEmail);
               setValid(true);
             }}
           />
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+
+          <FormControl.ErrorMessage
+            leftIcon={<WarningOutlineIcon size="xs" />}
+            _text={{ fontFamily: "ComfortaaRegular" }}
+          >
             You must enter an email to continue.
           </FormControl.ErrorMessage>
         </FormControl>
 
         <Button
           onPress={onSubmit}
-          mode="contained"          
+          mode="contained"
           loading={loading}
           disabled={loading}
           style={{
