@@ -5,6 +5,9 @@ import Navbar from '../components/NavBar';
 import SearchResults from "../components/SearchResults";
 import Map from '../components/Map';
 import { useNavigate, useLocation } from "react-router-dom";
+import SearchBar from "../components/SearchBar"
+
+import Map2 from '../components/GoogleMapReactComponent';
 
 import {
   Container,
@@ -29,23 +32,30 @@ const SearchPage = () => {
   const { state } = useLocation();
   let [showResults, setShowResults] = useState(true);
   let [focusItem, setFocusItem] = useState(null);
+  let [res, setRes] = useState(state && state.res ? state.res : []);
 
-  const updateFromChild = (newFocus) => {
+  const updateFocusFromChild = (newFocus) => {
     setFocusItem(newFocus);
+  };
+  
+  const updateResFromSearchbar = (newRes) => {
+    setRes(newRes);
   };
 
   console.log(state);
 
-  let center = state && state.res ? state.res.searchLocationCoords : {
+  let center = {
     lat: 28.602,
     lng: -81.200,
   };
+  
+  if (res && res.searchLocationCoords)
+    center = res.searchLocationCoords;
 
   // console.log('in search page');
-  // console.log(center);
+  console.log(center);
 
-  let res = (state ? state.res : null);
-  let srch = (state ? state.obj : null);
+  // let res = (state ? state.res : null);
 
   return (
     <Box
@@ -62,29 +72,67 @@ const SearchPage = () => {
         <Map
           sx={{ height: '100%' }}
           focus={focusItem}
-          updateFocus={updateFromChild}
+          updateFocus={updateFocusFromChild}
           results={(res && res.error == '') ? res.results : []}
           center={center}
         />
+
+        {/* <Map2
+          sx={{
+            width: '100%',
+            height: '100%',
+          }}
+          focus={focusItem}
+          updateFocus={updateFocusFromChild}
+          results={(res && res.error == '') ? res.results : []}
+          center={ center}
+        /> */}
       </Box>
 
-      {/* <Paper
-        elevation={10}
-        sx={{
-          width: '100%',
-          height: '100%'
+      {/* <motion.div
+        initial='hidden'
+        animate='visible'
+        exit='exit'
+        variants={{
+          hidden: {
+            y: -100,
+            opacity: 0
+          },
+          visible: {
+            y: 0,
+            opacity: 1,
+          },
+          exit: {
+            y: -100,
+            opacity: 0
+          }
+        }}
+        transition={{
+          duration: 0.5
         }}
       >
-        
-      </Paper> */}
-
+      </motion.div> */}
+      <Container sx={{ 
+          // display: { xs: 'none', sm: 'none', s900: 'flex' }, 
+          maxWidth: { xs: '380px', sm: '480px', lg: '910px'},
+          // width: '500px',
+          height: '300px',
+          mt: '-90vh',
+          ml: '50vh',
+          // bgcolor: 'green',
+          position: 'sticky',
+          pointerEvents: 'none',
+        }}
+      >
+        <SearchBar updateRes={updateResFromSearchbar}/>
+      </Container>
 
       <Box
         // elevation={5}
         maxWidth='100%'
         sx={{
           height: '80vh',
-          mt: '-85vh',
+          mt: '-20vh',
           ml: '3%',
           zIndex: 98,
           // bgcolor: 'green',
@@ -102,7 +150,7 @@ const SearchPage = () => {
         >
           <AnimatePresence
             // intial={false}
-            exitBeforeEnter={true}
+            // exitBeforeEnter={true}
           // onExitComplete={() => null}
           >
             {showResults &&
@@ -121,22 +169,26 @@ const SearchPage = () => {
                   x: -300,
                   opacity: 0
                 }}
+                transition={{
+                  duration: 0.2
+                }}
               >
                 <Box
                   sx={{
                     width: '30vh',
                     height: '100%',
-                    bgcolor: 'white',
+                    bgcolor: '#fff',
                     pointerEvents: 'auto',
                   }}
                 >
                   <SearchResults
                     focus={focusItem}
-                    updateFocus={updateFromChild}
+                    updateFocus={updateFocusFromChild}
                     results={(res && res.error == '') ? res.results : []}
                   />
                 </Box>
               </motion.div>}
+              
 
             <motion.div
               key='button'
@@ -182,13 +234,13 @@ const SearchPage = () => {
                 style={{
                   borderRadius: 10,
                   borderWidth: 0,
-                  backgroundColor: 'white',
+                  backgroundColor: '#fff',
                   // backgroundColor: '#005cc4',
                   color: 'black',
                   cursor: 'pointer',
                   width: '40px',
                   height: '20%',
-                  bgcolor: 'white',
+                  bgcolor: '#fff',
                   pointerEvents: 'auto',
                   boxShadow: '0 3px 10px rgb(0 0 0 / 0.2)',
                 }}

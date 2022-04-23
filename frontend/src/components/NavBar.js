@@ -159,7 +159,7 @@ const ResponsiveAppBar = (props) => {
 
             <Box m={1}/>
 
-            <AnimatePresence exitBeforeEnter>
+            {/* <AnimatePresence exitBeforeEnter>
               {pathname !== "/" && 
               <motion.div
                 initial='hidden'
@@ -187,7 +187,7 @@ const ResponsiveAppBar = (props) => {
                   <SearchBar/>
                 </Container>
               </motion.div>}
-            </AnimatePresence>
+            </AnimatePresence> */}
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             </Box>

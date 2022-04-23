@@ -2,16 +2,13 @@ change password on profile page needs:
 - repeat password
 - show password
 
-move "add new service" button on services page higher
+go back to search results button
 
-add crop to square function for uploaded images (to maintain consistent aspect ratio)
+move "add new service" button on services page higher
 
 drag n drop images
 
 jwt token expirations
-
-possibly remove searchbar from navbar. put it on the page instead.
-
 
 homepage decoration
 

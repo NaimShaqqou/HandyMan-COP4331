@@ -148,7 +148,11 @@ function SearchBar(props) {
       // Sort by title
       res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
 
-      navigate("/search", { replace: true, state: { obj: search, res: res} });
+      if (window.location.pathname == '/search') {
+        props.updateRes(res);
+      } else {
+        navigate("/search", { replace: true, state: { obj: search, res: res} });
+      }
 
     } catch (e) {
       console.log(e.toString());
@@ -182,9 +186,9 @@ function SearchBar(props) {
         backgroundColor: "white",
         width: "100%",
         textAlign: "center",
+        pointerEvents: 'auto',
       }}
     >
-    
       <Stack direction="row" spacing={1} alignItems="center">
         <Stack
           direction="row"

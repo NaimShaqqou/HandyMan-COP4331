@@ -28,7 +28,7 @@ const MyApp = (status) => {
     >
       <Map2
         sx={{
-          width: '700px',
+          width: '100%',
           height: '700px',
         }}
         // focus={focusItem}
