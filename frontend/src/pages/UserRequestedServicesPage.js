@@ -93,11 +93,11 @@ export default function UserRequestedServices() {
                 <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
                     <Typography variant="h2">You don't have any bookings</Typography> 
                 </Grid>
-          : requestedServices.map((requestedService, index) => requestedService.Accepted ? (
+          : requestedServices.map((requestedService, index) => 
           <Grid item key={index}>
             <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>
           </Grid>
-        ) : "")}
+        )}
       </Grid>
       </Box>
       

@@ -120,7 +120,7 @@ export default function RequestedService(props) {
                 >
                     <Grid container spacing={2}>
                         <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
-                            <Img sx={{ width: 256, height: 256 }} alt="complex" src={user.ProfilePicture === null ? '' : user.ProfilePicture} />
+                            <Img sx={{ width: 256, height: 256, objectFit: 'cover' }} alt="complex" src={user.ProfilePicture === null ? '' : user.ProfilePicture} />
                         </Grid>
                         <Grid item xs={12} md container >
 
@@ -129,17 +129,20 @@ export default function RequestedService(props) {
 
                                   <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>
                                     {!requestedService.Accepted ? 
-                                    <Box>
-                                      <IconButton onClick={() => acceptRequest()}>
-                                          <CheckCircleIcon color="success" />
-                                      </IconButton>
-                                      <IconButton onClick={() => denyRequest()}>
-                                          <DeleteForeverIcon color="warning" />
-                                      </IconButton>
-
-                                    </Box>
-
+                                        <Box>
+                                            <Button variant="outlined" color="error" onClick={() => denyRequest()}>
+                                                Refuse
+                                            </Button>
+                                        </Box>
                                     : requestedService.Completion ? <Button variant="contained" sx={{pointerEvents: "none", cursor: "default" }} color="success">Completed</Button> : <Button variant="outlined" color="success" onClick={() => completeRequest()}>Complete</Button>}
+                                    
+                                    {!requestedService.Accepted ? 
+                                    <Box sx={{ pr: 2 }}>
+                                            <Button variant="outlined" color="success" onClick={() => acceptRequest()}>
+                                                Accept
+                                            </Button>
+                                    </Box> : ""
+                                    }
                                   </Box>
 
                                   <Box m={2} />

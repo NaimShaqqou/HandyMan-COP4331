@@ -5,7 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { CardHeader } from "@mui/material";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Container, Divider, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -51,10 +51,10 @@ export default function UserRequestedService(props) {
         maxHeight: "100%",
     });
 
-
     return (
-                    <Container>
-                    {service !== null && requestedService.Accepted === true && (
+        <div>
+            {service !== null && (
+                <Container>
                     <Paper
                         sx={{
                             margin: "auto",
@@ -66,11 +66,89 @@ export default function UserRequestedService(props) {
                     >
                         <Grid container spacing={2}>
                             <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
-                                <Img sx={{ width: 256, height: 256 }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
+                                <Img sx={{ width: 256, height: 256, objectFit: 'cover' }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
                             </Grid>
-                            <Grid item xs={12} md container >
+                            <Grid item xs >
+                                <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
+
+                                    <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>
+
+                                        <Box>
+                                            {requestedService.Accepted ? requestedService.Completion ? <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }} color="success">Complete</Button> : <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }}>In Progress</Button>
+                                                : <Button variant="outlined" sx={{ pointerEvents: "none", cursor: "default" }} color="error">Not Accepted</Button>}
+                                        </Box>
+                                        {requestedService.Reviewed ?
+                                            <Box sx={{ pr: 2 }}>
+                                                <Button variant="outlined" color="success">Reviewed</Button>
+                                            </Box> : requestedService.Completion ? <Box sx={{ pr: 2 }}> <Button variant="outlined" color="success">Add Review</Button> </Box> : ""
+                                        }
+                                    </Box>
+
+                                    <Box m={2} />
+
+                                    <Container sx={{ display: 'flex', justifyContent: "center", width: "100%" }}>
+                                        <Stack direction="column" sx={{ textAlign: 'center' }} spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
+                                            <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                <Typography
+                                                    variant="h4"
+                                                    sx={{ fontWeight: "bold" }}
+                                                    component="div"
+                                                >
+                                                    {service.Title}
+                                                </Typography>
+                                            </Grid>
+
+                                            <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                <Typography variant="body1">
+                                                    Service Description: {service.Description}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item container direction="row" xs>
+                                                <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                    <Typography
+                                                        variant="h5"
+                                                    >
+                                                        {new Date(requestedService.Dates).toLocaleDateString("en-US")}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                    <Typography variant="h5">
+                                                        ${requestedService.Price}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={4} sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                    <Typography variant="h5" >
+                                                        {service.Address}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                Your request: {requestedService.DescriptionFromRequester}
+                                            </Grid>
+                                        </Stack>
+
+                                    </Container>
+                                </Stack>
+
+
+                            </Grid>
+
+
+
+
+
+
+
+
+
+                            {/* <Grid item xs={12} md container >
     
                                 <Grid item xs container direction="column" sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }} spacing={1} >
+                                    <Grid item xs>
+                                        <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>
+                                            
+                                        </Box>
+                                    </Grid>
                                     <Stack direction="column" spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
                                         <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center"  }}>
                                             <Typography
@@ -112,13 +190,15 @@ export default function UserRequestedService(props) {
                                     </Stack>
                                 </Grid>
     
-                            </Grid>
+                            </Grid> */}
                         </Grid>
-    
-    
+
+
                     </Paper>
-                    )
-                }
-            </Container >
+
+                </Container >
+            )
+            }
+        </div>
     );
 }
