@@ -39,10 +39,6 @@ export default function ServiceCard(props) {
       maxHeight: '100%',
     });
 
-    function openService() {
-        navigate('../service', {state: service})
-    }
-
     async function destroyService() {
         await axios.post(bp.buildPath("api/delete-service"), {
           serviceId: service._id,

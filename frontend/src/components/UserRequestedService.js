@@ -9,7 +9,7 @@ import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Container, Divider, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteServiceDialog from "./DeleteServiceDialog";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,11 +20,19 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
+import AddReviewDialog from "./AddReviewDialog";
 
 export default function UserRequestedService(props) {
-    const requestedService = props.requestedService;
+    const [requestedService, setRequestedService] = useState(props.requestedService);
+    let user = useSelector((state) => state.user);
     const [service, setService] = useState(null);
+    const [openDialog, setOpenDialog] = useState(false)
+    const [rating, setRating] = useState(0)
+    const [review, setReview] = useState("")
     let bp = require("./Path.js");
+
+    const dispatch = useDispatch();
+    const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
     useEffect(() => {
         console.log("IN USER REQUEST CARD USE EFFECT")
@@ -42,7 +50,44 @@ export default function UserRequestedService(props) {
                 console.log(error);
             });
         return () => mounted = false;
-    }, []);
+    }, [requestedService]);
+
+    async function addReview() {
+        if (review === "") {
+            return;
+        } else {
+            await axios.post(bp.buildPath("api/add-review"), {
+                serviceId: requestedService.ServiceId,
+                userId: user.userId,
+                reviewerProfilePic: user.profilePicture,
+                reviewText: review,
+                rating: rating,
+                jwtToken: user.jwtToken
+            }).then((response) => {
+                if (response.data.error === "") {
+                    console.log("Added review")
+                } else {
+                    console.log(response.data.error)
+                }
+            }).catch((error) => {
+                console.log(error.message)
+            })
+
+            await axios
+                .post(bp.buildPath("api/reviewed-request"), {
+                    requestedServiceId: requestedService._id,
+                    jwtToken: user.jwtToken
+                })
+                .then((response) => {
+                    setRequestedService({ ...requestedService, Reviewed: true})
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            setOpenDialog(false)
+
+        }
+    }
 
     const Img = styled("img")({
         margin: "auto",
@@ -79,8 +124,8 @@ export default function UserRequestedService(props) {
                                         </Box>
                                         {requestedService.Reviewed ?
                                             <Box sx={{ pr: 2 }}>
-                                                <Button variant="outlined" color="success">Reviewed</Button>
-                                            </Box> : requestedService.Completion ? <Box sx={{ pr: 2 }}> <Button variant="outlined" color="success">Add Review</Button> </Box> : ""
+                                                <Button variant="contained" color="success" sx={{ pointerEvents: "none", cursor: "default" }} >Reviewed</Button>
+                                            </Box> : requestedService.Completion ? <Box sx={{ pr: 2 }}> <Button variant="outlined" color="success" onClick={() => setOpenDialog(true)}>Add Review</Button> </Box> : ""
                                         }
                                     </Box>
 
@@ -195,7 +240,7 @@ export default function UserRequestedService(props) {
 
 
                     </Paper>
-
+                    <AddReviewDialog open={openDialog} setOpen={setOpenDialog} rating={rating} setRating={setRating} review={review} setReview={setReview} onConfirm={addReview} />
                 </Container >
             )
             }
