@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 // react redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,23 +10,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Box,
   Center,
-  Input,
-  Icon,
-  Heading,
   FormControl,
   Link,
   WarningOutlineIcon,
-  Modal,
-  useTheme,
 } from "native-base";
 import {
   Button,
   Headline,
   Subheading,
   TextInput,
-  Text,
 } from "react-native-paper";
-import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 
 // to store user info in global variable
 //const context = useContext(AppContext)
@@ -41,7 +34,6 @@ const storeInfo = async (userInfo, serviceInfo) => {
 };
 
 const LoginBox = () => {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
   const { updateCurrentUser, loginServices } = bindActionCreators(
     ActionCreators,
