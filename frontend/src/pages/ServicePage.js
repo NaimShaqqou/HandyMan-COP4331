@@ -167,13 +167,13 @@ export default function ServicePage() {
     return (
         <div>
             {/* <ResponsiveAppBar /> */}
-            <Container>
+            <Container maxWidth="xl">
                 <Box sx={{pt:5}}></Box>
                 <Typography variant='h2'>
                   {service.Title}
                 </Typography>
                 <Grid container direction="row" spacing={5}>
-                    <Grid item xs={7.5}>
+                    <Grid item xs={8.5}>
                       <Stack
                           direction="column"
                           divider={window.width < 900 ? (<div></div>) : (<Divider orientation="horizontal" flexItem />)}
@@ -220,7 +220,7 @@ export default function ServicePage() {
                           </Box>
                       </Stack>
                     </Grid>
-                    <Grid item xs={4.5}>
+                    <Grid item xs={3.5}>
                         <Paper
                           sx={{
                             textAlign: 'center',
