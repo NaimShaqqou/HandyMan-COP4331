@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ResponsiveAppBar from "../components/NavBar";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +15,8 @@ import { actionCreators } from "../reducerStore/index";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Review from '../components/Review';
+import axios from 'axios';
 
 var bp = require("../components/Path.js");
 
@@ -24,16 +26,37 @@ export default function ServicePage() {
     const [endDate, setEndDate] = useState(null);
     const [msg, setMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState(false);
+    const [reviews, setReviews] = useState([]);
     const user = useSelector((state) => state.user);
     const service = state ? state.service : null;
 
     const dispatch = useDispatch();
-
+ 
     const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+
+    useEffect(() => {
+      console.log("IN SERVICE PAGE USE EFFECT")
+      let mounted = true;
+      axios
+          .post(bp.buildPath("api/get-reviews"), {
+              serviceId: service._id
+          })
+          .then((response) => {
+              if (mounted) {
+                  setReviews(response.data.reviews);
+              }
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+      return () => mounted = false;
+  }, []);
 
     if (!service) {
       return <></>
     }
+
+    
 
     async function doBook(event) {
       event.preventDefault();
@@ -139,7 +162,7 @@ export default function ServicePage() {
       return price;
     }
     
-    console.log(service);
+    console.log(reviews);
     
     return (
         <div>
@@ -171,12 +194,30 @@ export default function ServicePage() {
                               </ImageListItem>
                               ))}
                           </ImageList>
-                          <Typography  variant='h5'>
-                              {service.Description}
-                          </Typography>
-                          {/* <Typography  variant='h3'>
-                              {service.Description}
-                          </Typography> */}
+                          <Box>
+                            <Typography variant="h5" sx={{ pb: 2 }} fontWeight="bold">
+                                Description:
+                            </Typography>
+                            <Typography sx={{ pb: 2 }} variant='h5'>
+                                {service.Description}
+                            </Typography>
+                            <Typography sx={{ pb: 2 }} variant="h5" fontWeight="bold">
+                                Price:
+                            </Typography>
+                            <Typography  variant='h5'>
+                                ${service.Price}
+                            </Typography>
+                          </Box>
+                          <Box>
+                          <Typography sx={{ pb: 2 }} variant="h5" fontWeight="bold">
+                                Reviews:
+                            </Typography>
+                            <Box>
+                              {reviews.map((review, index) => 
+                                <Review review={review} key={index} />
+                              )}
+                            </Box>
+                          </Box>
                       </Stack>
                     </Grid>
                     <Grid item xs={4.5}>
@@ -199,8 +240,8 @@ export default function ServicePage() {
 
                           <Box m={3} />
 
-                          <Grid container>
-                            <Grid item xs={8}>
+                          <Grid container direction="column" spacing={2}>
+                            <Grid item>
                               <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                   label="Start Date"
@@ -210,6 +251,10 @@ export default function ServicePage() {
                                   renderInput={(params) => <TextField {...params} />}
                                 />
                               </LocalizationProvider>     
+
+                            </Grid>
+
+                            <Grid item>   
                               <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                   label="End Date"
