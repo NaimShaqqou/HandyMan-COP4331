@@ -448,7 +448,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       requesterId, 
       serviceId, 
       price, 
-      date, 
+      dates, 
       description,
       jwtToken,
     } = req.body;
@@ -458,7 +458,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
       ServiceId: serviceId, 
       Completion: false,
       Price: price, 
-      Dates: date,
+      Dates: dates,
       DescriptionFromRequester: description
     } 
 

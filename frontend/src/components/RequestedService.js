@@ -173,7 +173,7 @@ export default function RequestedService(props) {
                                           <Typography
                                               variant="h5"
                                           >
-                                              {new Date(requestedService.Dates).toLocaleDateString("en-US")}
+                                              {new Date(requestedService.Dates[0]).toLocaleDateString("en-US")} - {new Date(requestedService.Dates[1]).toLocaleDateString("en-US")}
                                           </Typography>
                                           <Typography variant="h5" >
                                               ${requestedService.Price}

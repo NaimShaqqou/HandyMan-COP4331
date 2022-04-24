@@ -10,20 +10,26 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../reducerStore/index";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 var bp = require("../components/Path.js");
 
 export default function ServicePage() {
     const { state } = useLocation();
-    const [value, setValue] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [msg, setMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState(false);
     const user = useSelector((state) => state.user);
     const service = state.service;
+
+    const dispatch = useDispatch();
+
+    const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
 
     if (!service) {
       return <></>
@@ -31,14 +37,14 @@ export default function ServicePage() {
 
     async function doBook(event) {
       event.preventDefault();
-  
+      calculatePrice();
       let obj = {
         requesterId: user.userId,
         serviceId: service._id,
-        price: service.Price,
-        date: format(value, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
+        price: calculatePrice(),
+        dates: [format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"), format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")],
         description: msg,
-        jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjM0YzRkMzlhMDUwYTM2NTU1YTY5NDIiLCJmaXJzdE5hbWUiOiJFc3RlYmFuIiwibGFzdE5hbWUiOiJCcnVnYWwiLCJpYXQiOjE2NDc4MDk1NTB9.dxsK_ZU4KdvHjLzcZACYXwL1NjTZXIgoHK2SG5e1UkI"
+        jwtToken: user.jwtToken
       };
       let js = JSON.stringify(obj);
   
@@ -49,8 +55,10 @@ export default function ServicePage() {
           headers: { "Content-Type": "application/json" },
         });
         var res = JSON.parse(await response.text());
-
+        let refreshedToken = res.refreshedToken
+        updateCurrentUser({...user, jwtToken: refreshedToken})
         console.log(res);
+
   
         if (res.error == "") {
           setSuccessMsg(true);
@@ -61,6 +69,73 @@ export default function ServicePage() {
         console.log(e.toString());
         return; 
       }
+    }
+
+    function convertAvailableDaysToNumbers() {
+      let days = service.DaysAvailable;
+      let array = [0, 1, 2, 3, 4, 5, 6]
+
+      days.forEach((date) => {
+        let index;
+        if (date === "Monday") {
+          index = array.indexOf(1)
+          if (index >= 0) array.splice(index, 1)
+
+        } else if (date === "Tuesday") {
+          index = array.indexOf(2)
+          if (index >= 0) array.splice(index, 1)
+
+        } else if (date === "Wednesday") {
+          index = array.indexOf(3)
+          if (index >= 0) array.splice(index, 1)
+          
+        } else if (date === "Thursday") {
+          index = array.indexOf(4)
+          if (index >= 0) array.splice(index, 1)
+          
+        } else if (date === "Friday") {
+          index = array.indexOf(5)
+          if (index >= 0) array.splice(index, 1)
+          
+        } else if (date === "Saturday") {
+          index = array.indexOf(6)
+          if (index >= 0) array.splice(index, 1)
+          
+        } else if (date === "Sunday") {
+          index = array.indexOf(0)
+          if (index >= 0) array.splice(index, 1)
+        }
+
+      })
+
+      return array
+    }
+
+    function disableDates(date) {
+      let disableDates = convertAvailableDaysToNumbers()
+
+      return disableDates.includes(date.getDay()) 
+    }
+
+    function calculatePrice() {
+      let Difference_In_Time = endDate.getTime() - startDate.getTime();
+  
+      // To calculate the no. of days between two dates
+      let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+      let numberOfWorkingDays = 1
+      let disabledDays = convertAvailableDaysToNumbers()
+      let newDate = new Date(startDate)
+
+      for (let i = 1; i < Difference_In_Days; i++) {
+        newDate.setDate(newDate.getDate() + 1)
+
+        if (!disabledDays.includes(newDate.getDay())) {
+          numberOfWorkingDays++
+        }
+      }
+      let price = parseInt(service.Price) * numberOfWorkingDays
+      return price;
     }
     
     console.log(service);
@@ -126,13 +201,24 @@ export default function ServicePage() {
                           <Grid container>
                             <Grid item xs={8}>
                               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DateTimePicker
-                                  label="Schedule Appointment"
-                                  value={value}
-                                  onChange={(newValue) => { setValue(newValue);}}
+                                <DatePicker
+                                  label="Start Date"
+                                  value={startDate}
+                                  shouldDisableDate={disableDates}
+                                  onChange={(newValue) => { setStartDate(newValue);}}
                                   renderInput={(params) => <TextField {...params} />}
                                 />
                               </LocalizationProvider>     
+                              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                  label="End Date"
+                                  value={endDate}
+                                  shouldDisableDate={disableDates}
+                                  minDate={startDate}
+                                  onChange={(newValue) => { setEndDate(newValue);}}
+                                  renderInput={(params) => <TextField {...params} />}
+                                />
+                              </LocalizationProvider>   
 
                             </Grid>
                             

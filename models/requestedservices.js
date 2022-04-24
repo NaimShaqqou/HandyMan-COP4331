@@ -23,7 +23,7 @@ const RequestedServicesSchema = new Schema({
         required: true
     },
     Dates: {
-        type: Date,
+        type: [Date],
         required:true
     },
     Accepted: {

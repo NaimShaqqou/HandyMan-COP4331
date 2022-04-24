@@ -153,7 +153,7 @@ export default function UserRequestedService(props) {
                                                     <Typography
                                                         variant="h5"
                                                     >
-                                                        {new Date(requestedService.Dates).toLocaleDateString("en-US")}
+                                                        {new Date(requestedService.Dates[0]).toLocaleDateString("en-US")} - {new Date(requestedService.Dates[1]).toLocaleDateString("en-US")}
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={4} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
