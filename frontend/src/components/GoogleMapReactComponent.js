@@ -87,6 +87,8 @@ Map.defaultProps = {
 
 export default function Map(props) {
   const mapRef = useRef(null);
+  const mapsRef = useRef(null);
+
   let defaultCenter = {
     lat: 28.602,
     lng: -81.200,
@@ -117,23 +119,33 @@ export default function Map(props) {
   // Fit map to its bounds after the api is loaded
   const apiIsLoaded = (map, maps, places) => {
     mapRef.current = map;
-    console.log(mapRef.current);
+    mapsRef.current = maps;
+    // console.log(mapRef.current);
+    // console.log(map);
+    // console.log(maps);
     // Get bounds by our places
-    const bounds = getMapBounds(map, maps, places);
-    // Fit map to bounds
-    map.fitBounds(bounds);
-    console.log(map);
+
+    fitToPlaces();
+
     // map.setZoom(5);
     // Bind the resize listener
     // bindResizeListener(map, maps, bounds);
   };
 
-  // useEffect(() => {
-  //   // Get bounds by our places
-  //   const bounds = getMapBounds(map, maps, places);
-  //   // Fit map to bounds
-  //   map.fitBounds(bounds);
-  // }, []);
+  const fitToPlaces = () => {
+    const bounds = getMapBounds(mapRef.current, mapsRef.current, props.results);
+    // Fit map to bounds
+    mapRef.current.fitBounds(bounds);
+
+    if (mapRef.current.zoom > 15)
+      mapRef.current.setZoom(15);
+  };
+
+  useEffect(() => {
+
+    if (mapRef.current && mapsRef.current)
+      fitToPlaces();
+  }, [props.results]);
 
 
   // function handleLoad(map) {
