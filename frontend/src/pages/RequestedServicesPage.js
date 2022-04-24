@@ -52,7 +52,6 @@ export default function RequestedServicesPage() {
               console.log(response.data.error)
             }
           }
-            
         })
         .catch((error) => {
           console.log(error);

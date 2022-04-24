@@ -54,19 +54,21 @@ export default function ServicesPage() {
     <div>
       {/* <ResponsiveAppBar/> */}
       <Box sx={{ pt: 4}}>
-      <Grid container direction="column" spacing={5}>  
+
+      <Grid item>
+          <Box textAlign='center'>
+          <Button variant="contained" onClick={() => addService()}>Add new service</Button>
+          </Box>
+        </Grid>
+      
+        <Box sx={{ pt: 4}} />
+        
+        <Grid container direction="column" spacing={5}>  
         {services.map((service, index) => (
           <Grid item key={index}>
             <Card serviceCard={<ServiceCard service={service} />}/>
           </Grid>
         ))}
-        <Box sx={{ pt: 4}} />
-        
-        <Grid item>
-          <Box textAlign='center'>
-          <Button variant="contained" onClick={() => addService()}>Add new service</Button>
-          </Box>
-        </Grid>
       </Grid>
       </Box>
       

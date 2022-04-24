@@ -11,6 +11,7 @@ import ResponsiveAppBar from '../components/NavBar';
 import UserRequestedService from "../components/UserRequestedService";
 import axios from "axios";
 import { motion, Variants } from "framer-motion";
+import emptyBookings from "../images/empty.png"
 
 
 export default function UserRequestedServices() {
@@ -97,8 +98,14 @@ export default function UserRequestedServices() {
         {requestedServices.length === 0 && fetchedData
             ? 
                 <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography variant="h2">You don't have any bookings</Typography> 
+                    <Box sx={{pt: "100px",  display: 'flex', flexDirection: 'column'}}>
+                      <Typography variant="h2">You don't have any bookings</Typography> 
+                      <Box sx={{ height: 600, pt: 20 }} >
+                        <img src={emptyBookings} style={{width: "100%", height: "100%", aspectRatio: 863/645}} alt="People looking into empty box" />
+                      </Box>
+                    </Box>
                 </Grid>
+                
           : requestedServices.map((requestedService, index) => 
           <Grid item key={index}>
             <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>

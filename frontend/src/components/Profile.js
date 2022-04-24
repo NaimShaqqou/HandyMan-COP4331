@@ -166,13 +166,13 @@ function Profile() {
   return (
       <Container>
           <Grid container direction="column">
-            <Grid item sx={{ height: 150 }} >
+            <Grid item sx={{ height: 240, display: "flex", justifyContent: "center" }} >
               <img
                 src={userInfo.profilePicture}
                 style={{
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain' 
+                  width: 240, 
+                  height: 240,
+                  objectFit: 'cover'
                 }}
               />
             </Grid>
