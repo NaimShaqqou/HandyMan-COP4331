@@ -85,7 +85,7 @@ const SearchPage = () => {
           focus={focusItem}
           updateFocus={updateFocusFromChild}
           results={(res && res.error == '') ? res.results : []}
-          center={ center}
+          center={center}
         /> */}
       </Box>
 
