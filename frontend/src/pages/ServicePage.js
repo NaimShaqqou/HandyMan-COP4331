@@ -25,7 +25,7 @@ export default function ServicePage() {
     const [msg, setMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState(false);
     const user = useSelector((state) => state.user);
-    const service = state.service;
+    const service = state ? state.service : null;
 
     const dispatch = useDispatch();
 
