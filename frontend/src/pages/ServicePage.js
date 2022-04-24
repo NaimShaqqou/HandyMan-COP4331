@@ -37,6 +37,7 @@ export default function ServicePage() {
 
     async function doBook(event) {
       event.preventDefault();
+      if (startDate === null || endDate === null) return;
       calculatePrice();
       let obj = {
         requesterId: user.userId,

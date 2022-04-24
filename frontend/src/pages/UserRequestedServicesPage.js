@@ -36,7 +36,13 @@ export default function UserRequestedServices() {
             
             if (response.data.error === "") {
               let refreshedToken = response.data.refreshedToken
-              setRequestedServices(response.data.results);
+              let array = response.data.results
+              array.sort((a, b) => {
+                let da = new Date(a.Dates[1])
+                let db = new Date(b.Dates[1])
+                return db - da
+              })
+              setRequestedServices(array);
               updateCurrentUser({ ...user, jwtToken: refreshedToken })
             } else {
               console.log(response.data.error)
