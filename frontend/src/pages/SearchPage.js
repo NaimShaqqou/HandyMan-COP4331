@@ -184,6 +184,7 @@ const SearchPage = () => {
                   <SearchResults
                     focus={focusItem}
                     updateFocus={updateFocusFromChild}
+                    searchResults = {state}
                     results={(res && res.error == '') ? res.results : []}
                   />
                 </Box>

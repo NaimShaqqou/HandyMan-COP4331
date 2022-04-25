@@ -29,6 +29,7 @@ export default function ServicePage() {
     const [reviews, setReviews] = useState([]);
     const user = useSelector((state) => state.user);
     const service = state ? state.service : null;
+    const searchResults = state ? state.searchResults : null;
 
     const dispatch = useDispatch();
  

@@ -31,7 +31,7 @@ export default function SearchResults(props) {
   };
 
   const clickOpen = (item) => async (event) => {
-    navigate("/service", { replace: true, state: { service: item } });
+    navigate("/service", { state: { service: item } });
   };
 
   function checkImage(url) {

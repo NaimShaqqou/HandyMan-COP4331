@@ -53,7 +53,7 @@ function LoginBox(props) {
         console.log("Logged in " + res.firstName + " " + res.lastName);
         updateCurrentUser(res);
         loginServices(res.services);
-        navigate("../", { replace: true });
+        navigate("../");
       } else if (res.error == "Incorrect credentials") {
         setInvalidCredentials(true);
         setMessage(res.error);

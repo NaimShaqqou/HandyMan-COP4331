@@ -51,22 +51,22 @@ const ResponsiveAppBar = (props) => {
 
   const handleCloseUserMenu = (e) => {
     if (e.target.innerHTML === "Login") {
-      navigate("../login", { replace: true });
+      navigate("../login");
     } else if (e.target.innerHTML === "Profile") {
-      navigate("../profile", { replace: true });
+      navigate("../profile");
     } else if (e.target.innerHTML === "Home") {
-      navigate("../", { replace: true });
+      navigate("../");
     } else if (e.target.innerHTML === "Search") {
-      navigate("../search", { replace: true });
+      navigate("../search");
     }
     else if (e.target.innerHTML === "Services") {
-      navigate("../services", { replace: true });
+      navigate("../services");
     } else if (e.target.innerHTML === "Logout") {
       // call the redux function
       logoutUser();
-      navigate("../login", { replace: true });
+      navigate("../login");
     } else if (e.target.innerHTML === "Bookings") {
-      navigate("../user-requested-services", { replace: true });
+      navigate("../user-requested-services");
     } 
     setAnchorElUser(null);
   };
@@ -131,7 +131,7 @@ const ResponsiveAppBar = (props) => {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             {
-              location.pathname !== "/" && location.pathname !== "/login" && location.pathname !== "/service" ? <BackButton/> : ""
+              location.pathname !== "/" && location.pathname !== "/login" ? <BackButton/> : ""
             } 
           
             <a href='/'>

@@ -147,7 +147,7 @@ function SearchBar(props) {
       if (window.location.pathname == '/search') {
         props.updateRes(res);
       } else {
-        navigate("/search", { replace: true, state: { obj: search, res: res} });
+        navigate("/search", { state: { obj: search, res: res} });
       }
 
     } catch (e) {
