@@ -28,6 +28,10 @@ export default function RequestedService(props) {
     const [user, setUser] = useState(null);
     let myUserInfo = useSelector((state) => state.user);
     let bp = require("./Path.js");
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+
+    const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
     useEffect(() => {
         let mounted = true;
@@ -64,8 +68,14 @@ export default function RequestedService(props) {
                 jwtToken: myUserInfo.jwtToken
             })
             .then((response) => {
-                setUser({...myUserInfo, jwtToken: response.data.refreshedToken});
-                setRequestedService({ ...requestedService, Accepted: true})
+                if (response.data.refreshedToken === "") {
+                    logoutUser()
+                    logoutServices()
+                    navigate("../login")
+                } else {
+                    updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                    setRequestedService({ ...requestedService, Accepted: true})
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -79,8 +89,13 @@ export default function RequestedService(props) {
                 jwtToken: myUserInfo.jwtToken
             })
             .then((response) => {
-                setUser({...myUserInfo, jwtToken: response.data.refreshedToken});
-                setRequestedService({ ...requestedService, Completion: true})
+                if (response.data.refreshedToken === "") {
+                    logoutUser()
+                    navigate("../login")
+                } else {
+                    updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                    setRequestedService({ ...requestedService, Completion: true})
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -94,8 +109,13 @@ export default function RequestedService(props) {
                 jwtToken: myUserInfo.jwtToken
             })
             .then((response) => {
-                setUser({...myUserInfo, jwtToken: response.data.refreshedToken});
-                setRequestedService(null)
+                if (response.data.refreshedToken === "") {
+                    logoutUser()
+                    navigate("../login")
+                } else {
+                    updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                    setRequestedService(null)
+                }
             })
             .catch((error) => {
                 console.log(error);

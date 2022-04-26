@@ -11,10 +11,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   let bp = require("./Path.js");
   let user = useSelector((state) => state.user);
+  const navigate = useNavigate()
 
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(user);
@@ -42,7 +44,7 @@ function Profile() {
 
   //console.log(user)
 
-  const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+  const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
   function editProfile() {
     setShowSaveChangesButton(true);
@@ -100,18 +102,24 @@ function Profile() {
         newProfilePicture: newImageUrl,
         jwtToken: user.jwtToken,
       })
-      .then(function (response) {
-        updateCurrentUser({
-          userId: user.userId,
-          username: userInfo.username,
-          firstName: userInfo.firstName,
-          lastName: userInfo.lastName,
-          profileDescription: userInfo.profileDescription,
-          profilePicture: newImageUrl,
-          jwtToken: response.refreshedToken,
-        });
+      .then((response) => {
+        if (response.data.refreshedToken === "") {
+            logoutUser()
+            logoutServices()
+            navigate("../login")
+        } else {
+            updateCurrentUser({
+              userId: user.userId,
+              username: userInfo.username,
+              firstName: userInfo.firstName,
+              lastName: userInfo.lastName,
+              profileDescription: userInfo.profileDescription,
+              profilePicture: newImageUrl,
+              jwtToken: response.data.refreshedToken,
+            });
+        }
       })
-      .catch(function (response) {
+      .catch((response) => {
         console.log(response);
       });
     setShowSaveChangesButton(false);

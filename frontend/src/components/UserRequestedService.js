@@ -30,9 +30,10 @@ export default function UserRequestedService(props) {
     const [rating, setRating] = useState(0)
     const [review, setReview] = useState("")
     let bp = require("./Path.js");
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
-    const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+    const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
     useEffect(() => {
         console.log("IN USER REQUEST CARD USE EFFECT")
@@ -53,6 +54,7 @@ export default function UserRequestedService(props) {
     }, [requestedService]);
 
     async function addReview() {
+        let flag = false;
         if (review === "") {
             return;
         } else {
@@ -64,16 +66,29 @@ export default function UserRequestedService(props) {
                 rating: rating,
                 jwtToken: user.jwtToken
             }).then((response) => {
-                if (response.data.error === "") {
-                    console.log("Added review")
+                if (response.data.refreshedToken === "") {
+                    flag = true
+                    logoutUser()
+                    logoutServices()
+                    navigate("../login")
                 } else {
-                    console.log(response.data.error)
+                    if (response.data.error === "") {
+                        console.log("Added review")
+                        updateCurrentUser({...user, jwtToken: response.data.refreshedToken })
+                    } else {
+                        console.log(response.data.error)
+                    }
                 }
             }).catch((error) => {
                 console.log(error.message)
             })
 
-            await axios
+            setOpenDialog(false)
+
+            if (flag) {
+                return;
+            } else {
+                await axios
                 .post(bp.buildPath("api/reviewed-request"), {
                     requestedServiceId: requestedService._id,
                     jwtToken: user.jwtToken
@@ -84,7 +99,9 @@ export default function UserRequestedService(props) {
                 .catch((error) => {
                     console.log(error);
                 });
-            setOpenDialog(false)
+                
+            }
+            
 
         }
     }

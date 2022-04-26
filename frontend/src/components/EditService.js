@@ -51,7 +51,7 @@ export default function EditService(props) {
     const [availableDaysValidation, setAvailableDaysValidation] = useState(false);
 
     const dispatch = useDispatch();
-    const { updateServices, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+    const { updateServices, updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
 
     const handleImageChange = ({ target }) => {
@@ -85,10 +85,16 @@ export default function EditService(props) {
             newDaysAvailable: availableDays,
             newCategory: category,
         }).then((response) => {
-            let refreshedToken = response.data.refreshedToken
-            updateCurrentUser({ ...user, jwtToken: refreshedToken })
-            updateServices(response.data.service)
-            navigate(-1)
+            if (response.data.refreshedToken === "") {
+                logoutUser()
+                logoutServices()
+                navigate("../login")
+            } else {
+                let refreshedToken = response.data.refreshedToken
+                updateCurrentUser({ ...user, jwtToken: refreshedToken })
+                updateServices(response.data.service)
+                navigate(-1)
+            }
         }).catch((error) => {
             console.log(error.message)
         })

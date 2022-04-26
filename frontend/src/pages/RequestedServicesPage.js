@@ -21,9 +21,10 @@ export default function RequestedServicesPage() {
   const [requestedServices, setRequestedServices] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   let bp = require("../components/Path");
+  const navigate = useNavigate()
 
   const dispatch = useDispatch();
-  const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+  const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
   useEffect(() => {
     console.log("IN USE EFFECT")
@@ -35,23 +36,30 @@ export default function RequestedServicesPage() {
         })
         .then((response) => {
           if (mounted) {
-            setFetchedData(true)
-            if (response.data.error === "") {
-              let refreshedToken = response.data.refreshedToken
-              let array = response.data.results
-
-              // sort array by dates
-              array.sort((a, b) => {
-                  let da = new Date(a.Dates[1])
-                  let db = new Date(b.Dates[1])
-                  return db - da
-              })
-              
-              setRequestedServices(array);
-              updateCurrentUser({ ...user, jwtToken: refreshedToken })
+            if (response.data.refreshedToken === "") {
+              logoutUser()
+              logoutServices()
+              navigate("../login")
             } else {
-              console.log(response.data.error)
+              setFetchedData(true)
+              if (response.data.error === "") {
+                let refreshedToken = response.data.refreshedToken
+                let array = response.data.results
+
+                // sort array by dates
+                array.sort((a, b) => {
+                    let da = new Date(a.Dates[1])
+                    let db = new Date(b.Dates[1])
+                    return db - da
+                })
+                
+                setRequestedServices(array);
+                updateCurrentUser({ ...user, jwtToken: refreshedToken })
+              } else {
+                console.log(response.data.error)
+              }
             }
+            
           }
         })
         .catch((error) => {

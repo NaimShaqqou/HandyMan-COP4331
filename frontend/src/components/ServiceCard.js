@@ -30,7 +30,7 @@ export default function ServiceCard(props) {
     let user = useSelector((state) => state.user);
     let bp = require("./Path.js");
     const dispatch = useDispatch();
-    const { deleteService, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+    const { deleteService, updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
     const Img = styled('img')({
       margin: 'auto',
@@ -44,13 +44,20 @@ export default function ServiceCard(props) {
           serviceId: service._id,
           jwtToken: user.jwtToken
       }).then((response) => {
-          let refreshedToken = response.data.refreshedToken
-          updateCurrentUser({...user, jwtToken: refreshedToken})
-          if (response.data.error === "") {
-              deleteService(service)
+            if (response.data.refreshedToken === "") {
+              logoutUser()
+              logoutServices()
+              navigate("../login")
           } else {
-              console.log(response.data.error)
+            let refreshedToken = response.data.refreshedToken
+            updateCurrentUser({...user, jwtToken: refreshedToken})
+            if (response.data.error === "") {
+                deleteService(service)
+            } else {
+                console.log(response.data.error)
+            }
           }
+          
       }).catch((error) => {
           console.log(error.message)
       })

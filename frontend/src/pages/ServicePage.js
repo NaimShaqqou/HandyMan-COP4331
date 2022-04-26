@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from "../components/NavBar";
 import { useSelector, useDispatch } from "react-redux";
 import '../styles.css';
@@ -31,10 +31,11 @@ export default function ServicePage() {
     const [fetchedData, setFetchedData] = useState(false)
     const user = useSelector((state) => state.user);
     const service = state ? state.service : null;
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
  
-    const { updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
+    const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
     useEffect(() => {
       console.log("IN SERVICE PAGE USE EFFECT")
@@ -82,16 +83,23 @@ export default function ServicePage() {
           headers: { "Content-Type": "application/json" },
         });
         var res = JSON.parse(await response.text());
-        let refreshedToken = res.refreshedToken
-        updateCurrentUser({...user, jwtToken: refreshedToken})
-        console.log(res);
-
-  
-        if (res.error == "") {
-          setSuccessMsg(true);
+        if (res.refreshedToken === "") {
+          logoutUser()
+          logoutServices()
+          navigate("../login")
         } else {
-          
+          let refreshedToken = res.refreshedToken
+          updateCurrentUser({...user, jwtToken: refreshedToken})
+          console.log(res);
+  
+    
+          if (res.error == "") {
+            setSuccessMsg(true);
+          } else {
+            
+          }
         }
+        
       } catch (e) {
         console.log(e.toString());
         return; 

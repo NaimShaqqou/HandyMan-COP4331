@@ -48,7 +48,7 @@ export default function AddService() {
     const [availableDaysValidation, setAvailableDaysValidation] = useState(false);
 
     const dispatch = useDispatch();
-    const { addService, updateCurrentUser, logoutUser } = bindActionCreators(actionCreators, dispatch);
+    const { addService, updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
 
     const handleImageChange = ({ target }) => {
@@ -87,6 +87,7 @@ export default function AddService() {
         }).then((response) => {
             if (response.data.refreshedToken === "") {
                 logoutUser()
+                logoutServices()
                 navigate("../login")
             } else {
                 let insertedService = response.data.service
