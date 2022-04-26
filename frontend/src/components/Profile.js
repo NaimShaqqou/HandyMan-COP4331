@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 
 function Profile() {
   let bp = require("./Path.js");
+  var md5 = require('md5');
+
   let user = useSelector((state) => state.user);
   const navigate = useNavigate()
 
@@ -142,8 +144,8 @@ function Profile() {
     await axios
       .post(bp.buildPath("api/change-password"), {
         userId: userInfo.userId,
-        oldPassword: password.oldPassword,
-        newPassword: password.newPassword,
+        oldPassword: md5(password.oldPassword),
+        newPassword: md5(password.newPassword),
         jwtToken: userInfo.jwtToken,
       })
       .then((response) => {

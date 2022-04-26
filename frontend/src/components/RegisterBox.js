@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function RegisterBox(props) {
   var bp = require("./Path.js");
+  var md5 = require('md5');
 
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -34,6 +35,9 @@ function RegisterBox(props) {
     showPassword: false,
     rshowPassword: false,
   });
+
+  console.log(values.password);
+  console.log(md5(values.password));
 
   // validate email using regex
   const validateEmail = (email) => {
@@ -76,7 +80,7 @@ function RegisterBox(props) {
 
     var obj = {
       email: values.email.toLowerCase(),
-      password: values.password,
+      password: md5(values.password),
       firstName: values.firstName,
       lastName: values.lastName,
       username: values.username

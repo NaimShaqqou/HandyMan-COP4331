@@ -27,6 +27,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function LoginBox(props) {
   var bp = require("./Path.js");
+  var md5 = require('md5');
+
   const dispatch = useDispatch();
   const { updateCurrentUser, loginServices } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate();
@@ -37,7 +39,10 @@ function LoginBox(props) {
   const doLogin = async (event) => {
     event.preventDefault();
 
-    var obj = { login: values.username, password: values.password };
+    var obj = { 
+      login: values.username, 
+      password: md5(values.password)
+    };
     var js = JSON.stringify(obj);
 
     try {
