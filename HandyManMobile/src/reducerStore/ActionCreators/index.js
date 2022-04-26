@@ -49,3 +49,12 @@ export const logoutServices = () => {
         })
     ]
 }
+
+export const updateServices = (service) => {
+    return (dispatch) => [
+        dispatch({
+            type:"updateServices",
+            payload: {service: service}
+        })
+    ]
+}
