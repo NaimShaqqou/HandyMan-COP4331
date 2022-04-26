@@ -130,19 +130,20 @@ export default function RequestedService(props) {
         <Container>
             {user !== null && requestedService !== null && (
                 <Paper
+                    elevation={5}
                     sx={{
                         margin: "auto",
-                        maxWidth: 800,
+                        maxWidth: 1000,
                         flexGrow: 1,
                         backgroundColor: (theme) =>
                             theme.palette.mode === "dark" ? "#1A2027" : "white",
                     }}
                 >
                     <Grid container spacing={2}>
-                        <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
-                            <Img sx={{ width: 256, height: 256, objectFit: 'cover' }} alt="complex" src={user.ProfilePicture === null ? '' : user.ProfilePicture} />
+                        <Grid item xs={3.5} sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
+                            <Img sx={{ width: 256, height: "100%", objectFit: 'cover' }} alt="complex" src={user.ProfilePicture === null ? '' : user.ProfilePicture} />
                         </Grid>
-                        <Grid item xs={12} md container >
+                        <Grid item xs={8.5} md container >
 
                             <Grid item xs >
                                 <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
@@ -168,7 +169,7 @@ export default function RequestedService(props) {
                                   <Box m={2} />
 
                                   <Container sx={{ display: 'flex', justifyContent: "center" }}>
-                                    <Stack direction="column" sx={{ textAlign: 'center', maxWidth: '65%' }}  spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
+                                    <Stack direction="column" sx={{ textAlign: 'center', width: '95%' }}  spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
                                         <Container sx={{ display: 'flex', justifyContent: "center" }}>
 
                                             <Typography
@@ -183,22 +184,20 @@ export default function RequestedService(props) {
                                         <Typography variant="body1">
                                             Their Request: {requestedService.DescriptionFromRequester}
                                         </Typography>
-
-                                        <Stack
-                                          sx={{ display: 'flex', justifyContent: "center" }} 
-                                          direction="row" 
-                                          spacing={1} 
-                                          divider={<Divider orientation="vertical" flexItem />}
-                                        >
-                                          <Typography
-                                              variant="h5"
-                                          >
-                                              {new Date(requestedService.Dates[0]).toLocaleDateString("en-US")} - {new Date(requestedService.Dates[1]).toLocaleDateString("en-US")}
-                                          </Typography>
-                                          <Typography variant="h5" >
-                                              ${requestedService.Price}
-                                          </Typography>
-                                        </Stack>
+                                        <Grid item container direction="row" xs>
+                                                <Grid item xs={6} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                    <Typography
+                                                        variant="h5"
+                                                    >
+                                                        {new Date(requestedService.Dates[0]).toLocaleDateString("en-US")} - {new Date(requestedService.Dates[1]).toLocaleDateString("en-US")}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6} sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                                    <Typography variant="h5">
+                                                        ${requestedService.Price}
+                                                    </Typography>
+                                                </Grid>
+                                        </Grid>
                                     </Stack>
 
                                   </Container>

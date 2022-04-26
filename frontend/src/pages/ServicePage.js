@@ -180,11 +180,20 @@ export default function ServicePage() {
             {/* <ResponsiveAppBar /> */}
             <Container maxWidth="xl">
                 <Box sx={{pt:5}}></Box>
-                <Typography variant='h2'>
-                  {service.Title}
-                </Typography>
                 <Grid container direction="row" spacing={5}>
                     <Grid item xs={8.5}>
+                    <Paper
+                    elevation= {5}
+                    sx={{
+                        margin: "auto",
+                        p: 5,
+                        backgroundColor: (theme) =>
+                            theme.palette.mode === "dark" ? "#1A2027" : "white",
+                    }}
+                  >
+                    <Typography variant='h2'>
+                      {service.Title}
+                    </Typography>
                       <Stack
                           direction="column"
                           divider={window.width < 900 ? (<div></div>) : (<Divider orientation="horizontal" flexItem />)}
@@ -239,14 +248,16 @@ export default function ServicePage() {
                             </Box>
                           </Box>
                       </Stack>
+                      </ Paper>
                     </Grid>
                     <Grid item xs={3.5}>
                         <Paper
+                          elevation={5}
                           sx={{
                             textAlign: 'center',
                             p: 3,
                             backgroundColor: (theme) =>
-                            theme.palette.mode === 'dark' ? '#1A2027' : '#F2F1F0', alignItems:"center"
+                            theme.palette.mode === 'dark' ? '#1A2027' : 'white', alignItems:"center"
                           }}
                         >
                           <TextField
@@ -335,7 +346,7 @@ export default function ServicePage() {
                         </Paper>
                     </Grid>   
                 </Grid>  
-
+            
         </Container>
         </div>
     )

@@ -9,7 +9,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { Stack } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -162,6 +162,15 @@ export default function EditService(props) {
     return (
         <Container>
             <Box sx={{ pt: 3 }}>
+            <Paper
+              elevation= {5}
+              sx={{
+                  margin: "auto",
+                  p: 5,
+                  backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? "#1A2027" : "white",
+              }}
+          >
                 <Grid container spacing={2} direction="column">
                     <Grid item>
                         <Stack direction="row" spacing={2}>
@@ -363,6 +372,7 @@ export default function EditService(props) {
                         </Stack>
                     </Grid>
                 </Grid>
+                </ Paper>
             </Box>
 
         </Container >

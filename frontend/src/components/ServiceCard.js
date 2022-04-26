@@ -5,11 +5,11 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { CardHeader } from '@mui/material';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Container } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import {IconButton} from '@mui/material';
+import { IconButton } from '@mui/material';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteServiceDialog from './DeleteServiceDialog'
@@ -24,71 +24,113 @@ import ButtonBase from '@mui/material/ButtonBase';
 
 
 export default function ServiceCard(props) {
-    const [openDialog, setOpenDialog] = useState(false)
-    const service = props.service;
-    const navigate = useNavigate()
-    let user = useSelector((state) => state.user);
-    let bp = require("./Path.js");
-    const dispatch = useDispatch();
-    const { deleteService, updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
+  const [openDialog, setOpenDialog] = useState(false)
+  const service = props.service;
+  const navigate = useNavigate()
+  let user = useSelector((state) => state.user);
+  let bp = require("./Path.js");
+  const dispatch = useDispatch();
+  const { deleteService, updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(actionCreators, dispatch);
 
-    const Img = styled('img')({
-      margin: 'auto',
-      display: 'block',
-      maxWidth: '100%',
-      maxHeight: '100%',
-    });
+  const Img = styled('img')({
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  });
 
-    async function destroyService() {
-        await axios.post(bp.buildPath("api/delete-service"), {
-          serviceId: service._id,
-          jwtToken: user.jwtToken
-      }).then((response) => {
-            if (response.data.jwtToken === "") {
-              logoutUser()
-              logoutServices()
-              navigate("../login")
-          } else {
-            let refreshedToken = response.data.refreshedToken
-            updateCurrentUser({...user, jwtToken: refreshedToken})
-            if (response.data.error === "") {
-                deleteService(service)
-            } else {
-                console.log(response.data.error)
-            }
-          }
-          
-      }).catch((error) => {
-          console.log(error.message)
-      })
-    }
+  async function destroyService() {
+    await axios.post(bp.buildPath("api/delete-service"), {
+      serviceId: service._id,
+      jwtToken: user.jwtToken
+    }).then((response) => {
+      if (response.data.jwtToken === "") {
+        logoutUser()
+        logoutServices()
+        navigate("../login")
+      } else {
+        let refreshedToken = response.data.refreshedToken
+        updateCurrentUser({ ...user, jwtToken: refreshedToken })
+        if (response.data.error === "") {
+          deleteService(service)
+        } else {
+          console.log(response.data.error)
+        }
+      }
 
-    console.log(service)
-    
+    }).catch((error) => {
+      console.log(error.message)
+    })
+  }
+
+  console.log(service)
+
   return (
     <Container >
       <Paper
-    sx={{
-      margin: 'auto',
-      maxWidth: 800,
-      flexGrow: 1,
-      backgroundColor: (theme) =>
-        theme.palette.mode === 'dark' ? '#1A2027' : 'white',
-    }}
-  >
-    <Grid container spacing={2}>
-      <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4'}}>
+        elevation={5}
+        sx={{
+          margin: 'auto',
+          maxWidth: 800,
+          flexGrow: 1,
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark' ? '#1A2027' : 'white',
+        }}
+      >
+        <Grid container spacing={2} sx={{minHeight: 250}}>
+          <Grid item xs={4} sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
             <Img
-              sx={{ 
-                width: 240, 
-                height: 240,
+              sx={{
+                width: 256,
+                height: "100%",
                 objectFit: 'cover',
-              }} 
-              alt="complex" 
-              src={service.Images && service.Images != null && service.Images.length > 0 ? service.Images[0]: '' } 
+              }}
+              alt="complex"
+              src={service.Images && service.Images != null && service.Images.length > 0 ? service.Images[0] : ''}
             />
-      </Grid>
-      <Grid item xs={12} md container sx={{ pr: 2}}>
+          </Grid>
+          <Grid item xs={8} sx={{ p: 2 }}>
+            <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
+
+              <Box sx={{ pr: 3, display: 'flex', justifyContent: 'space-between' }}>
+                <Typography gutterBottom variant="h6" sx={{ fontWeight: "bold" }} component="div">
+                      {service.Title}
+                    </Typography>
+                <Typography variant="h6" component="div">
+                  ${service.Price}
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex', justifyContent: "flex-start", width: "100%" }}>
+                <Stack direction="column" sx={{ width: "95%" }} spacing={1}>
+                  <Grid item xs>
+                        <Typography variant="body2" color="text.secondary" sx={{ minHeight: 150, wordWrap: "break-word"}} component="div">
+                          {service.Description} 
+                        </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <IconButton onClick={() => navigate('../edit-service', {state: service})}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => setOpenDialog(true)}>
+                            <DeleteIcon />
+                    </IconButton>
+                    <IconButton onClick={() => navigate('../requested-services', {state: service})}>
+                            <WorkHistoryIcon />
+                    </IconButton>
+                  </Grid>
+                </Stack>
+
+              </Box>
+            </Stack>
+
+
+          </Grid>
+        </Grid>
+
+
+
+        {/* <Grid item xs sx={{ p: 2 }}>
         <Grid item xs container direction="column" spacing={2}>
           <Grid item xs>
             <Typography gutterBottom variant="h6" sx={{fontWeight: "bold"}}component="div">
@@ -116,11 +158,11 @@ export default function ServiceCard(props) {
           </Typography>
         </Grid>
       </Grid>
-    </Grid>
-  </Paper>
-      
-    <DeleteServiceDialog open={openDialog} setOpen={setOpenDialog} service={service} onConfirm={destroyService}/>
+    </Grid> */}
+      </Paper>
+
+      <DeleteServiceDialog open={openDialog} setOpen={setOpenDialog} service={service} onConfirm={destroyService} />
     </Container>
-    
+
   );
 }

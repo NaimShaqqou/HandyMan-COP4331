@@ -118,6 +118,7 @@ export default function UserRequestedService(props) {
             {service !== null && (
                 <Container>
                     <Paper
+                        elevation={5}
                         sx={{
                             margin: "auto",
                             maxWidth: 1000,
@@ -127,10 +128,10 @@ export default function UserRequestedService(props) {
                         }}
                     >
                         <Grid container spacing={2} >
-                            <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
+                            <Grid item xs={3.5} sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
                                 <Img sx={{ width: 256, height: "100%", objectFit: 'cover' }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
                             </Grid>
-                            <Grid item xs sx={{ p: 2}}>
+                            <Grid item xs={8.5} sx={{ p: 2 }}>
                                 <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
 
                                     <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>
@@ -160,8 +161,8 @@ export default function UserRequestedService(props) {
                                                 </Typography>
                                             </Grid>
 
-                                            <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                                <Typography variant="body1">
+                                            <Grid item xs sx={{ display: 'flex', textAlign: "left", justifyContent: "flex-start", alignItems: "center" }}>
+                                                <Typography variant="body1" sx={{ wordWrap: "break-word"}}component="div">
                                                     Service Description: {service.Description}
                                                 </Typography>
                                             </Grid>
