@@ -2,7 +2,7 @@ import { Button, Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import ServiceCard from "../components/ServiceCard";
 import { Container, Typography } from "@mui/material";
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
@@ -106,12 +106,22 @@ export default function RequestedServicesPage() {
         {requestedServices.length === 0 && fetchedData 
             ? 
             <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
+              <Paper
+              elevation= {5}
+              sx={{
+                  margin: "auto",
+                  p: 10,
+                  backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? "#1A2027" : "white",
+              }}
+          >
                 <Box sx={{pt: "100px",  display: 'flex', flexDirection: 'column'}}>
                   <Typography variant="h2">You don't have any requests</Typography> 
                   <Box sx={{ height: 600, pt: 20 }} >
                     <img src={emptyBookings} style={{width: "100%", height: "100%", aspectRatio: 863/645}} alt="People looking into empty box" />
                   </Box>
                 </Box>
+                </Paper>
             </Grid>
             : requestedServices.map((requestedService, index) => (
             <Grid item key={index}>
