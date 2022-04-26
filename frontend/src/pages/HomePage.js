@@ -3,10 +3,10 @@ import '../map.css';
 import jwt_decode from "jwt-decode";
 import SearchBar from "../components/SearchBar.js"
 import ServiceCard from "../components/ServiceCard";
+import WelcomeMsg from "../components/WelcomeMsg";
 import PopularServices from "../components/PopularServices";
-import { useSelector } from "react-redux";
 
-import { motion } from 'framer-motion';
+import { motion, useViewportScroll  } from 'framer-motion';
 
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
@@ -19,53 +19,12 @@ import {
 
 const HomePage = () =>
 {
-  let user = useSelector((state) => state.user);
+  // const [searchBoxStyle, setSearchBoxStyle] = useState({
+  //   opacity: 1,
+  // });
 
-  const [msgStyle, setMsgStyle] = useState({
-    textAlign: 'center',
-    color: '#003c80',
-    fontSize: '75px',
-    mt: 0,
-    opacity: 1,
-    textOverflow: 'clip',
-  });
-
-  const [searchBoxStyle, setSearchBoxStyle] = useState({
-    opacity: 1,
-  });
-
-  const [msgGap, setMsgGap] = useState(1.5);
-
-  useScrollPosition(({ currPos }) => {
-    const progress = -currPos.y / window.innerHeight
-
-    const newFontSize = 75 + progress * 100;
-    const newOpacity = 1 - progress * 6;
-
-    setMsgStyle(prev => ({
-      ...prev,
-      fontSize: `${newFontSize}px`,
-      opacity: newOpacity,
-    }));
-
-    setMsgGap(1.5 + progress * 50);
-
-    setSearchBoxStyle(prev => ({
-      ...prev,
-    }));
-  }, [msgStyle])
-
-  let msg1 = 'Welcome,';
-  let msg2 = 'Guest!';
-  let msg3 = '';
   console.log('Rendering Homepage: ');
   // console.log(user)
-
-  if (user.userId != '') {
-    msg1 = 'Hello,';
-    msg2 = user.firstName;
-    msg3 = user.lastName;
-  }
 
   const verticallyCenter = {
     display: "flex",
@@ -81,45 +40,10 @@ const HomePage = () =>
         spacing={7}
       >
 
-        <motion.div 
-          initial='hidden' 
-          animate='visible' 
-          variants={{
-            hidden: {
-              scale: .8,
-              opacity: 0
-            },
-            visible: {
-              scale: 1,
-              opacity: 1,
-              transition: {
-                delay: .4
-              }
-            }
-          }}
-        >
-          <Typography
-            component={'div'}
-            sx={{
-              ...msgStyle,
-              marginLeft: 'auto'
-            }}
-            noWrap
-          >
-            <Box
-              align = "center" justify = "center" alignItems = "center"
-            >
-              {msg1}
-              <Box m={msgGap} sx={{ display: 'inline' }}/>
-              {msg2}
-              {msg3 != '' && <Box m={msgGap} sx={{ display: 'inline' }}/>}
-              {msg3}
-            </Box>
-          </Typography>
-        </motion.div>
+        <WelcomeMsg />
 
         <Box
-          sx={searchBoxStyle}
+          // sx={searchBoxStyle}
         >
           <Container sx={{ width: { xs: '410px', sm: '510px', md: '940px'} }}>
             <SearchBar/>
