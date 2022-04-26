@@ -258,7 +258,7 @@ const ResponsiveAppBar = (props) => {
                 ))}
                 
                 {user.userId === "" &&
-                  <MenuItem key="Login" onClick={(event) => handleSettingClick(event)}>
+                  <MenuItem key="Login" onClick={handleSettingClick('Login')}>
                     <Typography textAlign="center">Login</Typography>
                   </MenuItem>}
               </Menu>
