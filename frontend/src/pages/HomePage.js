@@ -73,7 +73,7 @@ const HomePage = () =>
         </motion.div>
 
         <div>
-          <Container sx={{ maxWidth: { xs: '380px', sm: '480px', md: '910px'} }}>
+          <Container sx={{ width: { xs: '410px', sm: '510px', md: '940px'} }}>
             <SearchBar/>
           </Container>
         </div>

@@ -114,11 +114,11 @@ const SearchPage = () => {
       </motion.div> */}
       <Container sx={{ 
           // display: { xs: 'none', sm: 'none', s900: 'flex' }, 
-          maxWidth: { xs: '380px', sm: '480px', lg: '910px'},
+          width: { xs: '410px', sm: '510px', md: '940px'},
           // width: '500px',
           height: '300px',
           mt: '-90vh',
-          ml: '50vh',
+          // ml: '50vh',
           // bgcolor: 'green',
           position: 'sticky',
           pointerEvents: 'none',
