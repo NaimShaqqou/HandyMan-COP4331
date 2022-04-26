@@ -299,18 +299,13 @@ export default function Map(props) {
                 <Info service={listitem} />
               }
 
-              <motion.div
-                whileHover={{ scale: 2 }}
-                onHoverStart={e => {}}
-                onHoverEnd={e => {}}
-              >
-                <Marker
-                  service={listitem}
-                  focus={props.focus}
-                  text={listitem.Title}
-                  onClick={() => props.updateFocus(listitem)}
-                />
-              </motion.div>
+              
+              <Marker
+                service={listitem}
+                focus={props.focus}
+                text={listitem.Title}
+                onClick={() => props.updateFocus(listitem)}
+              />
             </Box>
             
           ))}

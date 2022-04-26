@@ -8,6 +8,8 @@ import {
   styled as stylesmui,
 } from '@mui/material';
 
+import { motion } from 'framer-motion';
+
 const Wrapper = styled.div`
   position: absolute;
   top: 50%;
@@ -25,31 +27,45 @@ const Wrapper = styled.div`
   }
 `;
 
-const Wrapper2 = stylesmui((props) => <Box />)(
-  ({ theme }) => ({
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    width: '18px',
-    height: '18px',
-    backgroundColor: '#003c80',
-    border: '2px solid #fff',
-    borderRadius: '100%',
-    userSelect: 'none',
-    transform: 'translate(-50%, -50%)',
-    cursor: 'pointer',
-    // cursor: ${(props) => (props.onClick ? 'pointer' : 'default')},
-    '&:hover': {
-      zIndex: 1,
-    }
-  }),
-);
+// const Wrapper2 = stylesmui((props) => <Box />)(
+//   ({ theme }) => ({
+//     position: 'absolute',
+//     top: '50%',
+//     left: '50%',
+//     width: '18px',
+//     height: '18px',
+//     backgroundColor: '#003c80',
+//     border: '2px solid #fff',
+//     borderRadius: '100%',
+//     userSelect: 'none',
+//     transform: 'translate(-50%, -50%)',
+//     cursor: 'pointer',
+//     // cursor: ${(props) => (props.onClick ? 'pointer' : 'default')},
+//     '&:hover': {
+//       zIndex: 1,
+//     }
+//   }),
+// );
 
 const Marker = ({ text, onClick }) => (
-  <Wrapper
-    alt={text}
-    onClick={onClick}
-  />
+
+  <motion.div
+    whileHover={{ scale: 2 }}
+    onHoverStart={e => {}}
+    onHoverEnd={e => {}}
+    style={{
+      position: 'absolute',
+      '&:hover': {
+        zIndex: 1,
+      }
+    }}
+  >
+
+    <Wrapper
+      alt={text}
+      onClick={onClick}
+    />
+  </motion.div>
   // <Wrapper2
   //   alt={text}
   //   onClick={onClick}
