@@ -18,7 +18,13 @@ export default function DeleteServiceDialog(props) {
     const { service, open, setOpen, onConfirm } = props;
 
   return (
-    <Dialog onClose={() => setOpen(false)} open={open}>
+    <Dialog onClose={() => setOpen(false)} open={open} sx={{
+      "& .MuiDialog-container": {
+        "& .MuiPaper-root": {
+          // can change width and height here
+        },
+      },
+    }}>
       <DialogTitle>Delete {service.Title}?</DialogTitle>
       <DialogActions>
           <Button onClick={() => setOpen(false)}>No</Button>

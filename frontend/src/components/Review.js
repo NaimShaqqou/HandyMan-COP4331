@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Divider, Avatar, Grid, Paper } from "@mui/material";
+import { Divider, Avatar, Grid, Paper, Box } from "@mui/material";
 import axios from "axios";
+import Ratings from 'react-ratings-declarative';
 
 export default function Review(props) {
     const [user, setUser] = useState(null);
@@ -35,8 +36,23 @@ export default function Review(props) {
                             <Avatar alt={user.Username} src={user.ProfilePicture} />
                         </Grid>
                         <Grid justifyContent="left" item xs zeroMinWidth>
-                            <h4 style={{ margin: 0, textAlign: "left" }}>{user.FirstName} {user.LastName}</h4>
-                            <h5 style={{ margin: 0, textAlign: "left" }}>{review.Rating}/5</h5>
+                            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                <h4 style={{ margin: 0, textAlign: "left" }}>{user.FirstName} {user.LastName}</h4>
+                                <Box sx={{ml: 2}}></Box>
+                                <Ratings
+                                    rating={review.Rating}
+                                    widgetDimensions="25px"
+                                    widgetSpacings="5px"
+                                    widgetRatedColors="#003c80"
+                                >
+                                    <Ratings.Widget />
+                                    <Ratings.Widget />
+                                    <Ratings.Widget />
+                                    <Ratings.Widget />
+                                    <Ratings.Widget />
+                                </Ratings>
+                            </Box>
+                            
                             <p style={{ textAlign: "left" }}>
                                 {review.ReviewText}{" "}
                             </p>

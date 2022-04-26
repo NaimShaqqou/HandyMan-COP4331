@@ -53,7 +53,7 @@ export default function ServicesPage() {
   return (
     <div>
       {/* <ResponsiveAppBar/> */}
-      <Box sx={{ pt: 4}}>
+      <Box sx={{ pt: 4 }}>
 
       <Grid item>
           <Box textAlign='center'>

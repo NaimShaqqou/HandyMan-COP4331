@@ -6,7 +6,7 @@ import '../styles.css';
 import {
   Paper, Divider, Button, Stack, TextField, Typography,
   Container, Box, Grid, ImageList, ImageListItem,
-  IconButton, Alert, Collapse
+  IconButton, Alert, Collapse, List, ListItem
 } from '@mui/material';
 import { format } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Review from '../components/Review';
 import axios from 'axios';
+import NoReview from '../images/no_review.png'
 
 var bp = require("../components/Path.js");
 
@@ -27,6 +28,7 @@ export default function ServicePage() {
     const [msg, setMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState(false);
     const [reviews, setReviews] = useState([]);
+    const [fetchedData, setFetchedData] = useState(false)
     const user = useSelector((state) => state.user);
     const service = state ? state.service : null;
 
@@ -43,6 +45,7 @@ export default function ServicePage() {
           })
           .then((response) => {
               if (mounted) {
+                  setFetchedData(true)
                   setReviews(response.data.reviews);
               }
           })
@@ -213,9 +216,18 @@ export default function ServicePage() {
                                 Reviews:
                             </Typography>
                             <Box>
-                              {reviews.map((review, index) => 
-                                <Review review={review} key={index} />
-                              )}
+                              { reviews.length === 0  && fetchedData ? 
+                              <Box sx={{ height: "100%", pt: 5, display: "flex", justifyContent: "center"}} >
+                                <img src={NoReview} style={{width: "30%", height: "30%", aspectRatio: 802/537}} alt="Review Section" />
+                              </Box>
+                              : <List sx={{overflow: 'auto', maxHeight: 600}}>
+                                {reviews.map((review, index) => 
+                                  <ListItem key={index}>
+                                      <Review review={review} key={index} />
+                                  </ListItem>
+                                )}
+                                </List>
+                              }
                             </Box>
                           </Box>
                       </Stack>
