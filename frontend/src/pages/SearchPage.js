@@ -69,15 +69,15 @@ const SearchPage = () => {
           height: '100%'
         }}
       >
-        <Map
+        {/* <Map
           sx={{ height: '100%' }}
           focus={focusItem}
           updateFocus={updateFocusFromChild}
           results={(res && res.error == '') ? res.results : []}
           center={center}
-        />
+        /> */}
 
-        {/* <Map2
+        <Map2
           sx={{
             width: '100%',
             height: '100%',
@@ -86,7 +86,7 @@ const SearchPage = () => {
           updateFocus={updateFocusFromChild}
           results={(res && res.error == '') ? res.results : []}
           center={center}
-        /> */}
+        />
       </Box>
 
       {/* <motion.div

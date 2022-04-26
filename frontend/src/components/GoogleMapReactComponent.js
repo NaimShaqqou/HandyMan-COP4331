@@ -3,15 +3,23 @@ import GoogleMapReact from 'google-map-react';
 import { GoogleMap, useJsApiLoader, InfoWindow } from '@react-google-maps/api';
 
 import Marker from './Marker';
+import { useNavigate, useLocation } from "react-router-dom";
+
+import CloseIcon from '@mui/icons-material/Close';
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { motion } from 'framer-motion';
 
 import {
   Typography,
   Box,
   Button,
   createTheme,
-  ThemeProvider
+  ThemeProvider,
+  Paper,
+  IconButton,
+  Container,
+  Grid
 } from '@mui/material';
 
 const dummyService = {
@@ -90,6 +98,7 @@ Map.defaultProps = {
 export default function Map(props) {
   const mapRef = useRef(null);
   const mapsRef = useRef(null);
+  let navigate = useNavigate();
 
   let defaultCenter = {
     lat: 28.602,
@@ -122,7 +131,7 @@ export default function Map(props) {
   const apiIsLoaded = (map, maps, places) => {
     mapRef.current = map;
     mapsRef.current = maps;
-    // console.log(mapRef.current);
+    console.log(mapRef.current);
     // console.log(map);
     // console.log(maps);
     // Get bounds by our places
@@ -137,10 +146,13 @@ export default function Map(props) {
   const fitToPlaces = () => {
     const bounds = getMapBounds(mapRef.current, mapsRef.current, props.results);
     // Fit map to bounds
+    // mapRef.current.panToBounds(bounds);
+    console.log(bounds);
     mapRef.current.fitBounds(bounds);
 
-    if (mapRef.current.zoom > 15)
-      mapRef.current.setZoom(15);
+    // if (mapRef.current.zoom > 15)
+
+    mapRef.current.setZoom(Math.min(mapRef.current.getZoom() - 1, 15));
   };
 
   useEffect(() => {
@@ -153,6 +165,16 @@ export default function Map(props) {
     }
 
   }, [props.results]);
+  
+  useEffect(() => {
+    if (props.focus && mapRef.current) {
+      // mapRef.current.setCenter(props.center);
+      mapRef.current.panTo({
+        lat: parseFloat(props.focus.Latitude),
+        lng: parseFloat(props.focus.Longitude),
+      });
+    }
+  }, [props.focus]);
 
 
   // function handleLoad(map) {
@@ -177,14 +199,72 @@ export default function Map(props) {
     // console.log(mapRef.current);
   }
 
-  // console.log(props.focus);
+  console.log(props.focus);
 
-  console.log(props.center);
+  // console.log(props.center);
+
+  const Info = ({service}) => {
+    const clickOpen = (item) => (event) => {
+      navigate("/service", { state: { service: item } });
+    };
+
+    let imageURL = '';
+
+    if (service.Images.length > 0)
+      imageURL = service.Images[0];
+
+    return (
+      <Paper
+        sx={{
+          bgcolor: '#fff',
+          height: '200px',
+          minWidth: '150px',
+          mt: -27,
+          ml: -2,
+          position: 'absolute',
+          zIndex: 2,
+        }}
+      >
+        <Grid container pt={2} sx={{
+          width: '100%'
+        }}>
+          <Grid item xs={10} sx={{
+          width: '100%'
+        }}>
+            <Typography variant='h6' sx={{ textAlign: 'center', pl: 3, width: '100%'}}>
+              {service.Title}
+            </Typography>
+
+          </Grid>
+          
+          <Grid
+            item 
+            xs={2}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row-reverse',
+            }}>
+            <IconButton onClick={() => props.updateFocus(null)} sx={{
+              height: '40px',
+              mt: -2
+            }}>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+        {/* {service.Images} */}
+        <img src={imageURL} style={{ height: '50%', width: '50%', objectFit: 'cover'  }}/>
+        <Button onClick={clickOpen(service)}>Open</Button>
+      </Paper>
+
+    )
+  };
 
   return (
     <ThemeProvider theme={theme}>
-      <Button onClick={() => mapRef.current.setZoom(10)}>Zoom</Button>
+      {/* <Button onClick={() => mapRef.current.setZoom(10)}>Zoom</Button>
       <Button onClick={() => mapRef.current.setCenter({lat: 28.602,lng: -81.200,})}>Center</Button>
+      <Button onClick={() => mapRef.current.panTo({lat: 28.602,lng: -81.200,})}>Pan</Button> */}
       <Box
         sx={{
           ...props.sx,
@@ -209,19 +289,30 @@ export default function Map(props) {
             //   service={listitem}
             //   focus={props.focus}
             // />
-            
-            <Marker
-              key={listitem._id}
+
+            <Box 
+              key={listitem._id} 
               lat={parseFloat(listitem.Latitude)} 
               lng={parseFloat(listitem.Longitude)} 
-              service={listitem}
-              focus={props.focus}
-              text={listitem.Title}
-              onClick={() => mapRef.current.setCenter({
-                lat: parseFloat(listitem.Latitude),
-                lng: parseFloat(listitem.Longitude),
-              })}
-            />
+            >
+              {props.focus != null && listitem._id == props.focus._id &&
+                <Info service={listitem} />
+              }
+
+              <motion.div
+                whileHover={{ scale: 2 }}
+                onHoverStart={e => {}}
+                onHoverEnd={e => {}}
+              >
+                <Marker
+                  service={listitem}
+                  focus={props.focus}
+                  text={listitem.Title}
+                  onClick={() => props.updateFocus(listitem)}
+                />
+              </motion.div>
+            </Box>
+            
           ))}
         </GoogleMapReact>
       </Box>

@@ -35,12 +35,15 @@ function SearchBar(props) {
   console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
   const [search, setSearch] = useState(emptySearch);
+  const [userLocation, setUserLocation] = useState(null);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [region, setRegion] = useState(null);
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
+    updateCurLocation();
+
     return () => {
       setPredictions(new Array());
       setSearch(emptySearch)
@@ -65,26 +68,28 @@ function SearchBar(props) {
       });
       var res = JSON.parse(await response.text());
 
-      console.log(res.location);
-      setSearch({ ...search, location: res.location });
+      // console.log(res.location);
+      // setSearch({ ...search, location: res.location });
+      return res.location;
     } catch (e) {
       console.log(e.toString());
       return; 
     }
   };
 
-  const getLocation = () => {
+  const updateCurLocation = () => {
     if (!navigator.geolocation) {
-      setStatus('Geolocation is not supported by your browser');
+      // setStatus('Geolocation is not supported by your browser');
     } else {
-      setStatus('Locating...');
+      // setStatus('Locating...');
       navigator.geolocation.getCurrentPosition((position) => {
-        setStatus(null);
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
-        reverseGeocode(position.coords.latitude, position.coords.longitude);
+        // setStatus(null);
+        // setLat(position.coords.latitude);
+        // setLng(position.coords.longitude);
+        reverseGeocode(position.coords.latitude, position.coords.longitude)
+        .then( result => setUserLocation(result));
       }, () => {
-        setStatus('Unable to retrieve your location');
+        // setStatus('Unable to retrieve your location');
       });
     }
   }
@@ -101,7 +106,8 @@ function SearchBar(props) {
   const user = useSelector((state) => state.user);
 
   const locationButtonPress = () => {
-    getLocation();
+    updateCurLocation();
+    setSearch({...search, location: userLocation});
   }
 
   const doSearch = async (e) => {
@@ -123,15 +129,17 @@ function SearchBar(props) {
   
     if (obj.location == '') {
       obj.location = 'Orlando, FL';
-      getLocation();
+      
+      if (userLocation)
+        obj.location = userLocation;
     }
 
     if (isNaN(obj.maxDist))
       obj.maxDist = 15;
 
     js = JSON.stringify(obj);
-    // console.log('sending:');
-    // console.log(obj);
+    console.log('sending:');
+    console.log(obj);
 
     try {
       const response = await fetch(bp.buildPath("api/search-services"), {
