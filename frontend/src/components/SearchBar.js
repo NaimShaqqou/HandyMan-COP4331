@@ -32,7 +32,7 @@ const emptySearch = {
 };
 
 function SearchBar(props) {
-  console.log('Rendering SearchBar.js');
+  // console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
   const [search, setSearch] = useState(emptySearch);
   const [userLocation, setUserLocation] = useState(null);

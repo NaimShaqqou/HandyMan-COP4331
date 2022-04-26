@@ -101,64 +101,28 @@ export default function ServiceCard(props) {
                 </Typography>
               </Box>
 
-              <Box sx={{ display: 'flex', justifyContent: "flex-start", width: "100%" }}>
-                <Stack direction="column" sx={{ width: "95%" }} spacing={1}>
-                  <Grid item xs>
-                        <Typography variant="body2" color="text.secondary" sx={{ minHeight: 150, wordWrap: "break-word"}} component="div">
-                          {service.Description} 
-                        </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <IconButton onClick={() => navigate('../edit-service', {state: service})}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => setOpenDialog(true)}>
-                            <DeleteIcon />
-                    </IconButton>
-                    <IconButton onClick={() => navigate('../requested-services', {state: service})}>
-                            <WorkHistoryIcon />
-                    </IconButton>
-                  </Grid>
-                </Stack>
+              <Box>
+                <Typography variant="body2" color="text.secondary" sx={{ minHeight: 150, wordWrap: "break-word"}} component="div">
+                  {service.Description} 
+                </Typography>
+              </Box>
 
+              <Box sx={{ height: '100%', display: 'flex', flexDirection:'column-reverse' }}>
+                <Box>
+                  <IconButton onClick={() => navigate('../edit-service', {state: service})}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() => setOpenDialog(true)}>
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton onClick={() => navigate('../requested-services', {state: service})}>
+                    <WorkHistoryIcon />
+                  </IconButton>
+                </Box>
               </Box>
             </Stack>
-
-
           </Grid>
         </Grid>
-
-
-
-        {/* <Grid item xs sx={{ p: 2 }}>
-        <Grid item xs container direction="column" spacing={2}>
-          <Grid item xs>
-            <Typography gutterBottom variant="h6" sx={{fontWeight: "bold"}}component="div">
-              {service.Title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {service.Description}
-            </Typography>
-          </Grid>
-          <Grid item>
-              <IconButton onClick={() => navigate('../edit-service', {state: service})}>
-                    <EditIcon />
-            </IconButton>
-            <IconButton onClick={() => setOpenDialog(true)}>
-                    <DeleteIcon />
-            </IconButton>
-            <IconButton onClick={() => navigate('../requested-services', {state: service})}>
-                    <WorkHistoryIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Typography variant="h6" component="div">
-            ${service.Price}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Grid> */}
       </Paper>
 
       <DeleteServiceDialog open={openDialog} setOpen={setOpenDialog} service={service} onConfirm={destroyService} />

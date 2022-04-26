@@ -22,10 +22,12 @@ export default function ServicesPage() {
 
   const cardVariants = {
     offscreen: {
-      y: 500
+      y: 500,
+      opacity: 0,
     },
     onscreen: {
-      y: 50,
+      y: 0,
+      opacity: 1,
       transition: {
         type: "spring",
         bounce: 0.4,
@@ -34,16 +36,23 @@ export default function ServicesPage() {
     }
   };
 
-  function Card({serviceCard}) {
+  function Card({children}) {
   
     return (
       <motion.div
         initial="offscreen"
         whileInView="onscreen"
         viewport={{ once: true, amount: 0.8 }}
+        // whileHover={{ y: -20 }}
+        // onHoverStart={e => {}}
+        // onHoverEnd={e => {}}
+        // style={{ backgroundColor: 'green' }}
       >
-        <motion.div  variants={cardVariants}>
-          {serviceCard}
+        <motion.div 
+          variants={cardVariants} 
+          // style={{ display: 'inline', backgroundColor: 'green' }}
+        >
+          {children}
         </motion.div>
       </motion.div>
     );
@@ -66,7 +75,9 @@ export default function ServicesPage() {
         <Grid container direction="column" spacing={5}>  
         {services.map((service, index) => (
           <Grid item key={index}>
-            <Card serviceCard={<ServiceCard service={service} />}/>
+            <Card>
+              <ServiceCard service={service} />
+            </Card>
           </Grid>
         ))}
       </Grid>

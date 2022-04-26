@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../map.css';
 import jwt_decode from "jwt-decode";
 import SearchBar from "../components/SearchBar.js"
+import ServiceCard from "../components/ServiceCard";
+import PopularServices from "../components/PopularServices";
 import { useSelector } from "react-redux";
 
 import { motion } from 'framer-motion';
@@ -10,9 +12,9 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 import {
   Box, Paper,
-  Stack,
+  Stack, Card,
   Typography,
-  Container
+  Container, Grid
 } from "@mui/material";
 
 const HomePage = () =>
@@ -97,6 +99,7 @@ const HomePage = () =>
           }}
         >
           <Typography
+            component={'div'}
             sx={{
               ...msgStyle,
               marginLeft: 'auto'
@@ -128,7 +131,15 @@ const HomePage = () =>
 
       <Box>
         <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-          <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
+          <img 
+            src={require('../images/barber.jpg')} 
+            style={{ 
+              // marginRight: '-500px',
+              height: '40%',
+              width: '40%',
+              objectFit: 'contain'
+            }}
+          />
 
           <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
             <Container>
@@ -152,6 +163,11 @@ const HomePage = () =>
         </Container>
       </Box>
 
+      <Typography variant='h4'>
+        Discover Popular Services
+      </Typography>
+
+      <PopularServices />
 
     </Box>
 
