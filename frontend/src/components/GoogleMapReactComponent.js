@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import GoogleMapReact from 'google-map-react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, InfoWindow } from '@react-google-maps/api';
+
+import Marker from './Marker';
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
@@ -125,9 +127,9 @@ export default function Map(props) {
     // console.log(maps);
     // Get bounds by our places
 
-    fitToPlaces();
+    if (props.results.length != 0)
+      fitToPlaces();
 
-    // map.setZoom(5);
     // Bind the resize listener
     // bindResizeListener(map, maps, bounds);
   };
@@ -142,9 +144,14 @@ export default function Map(props) {
   };
 
   useEffect(() => {
-
-    if (mapRef.current && mapsRef.current)
+    if (mapRef.current && mapsRef.current) {
       fitToPlaces();
+
+      if (props.results.length == 0)
+        mapRef.current.setCenter(props.center);
+      
+    }
+
   }, [props.results]);
 
 
@@ -166,7 +173,7 @@ export default function Map(props) {
 
   const onChange = (mapState/* , bounds, marginBounds */) => {
     // console.log(props.center);
-    // console.log(mapState);
+    console.log(mapState);
     // console.log(mapRef.current);
   }
 
@@ -176,7 +183,8 @@ export default function Map(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Button onClick={() => mapRef.current.setZoom(5)}>Button</Button>
+      <Button onClick={() => mapRef.current.setZoom(10)}>Zoom</Button>
+      <Button onClick={() => mapRef.current.setCenter({lat: 28.602,lng: -81.200,})}>Center</Button>
       <Box
         sx={{
           ...props.sx,
@@ -194,12 +202,25 @@ export default function Map(props) {
           // onLoad={handleLoad}
         >
           {props.results.map(listitem => (
-            <MyMarker 
+            // <MyMarker 
+            //   key={listitem._id}
+            //   lat={parseFloat(listitem.Latitude)} 
+            //   lng={parseFloat(listitem.Longitude)} 
+            //   service={listitem}
+            //   focus={props.focus}
+            // />
+            
+            <Marker
               key={listitem._id}
               lat={parseFloat(listitem.Latitude)} 
               lng={parseFloat(listitem.Longitude)} 
               service={listitem}
               focus={props.focus}
+              text={listitem.Title}
+              onClick={() => mapRef.current.setCenter({
+                lat: parseFloat(listitem.Latitude),
+                lng: parseFloat(listitem.Longitude),
+              })}
             />
           ))}
         </GoogleMapReact>
