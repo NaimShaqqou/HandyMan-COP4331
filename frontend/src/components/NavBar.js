@@ -43,38 +43,26 @@ const ResponsiveAppBar = (props) => {
 
   const pathname = window.location.pathname;
   const navigate = useNavigate()
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = (e) => {
-    console.log('click');
-    console.log(e);
-    if (e.target.innerHTML === "Login") {
-      navigate("../login");
-    } else if (e.target.innerHTML === "Profile") {
-      navigate("../profile");
-    } else if (e.target.innerHTML === "Home") {
-      navigate("../");
-    } else if (e.target.innerHTML === "Search") {
-      navigate("../search");
+  const handleSettingClick = (setting) => async (e) => {
+    const mappings = {
+      'Login': "../login",
+      'Profile': "../profile",
+      'Home': "../",
+      'Search': "../search",
+      'Services': "../services",
+      'Logout': "../login",
+      'Bookings': "../user-requested-services",
     }
-    else if (e.target.innerHTML === "Services") {
-      navigate("../services");
-    } else if (e.target.innerHTML === "Logout") {
-      // call the redux function
+
+    // call the redux function
+    if (setting === "Logout")
       logoutUser();
-      navigate("../login");
-    } else if (e.target.innerHTML === "Bookings") {
-      navigate("../user-requested-services");
-    } 
-    setAnchorElUser(null);
+
+    navigate(mappings[setting]);
   };
 
-  // Set this to the user's full name
-  // let avatarAlt = "User Name";
   let userObj = {
     username: "guest",
     fullName: "Guest",
@@ -234,12 +222,12 @@ const ResponsiveAppBar = (props) => {
               <Grid container sx={{pt: 0.4}}>
                 <Grid item xs={3} sx={{ pl: 0.7 }} >
                   <Tooltip  title="View Menu">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <IconButton onClick={(e) => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
                       <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
-                
+
                 <Grid item xs={9} sx={{ textAlign: 'center', pt: 0.2, pl: 1 }}>
                   <Typography variant='h6' sx={{paddingRight: 2}}>
                     {userObj.username}
@@ -261,16 +249,16 @@ const ResponsiveAppBar = (props) => {
                   horizontal: 'right',
                 }}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+                onClose={() => setAnchorElUser(null)}
               >
                 {user.userId !== "" && loggedInSettings.map((setting) => (
-                  <MenuItem key={setting} onClick={(event) => handleCloseUserMenu(event)}>
+                  <MenuItem key={setting} onClick={handleSettingClick(setting)}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
                 
                 {user.userId === "" &&
-                  <MenuItem key="Login" onClick={(event) => handleCloseUserMenu(event)}>
+                  <MenuItem key="Login" onClick={(event) => handleSettingClick(event)}>
                     <Typography textAlign="center">Login</Typography>
                   </MenuItem>}
               </Menu>
