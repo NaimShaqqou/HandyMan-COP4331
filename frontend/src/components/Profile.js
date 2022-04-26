@@ -147,12 +147,19 @@ function Profile() {
         jwtToken: userInfo.jwtToken,
       })
       .then((response) => {
-        if (response.data.error === "") {
-          message = "Successfully changed password.";
+        if (response.data.refreshedToken === "") {
+          logoutUser()
+          logoutServices()
+          navigate("../login")
         } else {
-          message = response.data.error;
+          if (response.data.error === "") {
+            message = "Successfully changed password.";
+          } else {
+            message = response.data.error;
+          }
+          setChangePasswordMessage(message);
         }
-        setChangePasswordMessage(message);
+        
       })
       .catch((error) => {
         console.log(error);
