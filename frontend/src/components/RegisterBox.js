@@ -24,6 +24,16 @@ function RegisterBox(props) {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [errorHighlight, setErrorHighlight] = useState('');
+  const [values, setValues] = React.useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    password: '',
+    rpassword: '',
+    email: '',
+    showPassword: false,
+    rshowPassword: false,
+  });
 
   // validate email using regex
   const validateEmail = (email) => {
@@ -103,17 +113,6 @@ function RegisterBox(props) {
     }
   };
 
-  const [values, setValues] = React.useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    password: '',
-    rpassword: '',
-    email: '',
-    showPassword: false,
-    rshowPassword: false,
-  });
-
   const handleChange = (prop) => (event) => {
     setSuccessMsg('');
     setValues({ ...values, [prop]: event.target.value });
@@ -129,7 +128,6 @@ function RegisterBox(props) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
 
   const rhandleClickShowPassword = () => {
     setValues({

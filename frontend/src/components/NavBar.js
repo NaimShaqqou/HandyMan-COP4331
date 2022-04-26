@@ -258,6 +258,11 @@ const ResponsiveAppBar = (props) => {
                 ))}
                 
                 {user.userId === "" &&
+                  <MenuItem key="Home" onClick={handleSettingClick('Home')}>
+                    <Typography textAlign="center">Home</Typography>
+                  </MenuItem>}
+
+                {user.userId === "" &&
                   <MenuItem key="Login" onClick={handleSettingClick('Login')}>
                     <Typography textAlign="center">Login</Typography>
                   </MenuItem>}
