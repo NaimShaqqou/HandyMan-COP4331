@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import '../map.css';
 import jwt_decode from "jwt-decode";
-import ResponsiveAppBar from '../components/NavBar';
 import SearchBar from "../components/SearchBar.js"
 import { useSelector } from "react-redux";
 
 import { motion } from 'framer-motion';
+
+import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 import {
   Box, Paper,
@@ -17,12 +18,51 @@ import {
 const HomePage = () =>
 {
   let user = useSelector((state) => state.user);
-  let msg = 'Welcome, Guest!';
+
+  const [msgStyle, setMsgStyle] = useState({
+    textAlign: 'center',
+    color: '#003c80',
+    fontSize: '75px',
+    mt: 0,
+    opacity: 1,
+    textOverflow: 'clip',
+  });
+
+  const [searchBoxStyle, setSearchBoxStyle] = useState({
+    opacity: 1,
+  });
+
+  const [msgGap, setMsgGap] = useState(1.5);
+
+  useScrollPosition(({ currPos }) => {
+    const progress = -currPos.y / window.innerHeight
+
+    const newFontSize = 75 + progress * 100;
+    const newOpacity = 1 - progress * 6;
+
+    setMsgStyle(prev => ({
+      ...prev,
+      fontSize: `${newFontSize}px`,
+      opacity: newOpacity,
+    }));
+
+    setMsgGap(1.5 + progress * 50);
+
+    setSearchBoxStyle(prev => ({
+      ...prev,
+    }));
+  }, [msgStyle])
+
+  let msg1 = 'Welcome,';
+  let msg2 = 'Guest!';
+  let msg3 = '';
   console.log('Rendering Homepage: ');
-  console.log(user)
+  // console.log(user)
 
   if (user.userId != '') {
-    msg = 'Hello, ' + user.firstName + " " + user.lastName;
+    msg1 = 'Hello,';
+    msg2 = user.firstName;
+    msg3 = user.lastName;
   }
 
   const verticallyCenter = {
@@ -33,65 +73,82 @@ const HomePage = () =>
 
   return(
     <Box>
-      {/* <Box
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-        }}
+      <Box sx={{ m: 25 }} />
+
+      <Stack 
+        spacing={7}
       >
-        <ResponsiveAppBar />
 
-      </Box> */}
-      <Box sx={{ m: 15 }} />
-
-      <Stack spacing={7}>
-
-        <motion.div initial='hidden' animate='visible' variants={{
-          hidden: {
-            scale: .8,
-            opacity: 0
-          },
-          visible: {
-            scale: 1,
-            opacity: 1,
-            transition: {
-              delay: .4
+        <motion.div 
+          initial='hidden' 
+          animate='visible' 
+          variants={{
+            hidden: {
+              scale: .8,
+              opacity: 0
+            },
+            visible: {
+              scale: 1,
+              opacity: 1,
+              transition: {
+                delay: .4
+              }
             }
-          }
-        }}>
+          }}
+        >
           <Typography
-            variant='h2'
             sx={{
-              textAlign: 'center',
-              color: '#003c80',
-              // fontFamily: 'Comfortaa',
+              ...msgStyle,
+              marginLeft: 'auto'
             }}
+            noWrap
           >
-            {msg}
+            <Box
+              align = "center" justify = "center" alignItems = "center"
+            >
+              {msg1}
+              <Box m={msgGap} sx={{ display: 'inline' }}/>
+              {msg2}
+              {msg3 != '' && <Box m={msgGap} sx={{ display: 'inline' }}/>}
+              {msg3}
+            </Box>
           </Typography>
         </motion.div>
 
-        <div>
+        <Box
+          sx={searchBoxStyle}
+        >
           <Container sx={{ width: { xs: '410px', sm: '510px', md: '940px'} }}>
             <SearchBar/>
           </Container>
-        </div>
+        </Box>
       </Stack>
 
       <Box m={20}/>
 
       <Box>
         <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-        <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
+          <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
 
-        <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
-          <Container>
-            <Typography variant='h4'>
-              Handle Style
-            </Typography>
-          </Container>
-        </Paper>
+          <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
+            <Container>
+              <Typography variant='h4'>
+                Handle Style
+              </Typography>
+            </Container>
+          </Paper>
+        </Container>
+
+        <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+          <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
+
+          <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
+            <Container>
+              <Typography variant='h4'>
+                Handle Style
+              </Typography>
+            </Container>
+          </Paper>
         </Container>
       </Box>
 
