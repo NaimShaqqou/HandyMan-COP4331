@@ -36,7 +36,7 @@ export default function RequestedServicesPage() {
         })
         .then((response) => {
           if (mounted) {
-            if (response.data.refreshedToken === "") {
+            if (response.data.jwtToken === "") {
               logoutUser()
               logoutServices()
               navigate("../login")

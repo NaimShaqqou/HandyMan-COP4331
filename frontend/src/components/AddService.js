@@ -85,7 +85,7 @@ export default function AddService() {
             category: category,
             jwtToken: user.jwtToken
         }).then((response) => {
-            if (response.data.refreshedToken === "") {
+            if (response.data.jwtToken === "") {
                 logoutUser()
                 logoutServices()
                 navigate("../login")

@@ -103,7 +103,7 @@ function Profile() {
         jwtToken: user.jwtToken,
       })
       .then((response) => {
-        if (response.data.refreshedToken === "") {
+        if (response.data.jwtToken === "") {
             logoutUser()
             logoutServices()
             navigate("../login")
@@ -147,7 +147,7 @@ function Profile() {
         jwtToken: userInfo.jwtToken,
       })
       .then((response) => {
-        if (response.data.refreshedToken === "") {
+        if (response.data.jwtToken === "") {
           logoutUser()
           logoutServices()
           navigate("../login")

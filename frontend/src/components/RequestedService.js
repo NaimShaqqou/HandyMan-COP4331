@@ -68,7 +68,7 @@ export default function RequestedService(props) {
                 jwtToken: myUserInfo.jwtToken
             })
             .then((response) => {
-                if (response.data.refreshedToken === "") {
+                if (response.data.jwtToken === "") {
                     logoutUser()
                     logoutServices()
                     navigate("../login")
@@ -89,7 +89,7 @@ export default function RequestedService(props) {
                 jwtToken: myUserInfo.jwtToken
             })
             .then((response) => {
-                if (response.data.refreshedToken === "") {
+                if (response.data.jwtToken === "") {
                     logoutUser()
                     navigate("../login")
                 } else {
@@ -109,7 +109,7 @@ export default function RequestedService(props) {
                 jwtToken: myUserInfo.jwtToken
             })
             .then((response) => {
-                if (response.data.refreshedToken === "") {
+                if (response.data.jwtToken === "") {
                     logoutUser()
                     navigate("../login")
                 } else {

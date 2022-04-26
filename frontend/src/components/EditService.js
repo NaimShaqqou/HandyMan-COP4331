@@ -85,7 +85,7 @@ export default function EditService(props) {
             newDaysAvailable: availableDays,
             newCategory: category,
         }).then((response) => {
-            if (response.data.refreshedToken === "") {
+            if (response.data.jwtToken === "") {
                 logoutUser()
                 logoutServices()
                 navigate("../login")

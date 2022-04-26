@@ -44,7 +44,7 @@ export default function ServiceCard(props) {
           serviceId: service._id,
           jwtToken: user.jwtToken
       }).then((response) => {
-            if (response.data.refreshedToken === "") {
+            if (response.data.jwtToken === "") {
               logoutUser()
               logoutServices()
               navigate("../login")

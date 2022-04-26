@@ -66,7 +66,7 @@ export default function UserRequestedService(props) {
                 rating: rating,
                 jwtToken: user.jwtToken
             }).then((response) => {
-                if (response.data.refreshedToken === "") {
+                if (response.data.jwtToken === "") {
                     flag = true
                     logoutUser()
                     logoutServices()
@@ -120,17 +120,17 @@ export default function UserRequestedService(props) {
                     <Paper
                         sx={{
                             margin: "auto",
-                            maxWidth: 800,
+                            maxWidth: 1000,
                             flexGrow: 1,
                             backgroundColor: (theme) =>
                                 theme.palette.mode === "dark" ? "#1A2027" : "white",
                         }}
                     >
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2} >
                             <Grid item sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
-                                <Img sx={{ width: 256, height: 256, objectFit: 'cover' }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
+                                <Img sx={{ width: 256, height: "100%", objectFit: 'cover' }} alt="complex" src={service.Images === null ? '' : service.Images[0]} />
                             </Grid>
-                            <Grid item xs >
+                            <Grid item xs sx={{ p: 2}}>
                                 <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
 
                                     <Box sx={{ pr: 3, display: 'flex', flexDirection: 'row-reverse' }}>
@@ -146,10 +146,10 @@ export default function UserRequestedService(props) {
                                         }
                                     </Box>
 
-                                    <Box m={2} />
+                                    <Box m={1} />
 
-                                    <Container sx={{ display: 'flex', justifyContent: "center", width: "100%" }}>
-                                        <Stack direction="column" sx={{ textAlign: 'center' }} spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
+                                    <Box sx={{ display: 'flex', justifyContent: "center", width: "100%"}}>
+                                        <Stack direction="column" sx={{ textAlign: 'center', width: "95%" }} spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
                                             <Grid item xs sx={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
                                                 <Typography
                                                     variant="h4"
@@ -189,7 +189,7 @@ export default function UserRequestedService(props) {
                                             </Grid>
                                         </Stack>
 
-                                    </Container>
+                                    </Box>
                                 </Stack>
 
 
