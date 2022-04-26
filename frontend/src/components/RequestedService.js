@@ -143,7 +143,7 @@ export default function RequestedService(props) {
                         <Grid item xs={3.5} sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
                             <Img sx={{ width: 256, height: "100%", objectFit: 'cover' }} alt="complex" src={user.ProfilePicture === null ? '' : user.ProfilePicture} />
                         </Grid>
-                        <Grid item xs={8.5} md container >
+                        <Grid item xs={8.5} sx={{p: 2}} >
 
                             <Grid item xs >
                                 <Stack direction="column" sx={{ width: '100%', height: '100%' }}>
@@ -166,7 +166,7 @@ export default function RequestedService(props) {
                                     }
                                   </Box>
 
-                                  <Box m={2} />
+                                  <Box m={1} />
 
                                   <Container sx={{ display: 'flex', justifyContent: "center" }}>
                                     <Stack direction="column" sx={{ textAlign: 'center', width: '95%' }}  spacing={1} divider={<Divider orientation="horizontal" flexItem />}>
@@ -181,8 +181,8 @@ export default function RequestedService(props) {
                                             </Typography>
                                         </Container>
 
-                                        <Typography variant="body1">
-                                            Their Request: {requestedService.DescriptionFromRequester}
+                                        <Typography variant="body1" sx={{ textAlign: "left", minHeight: 100, wordWrap: "break-word"}} component="div">
+                                            Their Request: {requestedService.DescriptionFromRequester} 
                                         </Typography>
                                         <Grid item container direction="row" xs>
                                                 <Grid item xs={6} sx={{ borderRight: "1px solid #e0e0e0", display: 'flex', justifyContent: "center", alignItems: "center" }}>

@@ -233,6 +233,7 @@ const classes = {
     borderRadius: "40px",
     boxShadow: "0px 4px 35px rgba(0, 0, 0, 0.08)",
     padding: "10px 0px 30px 10px",
+    backgroundColor: "white",
     // minHeight: {xs: 500, md: 700 },
     // "width": "700px",
     // "height": "500px",

@@ -161,8 +161,8 @@ export default function UserRequestedService(props) {
                                                 </Typography>
                                             </Grid>
 
-                                            <Grid item xs sx={{ display: 'flex', textAlign: "left", justifyContent: "flex-start", alignItems: "center" }}>
-                                                <Typography variant="body1" sx={{ wordWrap: "break-word"}}component="div">
+                                            <Grid item xs >
+                                                <Typography variant="body1" sx={{ textAlign: "left", wordWrap: "break-word"}} component="div">
                                                     Service Description: {service.Description}
                                                 </Typography>
                                             </Grid>
