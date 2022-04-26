@@ -42,7 +42,7 @@ export default function WelcomeMsg() {
     const progress = -currPos.y / window.innerHeight
 
     const newFontSize = 75 + progress * 100;
-    const newOpacity = 1 - progress * 6;
+    const newOpacity = 1 - progress * 5;
 
     const newMsgStyle = {
       ...initialMsgStyle,
