@@ -180,6 +180,15 @@ function Profile() {
 
   return (
       <Container>
+         <Paper
+              elevation= {5}
+              sx={{
+                  margin: "auto",
+                  p: 5,
+                  backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? "#1A2027" : "white",
+              }}
+          >
           <Grid container direction="column">
             <Grid item sx={{ height: 240, display: "flex", justifyContent: "center" }} >
               <img
@@ -372,6 +381,7 @@ function Profile() {
               </Grid>
             </Grid>
           </Grid>
+          </ Paper>
       </Container>
   );
 }

@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { Autocomplete } from "@mui/material";
-import { Container } from "@mui/material";
+import { Container, Paper } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
@@ -154,6 +154,15 @@ export default function AddService() {
 
     return (
         <Container>
+            <Paper
+              elevation= {5}
+              sx={{
+                  margin: "auto",
+                  p: 5,
+                  backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? "#1A2027" : "white",
+              }}
+          >
             <Grid container spacing={3} direction="column">
                 <Grid item>
                     <Stack direction="row" spacing={2}>
@@ -351,6 +360,7 @@ export default function AddService() {
                     </Stack>
                 </Grid>
             </Grid>
+            </Paper>
         </Container>
     );
 }

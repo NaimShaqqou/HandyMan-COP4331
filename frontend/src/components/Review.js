@@ -30,7 +30,11 @@ export default function Review(props) {
     return (
         <div>
             {user !== null && (
-                <Paper style={{ padding: "40px 20px", marginTop: 10 }}>
+                <Paper elevation={3} 
+                        sx={{ p: "40px 20px", 
+                        mt: 2, 
+                        backgroundColor: (theme) => theme.palette.mode === "dark" ? "#1A2027" : "rgba(0, 60, 128, 0.01)", }}
+                >
                     <Grid container wrap="nowrap" spacing={2}>
                         <Grid item>
                             <Avatar alt={user.Username} src={user.ProfilePicture} />

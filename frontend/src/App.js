@@ -12,7 +12,9 @@ import "./App.css";
 import {
   Box,
   createTheme,
-  ThemeProvider
+  ThemeProvider,
+  CssBaseline,
+  alpha
 } from '@mui/material';
 
 import Navbar from './components/NavBar';
@@ -52,6 +54,11 @@ function App() {
         'Arial',
         'sans-serif'
       ].join(','),
+    }, 
+    palette: {
+      background: {
+        default: alpha("#003c80", 0.1),
+      }
     }
   });
 
@@ -78,6 +85,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <AnimatePresence exitBeforeEnter>
         <Routes key={location.pathname} location={location}>
           <Route 
