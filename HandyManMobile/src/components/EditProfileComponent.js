@@ -43,7 +43,7 @@ const storeInfo = async (userInfo) => {
 const EditProfileComponent = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
+  const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(ActionCreators, dispatch);
 
   const navigation = useNavigation();
 
@@ -134,18 +134,25 @@ const EditProfileComponent = () => {
         jwtToken: user.jwtToken,
       })
       .then(function (response) {
-        const newUser = {
-          userId: user.userId,
-          firstName: firstName,
-          lastName: lastName,
-          profileDescription: description,
-          profilePicture: image,
-          jwtToken: response.refreshedToken,
-        };
-
-        updateCurrentUser(newUser);
-        // async storage
-        storeInfo(newUser); // store to localstorage
+        if (response.data.jwtToken === "") {
+          storeInfo({...user, jwtToken: response.refreshedToken})
+          logoutUser()
+          logoutServices()
+        } else {
+          const newUser = {
+            userId: user.userId,
+            firstName: firstName,
+            lastName: lastName,
+            profileDescription: description,
+            profilePicture: image,
+            jwtToken: response.data.refreshedToken,
+          };
+  
+          updateCurrentUser(newUser);
+          
+          // async storage
+          storeInfo(newUser); // store to localstorage
+        }
       })
       .catch(function (response) {
         console.log(response);
