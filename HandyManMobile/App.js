@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreators from "./src/reducerStore/ActionCreators/index";
 
+import axios from "axios";
+
 export default function App() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -25,7 +27,8 @@ export default function App() {
 
   // try to see if user is already logged in
   useEffect(() => {
-    setTimeout(async () => {
+    setTimeout(
+      async () => {
       let userInfo = null;
       let serviceInfo = null;
       try {
@@ -47,9 +50,26 @@ export default function App() {
         };
       } else {
         userInfo = JSON.parse(userInfo);
+        // checks if the user's token is expired or not
+        await axios
+          .post("https://myhandyman1.herokuapp.com/api/refresh-token", {
+            jwtToken: userInfo.jwtToken,
+          })
+          .then((response) => {
+            console.log("checking jwtToken")
+            if (response.data.refreshedToken === "") {
+              console.log("jwtToken invalid")
+              userInfo = { ...userInfo, jwtToken: "" };
+            }
+          })
+          .catch((response) => {
+            console.log(response);
+          });
       }
 
       serviceInfo = JSON.parse(serviceInfo);
+
+      console.log(userInfo.jwtToken)
 
       updateCurrentUser(userInfo);
       loginServices(serviceInfo);
