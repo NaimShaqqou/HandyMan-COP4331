@@ -1,20 +1,23 @@
 import {
   Center,
   Image,
-  Heading,
-  Text,
   Box,
   Flex,
   ScrollView,
   FormControl,
-  Input,
-  Icon,
-  HStack,
-  TextArea,
   WarningOutlineIcon,
+  View,
 } from "native-base";
-import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, useTheme, ActivityIndicator, TextInput, Headline, Divider } from "react-native-paper";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Spinner from "react-native-loading-spinner-overlay";
+import {
+  Button,
+  useTheme,
+  ActivityIndicator,
+  TextInput,
+  Headline,
+  Divider,
+} from "react-native-paper";
 import { MaterialIcons } from "@native-base/icons";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -45,7 +48,7 @@ const EditProfileComponent = () => {
   const navigation = useNavigation();
 
   const [validName, setValidName] = React.useState(true);
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(false);
 
   // form values
   const [firstName, setFirstName] = React.useState(user.firstName);
@@ -90,11 +93,10 @@ const EditProfileComponent = () => {
 
   // upload new image to cloudinary
   async function handleUpload(imageFile) {
-    
     const data = new FormData();
     data.append("image", imageFile);
 
-    console.log(data)
+    console.log(data);
 
     let imageUrl;
 
@@ -120,7 +122,7 @@ const EditProfileComponent = () => {
 
   // call edit profile api
   const handleSave = async () => {
-    setLoading(true)
+    setLoading(true);
 
     await axios
       .post("https://myhandyman1.herokuapp.com/api/edit-profile", {
@@ -140,7 +142,7 @@ const EditProfileComponent = () => {
           profilePicture: image,
           jwtToken: response.refreshedToken,
         };
-        
+
         updateCurrentUser(newUser);
         // async storage
         storeInfo(newUser); // store to localstorage
@@ -149,130 +151,148 @@ const EditProfileComponent = () => {
         console.log(response);
       });
 
-    setLoading(false)
+    setLoading(false);
     navigation.goBack();
   };
 
   const { colors } = useTheme();
 
   return (
-    <ImageBackground
-      source={require("../../assets/profile-screen-bg.png")}
+    <KeyboardAwareScrollView>
+    {/* <ImageBackground
+      source={require("../../assets/solid-color-image.png")}
       style={{
         width: width,
         height: height,
         padding: 0,
         zIndex: 1,
       }}
-      imageStyle={{ width: width, height: height }}
-    >
-      {/* {loading ? 
-        <Spinner 
-          visible={true}
-          customIndicator={<ActivityIndicator />}
-        />
-        :
-        <Spinner />
-      } */}
-      <ScrollView showsVerticalScrollIndicator={false} mt="25%" width={width}>
-        <Flex
-          p="16px"
-          mx="16px"
-          mt="65px"
-          borderTopRadius={6}
-          backgroundColor="white"
-        >
-          <Center position="relative" mt="-80px">
-            <Image
-              source={{ uri: image }}
-              h="150px"
-              w="150px"
-              borderRadius="40"
-            />
-            <Button onPress={pickImage}>edit profile picture</Button>
-          </Center>
-
-          <Box display="flex">
-            <Center mt={"35px"}>
-              <Headline style={{fontFamily: "ComfortaaBold"}}>Edit your Name</Headline>
-              <FormControl mt={"15px"} isInvalid={!validName}>
-                <Center
-                  display="flex"
-                  flexDir={"row"}
-                  justifyContent={"space-between"}
-                >
-                  <TextInput 
-                    defaultValue={user.firstName}
-                    left={<TextInput.Icon name="account" />}
-                    onChangeText={(newFirstName) => setFirstName(newFirstName)}
-                    style={{width: '48%'}}
-                    label={"First Name"}
-                    error={!validName}
-                  />
-                  <TextInput 
-                    defaultValue={user.lastName}
-                    onChangeText={(newLastName) => setLastName(newLastName)}
-                    style={{width: '48%'}}
-                    left={<TextInput.Icon name="account" />}
-                    label={"Last Name"}
-                    error={!validName}
-                  />
-                </Center>
-                <FormControl.ErrorMessage
-                  leftIcon={<WarningOutlineIcon size="xs" />}
-                  _text={{fontFamily: "ComfortaaRegular"}}
-                >
-                  First name and last name cannot be empty.
-                </FormControl.ErrorMessage>
-              </FormControl>
+      imageStyle={{ width: width, height: height, opacity: 0.1 }}
+    > */}
+         
+        {/* <ScrollView mt="15%" width={width} bgColor={"#003c80"}> */}
+          <Flex
+            p="16px"
+            mx="16px"
+            mt="30%"
+            borderRadius={6}
+            backgroundColor="white"
+            shadow="6"
+          >
+            <Center position="relative" mt="-80px">
+              <Image
+                source={{ uri: image }}
+                h="150px"
+                w="150px"
+                borderRadius="40"
+                alt="profile picture"
+              />
+              <Button onPress={pickImage}>edit profile picture</Button>
             </Center>
 
-            {/* <Center mt="30px" mb="16px">
+            <Box display="flex" flex="1">
+              <Center mt={"35px"}>
+                <Headline style={{ fontFamily: "ComfortaaBold" }}>
+                  Edit your Name
+                </Headline>
+                <FormControl mt={"15px"} isInvalid={!validName}>
+                  <Center
+                    display="flex"
+                    flexDir={"row"}
+                    justifyContent={"space-between"}
+                  >
+                    <TextInput
+                      defaultValue={user.firstName}
+                      left={<TextInput.Icon name="account" />}
+                      onChangeText={(newFirstName) =>
+                        setFirstName(newFirstName)
+                      }
+                      style={{ width: "48%" }}
+                      label={"First Name"}
+                      error={!validName}
+                    />
+                    <TextInput
+                      defaultValue={user.lastName}
+                      onChangeText={(newLastName) => setLastName(newLastName)}
+                      style={{ width: "48%" }}
+                      left={<TextInput.Icon name="account" />}
+                      label={"Last Name"}
+                      error={!validName}
+                    />
+                  </Center>
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                    _text={{ fontFamily: "ComfortaaRegular" }}
+                  >
+                    First name and last name cannot be empty.
+                  </FormControl.ErrorMessage>
+                </FormControl>
+              </Center>
+
+              {/* <Center mt="30px" mb="16px">
               <Box w="90%" borderWidth={1} borderColor="#E9ECEF" />
             </Center> */}
-            <Divider style={{marginTop: 32, marginBottom: 16}}/>
-            <Box alignItems={'center'}>
-              <Headline style={{fontFamily: "ComfortaaBold"}}>Edit your Description</Headline>
-                
-              <TextInput label="Description" multiline={true} defaultValue={user.profileDescription} onChangeText={(newDescription) =>
-                  setDescription(newDescription)
-                } style={{marginTop: 16, width: '100%'}}/>
-              
+              <Divider style={{ marginTop: 32, marginBottom: 16 }} />
+              <Box alignItems={"center"}>
+                <Headline style={{ fontFamily: "ComfortaaBold" }}>
+                  Edit your Description
+                </Headline>
+
+                <TextInput
+                  label="Description"
+                  multiline={true}
+                  defaultValue={user.profileDescription}
+                  onChangeText={(newDescription) =>
+                    setDescription(newDescription)
+                  }
+                  style={{ marginTop: 16, width: "100%" }}
+                />
+              </Box>
+
+              <Center
+                display={"flex"}
+                flexDir={"row"}
+                justifyContent={"space-between"}
+                mt={"32px"}
+              >
+                <Button
+                  compact
+                  flex={1}
+                  mode={"outlined"}
+                  onPress={() => navigation.goBack()}
+                  color={colors.error}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  compact
+                  flex={2}
+                  mode={"contained"}
+                  onPress={handleSave}
+                  style={{ marginLeft: 8 }}
+                  loading={loading}
+                >
+                  Save Changes
+                </Button>
+              </Center>
             </Box>
-
-            <Center
-              display={"flex"}
-              flexDir={"row"}
-              justifyContent={"space-between"}
-              mt={'32px'}
-            >
-              <Button
-                compact
-                flex={1}
-                mode={"outlined"}
-                onPress={() => navigation.goBack()}
-                color={ colors.error }
-                disabled={loading}
-              >
-                Cancel
-              </Button>
-
-              <Button
-                compact
-                flex={2}
-                mode={"contained"}
-                onPress={handleSave}
-                style={{ marginLeft: 8 }}
-                loading={loading}
-              >
-                Save Changes
-              </Button>
-            </Center>
-          </Box>
-        </Flex>
-      </ScrollView>
-    </ImageBackground>
+          </Flex>
+        {/* </ScrollView> */}
+    {/* </ImageBackground> */}
+      </KeyboardAwareScrollView>
   );
 };
 
 export default EditProfileComponent;
+
+
+// {loading ? 
+//   <Spinner 
+//     visible={true}
+//     customIndicator={<ActivityIndicator />}
+//   />
+//   :
+//   <Spinner />
+// }  

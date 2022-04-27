@@ -7,7 +7,7 @@ import { Button } from 'react-native-paper'
 
 const EditProfile = () => {
   return (
-    <Center display={'flex'} flex={1} backgroundColor='#fff'>
+    <Center display={'flex'} flex={1} backgroundColor="#003b801a">
       <EditProfileComponent />
     </Center>
   )
