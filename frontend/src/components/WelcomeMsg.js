@@ -24,7 +24,7 @@ export default function WelcomeMsg() {
   let user = useSelector((state) => state.user);
   const [msgStyle, setMsgStyle] = useState(initialMsgStyle);
   const { scrollYProgress } = useViewportScroll();
-  // const [msgGap, setMsgGap] = useState(1.5);
+  const [msgGap, setMsgGap] = useState(1.5);
 
   // console.log(scrollYProgress.current);
 
@@ -51,9 +51,10 @@ export default function WelcomeMsg() {
     }
 
     setMsgStyle(newMsgStyle);
+    setMsgGap(1.5 + progress * 70);
   }, [msgStyle])
 
-  const msgGap = 1.5 + scrollYProgress.current * 70;
+  // const msgGap = 1.5 + scrollYProgress.current * 70;
 
   return (
     <motion.div 

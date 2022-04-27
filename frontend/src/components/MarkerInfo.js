@@ -8,7 +8,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { motion, AnimatePresence } from 'framer-motion';
+import { styled } from '@mui/material/styles';
 
 import {
   Typography,
@@ -20,8 +22,17 @@ import {
   IconButton,
   Container,
   Grid,
-  ClickAwayListener
+  ClickAwayListener,
+  Fade,
+  Tooltip,
 } from '@mui/material';
+
+const Img = styled('img')({
+  margin: 'auto',
+  display: 'block',
+  maxWidth: '100%',
+  maxHeight: '100%',
+});
 
 export default function MarkerInfo({service, updateFocus}) {
   let navigate = useNavigate();
@@ -30,13 +41,19 @@ export default function MarkerInfo({service, updateFocus}) {
     navigate("/service", { state: { service: item } });
   };
 
+  const getImage = (item) => {
+    if (item.Images.length > 0) return item.Images[0];
+    // return breadurl;
+    return require('../images/no-image-icon.png');
+  };
+
   let imageURL = '';
 
   if (service.Images.length > 0)
     imageURL = service.Images[0];
 
   return (
-    <ClickAwayListener onClickAway={() => updateFocus(null)}>
+    // <ClickAwayListener onClickAway={() => updateFocus(null)}>
       <motion.div
         initial='hidden' 
         animate='visible'
@@ -60,24 +77,75 @@ export default function MarkerInfo({service, updateFocus}) {
           sx={{
             bgcolor: '#fff',
             height: '200px',
-            minWidth: '150px',
+            width: '500px',
             mt: -27,
             ml: -2,
             position: 'absolute',
             zIndex: 2,
           }}
           >
-            <Box m sx={{ textAlign: 'center'}}>
-              <Typography variant='h6' sx={{ width: '100%'}}>
-                {service.Title}
-              </Typography>
-            </Box>
+            <Grid container>
+              <Grid item xs>
+                <Img
+                  sx={{
+                    width: 200,
+                    height: '203px',
+                    objectFit: 'cover',
+                    ml: 0
+                  }}
+                  src={getImage(service)} 
+                />
+              </Grid>
+              <Grid item xs>
+                <Box m sx={{ textAlign: 'center'}}>
+                  <Typography variant='h5'>
+                    {service.Title}
+                  </Typography>
+                  <Typography  variant='h5' sx={{color: 'blue'}}>
+                    ${service.Price}
+                  </Typography>
+                  <Typography variant='subtitle1'>
+                    {service.Description}
+                  </Typography>
+                </Box>
+                {/* <Button onClick={clickOpen(service)}>Open</Button> */}
+
+                <Box sx={{display:'flex', flexDirection:'row-reverse'}}>
+                  {/* <Button onClick={clickOpen(listitem)}>Open</Button> */}
+                  <Tooltip title="Go to Service">
+                    <IconButton
+                      onClick={clickOpen(service)}
+                      sx={{
+                        color: 'white',
+                        bgcolor: 'steelblue',
+                        "&:hover": {
+                          bgcolor: "DarkTurquoise"
+                        }
+                      }}
+                    >
+                      <ArrowForwardIcon
+                        // sx={{ width: 17}}
+                        fontSize='large'
+                        aria-label="This is aria label"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Grid>
+
+              <Grid item xs>
+                <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                  <IconButton onClick={() => updateFocus(null)}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              </Grid>
+
+            </Grid>
           {/* {service.Images} */}
-          <img src={imageURL} style={{ height: '50%', width: '50%', objectFit: 'cover'  }}/>
-          <Button onClick={clickOpen(service)}>Open</Button>
         </Paper>
       </motion.div>
-    </ClickAwayListener>
+    // </ClickAwayListener>
 
   )
 }

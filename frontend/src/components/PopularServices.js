@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 
 import ServiceCard from "../components/ServiceCard";
+import PopularServiceCard from "../components/PopularServiceCard";
 
 export default function PopularServices() {
 
@@ -16,6 +17,8 @@ export default function PopularServices() {
   const [userLocation, setUserLocation] = useState(null);
 
   let bp = require("./Path");
+
+  console.log(popularServices);
 
   useEffect(() => {
     updatePopularServices();
@@ -51,8 +54,6 @@ export default function PopularServices() {
       // Sort by title
       res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
 
-      console.log(res.results);
-
       setPopularServices(res.results);
     } catch (e) {
       console.log(e.toString());
@@ -62,13 +63,18 @@ export default function PopularServices() {
 
   return (
     <Box>
-      <Grid container direction="column" spacing={5}>  
-        {popularServices.map((service, index) => (
-          <Grid item key={index}>
-            {/* <Card serviceCard={<ServiceCard service={service} />}/> */}
-          </Grid>
-        ))}
-      </Grid>
+      <Typography variant='h4'>
+        Discover Popular Services
+      </Typography>
+
+      {popularServices.length > 0 && <PopularServiceCard service={popularServices[0]}/>}
+
+      {/* <PopularServiceCard service={popularServices[0]}/> */}
+      {/* {popularServices.map((service, index) => (
+        <Grid item key={index}>
+          <Card serviceCard={<ServiceCard service={service} />}/>
+        </Grid>
+      ))} */}
     </Box>
   )
 }

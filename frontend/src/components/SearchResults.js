@@ -50,7 +50,8 @@ export default function SearchResults(props) {
 
   const getImage = (item) => {
     if (item.Images.length > 0 && checkImage(item.Images[0])) return item.Images[0];
-    return breadurl;
+    // return breadurl;
+    return require('../images/no-image-icon.png');
   };
 
   const theme = createTheme({
