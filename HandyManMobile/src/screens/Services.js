@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
+import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar, Button, Card, Title, Paragraph, useTheme, Text} from 'react-native-paper';
-import { ImageBackground, Dimensions, StyleSheet, View, FlatList, ScrollView } from 'react-native';
+import { ImageBackground, Dimensions, StyleSheet, View, FlatList, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { colors, Icon } from 'react-native-elements';
-import { Center, Column, ListItem } from 'native-base';
+import { bindActionCreators } from "redux";
+import * as ActionCreators from "../reducerStore/ActionCreators/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
@@ -16,12 +19,10 @@ const Services = () => {
 
   const user = useSelector((state) => state.user)
   const services = useSelector((state) => state.services).services;
+  const dispatch = useDispatch();
+  const { updateCurrentUser, deleteService, logoutUser, logoutServices } = bindActionCreators(ActionCreators, dispatch);
 
   const navigation = useNavigation();
-
-  const doDelete = async (event) => {
-    
-  }
 
   const onAddServiceTransition = () => {
     navigation.navigate("AddService");
@@ -30,6 +31,43 @@ const Services = () => {
   const onEditServiceTransition = () => {
     navigation.navigate("EditService");
   };
+
+  const deleteAPI = async (item) => {
+    await axios
+      .post("https://myhandyman1.herokuapp.com/api/delete-service", {
+        serviceId: item._id,
+        jwtToken: user.jwtToken,
+      })
+      .then(function (response) {
+        if (response.data.error !== "") {
+          console.log(response.data.error)
+          storeInfo({...user, jwtToken: ""})
+          logoutUser()
+          logoutServices()
+        } else {
+          updateCurrentUser({...user, jwtToken: response.data.refreshedToken,});
+
+          AsyncStorage.setItem("userInfo", JSON.stringify(user));
+
+          deleteService(item);
+        }
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  };
+
+  const deleteConfirmation = async (item) =>
+    Alert.alert(
+      "Are you sure you want to delete this Service?", '',
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "Delete", onPress: () => deleteAPI(item) }
+      ]
+    );
   
   return (
     <ImageBackground
@@ -59,7 +97,7 @@ const Services = () => {
                   title = {item.Title} 
                   subtitle = {item.Description}
                 />
-                <Card.Cover style = {{ borderRadius: 13}} source={{ uri: 'https://picsum.photos/700' }} />
+                <Card.Cover style = {{ borderRadius: 13}} source={{ uri: item.Images[0] }} />
                 <Card.Content>
                   <Title></Title>
                   <View style = {styles.cardContentView}>
@@ -81,11 +119,11 @@ const Services = () => {
                 </Card.Content>
                 <Card.Actions>
 
-                  <Button onPress={onEditServiceTransition}>
+                  <Button onPress={() => onEditServiceTransition}>
                     Edit
                   </Button>
 
-                  <Button color = {colors.error}>
+                  <Button onPress={() => deleteConfirmation(item)} color = {colors.error}>
                     Delete
                   </Button>
 
