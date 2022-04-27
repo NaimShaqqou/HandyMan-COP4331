@@ -159,140 +159,117 @@ const EditProfileComponent = () => {
 
   return (
     <KeyboardAwareScrollView>
-    {/* <ImageBackground
-      source={require("../../assets/solid-color-image.png")}
-      style={{
-        width: width,
-        height: height,
-        padding: 0,
-        zIndex: 1,
-      }}
-      imageStyle={{ width: width, height: height, opacity: 0.1 }}
-    > */}
-         
-        {/* <ScrollView mt="15%" width={width} bgColor={"#003c80"}> */}
-          <Flex
-            p="16px"
-            mx="16px"
-            mt="30%"
-            borderRadius={6}
-            backgroundColor="white"
-            shadow="6"
-          >
-            <Center position="relative" mt="-80px">
-              <Image
-                source={{ uri: image }}
-                h="150px"
-                w="150px"
-                borderRadius="40"
-                alt="profile picture"
-              />
-              <Button onPress={pickImage}>edit profile picture</Button>
-            </Center>
+      <Flex
+        p="16px"
+        mx="16px"
+        mt="30%"
+        borderRadius={6}
+        backgroundColor="white"
+        shadow="6"
+      >
+        <Center position="relative" mt="-80px">
+          <Image
+            source={{ uri: image }}
+            h="150px"
+            w="150px"
+            borderRadius="40"
+            alt="profile picture"
+          />
+          <Button onPress={pickImage}>edit profile picture</Button>
+        </Center>
 
-            <Box display="flex" flex="1">
-              <Center mt={"35px"}>
-                <Headline style={{ fontFamily: "ComfortaaBold" }}>
-                  Edit your Name
-                </Headline>
-                <FormControl mt={"15px"} isInvalid={!validName}>
-                  <Center
-                    display="flex"
-                    flexDir={"row"}
-                    justifyContent={"space-between"}
-                  >
-                    <TextInput
-                      defaultValue={user.firstName}
-                      left={<TextInput.Icon name="account" />}
-                      onChangeText={(newFirstName) =>
-                        setFirstName(newFirstName)
-                      }
-                      style={{ width: "48%" }}
-                      label={"First Name"}
-                      error={!validName}
-                    />
-                    <TextInput
-                      defaultValue={user.lastName}
-                      onChangeText={(newLastName) => setLastName(newLastName)}
-                      style={{ width: "48%" }}
-                      left={<TextInput.Icon name="account" />}
-                      label={"Last Name"}
-                      error={!validName}
-                    />
-                  </Center>
-                  <FormControl.ErrorMessage
-                    leftIcon={<WarningOutlineIcon size="xs" />}
-                    _text={{ fontFamily: "ComfortaaRegular" }}
-                  >
-                    First name and last name cannot be empty.
-                  </FormControl.ErrorMessage>
-                </FormControl>
-              </Center>
-
-              {/* <Center mt="30px" mb="16px">
-              <Box w="90%" borderWidth={1} borderColor="#E9ECEF" />
-            </Center> */}
-              <Divider style={{ marginTop: 32, marginBottom: 16 }} />
-              <Box alignItems={"center"}>
-                <Headline style={{ fontFamily: "ComfortaaBold" }}>
-                  Edit your Description
-                </Headline>
-
-                <TextInput
-                  label="Description"
-                  multiline={true}
-                  defaultValue={user.profileDescription}
-                  onChangeText={(newDescription) =>
-                    setDescription(newDescription)
-                  }
-                  style={{ marginTop: 16, width: "100%" }}
-                />
-              </Box>
-
+        <Box display="flex" flex="1">
+          <Center mt={"35px"}>
+            <Headline style={{ fontFamily: "ComfortaaBold" }}>
+              Edit your Name
+            </Headline>
+            <FormControl mt={"15px"} isInvalid={!validName}>
               <Center
-                display={"flex"}
+                display="flex"
                 flexDir={"row"}
                 justifyContent={"space-between"}
-                mt={"32px"}
               >
-                <Button
-                  compact
-                  flex={1}
-                  mode={"outlined"}
-                  onPress={() => navigation.goBack()}
-                  color={colors.error}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-
-                <Button
-                  compact
-                  flex={2}
-                  mode={"contained"}
-                  onPress={handleSave}
-                  style={{ marginLeft: 8 }}
-                  loading={loading}
-                >
-                  Save Changes
-                </Button>
+                <TextInput
+                  defaultValue={user.firstName}
+                  left={<TextInput.Icon name="account" />}
+                  onChangeText={(newFirstName) => setFirstName(newFirstName)}
+                  style={{ width: "48%" }}
+                  label={"First Name"}
+                  error={!validName}
+                />
+                <TextInput
+                  defaultValue={user.lastName}
+                  onChangeText={(newLastName) => setLastName(newLastName)}
+                  style={{ width: "48%" }}
+                  left={<TextInput.Icon name="account" />}
+                  label={"Last Name"}
+                  error={!validName}
+                />
               </Center>
-            </Box>
-          </Flex>
-        {/* </ScrollView> */}
-    {/* </ImageBackground> */}
-      </KeyboardAwareScrollView>
+              <FormControl.ErrorMessage
+                leftIcon={<WarningOutlineIcon size="xs" />}
+                _text={{ fontFamily: "ComfortaaRegular" }}
+              >
+                First name and last name cannot be empty.
+              </FormControl.ErrorMessage>
+            </FormControl>
+          </Center>
+          <Divider style={{ marginTop: 32, marginBottom: 16 }} />
+          <Box alignItems={"center"}>
+            <Headline style={{ fontFamily: "ComfortaaBold" }}>
+              Edit your Description
+            </Headline>
+
+            <TextInput
+              label="Description"
+              multiline={true}
+              defaultValue={user.profileDescription}
+              onChangeText={(newDescription) => setDescription(newDescription)}
+              style={{ marginTop: 16, width: "100%" }}
+            />
+          </Box>
+
+          <Center
+            display={"flex"}
+            flexDir={"row"}
+            justifyContent={"space-between"}
+            mt={"32px"}
+          >
+            <Button
+              compact
+              flex={1}
+              mode={"outlined"}
+              onPress={() => navigation.goBack()}
+              color={colors.error}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              compact
+              flex={2}
+              mode={"contained"}
+              onPress={handleSave}
+              style={{ marginLeft: 8 }}
+              loading={loading}
+            >
+              Save Changes
+            </Button>
+          </Center>
+        </Box>
+      </Flex>
+    </KeyboardAwareScrollView>
   );
 };
 
 export default EditProfileComponent;
 
-
-// {loading ? 
-//   <Spinner 
+// {loading ?
+//   <Spinner
 //     visible={true}
 //     customIndicator={<ActivityIndicator />}
 //   />
 //   :
 //   <Spinner />
-// }  
+// }

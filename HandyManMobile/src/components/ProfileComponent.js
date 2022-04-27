@@ -45,23 +45,24 @@ const ProfileComponent = () => {
   const { colors } = useTheme();
 
   return (
-    <ImageBackground
-      source={require("../../assets/profile-screen-bg.png")}
-      style={{
-        width: width,
-        height: height,
-        padding: 0,
-        zIndex: 1,
-      }}
-      imageStyle={{ width: width, height: height }}
-    >
-      <ScrollView showsVerticalScrollIndicator={false} mt="25%" width={width}>
+    // <ImageBackground
+    //   source={require("../../assets/solid-color-image.png")}
+    //   style={{
+    //     width: width,
+    //     height: height,
+    //     padding: 0,
+    //     zIndex: 1,
+    //   }}
+    //   imageStyle={{ width: width, height: height, opacity: 0.1, borderBottomLeftRadius: 90, borderBottomRightRadius: 90 }}
+    // >
+      <ScrollView showsVerticalScrollIndicator={false} width={width}>
         <Flex
           p="16px"
           mx="16px"
-          mt="65px"
+          mt="30%"
           borderTopRadius={6}
           backgroundColor="white"
+          shadow="6"
         >
           <Center position="relative" mt="-80px">
             <Image
@@ -69,6 +70,7 @@ const ProfileComponent = () => {
               h="150px"
               w="150px"
               borderRadius="40"
+              alt="profile picture"
             />
           </Center>
 
@@ -106,7 +108,7 @@ const ProfileComponent = () => {
           </Box>
         </Flex>
       </ScrollView>
-    </ImageBackground>
+    // </ImageBackground>
   );
 };
 
