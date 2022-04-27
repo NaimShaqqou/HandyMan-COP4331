@@ -26,6 +26,17 @@ const reducer = (
                 ...state,
                 services: new Array()
             }
+        case "updateServices":
+            const index = state.services.findIndex(service => service._id === action.payload.service._id);
+
+            const newArray = [...state.services];
+
+            newArray[index] = action.payload.service
+
+            return { 
+                ...state, 
+                services: newArray, 
+                }
         default:
             return state
     }

@@ -11,37 +11,38 @@ import {
   Container, Grid
 } from "@mui/material";
 
+const initialMsgStyle = {
+  textAlign: 'center',
+  color: '#003c80',
+  fontSize: '75px',
+  mt: 0,
+  opacity: 1,
+  textOverflow: 'clip',
+};
+
 export default function WelcomeMsg() {
-  const { scrollYProgress } = useViewportScroll();
-  const [msgGap, setMsgGap] = useState(1.5);
   let user = useSelector((state) => state.user);
+  const [msgStyle, setMsgStyle] = useState(initialMsgStyle);
+  const { scrollYProgress } = useViewportScroll();
+  // const [msgGap, setMsgGap] = useState(1.5);
+
+  // console.log(scrollYProgress.current);
 
   let msg1 = 'Welcome,';
   let msg2 = 'Guest!';
   let msg3 = '';
-
+  
   if (user.userId != '') {
     msg1 = 'Hello,';
     msg2 = user.firstName;
     msg3 = user.lastName;
   }
 
-  const initialMsgStyle = {
-    textAlign: 'center',
-    color: '#003c80',
-    fontSize: '75px',
-    mt: 0,
-    opacity: 1,
-    textOverflow: 'clip',
-  };
-
-  const [msgStyle, setMsgStyle] = useState(initialMsgStyle);
-
   useScrollPosition(({ currPos }) => {
     const progress = -currPos.y / window.innerHeight
 
     const newFontSize = 75 + progress * 100;
-    const newOpacity = 1 - progress * 6;
+    const newOpacity = 1 - progress * 5;
 
     const newMsgStyle = {
       ...initialMsgStyle,
@@ -49,11 +50,10 @@ export default function WelcomeMsg() {
       opacity: newOpacity,
     }
 
-    if (JSON.stringify(newMsgStyle) !== JSON.stringify(msgStyle))
-      setMsgStyle(newMsgStyle);
-
-    setMsgGap(1.5 + progress * 50);
+    setMsgStyle(newMsgStyle);
   }, [msgStyle])
+
+  const msgGap = 1.5 + scrollYProgress.current * 70;
 
   return (
     <motion.div 
@@ -85,9 +85,9 @@ export default function WelcomeMsg() {
           align = "center" justify = "center" alignItems = "center"
         >
           {msg1}
-          <Box m={msgGap} sx={{ display: 'inline' }}/>
+            <Box m={msgGap} sx={{ display: 'inline' }}/>
           {msg2}
-          {msg3 != '' && <Box m={msgGap} sx={{ display: 'inline' }}/>}
+            {msg3 != '' && <Box m={msgGap} sx={{ display: 'inline' }}/>}
           {msg3}
         </Box>
       </Typography>

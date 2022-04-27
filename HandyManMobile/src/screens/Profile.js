@@ -5,12 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProfileComponent from '../components/ProfileComponent'
 import EditProfileComponent from '../components/EditProfileComponent'
 
+
 const Stack = createNativeStackNavigator();
 
 
 const Profile = () => {
   return (
-    <Center display={'flex'} flex={1} backgroundColor='#fff'>
+    <Center display={'flex'} flex={1} backgroundColor='#003b801a'>
       <ProfileComponent /> 
     </Center>
   )
