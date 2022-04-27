@@ -9,7 +9,8 @@ import {
   InputLabel,
   Box,
   Container,
-  Stack
+  Stack,
+  Avatar
 } from "@mui/material";
 
 import Map2 from '../components/GoogleMapReactComponent';
@@ -17,26 +18,21 @@ import Map2 from '../components/GoogleMapReactComponent';
 const MyApp = (status) => {
 
   return (
-    <Box
-      // maxWidth={false}
-      // direction='row'
-      // sx={{
-      //   // bgcolor: 'green',
-      //   width: '50vh',
-      //   height: '50vh',
-      // }}
+    <Box 
+      sx={{ 
+        bgcolor: 'green',
+        height: '100px',
+        width: '100px',
+      }}
     >
-      <Map2
+      <Avatar 
+        alt="Remy Sharp" 
+        src="https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650429195/images/cvqjeiixca3jr1qe8efv.jpg" 
         sx={{
+          height: '100%',
           width: '100%',
-          height: '700px',
         }}
-        // focus={focusItem}
-        // updateFocus={updateFromChild}
-        // results={(res && res.error == '') ? res.results : []}
-        // center={center}
       />
-
     </Box>
   )
 };

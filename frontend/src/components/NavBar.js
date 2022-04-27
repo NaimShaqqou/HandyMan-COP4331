@@ -149,36 +149,6 @@ const ResponsiveAppBar = (props) => {
 
             <Box m={1}/>
 
-            {/* <AnimatePresence exitBeforeEnter>
-              {pathname !== "/" && 
-              <motion.div
-                initial='hidden'
-                animate='visible'
-                exit='exit'
-                variants={{
-                  hidden: {
-                    y: -100,
-                    opacity: 0
-                  },
-                  visible: {
-                    y: 0,
-                    opacity: 1,
-                  },
-                  exit: {
-                    y: -100,
-                    opacity: 0
-                  }
-                }}
-                transition={{
-                  duration: 0.5
-                }}
-              >
-                <Container sx={{ display: { xs: 'none', sm: 'none', s900: 'flex' }, maxWidth: { xs: '380px', sm: '480px', lg: '910px'} }}>
-                  <SearchBar/>
-                </Container>
-              </motion.div>}
-            </AnimatePresence> */}
-
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             </Box>
 
@@ -192,17 +162,7 @@ const ResponsiveAppBar = (props) => {
               handler
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {/* {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              ))} */}
-            </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}/>
 
             <Box
               sx={{
@@ -210,20 +170,25 @@ const ResponsiveAppBar = (props) => {
                 width: (userObj.username && userObj.username.length > 6 ? (150 + (userObj.username.length - 6) * 20) : 150).toString() + 'px',
                 height: '45px',
                 bgcolor: 'rgba(0, 0, 0, 0.5)',
-                // bgcolor: 'green',
                 borderRadius: 5,
-                // pt: 0.2
-                // display: "flex",
-                // flexDirection: "column",
-                // justifyContent: "center"
               }}
               direction="column"
             >
               <Grid container sx={{pt: 0.4}}>
                 <Grid item xs={3} sx={{ pl: 0.7 }} >
                   <Tooltip  title="View Menu">
-                    <IconButton onClick={(e) => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
-                      <Avatar alt={userObj.fullName} src={userObj.profilePicture} />
+                    <IconButton 
+                      onClick={(e) => setAnchorElUser(e.currentTarget)} 
+                      sx={{ p: 0 }}
+                    >
+                      <Avatar 
+                        alt={userObj.fullName} 
+                        src={userObj.profilePicture}
+                        sx={{ 
+                          // border: '2px solid #fff' 
+                          objectFit: 'cover',
+                        }}
+                      />
                     </IconButton>
                   </Tooltip>
                 </Grid>

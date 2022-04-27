@@ -52,10 +52,7 @@ const SearchPage = () => {
   if (res && res.searchLocationCoords)
     center = res.searchLocationCoords;
 
-  // console.log('in search page');
   console.log(center);
-
-  // let res = (state ? state.res : null);
 
   return (
     <Box
@@ -88,38 +85,10 @@ const SearchPage = () => {
           center={center}
         />
       </Box>
-
-      {/* <motion.div
-        initial='hidden'
-        animate='visible'
-        exit='exit'
-        variants={{
-          hidden: {
-            y: -100,
-            opacity: 0
-          },
-          visible: {
-            y: 0,
-            opacity: 1,
-          },
-          exit: {
-            y: -100,
-            opacity: 0
-          }
-        }}
-        transition={{
-          duration: 0.5
-        }}
-      >
-      </motion.div> */}
       <Container sx={{ 
-          // display: { xs: 'none', sm: 'none', s900: 'flex' }, 
           width: { xs: '410px', sm: '510px', md: '940px'},
-          // width: '500px',
           height: '300px',
           mt: '-90vh',
-          // ml: '50vh',
-          // bgcolor: 'green',
           position: 'sticky',
           pointerEvents: 'none',
         }}
@@ -128,16 +97,13 @@ const SearchPage = () => {
       </Container>
 
       <Box
-        // elevation={5}
         maxWidth='100%'
         sx={{
           height: '80vh',
           mt: '-20vh',
           ml: '3%',
           zIndex: 98,
-          // bgcolor: 'green',
           position: 'sticky',
-          // borderRadius: 5
           pointerEvents: 'none',
         }}
       >
@@ -194,9 +160,6 @@ const SearchPage = () => {
             <motion.div
               key='button'
               layout
-              // initial={false}
-              // animate={false}
-              // exit={false}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -211,18 +174,6 @@ const SearchPage = () => {
                   // height: '90%',
                   backgroundColor: '#429bff',
                 }}
-                // initial={{
-                //   // x: -100,
-                //   opacity: 1
-                // }}
-                // animate={{
-                //   // x: 0,
-                //   opacity: 1,
-                // }}
-                // exit={{
-                //   // x: -100,
-                //   opacity: 1
-                // }}
                 drag
                 dragConstraints={{
                   top: 0,

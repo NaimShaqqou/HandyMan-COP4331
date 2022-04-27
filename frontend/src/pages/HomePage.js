@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar.js"
 import ServiceCard from "../components/ServiceCard";
 import WelcomeMsg from "../components/WelcomeMsg";
 import PopularServices from "../components/PopularServices";
+import AnimatedBackground from "../components/AnimatedBackground";
 
 import { motion, useViewportScroll  } from 'framer-motion';
 
@@ -33,65 +34,81 @@ const HomePage = () =>
   }
 
   return(
-    <Box>
-      <Box sx={{ m: 25 }} />
+    <Box
+      sx={{
+        overflow: 'clip',
+      }}
+    >
 
-      <Stack 
-        spacing={7}
+      <AnimatedBackground />
+
+
+      <Box
+        sx={{
+          position: 'sticky',
+          mt: -215,
+        }}
       >
+        <Box sx={{ m: 25 }} />
 
-        <WelcomeMsg />
-
-        <Box
-          // sx={searchBoxStyle}
+        <Stack 
+          spacing={7}
         >
-          <Container sx={{ width: { xs: '410px', sm: '510px', md: '940px'} }}>
-            <SearchBar/>
+
+          <WelcomeMsg />
+
+          <Box
+            // sx={searchBoxStyle}
+          >
+            <Container sx={{ width: { xs: '410px', sm: '510px', md: '940px'} }}>
+              <SearchBar/>
+            </Container>
+          </Box>
+        </Stack>
+
+        <Box m={20}/>
+
+        <Box>
+          <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+            <img 
+              src={require('../images/barber.jpg')} 
+              style={{ 
+                // marginRight: '-500px',
+                height: '40%',
+                width: '40%',
+                objectFit: 'contain'
+              }}
+            />
+
+            <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
+              <Container>
+                <Typography variant='h4'>
+                  Handle Style
+                </Typography>
+              </Container>
+            </Paper>
+          </Container>
+
+          <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+            <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
+
+            <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
+              <Container>
+                <Typography variant='h4'>
+                  Handle Style
+                </Typography>
+              </Container>
+            </Paper>
           </Container>
         </Box>
-      </Stack>
 
-      <Box m={20}/>
+        <Typography variant='h4'>
+          Discover Popular Services
+        </Typography>
 
-      <Box>
-        <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-          <img 
-            src={require('../images/barber.jpg')} 
-            style={{ 
-              // marginRight: '-500px',
-              height: '40%',
-              width: '40%',
-              objectFit: 'contain'
-            }}
-          />
-
-          <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
-            <Container>
-              <Typography variant='h4'>
-                Handle Style
-              </Typography>
-            </Container>
-          </Paper>
-        </Container>
-
-        <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-          <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
-
-          <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
-            <Container>
-              <Typography variant='h4'>
-                Handle Style
-              </Typography>
-            </Container>
-          </Paper>
-        </Container>
+        <PopularServices />
+        
       </Box>
-
-      <Typography variant='h4'>
-        Discover Popular Services
-      </Typography>
-
-      <PopularServices />
 
     </Box>
 
