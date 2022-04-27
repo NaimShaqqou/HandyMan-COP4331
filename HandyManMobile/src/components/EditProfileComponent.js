@@ -135,7 +135,7 @@ const EditProfileComponent = () => {
       })
       .then(function (response) {
         if (response.data.jwtToken === "") {
-          storeInfo({...user, jwtToken: response.refreshedToken})
+          storeInfo({...user, jwtToken: ""})
           logoutUser()
           logoutServices()
         } else {
