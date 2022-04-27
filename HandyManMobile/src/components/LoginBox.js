@@ -21,8 +21,7 @@ import {
   TextInput,
 } from "react-native-paper";
 
-// to store user info in global variable
-//const context = useContext(AppContext)
+import md5 from 'md5';
 
 const storeInfo = async (userInfo, serviceInfo) => {
   try {
@@ -45,7 +44,7 @@ const LoginBox = () => {
     event.preventDefault();
     setLoading(true);
 
-    var obj = { login: username, password: pass };
+    var obj = { login: username, password: md5(pass) };
     var js = JSON.stringify(obj);
 
     try {
