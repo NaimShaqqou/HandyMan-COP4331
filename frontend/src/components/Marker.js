@@ -21,56 +21,26 @@ const Wrapper = styled.div`
   border-radius: 100%;
   user-select: none;
   transform: translate(-50%, -50%);
-  cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
-  &:hover {
-    z-index: 1;
-  }
+  cursor: pointer;
 `;
 
-// const Wrapper2 = stylesmui((props) => <Box />)(
-//   ({ theme }) => ({
-//     position: 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     width: '18px',
-//     height: '18px',
-//     backgroundColor: '#003c80',
-//     border: '2px solid #fff',
-//     borderRadius: '100%',
-//     userSelect: 'none',
-//     transform: 'translate(-50%, -50%)',
-//     cursor: 'pointer',
-//     // cursor: ${(props) => (props.onClick ? 'pointer' : 'default')},
-//     '&:hover': {
-//       zIndex: 1,
-//     }
-//   }),
-// );
+const Marker = ({ service, focus, onClick }) => {
+  const inFocus = focus && focus._id == service._id;
 
-const Marker = ({ text, onClick }) => (
-
-  <motion.div
-    whileHover={{ scale: 2 }}
-    onHoverStart={e => {}}
-    onHoverEnd={e => {}}
-    style={{
-      position: 'absolute',
-      '&:hover': {
-        zIndex: 1,
-      }
-    }}
-  >
-
-    <Wrapper
-      alt={text}
+  return (
+    <motion.div
+      whileHover={{ scale: 2, zIndex: 1 }}
+      onHoverStart={e => {}}
+      onHoverEnd={e => {}}
+      style={{
+        position: 'absolute'
+      }}
       onClick={onClick}
-    />
-  </motion.div>
-  // <Wrapper2
-  //   alt={text}
-  //   onClick={onClick}
-  // />
-);
+    >
+      <Wrapper  />
+    </motion.div>
+  )
+};
 
 Marker.defaultProps = {
   onClick: null,
@@ -78,7 +48,7 @@ Marker.defaultProps = {
 
 Marker.propTypes = {
   onClick: PropTypes.func,
-  text: PropTypes.string.isRequired,
+  // text: PropTypes.string.isRequired,
 };
 
 export default Marker;

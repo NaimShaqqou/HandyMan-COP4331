@@ -8,7 +8,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+import MarkerInfo from './MarkerInfo';
 
 import {
   Typography,
@@ -19,7 +21,8 @@ import {
   Paper,
   IconButton,
   Container,
-  Grid
+  Grid,
+  ClickAwayListener
 } from '@mui/material';
 
 const dummyService = {
@@ -203,63 +206,6 @@ export default function Map(props) {
 
   // console.log(props.center);
 
-  const Info = ({service}) => {
-    const clickOpen = (item) => (event) => {
-      navigate("/service", { state: { service: item } });
-    };
-
-    let imageURL = '';
-
-    if (service.Images.length > 0)
-      imageURL = service.Images[0];
-
-    return (
-      <Paper
-        sx={{
-          bgcolor: '#fff',
-          height: '200px',
-          minWidth: '150px',
-          mt: -27,
-          ml: -2,
-          position: 'absolute',
-          zIndex: 2,
-        }}
-      >
-        <Grid container pt={2} sx={{
-          width: '100%'
-        }}>
-          <Grid item xs={10} sx={{
-          width: '100%'
-        }}>
-            <Typography variant='h6' sx={{ textAlign: 'center', pl: 3, width: '100%'}}>
-              {service.Title}
-            </Typography>
-
-          </Grid>
-          
-          <Grid
-            item 
-            xs={2}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row-reverse',
-            }}>
-            <IconButton onClick={() => props.updateFocus(null)} sx={{
-              height: '40px',
-              mt: -2
-            }}>
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-        {/* {service.Images} */}
-        <img src={imageURL} style={{ height: '50%', width: '50%', objectFit: 'cover'  }}/>
-        <Button onClick={clickOpen(service)}>Open</Button>
-      </Paper>
-
-    )
-  };
-
   return (
     <ThemeProvider theme={theme}>
       {/* <Button onClick={() => mapRef.current.setZoom(10)}>Zoom</Button>
@@ -282,24 +228,17 @@ export default function Map(props) {
           // onLoad={handleLoad}
         >
           {props.results.map(listitem => (
-            // <MyMarker 
-            //   key={listitem._id}
-            //   lat={parseFloat(listitem.Latitude)} 
-            //   lng={parseFloat(listitem.Longitude)} 
-            //   service={listitem}
-            //   focus={props.focus}
-            // />
-
             <Box 
               key={listitem._id} 
               lat={parseFloat(listitem.Latitude)} 
               lng={parseFloat(listitem.Longitude)} 
             >
-              {props.focus != null && listitem._id == props.focus._id &&
-                <Info service={listitem} />
-              }
+              <AnimatePresence exitBeforeEnter>
+                {props.focus != null && listitem._id == props.focus._id &&
+                  <MarkerInfo service={listitem} updateFocus={props.updateFocus} />
+                }
+              </AnimatePresence>
 
-              
               <Marker
                 service={listitem}
                 focus={props.focus}
