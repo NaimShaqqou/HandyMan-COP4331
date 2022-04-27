@@ -3,7 +3,12 @@ import { MaterialIcons } from "@native-base/icons";
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as ActionCreators from "../reducerStore/ActionCreators/index";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 import { Divider, Headline, useTheme, TextInput } from "react-native-paper";
 import {
@@ -19,6 +24,9 @@ import GooglePlacesInput from "../components/LocationSearchBar.js";
 import BottomSheet from "../components/BottomSheet.js";
 
 const Home = () => {
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
   const { colors } = useTheme();
 
   // Can be called to actually call the search api
@@ -30,7 +38,6 @@ const Home = () => {
         category: filters.category,
         location: filters.location,
         maxDist: filters.maxDist,
-        jwtToken: user.jwtToken,
       };
       var js = JSON.stringify(obj);
       console.log("input: " + js);
@@ -43,11 +50,28 @@ const Home = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      var res = JSON.parse(await response.text());
 
-      return res;
-      // if (res.error == '')
-      // send the data to the map and list
+      // refresh token if necessary
+      await axios
+          .post("https://myhandyman1.herokuapp.com/api/refresh-token", {
+            jwtToken: user.jwtToken,
+          })
+          .then((resp) => {
+            console.log("checking jwtToken")
+            if (resp.data.refreshedToken === "") {
+              console.log("jwtToken invalid")
+              updateCurrentUser({ ...user, jwtToken: "" });
+            } else {
+              console.log("updated jwtToken")
+              updateCurrentUser({...user, jwtToken: resp.data.refreshedToken})
+            }
+          })
+          .catch((resp) => {
+            console.log(resp);
+          });
+          await AsyncStorage.setItem("userInfo", JSON.stringify(user));
+          
+      return JSON.parse(await response.text());
     } catch (e) {
       console.log(e.toString());
       return;
@@ -73,8 +97,7 @@ const Home = () => {
     });
   };
 
-  const user = useSelector((state) => state.user);
-
+  
   // stuff for filter modal
   const bottomSheetModalRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ["60%"], []);
