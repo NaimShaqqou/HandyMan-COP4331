@@ -1,5 +1,5 @@
 import { Center, ScrollView, Box, Image, Divider } from "native-base";
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Text,
   Headline,
@@ -15,68 +15,25 @@ import ImageSwiper from "../components/ImageSwiper";
 import { Dimensions, StyleSheet } from "react-native";
 
 import Review from "../components/Review";
+import { FlatList } from "react-native-gesture-handler";
 
 const windowHeight = Dimensions.get("window").height;
 
-// const ServiceInfo = () => {
-//     this.state = {
-//       activeIndex: 0,
-//       serviceOwner: {},
-//       service: {
-//         Address: "Waterford Lakes Parkway, Orlando, FL, USA",
-//         Category: "Teaching",
-//         DaysAvailable: ["Tuesday", "Saturday"],
-//         Description:
-//           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur ipsum, iusto hic laborum praesentium et distinctio alias sequi vitae commodi ratione esse placeat, atque officia libero! Nulla voluptates architecto ipsa!",
-//         Images: [
-//           "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650934686/images/jyvtq0tevgavi0cxbx54.jpg",
-//           "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650934687/images/lrorusgkoeelkvxbkrub.jpg",
-//           "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650934688/images/psthtbdzgvqqkg90fwk0.jpg",
-//           "https://res.cloudinary.com/dt7uj6vfp/image/upload/v1650934689/images/ow8caceygwyq8th7v9oz.jpg",
-//         ],
-//         Latitude: "28.557277",
-//         Longitude: "-81.2010939",
-//         Price: "4",
-//         Title: "TEST",
-//         UserId: "6234c4d39a050a36555a6942",
-//         __v: 0,
-//         _id: "626743a2a2bf479116950e4a",
-//       },
-//       reviews: {},
-//     };
-//   }
-
-// _renderItem({ item, index }) {
-//   return (
-//     <Image
-//       style={{
-//         width: Dimensions.get("screen").width,
-//         height: 330,
-//         resizeMode: "contain",
-//       }}
-//       source={{ uri: item }}
-//     />
-//   );
-// }
-
-const ServiceInfo = () => {
+const ServiceInfo = ({ route }) => {
+  const { service } = route.params
   const [user, setUser] = React.useState(null);
   const [reviews, setReviews] = React.useState([]);
   const [fetchedData, setFetchedData] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   getServiceOwner();
-  //   getReviews();
-  // }, [])
 
   React.useEffect(() => {
     console.log("IN REVIEW USE EFFECT");
     let mounted = true;
     axios
       .post("https://myhandyman1.herokuapp.com/api/get-user", {
-        userId: "6234c4d39a050a36555a6942",
+        userId: service.UserId,
       })
       .then((response) => {
+        console.log(response.data)
         if (mounted) {
           setUser(response.data.user);
         }
@@ -92,7 +49,7 @@ const ServiceInfo = () => {
     let mounted = true;
     axios
       .post("https://myhandyman1.herokuapp.com/api/get-reviews", {
-        serviceId: "624db366458caeccba7406ef",
+        serviceId: service._id,
       })
       .then(function (response) {
         console.log(response.data);
@@ -107,6 +64,12 @@ const ServiceInfo = () => {
 
     return () => (mounted = false);
   }, []);
+
+  const renderItem = useCallback(
+    ({ item }) => (
+      <Review review={item} />
+    )
+  )
 
   return (
     <Center flex={1}>
@@ -125,7 +88,7 @@ const ServiceInfo = () => {
       >
         <Title>
           Price:
-          {/* ${this.state.service.Price} */}
+          ${service.Price}
         </Title>
         <Button mode="contained">Book!</Button>
       </Box>
@@ -139,12 +102,10 @@ const ServiceInfo = () => {
               marginTop: 16,
             }}
           >
-            {/* {this.state.service.Title} */}
-            balh
+            {service.Title}
           </Headline>
           <Subheading style={{ paddingLeft: 8, marginTop: 8 }}>
-            {/* {this.state.service.Address} */}
-            blah
+            {service.Address}
           </Subheading>
           <Divider style={{ marginTop: 16 }} />
           <Box
@@ -179,7 +140,7 @@ const ServiceInfo = () => {
             Description:
           </Title>
           <Text style={{ paddingLeft: 8, marginTop: 16 }}>
-            {/* {this.state.service.Description} */}
+            {service.Description}
           </Text>
           <Divider style={{ marginTop: 16 }} />
           <Title
@@ -193,16 +154,20 @@ const ServiceInfo = () => {
           </Title>
           {fetchedData ? (
             <>
-            {reviews.length === 0 ?
-            <Text>No reviews yet...</Text>
-          :
-            <>
-              <Review review={reviews[0]} />
-              <Divider style={{ marginTop: 16 }} />
+              {reviews.length === 0 ? (
+                <Text style={{paddingLeft: 8, marginTop: 16}}>No reviews yet...</Text>
+              ) : (
+                <FlatList 
+                  data={reviews}
+                  renderItem={renderItem}
+                  ItemSeparatorComponent={() => <Divider style={{ marginTop: 16 }} />}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
             </>
-            }
-            </>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </Box>
       </ScrollView>
     </Center>

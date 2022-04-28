@@ -5,8 +5,14 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { Avatar, Button, Divider, List, Subheading } from "react-native-paper";
 
 import { FlatList } from "react-native-gesture-handler";
+import { Box } from "native-base";
+
+import { useNavigation } from "@react-navigation/native";
 
 const BottomSheetComponent = ({ searchResults }) => {
+  const navigation = useNavigation();
+
+
   // ref
   const bottomSheetRef = useRef(null);
 
@@ -26,11 +32,10 @@ const BottomSheetComponent = ({ searchResults }) => {
   const renderItem = useCallback(
     ({ item }) => (
       <List.Accordion
-        key={item.id}
         title={item.Title}
         description={item.Description}
         left={() => (
-          <Avatar.Image source={{ uri: "https://picsum.photos/700" }} />
+          <Avatar.Image source={{ uri: item.Images[0] }} />
         )}
         style={styles.list}
         theme={{ colors: { background: "white" } }}
@@ -61,7 +66,15 @@ const BottomSheetComponent = ({ searchResults }) => {
             <List.Icon icon="map-marker-outline" style={{ marginRight: 0 }} />
           )}
         />
-        <Button>Learn More</Button>
+        <List.Item
+          title=""
+          onPress={() => navigation.navigate("ServiceInfoScreen", { service: item })}
+          left={() => (
+            <Box flexDir={"row"} alignItems="center" justifyContent={'flex-end'}>
+              <Button icon="information-outline" style={{width: '95%'}} mode='outlined'>Learn More</Button>
+            </Box>
+          )}
+        />
       </List.Accordion>
     ),
     []
@@ -82,6 +95,7 @@ const BottomSheetComponent = ({ searchResults }) => {
           data={searchResults}
           renderItem={renderItem}
           ItemSeparatorComponent={() => <Divider />}
+          keyExtractor={(item, index) => index.toString()}
         />
       )}
     </BottomSheet>

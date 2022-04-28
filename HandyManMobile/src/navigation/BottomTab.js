@@ -3,11 +3,10 @@ import { MaterialIcons } from "@native-base/icons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { FontAwesome5 } from '@expo/vector-icons'; 
 
-import HomeScreen from "../screens/Home.js";
+import HomeStack from "./HomeStack";
 import ProfileStack from "./ProfileStack.js";
 import ServicesScreen from "../screens/Services.js";
 import BookingsScreen from "../screens/Bookings.js";
-import ServiceInfo from "../screens/ServiceInfo.js"
 
 
 import { useTheme } from "react-native-paper";
@@ -21,7 +20,7 @@ const BottomTab = () => {
       shifting={true}
       barStyle={{ backgroundColor: colors.primary }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Testing"
         component={ServiceInfo}
         options={{
@@ -29,10 +28,10 @@ const BottomTab = () => {
             <MaterialIcons name="home" size={26} color={"white"} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Search"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           tabBarIcon: () => (
             <MaterialIcons name="search" size={26} color={"white"} />
