@@ -14,14 +14,9 @@ import {
   Link,
   WarningOutlineIcon,
 } from "native-base";
-import {
-  Button,
-  Headline,
-  Subheading,
-  TextInput,
-} from "react-native-paper";
+import { Button, Headline, Subheading, TextInput } from "react-native-paper";
 
-import md5 from 'md5';
+import md5 from "md5";
 
 const storeInfo = async (userInfo, serviceInfo) => {
   try {
@@ -78,8 +73,6 @@ const LoginBox = () => {
         updateCurrentUser(user); // update redux state
         storeInfo(user, res.services); // store to localstorage
       }
-
-      setLoading(false);
     } catch (e) {
       console.log(e.toString());
       setLoading(false);
@@ -120,75 +113,75 @@ const LoginBox = () => {
       <Subheading>Login to continue!</Subheading>
 
       <Center mt={"32px"} w="100%">
-          <FormControl isInvalid={valid ? false : true}>
-            <TextInput
-              error={!valid}
-              onChangeText={(newUsername) => setUsername(newUsername)}
-              label="Username"
-              left={<TextInput.Icon name="account" />}
-            />
-          </FormControl>
+        <FormControl isInvalid={valid ? false : true}>
+          <TextInput
+            error={!valid}
+            onChangeText={(newUsername) => setUsername(newUsername)}
+            label="Username"
+            left={<TextInput.Icon name="account" />}
+          />
+        </FormControl>
 
-          <FormControl mt={"16px"} isInvalid={!valid}>
-            <TextInput
-              error={!valid}
-              onChangeText={(newPassword) => setPassword(newPassword)}
-              label="Password"
-              secureTextEntry={show ? false : true}
-              left={<TextInput.Icon name="lock" />}
-              right={
-                <TextInput.Icon
-                  name={show ? "eye" : "eye-off"}
-                  forceTextInputFocus={false}
-                  onPress={() => setShow(!show)}
-                />
-              }
-            />
+        <FormControl mt={"16px"} isInvalid={!valid}>
+          <TextInput
+            error={!valid}
+            onChangeText={(newPassword) => setPassword(newPassword)}
+            label="Password"
+            secureTextEntry={show ? false : true}
+            left={<TextInput.Icon name="lock" />}
+            right={
+              <TextInput.Icon
+                name={show ? "eye" : "eye-off"}
+                forceTextInputFocus={false}
+                onPress={() => setShow(!show)}
+              />
+            }
+          />
 
-            <FormControl.ErrorMessage
-              _text={{ fontFamily: "ComfortaaRegular" }}
-              leftIcon={<WarningOutlineIcon size="xs" />}
-            >
-              {msg}
-            </FormControl.ErrorMessage>
-          </FormControl>
-
-          <Link
-            _text={{
-              fontWeight: "500",
-              fontFamily: "ComfortaaBold",
-              color: "secondary.500",
-            }}
-            alignSelf="flex-end"
-            mt="1"
-            onPress={onForgotPasswordPressed}
+          <FormControl.ErrorMessage
+            _text={{ fontFamily: "ComfortaaRegular" }}
+            leftIcon={<WarningOutlineIcon size="xs" />}
           >
-            Forgot Password?
-          </Link>
+            {msg}
+          </FormControl.ErrorMessage>
+        </FormControl>
 
-          <Button
-            onPress={doLogin}
-            mode="contained"
-            loading={loading}
-            disabled={loading}
-            style={{
-              width: "100%",
-              marginTop: 20,
-            }}
-          >
-            Login
-          </Button>
+        <Link
+          _text={{
+            fontWeight: "500",
+            fontFamily: "ComfortaaBold",
+            color: "secondary.500",
+          }}
+          alignSelf="flex-end"
+          mt="1"
+          onPress={onForgotPasswordPressed}
+        >
+          Forgot Password?
+        </Link>
 
-          <Button
-            onPress={onRegisterTransition}
-            mode="outlined"
-            style={{
-              width: "100%",
-              marginTop: 20,
-            }}
-          >
-            Don't have an account?
-          </Button>
+        <Button
+          onPress={doLogin}
+          mode="contained"
+          loading={loading}
+          disabled={loading}
+          style={{
+            width: "100%",
+            marginTop: 20,
+          }}
+        >
+          Login
+        </Button>
+
+        <Button
+          onPress={onRegisterTransition}
+          mode="outlined"
+          style={{
+            width: "100%",
+            marginTop: 20,
+          }}
+        >
+          Don't have an account?
+        </Button>
       </Center>
     </Box>
   );
