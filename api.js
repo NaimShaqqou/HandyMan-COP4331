@@ -762,7 +762,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let apiKey = process.env.PLACES_API_KEY
     let predictions = new Array()
 
-    input = input.replaceAll(' ', '+')
+    input = input.replace('/ /g', '+')
     googleUrl = googleUrl + input + "&components=country:us&types=(regions)&key=" + apiKey
 
     await axios(googleUrl)
@@ -787,7 +787,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
     let apiKey = process.env.PLACES_API_KEY
     let predictions = new Array()
 
-    input = input.replaceAll(' ', '+')
+    input = input.replace('/ /g', '+')
     googleUrl = googleUrl + input + "&components=country:us&types=address&key=" + apiKey
 
     await axios(googleUrl)

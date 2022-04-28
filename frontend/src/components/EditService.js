@@ -260,6 +260,7 @@ export default function EditService(props) {
                                         ...params.InputProps,
                                         type: "text"
                                     }}
+                                    value={location}
                                     error={locationValidation === true}
                                     helperText={
                                         locationValidation === true

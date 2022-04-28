@@ -235,6 +235,7 @@ export default function AddService() {
                     </Typography>
                     <Autocomplete
                         options={predictions.map((prediction) => prediction)}
+                        value={location}
                         onChange={(e, value) => {
                             value === null ? setLocation("") : setLocation(value)
                             setLocationValidation(false);
@@ -245,6 +246,7 @@ export default function AddService() {
                                 label="Address"
                                 variant="outlined"
                                 fullWidth
+                                value={location}
                                 InputProps={{
                                     ...params.InputProps,
                                     type: "text"
