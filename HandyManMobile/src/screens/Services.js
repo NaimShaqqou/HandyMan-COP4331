@@ -42,7 +42,7 @@ const Services = () => {
   const navigation = useNavigation();
 
   const onEditServiceTransition = (item) => {
-    console.log(item)
+    console.log(item);
     // item is being passed as a prop to the edit service page
     navigation.navigate("EditService", { service: item });
   };
@@ -85,8 +85,11 @@ const Services = () => {
     ]);
 
   return (
-
-      <ScrollView contentContainerStyle={styles.viewContainer}>
+    <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
+      <ScrollView
+        contentContainerStyle={styles.viewContainer}
+      >
+        <Text>{"\n"}</Text>
         {Object.values(services).map((item) => (
           <Text key={item._id}>
             <Card style={styles.menuContainer}>
@@ -119,7 +122,9 @@ const Services = () => {
                 </View>
               </Card.Content>
               <Card.Actions>
-                <Button onPress={() => onEditServiceTransition(item)}>Edit</Button>
+                <Button onPress={() => onEditServiceTransition(item)}>
+                  Edit
+                </Button>
 
                 <Button
                   onPress={() => deleteConfirmation(item)}
@@ -138,6 +143,7 @@ const Services = () => {
           {"\n"}
         </Text>
       </ScrollView>
+    </View>
   );
 };
 
