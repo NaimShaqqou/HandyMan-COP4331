@@ -1050,7 +1050,7 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     let i = 0;
     for (const [key, value] of mapSort) {
-      if (i >= num) break;
+      if (i >= numOfServices) break;
 
       topServices.push(key)
       i++
