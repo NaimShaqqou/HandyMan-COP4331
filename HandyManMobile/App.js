@@ -27,8 +27,7 @@ export default function App() {
 
   // try to see if user is already logged in
   useEffect(() => {
-    setTimeout(
-      async () => {
+    setTimeout(async () => {
       let userInfo = null;
       let serviceInfo = null;
       try {
@@ -56,9 +55,9 @@ export default function App() {
             jwtToken: userInfo.jwtToken,
           })
           .then((response) => {
-            console.log("checking jwtToken")
+            console.log("checking jwtToken");
             if (response.data.refreshedToken === "") {
-              console.log("jwtToken invalid")
+              console.log("jwtToken invalid");
               userInfo = { ...userInfo, jwtToken: "" };
             }
           })
@@ -69,7 +68,7 @@ export default function App() {
 
       serviceInfo = JSON.parse(serviceInfo);
 
-      console.log(userInfo.jwtToken)
+      console.log(userInfo.jwtToken);
 
       updateCurrentUser(userInfo);
       loginServices(serviceInfo);
@@ -87,100 +86,11 @@ export default function App() {
   }
 
   return (
-    // <Provider store={store}>
-    // <AppContext.Provider value={{authContext, userState}}>
     <NativeBaseProvider>
       <StatusBar style="auto" />
       <NavigationContainer>
         {user.jwtToken != "" ? <AppStack /> : <AuthStack />}
       </NavigationContainer>
     </NativeBaseProvider>
-
-    // </AppContext.Provider>
-    // </Provider>
   );
 }
-
-// const initialUserState = {
-//   isLoading: true,
-//   userId: "",
-//   firstName: "",
-//   lastName: "",
-//   profileDescription: "",
-//   profilePicture: "",
-//   userName: "",
-//   jwtToken: "",
-// };
-
-// const userReducer = (prevState, action) => {
-//   switch( action.type ) {
-//     case 'RETRIEVE_TOKEN':
-//       return {
-//         ...prevState,
-//         userId: action.payload.userId,
-//         firstName: action.payload.firstName,
-//         lastName: action.payload.lastName,
-//         profileDescription: action.payload.profileDescription,
-//         profilePicture: action.payload.profilePicture,
-//         jwtToken: action.payload.jwtToken,
-//         isLoading: false,
-//       };
-//     case 'LOGIN':
-//       return {
-//         ...prevState,
-//         userId: action.payload.userId,
-//         firstName: action.payload.firstName,
-//         lastName: action.payload.lastName,
-//         profileDescription: action.payload.profileDescription,
-//         profilePicture: action.payload.profilePicture,
-//         jwtToken: action.payload.jwtToken,
-//         isLoading: false,
-//       };
-//     case 'LOGOUT':
-//       return {
-//         ...prevState,
-//         userId: "",
-//         firstName: "",
-//         lastName: "",
-//         profileDescription: "",
-//         profilePicture: "",
-//         userName: "",
-//         jwtToken: "",
-//         isLoading: false,
-//       };
-//     case 'REGISTER':
-//       return {
-//         ...prevState,
-//         //userName: action.id,
-//         // jwtToken: action.token,
-//         isLoading: false,
-//       };
-//   }
-// };
-
-// const [userState, dispatch] = React.useReducer(userReducer, initialUserState);
-
-// const authContext = React.useMemo(() => ({
-//   Login: async (userInfo) => {
-//     console.log(userInfo)
-//     try {
-//       await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
-//     } catch(e) {
-//       console.log(e)
-//     }
-
-//     console.log(userInfo)
-//     dispatch({ type: 'LOGIN', payload: userInfo})
-//   },
-//   Logout: async() => {
-//     try {
-//       await AsyncStorage.removeItem('userInfo')
-//     } catch(e) {
-//       console.log(e)
-//     }
-//     dispatch({ type: 'LOGOUT' })
-//   },
-//   Register: () => {
-//     setIsLoading(false);
-//   },
-// }), []);

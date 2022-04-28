@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {BottomSheetVirtualizedList} from "@gorhom/bottom-sheet";
 import { Avatar, Button, Divider, List, Subheading } from "react-native-paper";
 
-import { FlatList } from "react-native-gesture-handler";
-import { Box } from "native-base";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+
+import { Box, View } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -19,8 +20,19 @@ const BottomSheetComponent = ({ searchResults }) => {
   const snapPoints = useMemo(() => ["3%", "25%", "50%", "80%"], []);
 
   // callbacks
+  const [height, setHeight] = React.useState()
   const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
+    switch(index) {
+      case 1:
+        setHeight('175');
+        break;
+      case 3:
+        setHeight('100%');
+        break;
+      default:
+        setHeight('365');
+        break;
+    }
   }, []);
 
   React.useEffect(() => {
@@ -100,12 +112,16 @@ const BottomSheetComponent = ({ searchResults }) => {
       {searchResults == "" ? (
         <Subheading>No search results found</Subheading>
       ) : (
+        <View h={height}>
         <FlatList
           data={searchResults}
+          // getItemCount={(data) => data.length}
+          // getItem={(data, index) => data[index]}
           renderItem={renderItem}
           ItemSeparatorComponent={() => <Divider />}
           keyExtractor={(item, index) => index.toString()}
         />
+        </View>
       )}
     </BottomSheet>
   );
@@ -118,6 +134,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   contentContainer: {
+    flex: 1,
     backgroundColor: "white",
   },
   itemContainer: {

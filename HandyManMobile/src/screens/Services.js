@@ -41,12 +41,10 @@ const Services = () => {
 
   const navigation = useNavigation();
 
-  const onAddServiceTransition = () => {
-    navigation.navigate("AddService");
-  };
-
-  const onEditServiceTransition = () => {
-    navigation.navigate("EditService");
+  const onEditServiceTransition = (item) => {
+    console.log(item)
+    // item is being passed as a prop to the edit service page
+    navigation.navigate("EditService", { service: item });
   };
 
   const deleteAPI = async (item) => {
@@ -87,30 +85,6 @@ const Services = () => {
     ]);
 
   return (
-    <ImageBackground
-      source={require("../../assets/profile-screen-bg.png")}
-      style={{
-        width: width,
-        height: height,
-        padding: 0,
-        zIndex: 1,
-      }}
-      imageStyle={{ width: width, height: height }}
-    >
-      <Text>{"\n"}</Text>
-
-      <Button
-        onPress={onAddServiceTransition}
-        mode="outlined"
-        style={styles.addButton}
-      >
-        <Icon
-          name="add-circle-outline"
-          size={40}
-          color={"white"}
-          style={{ margin: 0 }}
-        />
-      </Button>
 
       <ScrollView contentContainerStyle={styles.viewContainer}>
         {Object.values(services).map((item) => (
@@ -145,7 +119,7 @@ const Services = () => {
                 </View>
               </Card.Content>
               <Card.Actions>
-                <Button onPress={() => onEditServiceTransition}>Edit</Button>
+                <Button onPress={() => onEditServiceTransition(item)}>Edit</Button>
 
                 <Button
                   onPress={() => deleteConfirmation(item)}
@@ -164,7 +138,6 @@ const Services = () => {
           {"\n"}
         </Text>
       </ScrollView>
-    </ImageBackground>
   );
 };
 
