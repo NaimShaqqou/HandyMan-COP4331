@@ -1019,6 +1019,63 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   })
 
+  app.post("/api/best-reviewed-services", async (req, res, next) => {
+    const { numOfServices } = req.body; 
+
+    let reviews = await Review.find({}).exec()
+    //console.log(reviews)
+
+    let dict = new Map()
+
+    reviews.forEach((review) => {
+      let object = dict.get(review.ServiceId.toString())
+      if (object === undefined) {
+        dict.set(review.ServiceId.toString(), { totalRating: review.Rating, numOfReviews: 1 })
+      } else {
+        dict.set(review.ServiceId.toString(), { totalRating: object.totalRating + review.Rating, numOfReviews: object.numOfReviews + 1 })
+      }
+    })
+
+    console.log(dict)
+
+    for (const [key, value] of dict) {
+      dict.set(key, value.totalRating / value.numOfReviews)
+    }
+
+    // Time to sort 
+    let mapSort = new Map([...dict].sort((a, b) => b[1] - a[1]));
+    
+    console.log(mapSort)
+    let topServices = new Array()
+
+    let i = 0;
+    for (const [key, value] of mapSort) {
+      if (i >= num) break;
+
+      topServices.push(key)
+      i++
+    }
+
+    console.log(topServices)
+
+    Service.find({
+          '_id': { $in: topServices }
+      }, function(err, response){
+          // Creates object with sorted services and their respective ratings
+          let finalArray = new Array()
+          for (const service of response) {
+            finalArray.push({ service: service, averageRating: mapSort.get(service._id.toString())})
+          }
+
+          finalArray.sort((a, b) => b.averageRating - a.averageRating)
+
+          console.log(finalArray)
+
+          res.status(200).json({ topServices: finalArray })
+      })
+
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {
