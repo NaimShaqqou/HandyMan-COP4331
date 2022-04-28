@@ -27,7 +27,7 @@ const renderPagination = (index, total, _context) => {
   );
 };
 
-const ImageSwiper = () => {
+const ImageSwiper = ({ images }) => {
   return (
     <Swiper
       style={styles.wrapper}
@@ -37,26 +37,21 @@ const ImageSwiper = () => {
       loop={false}
       bounces={true}
     >
+      {Object.values(images).map(item => (
+
       <Center>
         <Image
           source={{
-            uri: "https://wallpaperaccess.com/full/317501.jpg",
+            uri: item,
           }}
-          alt="Service Image"
+          alt={"\n\n\n\n\n" + "Image Unavailable"}
           width="100%"
           height="100%"
         />
       </Center>
-      <Center>
-        <Image
-          source={{
-            uri: "https://wallpaperaccess.com/full/317501.jpg",
-          }}
-          alt="Service Image"
-          width="100%"
-          height="100%"
-        />
-      </Center>
+      ))
+      }
+      
     </Swiper>
   );
 };
