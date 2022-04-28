@@ -12,7 +12,7 @@ const Login = () => {
   const { colors } = useTheme();
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       flex={1}
       w="100%"
       alignItems={"center"}
