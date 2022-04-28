@@ -12,7 +12,6 @@ import { useNavigation } from "@react-navigation/native";
 const BottomSheetComponent = ({ searchResults }) => {
   const navigation = useNavigation();
 
-
   // ref
   const bottomSheetRef = useRef(null);
 
@@ -34,9 +33,7 @@ const BottomSheetComponent = ({ searchResults }) => {
       <List.Accordion
         title={item.Title}
         description={item.Description}
-        left={() => (
-          <Avatar.Image source={{ uri: item.Images[0] }} />
-        )}
+        left={() => <Avatar.Image source={{ uri: item.Images[0] }} />}
         style={styles.list}
         theme={{ colors: { background: "white" } }}
       >
@@ -68,10 +65,22 @@ const BottomSheetComponent = ({ searchResults }) => {
         />
         <List.Item
           title=""
-          onPress={() => navigation.navigate("ServiceInfoScreen", { service: item })}
+          onPress={() =>
+            navigation.navigate("ServiceInfoScreen", { service: item })
+          }
           left={() => (
-            <Box flexDir={"row"} alignItems="center" justifyContent={'flex-end'}>
-              <Button icon="information-outline" style={{width: '95%'}} mode='outlined'>Learn More</Button>
+            <Box
+              flexDir={"row"}
+              alignItems="center"
+              justifyContent={"flex-end"}
+            >
+              <Button
+                icon="information-outline"
+                style={{ width: "95%" }}
+                mode="outlined"
+              >
+                Learn More
+              </Button>
             </Box>
           )}
         />

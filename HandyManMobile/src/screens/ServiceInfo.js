@@ -20,7 +20,7 @@ import { FlatList } from "react-native-gesture-handler";
 const windowHeight = Dimensions.get("window").height;
 
 const ServiceInfo = ({ route }) => {
-  const { service } = route.params
+  const { service } = route.params;
   const [user, setUser] = React.useState(null);
   const [reviews, setReviews] = React.useState([]);
   const [fetchedData, setFetchedData] = React.useState(false);
@@ -33,7 +33,7 @@ const ServiceInfo = ({ route }) => {
         userId: service.UserId,
       })
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         if (mounted) {
           setUser(response.data.user);
         }
@@ -65,11 +65,7 @@ const ServiceInfo = ({ route }) => {
     return () => (mounted = false);
   }, []);
 
-  const renderItem = useCallback(
-    ({ item }) => (
-      <Review review={item} />
-    )
-  )
+  const renderItem = useCallback(({ item }) => <Review review={item} />);
 
   return (
     <Center flex={1}>
@@ -86,14 +82,11 @@ const ServiceInfo = ({ route }) => {
         flexDir={"row"}
         alignItems={"center"}
       >
-        <Title>
-          Price:
-          ${service.Price}
-        </Title>
+        <Title>Price: ${service.Price}</Title>
         <Button mode="contained">Book!</Button>
       </Box>
       <ScrollView mb={"69px"}>
-        <ImageSwiper images={service.Images}/>
+        <ImageSwiper images={service.Images} />
         <Box w={"90%"} alignSelf={"center"}>
           <Headline
             style={{
@@ -155,12 +148,16 @@ const ServiceInfo = ({ route }) => {
           {fetchedData ? (
             <>
               {reviews.length === 0 ? (
-                <Text style={{paddingLeft: 8, marginTop: 16}}>No reviews yet...</Text>
+                <Text style={{ paddingLeft: 8, marginTop: 16 }}>
+                  No reviews yet...
+                </Text>
               ) : (
-                <FlatList 
+                <FlatList
                   data={reviews}
                   renderItem={renderItem}
-                  ItemSeparatorComponent={() => <Divider style={{ marginTop: 16 }} />}
+                  ItemSeparatorComponent={() => (
+                    <Divider style={{ marginTop: 16 }} />
+                  )}
                   keyExtractor={(item, index) => index.toString()}
                 />
               )}

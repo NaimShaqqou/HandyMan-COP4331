@@ -37,21 +37,18 @@ const ImageSwiper = ({ images }) => {
       loop={false}
       bounces={true}
     >
-      {Object.values(images).map(item => (
-
-      <Center>
-        <Image
-          source={{
-            uri: item,
-          }}
-          alt={"\n\n\n\n\n" + "Image Unavailable"}
-          width="100%"
-          height="100%"
-        />
-      </Center>
-      ))
-      }
-      
+      {Object.values(images).map((item) => (
+        <Center>
+          <Image
+            source={{
+              uri: item,
+            }}
+            alt={"\n\n\n\n\n" + "Image Unavailable"}
+            width="100%"
+            height="100%"
+          />
+        </Center>
+      ))}
     </Swiper>
   );
 };

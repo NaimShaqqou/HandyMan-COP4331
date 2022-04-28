@@ -53,24 +53,24 @@ const Home = () => {
 
       // refresh token if necessary
       await axios
-          .post("https://myhandyman1.herokuapp.com/api/refresh-token", {
-            jwtToken: user.jwtToken,
-          })
-          .then((resp) => {
-            console.log("checking jwtToken")
-            if (resp.data.refreshedToken === "") {
-              console.log("jwtToken invalid")
-              updateCurrentUser({ ...user, jwtToken: "" });
-            } else {
-              console.log("updated jwtToken")
-              updateCurrentUser({...user, jwtToken: resp.data.refreshedToken})
-            }
-          })
-          .catch((resp) => {
-            console.log(resp);
-          });
-          await AsyncStorage.setItem("userInfo", JSON.stringify(user));
-          
+        .post("https://myhandyman1.herokuapp.com/api/refresh-token", {
+          jwtToken: user.jwtToken,
+        })
+        .then((resp) => {
+          console.log("checking jwtToken");
+          if (resp.data.refreshedToken === "") {
+            console.log("jwtToken invalid");
+            updateCurrentUser({ ...user, jwtToken: "" });
+          } else {
+            console.log("updated jwtToken");
+            updateCurrentUser({ ...user, jwtToken: resp.data.refreshedToken });
+          }
+        })
+        .catch((resp) => {
+          console.log(resp);
+        });
+      await AsyncStorage.setItem("userInfo", JSON.stringify(user));
+
       return JSON.parse(await response.text());
     } catch (e) {
       console.log(e.toString());
@@ -97,7 +97,6 @@ const Home = () => {
     });
   };
 
-  
   // stuff for filter modal
   const bottomSheetModalRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ["60%"], []);
