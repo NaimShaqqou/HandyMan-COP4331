@@ -5,9 +5,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import HomeStack from "./HomeStack";
 import ProfileStack from "./ProfileStack.js";
-import ServicesScreen from "../screens/Services.js";
+import OwnedServiceStack from "./OwnedServiceStack";
 import BookingsScreen from "../screens/Bookings.js";
-
 
 import { useTheme } from "react-native-paper";
 
@@ -40,7 +39,7 @@ const BottomTab = () => {
       />
       <Tab.Screen
         name="Services"
-        component={ServicesScreen}
+        component={OwnedServiceStack}
         options={{
           tabBarIcon: () => (
             <MaterialIcons name="business-center" size={26} color={"white"} />
