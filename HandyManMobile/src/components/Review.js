@@ -26,7 +26,7 @@ const Review = ({ review }) => {
 
   return (
     <>
-      {user !== null && (
+      {user !== null && review !== null && (
         <List.Item
           style={{ paddingLeft: 8, marginTop: 16 }}
           left={() => (
