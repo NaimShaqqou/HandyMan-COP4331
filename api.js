@@ -1076,6 +1076,54 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
   })
 
+  app.post("/api/search-on-map-change", async (req, res, next) => {
+    const { marginBounds, category, search } = req.body
+    const polygonCoords = [marginBounds.nw, marginBounds.ne, marginBounds.se, marginBounds.sw]
+
+    var _search = search.trim();
+    console.log(_search);
+
+    // Make sure we search all categories if they select that option
+    // CHANGE THIS WHEN WE KNOW WHAT THE ACTUAL VALUE FOR "All Categories" IS
+    var _category = category.trim();
+    if (_category == "")
+      _category = "";
+
+    
+
+    try {
+      var services = await Service.find({
+        $and: [
+          // based on partial match
+          { $or: [
+            { Title : { "$regex" : _search, "$options" : "i" } },
+            { Description : { "$regex" : _search, "$options" : "i" } },
+            { Category : { "$regex" : _search, "$options" : "i" } }
+          ]},
+          // category has to be exact since from drop down
+          { Category : { "$regex" : _category, "$options" : "i" } }
+        ]
+      });
+
+      let filteredServices = new Array()
+      services.forEach((service) => {
+        if (PolyUtil.containsLocation({lat: parseFloat(service.Latitude), lng: parseFloat(service.Longitude)}, polygonCoords))
+          filteredServices.push(service)
+      })
+
+
+      let response = { results: filteredServices, error: ""}
+      res.status(200).json(response);
+    }
+    // If we have problems, we end up here
+    catch (err)
+    {
+      response = { results: [], error: err.message };
+      res.status(200).json(response);
+    }
+
+  })
+
 
   // Sends email to verify their account
   function verifyEmail(email, userId) {
