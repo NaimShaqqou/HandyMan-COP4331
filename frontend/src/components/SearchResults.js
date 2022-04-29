@@ -107,7 +107,7 @@ export default function SearchResults(props) {
                         overflow: 'auto', // scroll bar
                         height: '100%',
                         // backgroundColor: 'green',
-                        padding: 0
+                        paddingLeft: 5
                       }}
                     >
                       { (props.results && props.results.length > 0) ? props.results.map(listitem => (
