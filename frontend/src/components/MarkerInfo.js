@@ -27,13 +27,6 @@ import {
   Tooltip,
 } from '@mui/material';
 
-const Img = styled('img')({
-  margin: 'auto',
-  display: 'block',
-  maxWidth: '100%',
-  maxHeight: '100%',
-});
-
 export default function MarkerInfo({service, updateFocus}) {
   let navigate = useNavigate();
 
@@ -76,41 +69,63 @@ export default function MarkerInfo({service, updateFocus}) {
         <Paper
           sx={{
             bgcolor: '#fff',
-            height: '200px',
+            minHeight: '200px',
             width: '500px',
             mt: -27,
             ml: -2,
             position: 'absolute',
             zIndex: 2,
+            p: 0,
+            // borderRadius: 5
           }}
           >
             <Grid container>
-              <Grid item xs>
-                <Img
-                  sx={{
-                    width: 200,
-                    height: '203px',
+              <Grid item xs={5} sx={{ height: '200px' }}>
+                <img
+                  style={{
+                    // margin: 'auto',
+                    display: 'block',
+                    // maxWidth: '100%',
+                    // maxHeight: '100%',
+                    width: '100%',
+                    height: '102%',
                     objectFit: 'cover',
-                    ml: 0
+                    m: 0,
+                    p:0,
+                    // verticalAlign: 'bottom',
+                    // lineHeight: 1,
+                    // fontSize: '0px',
                   }}
                   src={getImage(service)} 
                 />
               </Grid>
-              <Grid item xs>
-                <Box m sx={{ textAlign: 'center'}}>
-                  <Typography variant='h5'>
+
+              <Grid item xs sx={{ pl: 2, pt: 1}}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='h6' sx={{ display: 'inline' }}>
                     {service.Title}
                   </Typography>
-                  <Typography  variant='h5' sx={{color: 'blue'}}>
+                  
+                  <Typography variant='h6' sx={{ display: 'inline' }} color='#ababab'>
                     ${service.Price}
                   </Typography>
-                  <Typography variant='subtitle1'>
-                    {service.Description}
-                  </Typography>
                 </Box>
-                {/* <Button onClick={clickOpen(service)}>Open</Button> */}
 
-                <Box sx={{display:'flex', flexDirection:'row-reverse'}}>
+                <Typography color='darkblue'>
+                  {service.Address}
+                </Typography>
+                <Typography>
+                  {service.Description}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={1} sx={{  }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                  <IconButton onClick={() => updateFocus(null)}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+                <Box sx={{ position: 'absolute', bottom: 10, right: 10}}>
                   {/* <Button onClick={clickOpen(listitem)}>Open</Button> */}
                   <Tooltip title="Go to Service">
                     <IconButton
@@ -125,19 +140,11 @@ export default function MarkerInfo({service, updateFocus}) {
                     >
                       <ArrowForwardIcon
                         // sx={{ width: 17}}
-                        fontSize='large'
+                        fontSize='medium'
                         aria-label="This is aria label"
                       />
                     </IconButton>
                   </Tooltip>
-                </Box>
-              </Grid>
-
-              <Grid item xs>
-                <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                  <IconButton onClick={() => updateFocus(null)}>
-                    <CloseIcon />
-                  </IconButton>
                 </Box>
               </Grid>
 
