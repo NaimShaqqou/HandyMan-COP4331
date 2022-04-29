@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   Title,
-  Paragraph,
   useTheme,
   Text,
 } from "react-native-paper";
@@ -16,7 +15,6 @@ import {
   Dimensions,
   StyleSheet,
   View,
-  FlatList,
   ScrollView,
   Alert,
 } from "react-native";
@@ -81,7 +79,7 @@ const Services = () => {
         text: "Cancel",
         style: "cancel",
       },
-      { text: "Delete", onPress: () => deleteAPI(item) },
+      { text: "Delete", style: "destructive", onPress: () => deleteAPI(item) },
     ]);
 
   return (
@@ -89,7 +87,6 @@ const Services = () => {
       <ScrollView
         contentContainerStyle={styles.viewContainer}
       >
-        <Text>{"\n"}</Text>
         {Object.values(services).map((item) => (
           <Text key={item._id}>
             <Card style={styles.menuContainer}>
@@ -114,7 +111,12 @@ const Services = () => {
                 </View>
                 <View style={styles.cardContentView}>
                   <Icon name="event" style={{ marginRight: 0 }} />
-                  <Text> Days Available: {item.DaysAvailable}</Text>
+                  <Text> Days Available: 
+                    {item.DaysAvailable.map((day) => (
+                      <Text key={day}> {day}</Text>
+                    ))}
+
+                  </Text>
                 </View>
                 <View style={styles.cardContentView}>
                   <Icon name="place" style={{ marginRight: 0 }} />
