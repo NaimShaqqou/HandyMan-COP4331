@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -56,7 +56,6 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
 
   return (
     <motion.div
-      layout
       whileHover={{ backgroundColor: '#cce6ff' }}
       animate={{
         backgroundColor: focus != null && focus._id === service._id ? '#b0d7ff' : '#fff',
@@ -67,11 +66,11 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
         marginTop: '5px',
         marginBottom: '5px',
         // height: '100%'
+        cursor: 'pointer',
       }}
-      transition={{
-        duration: 0.2
-      }}
+      onClick={clickItem(service)}
     >
+      
       {/* <Box sx={{ height: '100%', width: '100px', bgcolor: 'green' }}>
 
       </Box> */}
@@ -88,11 +87,11 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
             // bgcolor: 'green' 
           }} 
         >
-          <motion.img
+          <img
             layout
             style={{
-              width: '100%',
-              height: '100%',
+              width: '100px',
+              height: '100px',
               objectFit: 'cover',
               ml: 0,
               // margin: 'auto',
@@ -103,32 +102,33 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
         </Grid>
 
         <Grid item xs >
-          <ListItemText
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant='h6' sx={{ display: 'inline' }}>
+              {service.Title}
+            </Typography>
+            
+            <Typography variant='h6' sx={{ display: 'inline' }} color='#ababab'>
+              ${service.Price}
+            </Typography>
+          </Box>
+
+          <Collapse in={focus != null && focus._id === service._id} collapsedSize='65px'>
+            {/* <Typography>
+              {service.Address}
+            </Typography> */}
+            <Typography>
+              {service.Description}
+            </Typography>
+          </Collapse>
+          
+          {/* <ListItemText
             onClick={clickItem(service)}
             primary={service.Title}
             secondary={
               <React.Fragment>
-                {/* {focus != null && focus._id === service._id && */}
-                  {/* <motion.div
-                    layout
-                    initial='hidden' 
-                    animate='visible' 
-                    variants={{
-                      hidden: {
-                        scale: .8,
-                        opacity: 0
-                      },
-                      visible: {
-                        scale: 1,
-                        opacity: 1,
-                      }
-                    }}
-                  >
-                    {service.Address}
-                  </motion.div> */}
 
                 <Collapse in={focus != null && focus._id === service._id} collapsedSize={0}>
-                  <motion.div
+                  <div
                     layout
                     initial='hidden' 
                     animate='visible' 
@@ -144,7 +144,7 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
                     }}
                   >
                     {service.Address}
-                  </motion.div>
+                  </div>
                 </Collapse>
                 
                 <React.Fragment>
@@ -153,7 +153,7 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
               </React.Fragment>
             }
             sx={{ cursor: 'pointer' }}
-          />
+          /> */}
 
         </Grid>
 
@@ -167,19 +167,7 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
           }}
           >
           {focus != null && focus._id === service._id &&
-            <motion.div
-              initial='hidden' 
-              animate='visible' 
-              variants={{
-                hidden: {
-                  scale: .8,
-                  opacity: 0
-                },
-                visible: {
-                  scale: 1,
-                  opacity: 1,
-                }
-              }}
+            <div
               style={{display:'flex', flexDirection:'row-reverse'}}
             >
                 <Tooltip title="Go to Service">
@@ -200,7 +188,7 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
                     />
                   </IconButton>
                 </Tooltip>
-            </motion.div>
+            </div>
           }
         </Grid>
       </Grid>

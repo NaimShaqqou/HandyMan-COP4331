@@ -90,7 +90,7 @@ export default function SearchResults(props) {
               <Paper
                 elevation={10}
                 sx={{
-                  width: '30vh',
+                  width: {md: '350px', lg: '450px'},
                   height: '100%',
                   bgcolor: '#fff',
                   pointerEvents: 'auto',
@@ -100,40 +100,42 @@ export default function SearchResults(props) {
                 }}
               >
                 <ThemeProvider theme={theme}>
-                  <LayoutGroup>
-                    <motion.ul
-                      layout
-                      style={{
-                        overflow: 'auto', // scroll bar
-                        height: '100%',
-                        // backgroundColor: 'green',
-                        paddingLeft: 5
-                      }}
-                    >
-                      { (props.results && props.results.length > 0) ? props.results.map(listitem => (
-                        <motion.li layout key={listitem._id} style={{  }}>
-                          <SearchResultCard
-                            listitem={listitem} 
-                            focus={props.focus} 
-                            updateFocus={props.updateFocus}
-                          />
-                          <Divider />
-                        </motion.li>
-                      )) : (
-                      <div>
-                        <Typography
-                          variant='h4'
-                          sx={{
-                            textAlign: 'center',
-                            paddingTop: 5,
-                          }}
-                        >
-                          No results found
-                        </Typography>
-                      </div>
-                      )}
-                    </motion.ul>
-                  </LayoutGroup>
+                  <ul
+                    layout
+                    style={{
+                      overflow: 'auto', // scroll bar
+                      height: '100%',
+                      // backgroundColor: 'green',
+                      paddingLeft: 5
+                    }}
+                  >
+                    { (props.results && props.results.length > 0) ? props.results.map(listitem => (
+                      <li 
+                        layout 
+                        key={listitem._id} 
+                        style={{  }}
+                      >
+                        <SearchResultCard
+                          listitem={listitem} 
+                          focus={props.focus} 
+                          updateFocus={props.updateFocus}
+                        />
+                        <Divider />
+                      </li>
+                    )) : (
+                    <div>
+                      <Typography
+                        variant='h4'
+                        sx={{
+                          textAlign: 'center',
+                          paddingTop: 5,
+                        }}
+                      >
+                        No results found
+                      </Typography>
+                    </div>
+                    )}
+                  </ul>
                 </ThemeProvider>
               </Paper>
             </motion.div>}
