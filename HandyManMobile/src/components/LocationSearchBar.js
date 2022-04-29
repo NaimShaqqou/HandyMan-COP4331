@@ -1,18 +1,25 @@
-import React, { useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useRef, useImperativeHandle } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { PLACES_API_KEY } from "@env";
 import { TextInput } from "react-native-paper";
 
-const GooglePlacesInput = (props) => {
-  const ref = useRef();
+const GooglePlacesInput = forwardRef((props, ref) => {
+  const autocompleteRef = useRef();
+  
+  // Call this to change the services. This will force refresh the render.
+  // handleChange = e => this.setState({services: e});
+  useImperativeHandle(ref, () => ({
 
-  useEffect(() => {
-    ref.current?.setAddressText("");
-  }, []);
+    setText(text)
+    {
+      autocompleteRef.current?.setAddressText(text);
+    }
+    
+  }));
 
   return (
     <GooglePlacesAutocomplete
-      ref={ref}
+      ref={autocompleteRef}
       textInputProps={{
         InputComp: TextInput,
         style: {
@@ -37,6 +44,6 @@ const GooglePlacesInput = (props) => {
       }}
     />
   );
-};
+});
 
 export default GooglePlacesInput;

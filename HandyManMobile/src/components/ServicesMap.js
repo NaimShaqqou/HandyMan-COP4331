@@ -21,6 +21,7 @@ const ServicesMap = forwardRef((props, ref) => {
     {
       setServices(s);
     }
+    
   }));
 
   return (
