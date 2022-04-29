@@ -23,14 +23,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'framer-motion';
 
-// TODO: fix how marker titles look
-// TODO: show service image (replace bread image with actual)
-// TODO: customize marker info popup
-// TODO: adjust zoom level to fit all markers
-
 const SearchPage = () => {
   const { state } = useLocation();
-  let [showResults, setShowResults] = useState(true);
+  
   let [focusItem, setFocusItem] = useState(null);
   let [res, setRes] = useState(state && state.res ? state.res : []);
 
@@ -42,7 +37,7 @@ const SearchPage = () => {
     setRes(newRes);
   };
 
-  console.log(state);
+  // console.log(state);
 
   let center = {
     lat: 28.602,
@@ -51,8 +46,6 @@ const SearchPage = () => {
   
   if (res && res.searchLocationCoords)
     center = res.searchLocationCoords;
-
-  console.log(center);
 
   return (
     <Box
@@ -66,14 +59,6 @@ const SearchPage = () => {
           height: '100%'
         }}
       >
-        {/* <Map
-          sx={{ height: '100%' }}
-          focus={focusItem}
-          updateFocus={updateFocusFromChild}
-          results={(res && res.error == '') ? res.results : []}
-          center={center}
-        /> */}
-
         <Map2
           sx={{
             width: '100%',
@@ -85,6 +70,7 @@ const SearchPage = () => {
           center={center}
         />
       </Box>
+
       <Container sx={{ 
           width: { xs: '410px', sm: '510px', md: '940px'},
           height: '300px',
@@ -96,123 +82,20 @@ const SearchPage = () => {
         <SearchBar updateRes={updateResFromSearchbar}/>
       </Container>
 
-      <Box
-        maxWidth='100%'
+      <SearchResults
+        focus={focusItem}
+        updateFocus={updateFocusFromChild}
+        searchResults = {state}
+        results={(res && res.error == '') ? res.results : []}
         sx={{
-          height: '80vh',
-          mt: '-20vh',
+          height: '75vh',
+          mt: '-15vh',
           ml: '3%',
           zIndex: 98,
           position: 'sticky',
           pointerEvents: 'none',
         }}
-      >
-        <Stack direction='row'
-          maxWidth='100%'
-          sx={{
-            // bgcolor: 'blue',
-            height: '100%'
-          }}
-        >
-          <AnimatePresence
-            // intial={false}
-            // exitBeforeEnter={true}
-          // onExitComplete={() => null}
-          >
-            {showResults &&
-              <motion.div
-                key='results'
-                layout
-                initial={{
-                  x: -100,
-                  opacity: 0
-                }}
-                animate={{
-                  x: 0,
-                  opacity: 1,
-                }}
-                exit={{
-                  x: -300,
-                  opacity: 0
-                }}
-                transition={{
-                  duration: 0.2
-                }}
-              >
-                <Box
-                  sx={{
-                    width: '30vh',
-                    height: '100%',
-                    bgcolor: '#fff',
-                    pointerEvents: 'auto',
-                  }}
-                >
-                  <SearchResults
-                    focus={focusItem}
-                    updateFocus={updateFocusFromChild}
-                    searchResults = {state}
-                    results={(res && res.error == '') ? res.results : []}
-                  />
-                </Box>
-              </motion.div>}
-              
-
-            <motion.div
-              key='button'
-              layout
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                paddingLeft: '5px',
-              }}
-            >
-
-              <motion.button
-                whileHover={{
-                  scale: 1.05,
-                  // height: '90%',
-                  backgroundColor: '#429bff',
-                }}
-                drag
-                dragConstraints={{
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                }}
-                // onHoverStart={e => {}}
-                // onHoverEnd={e => {}}
-                style={{
-                  borderRadius: 10,
-                  borderWidth: 0,
-                  backgroundColor: '#fff',
-                  // backgroundColor: '#005cc4',
-                  color: 'black',
-                  cursor: 'pointer',
-                  width: '40px',
-                  height: '20%',
-                  bgcolor: '#fff',
-                  pointerEvents: 'auto',
-                  boxShadow: '0 3px 10px rgb(0 0 0 / 0.2)',
-                }}
-                onClick={() => {
-                  setShowResults(prevState => {
-                    console.log(prevState);
-                    return !prevState;
-                  });
-                }}
-              >
-                {showResults ? 
-                <ArrowBackIosIcon sx={{ color: '#003c80'}} /> 
-                : 
-                <ArrowForwardIosIcon sx={{ color: '#003c80'}}/>}
-                
-              </motion.button>
-            </motion.div>
-          </AnimatePresence>
-        </Stack>
-      </Box>
+      />
 
     </Box>
   );

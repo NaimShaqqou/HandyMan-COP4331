@@ -21,10 +21,6 @@ import {
 
 const HomePage = () =>
 {
-  // const [searchBoxStyle, setSearchBoxStyle] = useState({
-  //   opacity: 1,
-  // });
-
   console.log('Rendering Homepage: ');
   // console.log(user)
 
@@ -34,7 +30,15 @@ const HomePage = () =>
         overflow: 'clip',
       }}
     >
-      <AnimatedBackground />
+      <AnimatedBackground 
+        height={1700}
+        yDelta={300}
+        startAngle={180}
+        angleDelta={360}
+        duration={60}
+        startX='left'
+        startY={0}
+      />
 
       <Box
         sx={{
@@ -64,43 +68,8 @@ const HomePage = () =>
 
         <Container>
           <Barber />
-        </Container>
-
-        <Box sx={{ }}>
-          {/* <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-            <img 
-              src={require('../images/barber.jpg')} 
-              style={{ 
-                // marginRight: '-500px',
-                height: '40%',
-                width: '40%',
-                objectFit: 'contain'
-              }}
-            />
-
-            <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
-              <Container>
-                <Typography variant='h4'>
-                  Handle Style
-                </Typography>
-              </Container>
-            </Paper>
-          </Container> */}
-
-          {/* <Container sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-            <img src={require('../images/barber.jpg')} style={{ height: '40%', width: '40%', objectFit: 'contain'  }}/>
-
-            <Paper sx={{ width: '280px', height: '70px', ...verticallyCenter, mr: -35, mt: 70, borderRadius: 0}}>
-              <Container>
-                <Typography variant='h4'>
-                  Handle Style
-                </Typography>
-              </Container>
-            </Paper>
-          </Container> */}
-        </Box>
-
-        
+          <Barber />
+        </Container>       
         
       </Box>
 

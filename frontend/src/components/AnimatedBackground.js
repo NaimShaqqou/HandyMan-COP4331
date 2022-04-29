@@ -11,25 +11,26 @@ import {
   Container, Grid
 } from "@mui/material";
 
-export default function AnimatedBackground() {
+export default function AnimatedBackground(props) {
   const originalHeight = 2560.0;
   const originalWidth = 1605.0;
   const ratio = originalHeight / originalWidth;
 
-  const height = 1700;
+  const height = props.height;
   const width = height / ratio;
 
   return (
     <motion.div
         animate={{ 
-          rotate: 180+360,
-          x: '130vw',
-          y: 500,
+          rotate: props.startAngle+props.angleDelta,
+          x: props.startX == 'right' ? '-130vw' : '130vw',
+          y: props.startY + props.yDelta,
         }}
-        transition={{ repeat: Infinity, duration: 100, ease: 'linear' }}
+        transition={{ repeat: Infinity, duration: props.duration, ease: 'linear' }}
         style={{
-          rotate: 180,
-          x: -width,
+          rotate: props.startAngle,
+          x: props.startX == 'right' ? '100vw' : -width,
+          y: props.startY,
           display: 'inline-block',
         }}
       >
