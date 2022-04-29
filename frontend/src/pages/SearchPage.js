@@ -5,6 +5,7 @@ import Navbar from '../components/NavBar';
 import SearchResults from "../components/SearchResults";
 import { useNavigate, useLocation } from "react-router-dom";
 import SearchBar from "../components/SearchBar"
+import Switch from "../components/Switch"
 
 import Map from '../components/GoogleMapReactComponent';
 
@@ -25,6 +26,7 @@ import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'frame
 const SearchPage = () => {
   const { state } = useLocation();
   
+  let [autoSearch, setAutoSearch] = useState(true);
   let [focusItem, setFocusItem] = useState(null);
   // let [res, setRes] = useState(state && state.res ? state.res : []);
   let [resObj, setResObj] = useState({
@@ -39,6 +41,10 @@ const SearchPage = () => {
   //   setFitBoundsTrigger(prev => !prev);
   // }
 
+  const toggleAutoSearch = () => {
+    setAutoSearch(prev => !prev);
+  }
+
   const updateMapMarginFromChild = (newMapMargin) => {
     setMapMargin(newMapMargin);
   }
@@ -50,11 +56,6 @@ const SearchPage = () => {
   const updateResFromSearchbar = (newResObj) => {
     setResObj(newResObj);
   };
-
-  console.log(resObj);
-
-  // console.log(state);
-
   // let center = {
   //   lat: 28.602,
   //   lng: -81.200,
@@ -64,6 +65,8 @@ const SearchPage = () => {
 
   // if (res && res.searchLocationCoords)
   //   center = res.searchLocationCoords;
+
+  console.log(autoSearch);
 
   return (
     <Box
@@ -99,6 +102,21 @@ const SearchPage = () => {
         }}
       >
         <SearchBar updateRes={updateResFromSearchbar} mapMargin={mapMargin} fitBoundsTrigger={resObj.fitBoundsTrigger} />
+
+        <Switch 
+          value={autoSearch} 
+          onClick={toggleAutoSearch}
+          width={90}
+          height={60}
+          style={{
+            // width: '160px',
+            // height: '100px',
+            position: 'absolute',
+            top: 0,
+            left: -100,
+          }}
+          text="Auto Search"
+        />
       </Container>
 
       <SearchResults

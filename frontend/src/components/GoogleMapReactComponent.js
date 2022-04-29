@@ -104,8 +104,7 @@ Map.defaultProps = {
         }
       ],
       error: ""
-  }
-    
+    }
   }
 }
 
@@ -114,11 +113,7 @@ export default function Map(props) {
   const mapsRef = useRef(null);
   let navigate = useNavigate();
 
-  console.log(props.resObj);
-
   const results = props.resObj && props.resObj.res && props.resObj.res.results ? props.resObj.res.results : [];
-
-  console.log(results);
 
   let defaultCenter = {
     lat: 28.602,
@@ -220,10 +215,6 @@ export default function Map(props) {
     props.updateMargin(mapState.marginBounds);
     // console.log(mapRef.current);
   }
-
-  console.log(props.focus);
-
-  // console.log(props.center);
 
   return (
     <ThemeProvider theme={theme}>

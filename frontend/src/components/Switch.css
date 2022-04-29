@@ -1,7 +1,7 @@
 .switch {
   /* width: 160px;
   height: 100px; */
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: flex-start;
   border-radius: 50px;
@@ -11,4 +11,5 @@
 
 .switch[data-ison="true"] {
   justify-content: flex-end;
+  background-color: rgba(26, 110, 0, 0.7);
 }

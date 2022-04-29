@@ -3,6 +3,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import "./Switch.css";
 
+import {
+  Typography
+} from '@mui/material';
+
 /**
  * This is an example of layout animations in Framer Motion 2.
  *
@@ -13,7 +17,7 @@ import "./Switch.css";
  * animation is now fully compatible with user-set transforms.
  */
 
-export default function Switch({value, onClick, style}) {
+export default function Switch({value, onClick, style, width, height, text}) {
   // const [isOn, setIsOn] = useState(false);
 
   // const toggleSwitch = () => setIsOn(!isOn);
@@ -26,11 +30,27 @@ export default function Switch({value, onClick, style}) {
       onClick={onClick}
       style={{
         ...style,
-        width: '160px',
-        height: '100px'
+        width: width,
+        height: height,
+        pointerEvents: 'auto',
       }}
     >
-      <motion.div className="handle" layout transition={spring} style={{"width":"80px","height":"80px","backgroundColor":"white","borderRadius":"40px"}}/>
+      {/* <Typography sx={{ fontSize: '10px' }}>
+        {text}
+      </Typography> */}
+
+      <motion.div 
+        className="handle" 
+        layout 
+        transition={spring} 
+        style={{
+          position: 'absolute',
+          height: (height - 20) + "px",
+          width: (height - 20) + "px",
+          "backgroundColor":"white",
+          "borderRadius":"40px"
+        }}
+      />
     </div>
   );
 }
