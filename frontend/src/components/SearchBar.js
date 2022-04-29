@@ -126,41 +126,64 @@ function SearchBar(props) {
     let js = JSON.stringify(obj);
     console.log('search input:');
     console.log(obj);
-  
-    if (obj.location == '') {
-      obj.location = 'Orlando, FL';
-      
-      if (userLocation)
-        obj.location = userLocation;
-    }
-
+    
     if (isNaN(obj.maxDist))
       obj.maxDist = 15;
 
-    js = JSON.stringify(obj);
-    console.log('sending:');
-    console.log(obj);
+    let res = null;
+    let fitBoundsTrigger = props.fitBoundsTrigger;
 
-    try {
-      const response = await fetch(bp.buildPath("api/search-services"), {
-        method: "POST",
-        body: js,
-        headers: { "Content-Type": "application/json" },
-      });
-      var res = JSON.parse(await response.text());
+    if (obj.location == '') {
+      obj = {
+        marginBounds: props.mapMargin,
+        search: search.keyword,
+        category: search.category
+      };
 
-      // Sort by title
-      res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
+      js = JSON.stringify(obj);
+      console.log('sending:');
+      console.log(obj);
 
-      if (window.location.pathname == '/search') {
-        props.updateRes(res);
-      } else {
-        navigate("/search", { state: { obj: search, res: res} });
+      try {
+        const response = await fetch(bp.buildPath("api/search-on-map-change"), {
+          method: "POST",
+          body: js,
+          headers: { "Content-Type": "application/json" },
+        });
+        res = JSON.parse(await response.text());
+
+      } catch (e) {
+        console.log(e.toString());
+        return;
       }
+    } else {
+      js = JSON.stringify(obj);
+      console.log('sending:');
+      console.log(obj);
+  
+      try {
+        const response = await fetch(bp.buildPath("api/search-services"), {
+          method: "POST",
+          body: js,
+          headers: { "Content-Type": "application/json" },
+        });
+        res = JSON.parse(await response.text());
 
-    } catch (e) {
-      console.log(e.toString());
-      return;
+        fitBoundsTrigger = Math.random();
+      } catch (e) {
+        console.log(e.toString());
+        return;
+      }
+    }
+
+    // Sort by title
+    res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
+
+    if (window.location.pathname == '/search') {
+      // props.updateRes();
+      props.updateRes({res: res, fitBoundsTrigger: fitBoundsTrigger});
+    } else {
+      navigate("/search", { state: { res: res} });
     }
   };
 
@@ -283,7 +306,9 @@ function SearchBar(props) {
 
         <Tooltip  title="Search">
           <IconButton
-            onClick={(event) => doSearch(event)}
+            onClick={(event) => {
+              doSearch(event);
+            }}
             color='primary'
             style={{color: 'white', backgroundColor: '#003c80'}}>
             <SearchIcon />

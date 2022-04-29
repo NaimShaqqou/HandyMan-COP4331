@@ -3,11 +3,10 @@ import '../map.css';
 import jwt_decode from "jwt-decode";
 import Navbar from '../components/NavBar';
 import SearchResults from "../components/SearchResults";
-import Map from '../components/Map';
 import { useNavigate, useLocation } from "react-router-dom";
 import SearchBar from "../components/SearchBar"
 
-import Map2 from '../components/GoogleMapReactComponent';
+import Map from '../components/GoogleMapReactComponent';
 
 import {
   Container,
@@ -27,25 +26,44 @@ const SearchPage = () => {
   const { state } = useLocation();
   
   let [focusItem, setFocusItem] = useState(null);
-  let [res, setRes] = useState(state && state.res ? state.res : []);
+  // let [res, setRes] = useState(state && state.res ? state.res : []);
+  let [resObj, setResObj] = useState({
+    res: [],
+    fitBoundsTrigger: 0,
+  });
+  let [mapMargin, setMapMargin] = useState({});
+
+  // console.log(mapMargin);
+
+  // const triggerFitBounds = () => {
+  //   setFitBoundsTrigger(prev => !prev);
+  // }
+
+  const updateMapMarginFromChild = (newMapMargin) => {
+    setMapMargin(newMapMargin);
+  }
 
   const updateFocusFromChild = (newFocus) => {
     setFocusItem(newFocus);
   };
   
-  const updateResFromSearchbar = (newRes) => {
-    setRes(newRes);
+  const updateResFromSearchbar = (newResObj) => {
+    setResObj(newResObj);
   };
+
+  console.log(resObj);
 
   // console.log(state);
 
-  let center = {
-    lat: 28.602,
-    lng: -81.200,
-  };
-  
-  if (res && res.searchLocationCoords)
-    center = res.searchLocationCoords;
+  // let center = {
+  //   lat: 28.602,
+  //   lng: -81.200,
+  // };
+
+  // let res = resObj.res;
+
+  // if (res && res.searchLocationCoords)
+  //   center = res.searchLocationCoords;
 
   return (
     <Box
@@ -59,15 +77,16 @@ const SearchPage = () => {
           height: '100%'
         }}
       >
-        <Map2
+        <Map
           sx={{
             width: '100%',
             height: '100%',
           }}
           focus={focusItem}
           updateFocus={updateFocusFromChild}
-          results={(res && res.error == '') ? res.results : []}
-          center={center}
+          resObj={resObj}
+          // center={center}
+          updateMargin={updateMapMarginFromChild}
         />
       </Box>
 
@@ -79,14 +98,14 @@ const SearchPage = () => {
           pointerEvents: 'none',
         }}
       >
-        <SearchBar updateRes={updateResFromSearchbar}/>
+        <SearchBar updateRes={updateResFromSearchbar} mapMargin={mapMargin} fitBoundsTrigger={resObj.fitBoundsTrigger} />
       </Container>
 
       <SearchResults
         focus={focusItem}
         updateFocus={updateFocusFromChild}
         searchResults = {state}
-        results={(res && res.error == '') ? res.results : []}
+        results={(resObj.res && resObj.res.error == '') ? resObj.res.results : []}
         sx={{
           height: '75vh',
           mt: '-15vh',

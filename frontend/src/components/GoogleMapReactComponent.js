@@ -82,26 +82,43 @@ MyMarker.defaultProps = {
 Map.defaultProps = {
   center: {lat: 59.95, lng: 30.33},
   zoom: 11,
-  results: [
-    {
-      _id: 1,
-      Title: 'service 1',
-      Latitude: '59.95',
-      Longitude: '30.4',
-    },
-    {
-      _id: 2,
-      Title: 'service 2',
-      Latitude: '59.95',
-      Longitude: '30.2',
-    }
-  ]
+  resObj: {
+    fitBoundsTrigger: 0,
+    res: {
+      searchLocationCoords: {
+          lat: 28.5383832,
+          lng: -81.3789269
+      },
+      results: [
+        {
+          _id: 1,
+          Title: 'service 1',
+          Latitude: '59.95',
+          Longitude: '30.4',
+        },
+        {
+          _id: 2,
+          Title: 'service 2',
+          Latitude: '59.95',
+          Longitude: '30.2',
+        }
+      ],
+      error: ""
+  }
+    
+  }
 }
 
 export default function Map(props) {
   const mapRef = useRef(null);
   const mapsRef = useRef(null);
   let navigate = useNavigate();
+
+  console.log(props.resObj);
+
+  const results = props.resObj && props.resObj.res && props.resObj.res.results ? props.resObj.res.results : [];
+
+  console.log(results);
 
   let defaultCenter = {
     lat: 28.602,
@@ -139,7 +156,7 @@ export default function Map(props) {
     // console.log(maps);
     // Get bounds by our places
 
-    if (props.results.length != 0)
+    if (results.length != 0)
       fitToPlaces();
 
     // Bind the resize listener
@@ -147,7 +164,7 @@ export default function Map(props) {
   };
 
   const fitToPlaces = () => {
-    const bounds = getMapBounds(mapRef.current, mapsRef.current, props.results);
+    const bounds = getMapBounds(mapRef.current, mapsRef.current, results);
     // Fit map to bounds
     // mapRef.current.panToBounds(bounds);
     console.log(bounds);
@@ -161,13 +178,14 @@ export default function Map(props) {
   useEffect(() => {
     if (mapRef.current && mapsRef.current) {
       fitToPlaces();
+      console.log(164);
 
-      if (props.results.length == 0)
+      if (results.length == 0)
         mapRef.current.setCenter(props.center);
       
     }
 
-  }, [props.results]);
+  }, [props.resObj.fitBoundsTrigger]);
   
   useEffect(() => {
     if (props.focus && mapRef.current) {
@@ -198,7 +216,8 @@ export default function Map(props) {
 
   const onChange = (mapState/* , bounds, marginBounds */) => {
     // console.log(props.center);
-    console.log(mapState);
+    // console.log(mapState);
+    props.updateMargin(mapState.marginBounds);
     // console.log(mapRef.current);
   }
 
@@ -224,10 +243,10 @@ export default function Map(props) {
           options={createMapOptions}
           onChange={onChange}
           yesIWantToUseGoogleMapApiInternals
-          onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps, props.results)}
+          onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps, results)}
           // onLoad={handleLoad}
         >
-          {props.results.map(listitem => (
+          {results.map(listitem => (
             <Box 
               key={listitem._id} 
               lat={parseFloat(listitem.Latitude)} 
