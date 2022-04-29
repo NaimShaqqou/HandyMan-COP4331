@@ -87,8 +87,8 @@ export default function PopularServices() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           style={{ display: 'inline-block' }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.5, y: 300, }}
+          whileInView={{ opacity: 1, scale: 1, y: 0, }}
           viewport={{  }}
         >
           <PopularServiceCard  serviceWithRating={service}/>
