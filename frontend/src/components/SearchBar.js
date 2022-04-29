@@ -133,7 +133,7 @@ function SearchBar(props) {
     let res = null;
     let fitBoundsTrigger = props.fitBoundsTrigger;
 
-    if (obj.location == '') {
+    if (window.location.pathname == '/search' && obj.location == '') {
       obj = {
         marginBounds: props.mapMargin,
         search: search.keyword,
@@ -157,6 +157,12 @@ function SearchBar(props) {
         return;
       }
     } else {
+      if (obj.location == '') {
+        obj.location = 'Orlando, FL';
+
+        if (userLocation)
+          obj.location = userLocation;
+      }
       js = JSON.stringify(obj);
       console.log('sending:');
       console.log(obj);

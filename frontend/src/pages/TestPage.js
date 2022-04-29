@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Select,
@@ -13,7 +13,15 @@ import {
   Avatar
 } from "@mui/material";
 
+import Switch from '../components/Switch';
+import { ClassNames } from '@emotion/react';
+
 const MyApp = (status) => {
+  const [isOn, setIsOn] = useState(false);
+
+  const toggleSwitch = () => setIsOn(!isOn);
+
+  console.log(isOn);
 
   return (
     <Box 
@@ -23,7 +31,7 @@ const MyApp = (status) => {
         // width: '100px',
       }}
     >
-      
+      <Switch value={isOn} onClick={toggleSwitch} />
     </Box>
   )
 };

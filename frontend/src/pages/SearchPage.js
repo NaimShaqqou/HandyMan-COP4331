@@ -28,7 +28,7 @@ const SearchPage = () => {
   let [focusItem, setFocusItem] = useState(null);
   // let [res, setRes] = useState(state && state.res ? state.res : []);
   let [resObj, setResObj] = useState({
-    res: [],
+    res: state && state.res ? state.res : [],
     fitBoundsTrigger: 0,
   });
   let [mapMargin, setMapMargin] = useState({});
