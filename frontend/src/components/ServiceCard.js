@@ -18,8 +18,11 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import { 
+  Paper, 
+  Collapse,
+  Grid
+} from '@mui/material';
 import ButtonBase from '@mui/material/ButtonBase';
 
 
@@ -66,7 +69,7 @@ export default function ServiceCard(props) {
   console.log(service)
 
   return (
-    <Container >
+    <Container sx={{ m: 3 }}>
       <Paper
         elevation={5}
         sx={{
@@ -81,9 +84,10 @@ export default function ServiceCard(props) {
           <Grid item xs={4} sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
             <Img
               sx={{
-                width: 256,
-                height: "100%",
+                width: '256px',
+                height: "256px",
                 objectFit: 'cover',
+                // marginBottom: 15
               }}
               alt="complex"
               src={service.Images && service.Images != null && service.Images.length > 0 ? service.Images[0] : ''}
@@ -102,9 +106,17 @@ export default function ServiceCard(props) {
               </Box>
 
               <Box>
-                <Typography variant="body2" color="text.secondary" sx={{ minHeight: 150, wordWrap: "break-word"}} component="div">
-                  {service.Description} 
-                </Typography>
+                {/* <Collapse in={props.focus != null && props.focus._id === service._id} collapsedSize='150px'> */}
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{ minHeight: 150, wordWrap: "break-word"}} 
+                    component="div"
+                    onClick={() => props.updateFocus(service)}
+                  >
+                    {service.Description} 
+                  </Typography>
+                {/* </Collapse> */}
               </Box>
 
               <Box sx={{ height: '100%', display: 'flex', flexDirection:'column-reverse' }}>

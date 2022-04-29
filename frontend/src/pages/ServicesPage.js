@@ -72,7 +72,11 @@ export default function ServicesPage() {
       
         <Box sx={{ pt: 4}} />
         
-        <Grid container direction="column" spacing={5}>  
+        <Grid 
+          container 
+          direction="column" 
+          // spacing={5}
+        >  
         {services.map((service, index) => (
           <Grid item key={index}>
             <Card>
