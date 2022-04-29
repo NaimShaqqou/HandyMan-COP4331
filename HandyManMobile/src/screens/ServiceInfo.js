@@ -1,4 +1,4 @@
-import { Center, ScrollView, Box, Image, Divider } from "native-base";
+import { Center, ScrollView, Box, Image, Divider, View } from "native-base";
 import React, { useCallback } from "react";
 import {
   Text,
@@ -8,6 +8,7 @@ import {
   Button,
   Avatar,
 } from "react-native-paper";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import axios from "axios";
 
@@ -22,6 +23,7 @@ const windowHeight = Dimensions.get("window").height;
 const ServiceInfo = ({ route }) => {
   const { service } = route.params;
   const [user, setUser] = React.useState(null);
+  const [avgReviews, setAvgReviews] = React.useState(0);
   const [reviews, setReviews] = React.useState([]);
   const [fetchedData, setFetchedData] = React.useState(false);
 
@@ -55,6 +57,7 @@ const ServiceInfo = ({ route }) => {
         console.log(response.data);
         if (mounted) {
           setReviews(response.data.reviews);
+          setAvgReviews(response.data.reviews.reduce((sum, curr) => sum += curr.Rating, 0));
           setFetchedData(true);
         }
       })
@@ -152,14 +155,32 @@ const ServiceInfo = ({ route }) => {
                   No reviews yet...
                 </Text>
               ) : (
-                <FlatList
-                  data={reviews}
-                  renderItem={renderItem}
-                  ItemSeparatorComponent={() => (
-                    <Divider style={{ marginTop: 16 }} />
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                />
+                <View>
+                  <View
+                    style={{ 
+                            fontFamily: "ComfortaaBold",
+                            paddingLeft: 8,
+                            marginTop: 16,
+                            fontSize: 25,
+                          }} 
+                    flexDir={"row"}
+                    mode="contained"
+                  >
+                    <Icon name="star" size={24} color="#003c80" />
+                    <Text style={{ fontSize: 18 }}> {Math.round(avgReviews / reviews.length * 10) / 10 }{'\t\t\t\t'}</Text>
+                    <Icon name="user" size={24} color="#003c80" />
+                    <Text style={{ fontSize: 18 }}> {reviews.length} reviews</Text>
+                  </View>
+                    
+                  <FlatList
+                    data={reviews}
+                    renderItem={renderItem}
+                    ItemSeparatorComponent={() => (
+                      <Divider style={{ marginTop: 16 }} />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                </View>
               )}
             </>
           ) : (

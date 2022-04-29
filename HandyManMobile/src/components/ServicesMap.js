@@ -1,28 +1,35 @@
-import React from 'react'
+import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
-import MapView from 'react-native-maps'
+import MapView, { Callout } from 'react-native-maps'
 
-export default class ServicesMap extends React.Component {
-    constructor(props) {
-        super(props);
+import { useNavigation } from "@react-navigation/native";
+import { View } from 'native-base';
 
-        this.state = {
-            // CHANGE THIS IF YOU WANT TO MANUALLY TEST INPUT.
-            services : []
-        };
+const ServicesMap = forwardRef((props, ref) => {
+  const navigation = useNavigation();
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    console.log(services);
+  }, [services]);
+
+  // Call this to change the services. This will force refresh the render.
+  // handleChange = e => this.setState({services: e});
+  useImperativeHandle(ref, () => ({
+
+    setServicesFromParent(s)
+    {
+      setServices(s);
     }
+  }));
 
-    // Call this to change the services. This will force refresh the render.
-    // handleChange = e => this.setState({services: e});
-    setServices(s) { this.setState({services : s}); }
-
-    render() {
-      return (
-        <MapView style={styles.map}
-        // onPress={(e) => this.setState({ services: e.nativeEvent.coordinate })}
-        >
-        {
-            this.state.services.map((marker, index) => (
+  return (
+    <MapView style={styles.map}
+    // onPress={(e) => this.setState({ services: e.nativeEvent.coordinate })}
+    >
+    {
+        services.map((marker, index) => (
+          <View>
             <MapView.Marker
                 key = {index}
                 coordinate = {{
@@ -31,13 +38,17 @@ export default class ServicesMap extends React.Component {
                 }}
                 title = { marker.Title }
                 description = { marker.Description }
+                // When pressing the little bubble, takes u to the correct screen
+                onCalloutPress={() =>
+                   navigation.navigate("ServiceInfoScreen", { service: marker })
+                }
             />
-            ))
-        }
-        </MapView>
-      );
+          </View>
+        ))
     }
-}
+    </MapView>
+  );
+})
 
 const styles = StyleSheet.create({
   map: {
@@ -46,3 +57,5 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   },
 });
+
+export default ServicesMap;

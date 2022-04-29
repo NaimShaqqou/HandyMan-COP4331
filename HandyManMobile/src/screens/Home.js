@@ -92,7 +92,7 @@ const Home = () => {
       location: location,
       maxDist: maxDist,
     }).then((data) => {
-      mapViewRef.current.setServices(data.results);
+      mapViewRef.current.setServicesFromParent(data.results);
       setBottomSheetList(data.results);
     });
   };
