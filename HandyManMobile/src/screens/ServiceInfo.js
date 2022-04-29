@@ -1,4 +1,4 @@
-import { Center, ScrollView, Box, Image, Divider, View } from "native-base";
+import { Center, ScrollView, Box, Divider, View } from "native-base";
 import React, { useCallback } from "react";
 import {
   Text,
@@ -28,14 +28,12 @@ const ServiceInfo = ({ route }) => {
   const [fetchedData, setFetchedData] = React.useState(false);
 
   React.useEffect(() => {
-    console.log("IN REVIEW USE EFFECT");
     let mounted = true;
     axios
       .post("https://myhandyman1.herokuapp.com/api/get-user", {
         userId: service.UserId,
       })
       .then((response) => {
-        console.log(response.data);
         if (mounted) {
           setUser(response.data.user);
         }
@@ -47,14 +45,12 @@ const ServiceInfo = ({ route }) => {
   }, []);
 
   React.useEffect(() => {
-    console.log("reviews use effect");
     let mounted = true;
     axios
       .post("https://myhandyman1.herokuapp.com/api/get-reviews", {
         serviceId: service._id,
       })
       .then(function (response) {
-        console.log(response.data);
         if (mounted) {
           setReviews(response.data.reviews);
           setAvgReviews(response.data.reviews.reduce((sum, curr) => sum += curr.Rating, 0));
@@ -162,14 +158,14 @@ const ServiceInfo = ({ route }) => {
                             paddingLeft: 8,
                             marginTop: 16,
                             fontSize: 25,
-                          }} 
+                          }}
+                    alignItems={'center'} 
                     flexDir={"row"}
-                    mode="contained"
                   >
                     <Icon name="star" size={24} color="#003c80" />
                     <Text style={{ fontSize: 18 }}> {Math.round(avgReviews / reviews.length * 10) / 10 }{'\t\t\t\t'}</Text>
                     <Icon name="user" size={24} color="#003c80" />
-                    <Text style={{ fontSize: 18 }}> {reviews.length} reviews</Text>
+                    <Text style={{ fontSize: 18 }}> {reviews.length} review{reviews.length == 1 ? "" : "s"}</Text>
                   </View>
                     
                   <FlatList
