@@ -64,9 +64,10 @@ const HomePage = () =>
 
         <Box m={20}/>
 
-        <PopularServices />
-
-        <Container>
+        <Container 
+          sx={{ maxWidth: { md: '1500px'} }}
+        >
+          <PopularServices />
           <Barber />
           <Barber />
         </Container>       
