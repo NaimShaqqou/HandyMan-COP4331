@@ -1,5 +1,5 @@
 import { Center, ScrollView, Box, Divider, View } from "native-base";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import {
   Text,
   Headline,
@@ -7,6 +7,7 @@ import {
   Title,
   Button,
   Avatar,
+  TextInput,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -17,6 +18,13 @@ import { Dimensions, StyleSheet } from "react-native";
 
 import Review from "../components/Review";
 import { FlatList } from "react-native-gesture-handler";
+
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import { DatePickerInput } from "react-native-paper-dates";
+import BookingComponent from "../components/BookingComponent";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -68,6 +76,15 @@ const ServiceInfo = ({ route }) => {
 
   const renderItem = useCallback(({ item }) => <Review review={item} />);
 
+  const bottomSheetModalRef = React.useRef(null);
+  const snapPoints = React.useMemo(() => ["60%"], []);
+  const handlePresentModalPress = React.useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = React.useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
   return (
     <Center flex={1}>
       <Box
@@ -84,7 +101,14 @@ const ServiceInfo = ({ route }) => {
         alignItems={"center"}
       >
         <Title>Price: ${service.Price}</Title>
-        <Button mode="contained">Book!</Button>
+        <Button
+          mode="contained"
+          onPress={() => {
+            handlePresentModalPress();
+          }}
+        >
+          Book!
+        </Button>
       </Box>
       <ScrollView mb={"69px"}>
         <ImageSwiper images={service.Images} />
@@ -193,88 +217,20 @@ const ServiceInfo = ({ route }) => {
           )}
         </Box>
       </ScrollView>
+      <BottomSheetModalProvider>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+        >
+          <ScrollView style={{padding: 16}}>
+            <BookingComponent service={service} />
+          </ScrollView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </Center>
   );
 };
-
-// return (
-//     <SafeAreaView style={{flex: 1, backgroundColor:"#003b801a", paddingTop: 40, }}>
-//       <ScrollView>
-//         <View style={{flexDirection:'row', justifyContent: 'center'}}>
-//             <Carousel
-//               loop={true}
-//               layout={'stack'}
-//               ref={ref => this.carousel = ref}
-//               data={this.state.service.Images}
-//               sliderWidth={300}
-//               itemWidth={300}
-//               renderItem={this._renderItem}
-//               onSnapToItem = { index => this.setState({activeIndex:index}) } />
-//         </View>
-//         <Text style={[styles.textLarge, styles.alignC, styles.borderShort]}>{ this.state.service.Title }
-//           <Text style={[styles.textSmall, styles.alignC, {fontWeight: "100"}]}>{'\n'}{ this.state.service.Category }</Text>
-//         </Text>
-//         <Text style={[styles.textMedium, styles.border, styles.alignC]}>{ this.state.service.Address }</Text>
-//         <Text style={[styles.textSmall, styles.border, styles.alignL]}>{ this.state.service.Description }</Text>
-//         <View style={{flexDirection:'row', paddingTop: 15}}>
-//           <Text style={[styles.textSmall, styles.alignL,]}>Service provided by
-//             <Text style={[styles.textMedium, {fontWeight: "bold"}, styles.alignL]}>{"\n"}{ this.state.serviceOwner.FirstName }</Text>
-//           </Text>
-//           <Image style={styles.profilePic} source={{uri: this.state.serviceOwner.ProfilePicture}}/>
-//         </View>
-//       </ScrollView>
-//     </SafeAreaView>
-//     )
-
-const styles = StyleSheet.create({
-  divider: {
-    borderWidth: 0.25,
-  },
-  textLarge: {
-    fontSize: 42,
-    fontFamily: "ComfortaaBold",
-  },
-  textMedium: {
-    fontSize: 24,
-    fontFamily: "ComfortaaBold",
-  },
-  textSmall: {
-    fontSize: 17,
-    fontFamily: "ComfortaaBold",
-  },
-  alignL: {
-    paddingLeft: 10,
-    fontFamily: "ComfortaaBold",
-  },
-  alignR: {
-    paddingRight: 10,
-    textAlign: "right",
-  },
-  alignC: {
-    textAlign: "center",
-  },
-  border: {
-    paddingVertical: 15,
-    borderBottomColor: "black",
-    borderBottomWidth: 2,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  borderShort: {
-    paddingVertical: 5,
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-  },
-  profilePic: {
-    justifyContent: "flex-end",
-    paddingLeft: 250,
-    width: 70,
-    height: 70,
-    resizeMode: "contain",
-    borderRadius: 100,
-  },
-});
 
 export default ServiceInfo;

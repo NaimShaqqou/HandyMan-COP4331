@@ -11,9 +11,16 @@ import { Provider } from "react-redux";
 import { DefaultTheme, configureFonts, Provider as PaperProvider } from "react-native-paper";
 import { useFonts } from 'expo-font';
 
+import {
+  en,
+  registerTranslation,
+} from 'react-native-paper-dates'
+
 // fixes annoying native base warnings
 import {LogBox} from 'react-native';
 LogBox.ignoreLogs(['NativeBase:']);
+
+registerTranslation('en', en)
 
 let customFonts = {
   'Comfortaa-regular': require("./assets/Comfortaa/static/Comfortaa-Regular.ttf"),
