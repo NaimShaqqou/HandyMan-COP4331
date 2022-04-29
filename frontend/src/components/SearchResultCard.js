@@ -109,6 +109,25 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
             secondary={
               <React.Fragment>
                 {/* {focus != null && focus._id === service._id && */}
+                  {/* <motion.div
+                    layout
+                    initial='hidden' 
+                    animate='visible' 
+                    variants={{
+                      hidden: {
+                        scale: .8,
+                        opacity: 0
+                      },
+                      visible: {
+                        scale: 1,
+                        opacity: 1,
+                      }
+                    }}
+                  >
+                    {service.Address}
+                  </motion.div> */}
+
+                <Collapse in={focus != null && focus._id === service._id} collapsedSize={0}>
                   <motion.div
                     layout
                     initial='hidden' 
@@ -126,6 +145,7 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
                   >
                     {service.Address}
                   </motion.div>
+                </Collapse>
                 
                 <React.Fragment>
                   {service.Description}
