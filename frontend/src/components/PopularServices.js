@@ -10,15 +10,39 @@ import {
 import ServiceCard from "../components/ServiceCard";
 import PopularServiceCard from "../components/PopularServiceCard";
 
+import { useScrollPosition } from '@n8tb1t/use-scroll-position';
+import { motion } from "framer-motion"
+
 export default function PopularServices() {
 
   const [popularServices, setPopularServices] = useState([]);
-
-  const [userLocation, setUserLocation] = useState(null);
+  // const [opacity, setOpacity] = useState(1);
+  const [margin, setMargin] = useState(0);
+  // const [userLocation, setUserLocation] = useState(null);
 
   let bp = require("./Path");
 
-  // console.log(popularServices);
+  const animationStart = 0;
+
+  useScrollPosition(({ currPos }) => {
+    
+    // let newOpacity = 1;
+    let newMargin = 0;
+    
+    if (-currPos.y > animationStart) {
+      const progress = (-currPos.y / window.innerHeight) - (animationStart / window.innerHeight);
+      console.log(currPos);
+
+      // newOpacity = 1 - progress * 1;
+      newMargin = progress * 30;
+    }
+    
+    // if (newOpacity != opacity)
+    //   setOpacity(newOpacity);
+
+    if (newMargin != margin)
+      setMargin(newMargin);
+  });
 
   useEffect(() => {
     updatePopularServices();
@@ -50,16 +74,27 @@ export default function PopularServices() {
   };
 
   return (
-    <Box>
-      <Typography variant='h4'>
-        Discover Popular Services
-      </Typography>
-
-      {/* {popularServices.length > 0 && <PopularServiceCard serviceWithRating={popularServices[0]}/>} */}
-
+    <Box sx={{
+      width: '100vw',
+      textAlign: 'center',
+      color: '#003c80',
+      fontSize: '75px',
+      overflow: 'clip',
+    }}>
       {popularServices.map((service, index) => (
-        <PopularServiceCard key={index} serviceWithRating={service}/>
+        <motion.div
+          key={index}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          style={{ display: 'inline-block' }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{  }}
+        >
+          <PopularServiceCard  serviceWithRating={service}/>
+        </motion.div>
       ))}
+
     </Box>
   )
 }

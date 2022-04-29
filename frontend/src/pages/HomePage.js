@@ -67,7 +67,16 @@ const HomePage = () =>
         <Container 
           sx={{ maxWidth: { md: '1500px'} }}
         >
-          <PopularServices />
+          <Typography variant='h4' sx={{ fontWeight: 'bold', color: '#003c80', }}>
+            Discover Popular Services
+          </Typography>
+        </Container>
+
+        <PopularServices />
+
+        <Container 
+          sx={{ maxWidth: { md: '1500px'} }}
+        >
           <Barber />
           <Barber />
         </Container>       

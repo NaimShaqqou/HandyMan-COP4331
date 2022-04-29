@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 
+
+
 import {
   Box, Paper,
   Stack, Card,
@@ -20,17 +22,16 @@ export default function PopularServiceCard({serviceWithRating}) {
 
   const service = serviceWithRating.service;
 
-  console.log(serviceWithRating);
-
   return (
     <Paper 
       sx={{
+        opacity: 1,
+        m: 3,
         width: '300px',
         height: '400px',
         borderRadius: 10,
         cursor: 'pointer',
         display: 'inline-block',
-        m: 3,
         overflow: 'clip'
         // bgcolor: 'green'
       }}
@@ -53,24 +54,34 @@ export default function PopularServiceCard({serviceWithRating}) {
         }}
         src={getImage(service)} 
       />
+
       <Box 
         sx={{
           width: '300px',
-          height: '60px',
+          height: '100px',
           // bot: 3,
           position: 'relative', 
-          // mt: -4.7,
-          bot: 5,
+          mt: -20,
           zIndex: 1, 
-          bgcolor: 'rgba(255, 255, 255, 0.5)',
-          // overflow: 'auto'
+          bgcolor: 'rgba(0, 29, 73, 0.5)',
+          backdropFilter: 'blur(2px)',
+          // overflow: 'clip'
         }}
-        
-      >
-        {/* <Typography variant='h5'>
-          {service.Title}
-        </Typography> */}
-      </Box>
+      />
+
+      <Typography variant='h5' sx={{
+        textAlign: 'left',
+        width: '300px',
+        height: '100px',
+        position: 'relative', 
+        mt: -12,
+        ml: 1,
+        zIndex: 1,
+        // fontWeight: 'bold',
+        color: 'white',
+      }}>
+        {service.Title}
+      </Typography>
       
     </Paper>
   )

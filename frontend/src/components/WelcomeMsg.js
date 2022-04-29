@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { motion, useViewportScroll  } from 'framer-motion';
 import { useSelector } from "react-redux";
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 
 import {
   Box, Paper,
@@ -18,12 +18,12 @@ const initialMsgStyle = {
   mt: 0,
   opacity: 1,
   textOverflow: 'clip',
+  marginLeft: 'auto'
 };
 
 export default function WelcomeMsg() {
   let user = useSelector((state) => state.user);
   const [msgStyle, setMsgStyle] = useState(initialMsgStyle);
-  const { scrollYProgress } = useViewportScroll();
   const [msgGap, setMsgGap] = useState(1.5);
 
   // console.log(scrollYProgress.current);
@@ -78,7 +78,6 @@ export default function WelcomeMsg() {
         component={'div'}
         sx={{
           ...msgStyle,
-          marginLeft: 'auto'
         }}
         noWrap
       >

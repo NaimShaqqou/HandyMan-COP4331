@@ -21,30 +21,30 @@ export default function AnimatedBackground(props) {
 
   return (
     <motion.div
-        animate={{ 
-          rotate: props.startAngle+props.angleDelta,
-          x: props.startX == 'right' ? '-130vw' : '130vw',
-          y: props.startY + props.yDelta,
-        }}
-        transition={{ repeat: Infinity, duration: props.duration, ease: 'linear' }}
+      animate={{ 
+        rotate: props.startAngle+props.angleDelta,
+        x: props.startX == 'right' ? '-130vw' : '130vw',
+        y: props.startY + props.yDelta,
+      }}
+      transition={{ repeat: Infinity, duration: props.duration, ease: 'linear' }}
+      style={{
+        rotate: props.startAngle,
+        x: props.startX == 'right' ? '100vw' : -width,
+        y: props.startY,
+        display: 'inline-block',
+      }}
+    >
+      <img
+        src={require('../images/handler-logo-black.png')}
+        // src={require('../images/handler-logo-2560x2560.png')}
         style={{
-          rotate: props.startAngle,
-          x: props.startX == 'right' ? '100vw' : -width,
-          y: props.startY,
-          display: 'inline-block',
+          width: width + 'px',
+          height: height + 'px',
+          opacity: 0.15,
+          color: 'blue',
+          filter: 'blur(0px) invert(17%) sepia(94%) saturate(1438%) hue-rotate(193deg) brightness(95%) contrast(107%)',
         }}
-      >
-        <img
-          src={require('../images/handler-logo-black.png')}
-          // src={require('../images/handler-logo-2560x2560.png')}
-          style={{
-            width: width + 'px',
-            height: height + 'px',
-            opacity: 0.15,
-            color: 'blue',
-            filter: 'blur(0px) invert(17%) sepia(94%) saturate(1438%) hue-rotate(193deg) brightness(95%) contrast(107%)',
-          }}
-        />
-      </motion.div>
+      />
+    </motion.div>
   )
 }
