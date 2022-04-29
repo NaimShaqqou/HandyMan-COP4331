@@ -14,14 +14,15 @@ const renderPagination = (index, total, _context) => {
       alignSelf={"flex-end"}
       py={"8px"}
       px={"16px"}
-      backgroundColor={"#003b801a"}
+      // backgroundColor={"#003b801a"}
+      backgroundColor={"#00000099"}
       position={"absolute"}
       right={"16px"}
-      top={windowHeight / 5}
+      top={windowHeight / 3.5}
       borderRadius={15}
     >
-      <Text>
-        <Text>{index + 1}</Text>/{total}
+      <Text style={{color: 'white'}}>
+        {index + 1} / {total}
       </Text>
     </Box>
   );
@@ -32,7 +33,7 @@ const ImageSwiper = ({ images }) => {
     <Swiper
       style={styles.wrapper}
       showsButtons={true}
-      height={windowHeight / 4}
+      height={windowHeight / 3}
       renderPagination={renderPagination}
       loop={false}
       bounces={true}
