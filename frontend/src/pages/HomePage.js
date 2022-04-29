@@ -7,6 +7,8 @@ import WelcomeMsg from "../components/WelcomeMsg";
 import PopularServices from "../components/PopularServices";
 import AnimatedBackground from "../components/AnimatedBackground";
 import Barber from "../components/Barber";
+import RequestServiceBanner from "../components/RequestServiceBanner";
+import ListServiceBanner from '../components/ListServiceBanner';
 
 import { motion, useViewportScroll  } from 'framer-motion';
 
@@ -65,8 +67,21 @@ const HomePage = () =>
         <Box m={20}/>
 
         <Container 
-          sx={{ maxWidth: { md: '1500px'} }}
+          sx={{ maxWidth: { md: '1200px'} }}
         >
+          <Box 
+            sx={{ 
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <RequestServiceBanner />
+            <Box sx={{ m: 10, display: 'inline' }}/>
+            <ListServiceBanner />
+          </Box>
+
+          <Box m={10} />
+
           <Typography variant='h4' sx={{ fontWeight: 'bold', color: '#003c80', }}>
             Discover Popular Services
           </Typography>

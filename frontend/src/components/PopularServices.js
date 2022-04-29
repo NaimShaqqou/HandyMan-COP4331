@@ -26,19 +26,13 @@ export default function PopularServices() {
 
   useScrollPosition(({ currPos }) => {
     
-    // let newOpacity = 1;
     let newMargin = 0;
     
     if (-currPos.y > animationStart) {
       const progress = (-currPos.y / window.innerHeight) - (animationStart / window.innerHeight);
-      console.log(currPos);
-
-      // newOpacity = 1 - progress * 1;
+      
       newMargin = progress * 30;
     }
-    
-    // if (newOpacity != opacity)
-    //   setOpacity(newOpacity);
 
     if (newMargin != margin)
       setMargin(newMargin);
@@ -90,6 +84,7 @@ export default function PopularServices() {
           initial={{ opacity: 0, scale: 0.5, y: 300, }}
           whileInView={{ opacity: 1, scale: 1, y: 0, }}
           viewport={{  }}
+          // transition={{ type: 'Inertia' }}
         >
           <PopularServiceCard  serviceWithRating={service}/>
         </motion.div>
