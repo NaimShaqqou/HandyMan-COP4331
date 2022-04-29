@@ -71,7 +71,7 @@ export default function MarkerInfo({service, updateFocus}) {
             bgcolor: '#fff',
             minHeight: '200px',
             width: '500px',
-            mt: -27,
+            mt: -28,
             ml: -2,
             position: 'absolute',
             zIndex: 2,

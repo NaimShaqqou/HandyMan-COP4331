@@ -10,34 +10,48 @@ import {
 
 import { motion } from 'framer-motion';
 
-const Wrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 18px;
-  height: 18px;
-  background-color: #003c80;
-  border: 2px solid #fff;
-  border-radius: 100%;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-`;
-
 const Marker = ({ service, focus, onClick }) => {
   const inFocus = focus && focus._id == service._id;
 
   return (
     <motion.div
       whileHover={{ scale: 2, zIndex: 1 }}
+      animate={{ 
+        scale: inFocus ? 2 : 1,
+        zIndex: inFocus ? 1 : 0,
+        // backgroundColor: inFocus ? '#9000ff' : '#003c80',
+      }}
+      // transition={{ repeat: inFocus ? Infinity : 0, duration: 1 }}
       onHoverStart={e => {}}
       onHoverEnd={e => {}}
       style={{
-        position: 'absolute'
+        position: 'absolute',
       }}
       onClick={onClick}
     >
-      <Wrapper  />
+      {/* <Wrapper  /> */}
+
+      <motion.div
+        whileHover={{ backgroundColor: '#00eeff' }}
+        animate={{
+          backgroundColor: inFocus ? ['#003c80', '#00eeff', '#003c80'] : '#003c80',
+          borderColor: inFocus ? ['#fff', '#003c80', '#fff'] : '#fff',
+        }}
+        transition={{ repeat: inFocus ? Infinity : 0, duration: 1.5 }}
+        style={{
+          "position":"absolute",
+          "top":"50%",
+          "left":"50%",
+          "width":"18px",
+          "height":"18px",
+          // "backgroundColor":"#003c80",
+          "border":"2px solid",
+          "borderRadius":"100%",
+          "userSelect":"none",
+          "transform":"translate(-50%, -50%)",
+          "cursor":"pointer"
+        }}
+      />
     </motion.div>
   )
 };
