@@ -74,7 +74,7 @@ export default function UserRequestedService(props) {
                 } else {
                     if (response.data.error === "") {
                         console.log("Added review")
-                        updateCurrentUser({...user, jwtToken: response.data.refreshedToken })
+                        // updateCurrentUser({...user, jwtToken: response.data.refreshedToken })
                     } else {
                         console.log(response.data.error)
                     }
