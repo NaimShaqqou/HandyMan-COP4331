@@ -24,9 +24,8 @@ const GooglePlacesInput = forwardRef((props, ref) => {
         InputComp: TextInput,
         style: {
           width: "100%",
-          backgroundColor: "#fff"
         },
-        mode: "outlined",
+        mode: props.mode != null ? "flat" : "outlined",
         left: <TextInput.Icon name="magnify" />,
         right: props.filterIcon,
         label: "Location",

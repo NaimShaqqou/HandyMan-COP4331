@@ -3,7 +3,9 @@ import { MaterialIcons } from "@native-base/icons";
 import React, { useEffect } from "react";
 import {
   Title,
-  Button
+  Button,
+  useTheme,
+  TextInput
 } from "react-native-paper";
 
 import axios from "axios";
@@ -22,7 +24,7 @@ import RNPickerSelect from "react-native-picker-select";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import CurrencyInput from 'react-native-currency-input';
 
-import { TextInput, StyleSheet } from "react-native"
+import { StyleSheet } from "react-native"
 
 const storeInfo = async (userInfo, serviceInfo) => {
   try {
@@ -53,6 +55,7 @@ const days = {
 }
 
 const EditService = ({ route }) => {
+  const { colors } = useTheme();
   
   const user = useSelector((state) => state.user);
   
@@ -212,10 +215,10 @@ const EditService = ({ route }) => {
             Title:
           </Title>
           <TextInput
-            style={styles.textInput}
+            // style={styles.textInput}
             onChangeText={(title) => updateService("Title", { title })}
             defaultValue={service.Title}
-            name="Title"
+            label="Title"
           />
 
           <Divider style={{ marginTop: 16 }} />
@@ -224,10 +227,11 @@ const EditService = ({ route }) => {
             Description:
           </Title>
           <TextInput
-            style={styles.textInput}
+            // style={styles.textInput}
             defaultValue={service.Description}
             onChangeText={(description) => updateService("Description", { description })}
-            name="Description"
+            label="Description"
+            multiline={true}
           />
 
           <Divider style={{ marginTop: 16 }} />
@@ -239,7 +243,7 @@ const EditService = ({ route }) => {
             style={{fontFamily: "ComfortaaRegular"}}
             ref={googleAutocompleteRef}
             passLocation={(address) => updateService("Address", { address })}
-            name="Address"
+            mode="flat"
           />
 
           <Divider style={{ marginTop: 16 }} />
@@ -256,15 +260,15 @@ const EditService = ({ route }) => {
               ]}
               Icon={() => (
                 <Icon
-                  mt="7"
-                  mr="3"
+                  mt="2.5"
+                  mr="1"
                   size={8}
                   as={<MaterialIcons name="arrow-drop-down" />}
                   Color="muted.400"
                 />
               )}
               value={currentService.Category}
-              style={pickerSelectStyles}
+              // style={pickerSelectStyles}
               useNativeAndroidPickerStyle={false}
               textInputProps={{
                 borderWidth: 1,
@@ -272,7 +276,7 @@ const EditService = ({ route }) => {
                 height: 50,
                 borderColor: "lightgray",
                 padding: 6,
-                backgroundColor: "colors.background",
+                backgroundColor: colors.background,
               }}
             />
           <Divider style={{ marginTop: 16 }} />
