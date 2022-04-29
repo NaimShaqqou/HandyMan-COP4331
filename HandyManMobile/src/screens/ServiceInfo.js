@@ -8,7 +8,7 @@ import {
   Button,
   Avatar,
 } from "react-native-paper";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 
 import axios from "axios";
 
@@ -53,7 +53,9 @@ const ServiceInfo = ({ route }) => {
       .then(function (response) {
         if (mounted) {
           setReviews(response.data.reviews);
-          setAvgReviews(response.data.reviews.reduce((sum, curr) => sum += curr.Rating, 0));
+          setAvgReviews(
+            response.data.reviews.reduce((sum, curr) => (sum += curr.Rating), 0)
+          );
           setFetchedData(true);
         }
       })
@@ -153,21 +155,28 @@ const ServiceInfo = ({ route }) => {
               ) : (
                 <View>
                   <View
-                    style={{ 
-                            fontFamily: "ComfortaaBold",
-                            paddingLeft: 8,
-                            marginTop: 16,
-                            fontSize: 25,
-                          }}
-                    alignItems={'center'} 
+                    style={{
+                      fontFamily: "ComfortaaBold",
+                      paddingLeft: 8,
+                      marginTop: 16,
+                      fontSize: 25,
+                    }}
+                    alignItems={"center"}
                     flexDir={"row"}
                   >
                     <Icon name="star" size={24} color="#003c80" />
-                    <Text style={{ fontSize: 18 }}> {Math.round(avgReviews / reviews.length * 10) / 10 }{'\t\t\t\t'}</Text>
+                    <Text style={{ fontSize: 18 }}>
+                      {" "}
+                      {Math.round((avgReviews / reviews.length) * 10) / 10}
+                      {"\t\t\t\t"}
+                    </Text>
                     <Icon name="user" size={24} color="#003c80" />
-                    <Text style={{ fontSize: 18 }}> {reviews.length} review{reviews.length == 1 ? "" : "s"}</Text>
+                    <Text style={{ fontSize: 18 }}>
+                      {" "}
+                      {reviews.length} review{reviews.length == 1 ? "" : "s"}
+                    </Text>
                   </View>
-                    
+
                   <FlatList
                     data={reviews}
                     renderItem={renderItem}
