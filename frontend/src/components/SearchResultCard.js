@@ -88,7 +88,6 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
           }} 
         >
           <img
-            layout
             style={{
               width: '100px',
               height: '100px',
@@ -102,59 +101,21 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
         </Grid>
 
         <Grid item xs >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant='h6' sx={{ display: 'inline' }}>
-              {service.Title}
-            </Typography>
-            
-            <Typography variant='h6' sx={{ display: 'inline' }} color='#ababab'>
-              ${service.Price}
-            </Typography>
-          </Box>
+          <Collapse in={focus != null && focus._id === service._id} collapsedSize='100px'>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant='h6' sx={{ display: 'inline' }}>
+                {service.Title}
+              </Typography>
+              
+              <Typography variant='h6' sx={{ display: 'inline' }} color='#ababab'>
+                ${service.Price}
+              </Typography>
+            </Box>
 
-          <Collapse in={focus != null && focus._id === service._id} collapsedSize='65px'>
-            {/* <Typography>
-              {service.Address}
-            </Typography> */}
             <Typography>
               {service.Description}
             </Typography>
           </Collapse>
-          
-          {/* <ListItemText
-            onClick={clickItem(service)}
-            primary={service.Title}
-            secondary={
-              <React.Fragment>
-
-                <Collapse in={focus != null && focus._id === service._id} collapsedSize={0}>
-                  <div
-                    layout
-                    initial='hidden' 
-                    animate='visible' 
-                    variants={{
-                      hidden: {
-                        scale: .8,
-                        opacity: 0
-                      },
-                      visible: {
-                        scale: 1,
-                        opacity: 1,
-                      }
-                    }}
-                  >
-                    {service.Address}
-                  </div>
-                </Collapse>
-                
-                <React.Fragment>
-                  {service.Description}
-                </React.Fragment>
-              </React.Fragment>
-            }
-            sx={{ cursor: 'pointer' }}
-          /> */}
-
         </Grid>
 
         <Grid 

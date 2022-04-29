@@ -101,7 +101,6 @@ export default function SearchResults(props) {
               >
                 <ThemeProvider theme={theme}>
                   <ul
-                    layout
                     style={{
                       overflow: 'auto', // scroll bar
                       height: '100%',
@@ -110,8 +109,7 @@ export default function SearchResults(props) {
                     }}
                   >
                     { (props.results && props.results.length > 0) ? props.results.map(listitem => (
-                      <li 
-                        layout 
+                      <li
                         key={listitem._id} 
                         style={{  }}
                       >
