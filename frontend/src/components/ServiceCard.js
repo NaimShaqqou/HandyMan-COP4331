@@ -69,7 +69,7 @@ export default function ServiceCard(props) {
   console.log(service)
 
   return (
-    <Container sx={{ m: 3 }}>
+    <Container sx={{ mb: 5 }}>
       <Paper
         elevation={5}
         sx={{
