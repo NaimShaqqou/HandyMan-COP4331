@@ -73,7 +73,7 @@ export default function RequestedService(props) {
                     logoutServices()
                     navigate("../login")
                 } else {
-                    updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                    // updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
                     setRequestedService({ ...requestedService, Accepted: true})
                 }
             })
@@ -93,7 +93,7 @@ export default function RequestedService(props) {
                     logoutUser()
                     navigate("../login")
                 } else {
-                    updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                    // updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
                     setRequestedService({ ...requestedService, Completion: true})
                 }
             })
@@ -113,7 +113,7 @@ export default function RequestedService(props) {
                     logoutUser()
                     navigate("../login")
                 } else {
-                    updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
+                    // updateCurrentUser({...myUserInfo, jwtToken: response.data.refreshedToken});
                     setRequestedService(null)
                 }
             })
