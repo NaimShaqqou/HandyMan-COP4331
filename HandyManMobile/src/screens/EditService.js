@@ -19,7 +19,7 @@ import ImageSwiper from "../components/ImageSwiper";
 
 import * as ImagePicker from "expo-image-picker";
 import RNPickerSelect from "react-native-picker-select";
-import MultiSelect from 'react-native-multiple-select';
+import CustomMultiPicker from "react-native-multiple-select-list";
 import CurrencyInput from 'react-native-currency-input';
 
 import { TextInput, StyleSheet } from "react-native"
@@ -42,29 +42,15 @@ const storeInfo = async (userInfo, serviceInfo) => {
 };
 
 // For our multiselect Days Available
-const days = [{
-    id: 'Monday',
-    name: 'Monday'
-  }, {
-    id: 'Tuesday',
-    name: 'Tuesday'
-  }, {
-    id: 'Wednesday',
-    name: 'Wednesday'
-  }, {
-    id: 'Thursday',
-    name: 'Thursday'
-  }, {
-    id: 'Friday',
-    name: 'Friday'
-  }, {
-    id: 'Saturday',
-    name: 'Saturday'
-  }, {
-    id: 'Sunday',
-    name: 'Sunday'
-  }
-];
+const days = {
+  'Monday': 'Monday',
+  'Tuesday':'Tuesday',
+  'Wednesday': 'Wednesday',
+  'Thursday': 'Thursday',
+  'Friday': 'Friday',
+  'Saturday': 'Saturday',
+  'Sunday': 'Sunday'
+}
 
 const EditService = ({ route }) => {
   
@@ -79,15 +65,20 @@ const EditService = ({ route }) => {
 
   const [currentService, setCurrentService] = React.useState(service)
   const [loading, setLoading] = React.useState(false)
+  const [daysAvailOpen, setDaysAvailOpen] = React.useState(false)
+  const [daysAvailValues, setDaysAvailValues] = React.useState([])
 
   const updateService = (name, value) => {
     if (value)
     {
-      value = Object.values(value);
-
-      // Terrible, but allows us to use the same type of funciton for everything
-      if (name != "DaysAvailable")
-        value = value[0];
+      // Terrible, but lets us use the same function for everything
+      if (name != "Category")
+      {
+        value = Object.values(value);
+  
+        if (name != "DaysAvailable")
+          value = value[0];
+      }
 
       setCurrentService({ ...currentService, [name]: value})
     } 
@@ -155,6 +146,7 @@ const EditService = ({ route }) => {
   React.useEffect(() =>
   {
     googleAutocompleteRef.current.setText(service.Address);
+    setDaysAvailValues(service.DaysAvailable);
   }, []);
 
   // Get the user's information
@@ -244,6 +236,7 @@ const EditService = ({ route }) => {
             Address:
           </Title>
           <GooglePlacesInput 
+            style={{fontFamily: "ComfortaaRegular"}}
             ref={googleAutocompleteRef}
             passLocation={(address) => updateService("Address", { address })}
             name="Address"
@@ -257,18 +250,22 @@ const EditService = ({ route }) => {
           <RNPickerSelect
               onValueChange={(category) => updateService("Category", category)}
               items={[
-                { label: "Baking", value: {category: "Baking"} },
-                { label: "Teaching", value: {category: "Teaching"} },
-                { label: "Fixing", value: {category: "Fixing"} },
+                { label: "Baking", value: "Baking" },
+                { label: "Teaching", value: "Teaching" },
+                { label: "Fixing", value: "Fixing" },
               ]}
               Icon={() => (
                 <Icon
-                  mt="2.5"
-                  mr="1"
+                  mt="7"
+                  mr="3"
+                  size={8}
                   as={<MaterialIcons name="arrow-drop-down" />}
                   Color="muted.400"
                 />
               )}
+              value={currentService.Category}
+              style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
               textInputProps={{
                 borderWidth: 1,
                 borderRadius: 5,
@@ -282,26 +279,21 @@ const EditService = ({ route }) => {
           <Title style={styles.header} >
             Days Available:
           </Title>
-          <MultiSelect
-            hideTags
-            items={days}
-            uniqueKey="id"
-            onSelectedItemsChange={(daysAvailable) => updateService("DaysAvailable", daysAvailable)}
-            selectedItems={currentService.DaysAvailable}
-            selectText="Select days available"
-            onChangeInput={ (text)=> console.log(text)}
-            altFontFamily="ProximaNova-Light"
-            tagRemoveIconColor="#CCC"
-            tagBorderColor="#CCC"
-            tagTextColor="#CCC"
-            selectedItemTextColor="#CCC"
-            selectedItemIconColor="#CCC"
-            itemTextColor="#000"
-            displayKey="name"
-            searchInputStyle={{ color: '#CCC' }}
-            submitButtonColor="#CCC"
-            submitButtonText="Submit"
-          />      
+          <CustomMultiPicker
+            options={days}
+            search={false} // should show search bar?
+            multiple={true} //
+            callback={(daysAvailable) => { updateService("DaysAvailable", daysAvailable) }} // callback, array of selected items
+            rowBackgroundColor={"#fff"}
+            rowHeight={50}
+            rowRadius={4}
+            iconColor={"#00a2dd"}
+            iconSize={30}
+            selectedIconName={"ios-checkmark-circle-outline"}
+            unselectedIconName={"ios-radio-button-off-outline"}
+            scrollViewHeight={390}
+            selected={currentService.DaysAvailable} // list of options which are selected by default
+          />
 
           <Divider style={{ marginTop: 16 }} />
 
@@ -332,14 +324,15 @@ export default EditService;
 const styles = StyleSheet.create({
   textInput: {
     fontSize: 16,
-    fontFamily: "ComfortaaBold",
-    paddingLeft: 8,
+    fontFamily: "ComfortaaRegular",
+    paddingLeft: 16,
     marginTop: 16,
     borderWidth: 1,
     borderRadius: 4,
     height: 60,
     color: "black",
-    borderColor: "gray"
+    borderColor: "gray",
+    backgroundColor: "#fff"
   },
   header: {
     fontSize: 20,
@@ -347,4 +340,33 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     marginTop: 16,
   }
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontFamily: "ComfortaaRegular",
+    backgroundColor: "#fff",
+    fontSize: 16,
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontFamily: "ComfortaaRegular",
+    backgroundColor: "#fff",
+    fontSize: 16,
+    marginTop: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
 });
