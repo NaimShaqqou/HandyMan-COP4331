@@ -127,6 +127,7 @@ const Home = () => {
       <ServicesMap ref={mapViewRef} />
       <Center w="80%" position={"absolute"} safeAreaTop top={5}>
         <GooglePlacesInput
+          bg="#fff"
           doSearch={doSearchHelper}
           passLocation={setLocation}
           filterIcon={
@@ -195,6 +196,7 @@ const Home = () => {
                 <Icon
                   mt="2.5"
                   mr="1"
+                  size={8}
                   as={<MaterialIcons name="arrow-drop-down" />}
                   Color="muted.400"
                 />
