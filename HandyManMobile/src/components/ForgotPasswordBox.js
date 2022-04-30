@@ -6,11 +6,88 @@ import {
   FormControl,
   useToast,
   WarningOutlineIcon,
+  VStack,
+  HStack,
+  Text,
+  IconButton,
+  CloseIcon,
+  Alert,
 } from "native-base";
 import { Button, TextInput, Headline, Subheading } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 const ForgotPasswordBox = () => {
+  const toast = useToast();
+
+  const ToastAlert = ({
+    id,
+    status,
+    variant,
+    title,
+    description,
+    isClosable,
+    ...rest
+  }) => (
+    <Alert
+      maxWidth="90%"
+      alignSelf="center"
+      flexDirection="row"
+      status={status ?? "info"}
+      variant={variant}
+      {...rest}
+    >
+      <VStack space={1} flexShrink={1} w="100%">
+        <HStack
+          flexShrink={1}
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <HStack space={2} flexShrink={1} alignItems="center">
+            <Alert.Icon />
+            <Text
+              fontFamily={"ComfortaaBold"}
+              fontSize="md"
+              fontWeight="medium"
+              flexShrink={1}
+              color={
+                variant === "solid"
+                  ? "lightText"
+                  : variant !== "outline"
+                  ? "darkText"
+                  : null
+              }
+            >
+              {title}
+            </Text>
+          </HStack>
+          {isClosable ? (
+            <IconButton
+              variant="unstyled"
+              icon={<CloseIcon size="3" />}
+              _icon={{
+                color: variant === "solid" ? "lightText" : "darkText",
+              }}
+              onPress={() => toast.close(id)}
+            />
+          ) : null}
+        </HStack>
+        <Text
+          px="6"
+          color={
+            variant === "solid"
+              ? "lightText"
+              : variant !== "outline"
+              ? "darkText"
+              : null
+          }
+          fontFamily={"ComfortaaRegular"}
+        >
+          {description}
+        </Text>
+      </VStack>
+    </Alert>
+  );
+
   const onSubmit = async (event) => {
     event.preventDefault();
 
@@ -42,25 +119,29 @@ const ForgotPasswordBox = () => {
 
       setLoading(false);
       if (res.error == "") {
-        toast.show({
+        const item= {
           title: "Email Sent",
           status: "success",
           description:
             "We have sent an email to the address you provided with instructions on how to reset your password.",
-          duration: null,
-          width: "90%",
-          fontFamily: "ComfortaaRegular",
+          isClosable: true,
+        }
+        toast.show({
+          render: ({id}) => {
+            return <ToastAlert id={id} {...item} />
+          },
         });
       } else {
-        toast.show({
+        const item = {
           title: "Error",
           status: "error",
           description: res.error,
-          duration: null,
-          w: "90%",
-          textStyle: {
-            fontFamily: "ComfortaaRegular",
-          }
+          isClosable: true,
+        };
+        toast.show({
+          render: ({ id }) => {
+            return <ToastAlert id={id} {...item} />;
+          },
         });
       }
     } catch (e) {
@@ -74,7 +155,6 @@ const ForgotPasswordBox = () => {
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
-  const toast = useToast();
 
   return (
     <Box safeArea w="90%" justifyContent="center">
