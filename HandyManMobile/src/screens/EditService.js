@@ -201,11 +201,11 @@ const EditService = ({ route }) => {
   return (
     <>
       <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
-        <Button onPress={() => pickImage()} mode="contained">
-          Pick images
-        </Button>
 
         <ImageSwiper images={currentService.Images} service={currentService} serviceSetter={(ret) => setCurrentService(ret)} edit={true}/>
+        <Button icon="image-plus" onPress={() => pickImage()} mode="contained" style={{alignSelf: 'flex-start', marginLeft: 8, width: '46%'}}>
+          Pick images
+        </Button>
         <Box w={"90%"} alignSelf={"center"}>
           <Title style={styles.header}>Title:</Title>
           <TextInput
