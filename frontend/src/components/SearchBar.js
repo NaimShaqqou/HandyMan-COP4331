@@ -30,6 +30,15 @@ const emptySearch = {
   category: '',
 };
 
+SearchBar.defaultProps = {
+  mapMargin: {
+    ne: {lat: 28.84917863265754, lng: -80.32693023681641},
+    nw: {lat: 28.84917863265754, lng: -82.0730697631836},
+    se: {lat: 28.354238556858903, lng: -80.32693023681641},
+    sw: {lat: 28.354238556858903, lng: -82.0730697631836}
+  }
+}
+
 function SearchBar(props) {
   const [predictions, setPredictions] = useState(new Array());
   const [search, setSearch] = useState(emptySearch);
@@ -53,13 +62,13 @@ function SearchBar(props) {
       category: search.category
     });
 
+    // console.log(window.location.pathname);
+
     if (window.location.pathname == '/search') {
       props.updateRes({
         res: res, 
         fitBoundsTrigger: props.fitBoundsTrigger
       });
-    } else {
-      navigate("/search", { state: { res: res} });
     }
   }, [props.searchTrigger]);
 
@@ -126,8 +135,8 @@ function SearchBar(props) {
   const marginSearchAPI = async (body) => {
     let res = null;
     let js = JSON.stringify(body);
-    // console.log('sending:');
-    // console.log(obj);
+    console.log('sending:');
+    console.log(body);
 
     try {
       const response = await fetch(bp.buildPath("api/search-on-map-change"), {
