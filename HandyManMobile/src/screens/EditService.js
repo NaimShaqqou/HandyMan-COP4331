@@ -1,12 +1,8 @@
 import { Center, ScrollView, Box, Icon, Divider, View } from "native-base";
 import { MaterialIcons } from "@native-base/icons";
 import React, { useEffect } from "react";
-import {
-  Title,
-  Button,
-  useTheme,
-  TextInput
-} from "react-native-paper";
+import { Title, Button, useTheme, TextInput } from "react-native-paper";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,22 +18,26 @@ import ImageSwiper from "../components/ImageSwiper";
 import * as ImagePicker from "expo-image-picker";
 import RNPickerSelect from "react-native-picker-select";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import CurrencyInput from 'react-native-currency-input';
+import CurrencyInput from "react-native-currency-input";
 
-import { StyleSheet } from "react-native"
+import { StyleSheet } from "react-native";
 
 const storeInfo = async (userInfo, serviceInfo) => {
   try {
     await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-    await AsyncStorage.getItem("serviceInfo").then(data => {
-      
+
+    if (serviceInfo != null) {
+    await AsyncStorage.getItem("serviceInfo").then((data) => {
       // Update whats already in the storage
       data = JSON.parse(data);
-      const index = data.findIndex(service => service._id === serviceInfo._id);
+      const index = data.findIndex(
+        (service) => service._id === serviceInfo._id
+      );
       data[index] = serviceInfo;
-      
+
       AsyncStorage.setItem("serviceInfo", JSON.stringify(data));
     });
+  }
   } catch (err) {
     console.log(err);
   }
@@ -45,47 +45,47 @@ const storeInfo = async (userInfo, serviceInfo) => {
 
 // For our multiselect Days Available
 const days = {
-  'Monday': 'Monday',
-  'Tuesday':'Tuesday',
-  'Wednesday': 'Wednesday',
-  'Thursday': 'Thursday',
-  'Friday': 'Friday',
-  'Saturday': 'Saturday',
-  'Sunday': 'Sunday'
-}
+  Monday: "Monday",
+  Tuesday: "Tuesday",
+  Wednesday: "Wednesday",
+  Thursday: "Thursday",
+  Friday: "Friday",
+  Saturday: "Saturday",
+  Sunday: "Sunday",
+};
 
 const EditService = ({ route }) => {
   const { colors } = useTheme();
-  
+
   const user = useSelector((state) => state.user);
-  
+
   // Redux stuff
   const dispatch = useDispatch();
-  const { updateServices, updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
-  
+  const { updateServices, updateCurrentUser } = bindActionCreators(
+    ActionCreators,
+    dispatch
+  );
+
   const navigation = useNavigation();
   const { service } = route.params;
 
-  const [currentService, setCurrentService] = React.useState(service)
-  const [loading, setLoading] = React.useState(false)
-  const [daysAvailOpen, setDaysAvailOpen] = React.useState(false)
-  const [daysAvailValues, setDaysAvailValues] = React.useState([])
+  const [currentService, setCurrentService] = React.useState(service);
+  const [loading, setLoading] = React.useState(false);
+  const [daysAvailOpen, setDaysAvailOpen] = React.useState(false);
+  const [daysAvailValues, setDaysAvailValues] = React.useState([]);
 
   const updateService = (name, value) => {
-    if (value)
-    {
+    if (value) {
       // Terrible, but lets us use the same function for everything
-      if (name != "Category")
-      {
+      if (name != "Category") {
         value = Object.values(value);
-  
-        if (name != "DaysAvailable")
-          value = value[0];
+
+        if (name != "DaysAvailable") value = value[0];
       }
 
-      setCurrentService({ ...currentService, [name]: value})
-    } 
-  }
+      setCurrentService({ ...currentService, [name]: value });
+    }
+  };
 
   // get image from phone and upload it
   const pickImage = async () => {
@@ -109,7 +109,7 @@ const EditService = ({ route }) => {
         name: `user-profile.${result.uri.split(".")[1]}`,
       }).then((response) => {
         images.push(response);
-        updateService("Images", {"images" : images});
+        updateService("Images", { images: images });
       });
     }
   };
@@ -146,8 +146,7 @@ const EditService = ({ route }) => {
   const googleAutocompleteRef = React.useRef(null);
 
   // Setup page
-  React.useEffect(() =>
-  {
+  React.useEffect(() => {
     googleAutocompleteRef.current.setText(service.Address);
     setDaysAvailValues(service.DaysAvailable);
   }, []);
@@ -157,65 +156,63 @@ const EditService = ({ route }) => {
     console.log(currentService);
   }, [currentService]);
 
-  const saveChanges = async () =>
-  {
+  const saveChanges = async () => {
     setLoading(true);
 
     console.log("saving edited service! \n" + currentService.Images);
     await axios
-      .post("https://myhandyman1.herokuapp.com/api/edit-service", 
-      {
+      .post("https://myhandyman1.herokuapp.com/api/edit-service", {
         serviceId: currentService._id,
-        newTitle: currentService.Title, 
+        newTitle: currentService.Title,
         newImages: currentService.Images,
-        newAddress: currentService.Address, 
-        newDescription: currentService.Description, 
-        newPrice: currentService.Price, 
-        newDaysAvailable: currentService.DaysAvailable, 
+        newAddress: currentService.Address,
+        newDescription: currentService.Description,
+        newPrice: currentService.Price,
+        newDaysAvailable: currentService.DaysAvailable,
         newCategory: currentService.Category,
-        jwtToken: user.jwtToken
+        jwtToken: user.jwtToken,
       })
       .then((response) => {
-        
-        const newUser = {
-          userId: user.userId,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profileDescription: user.profileDescription,
-          profilePicture: user.profilePicture,
-          jwtToken: response.data.refreshedToken,
-        };
-        
-        // redux
-        updateServices(currentService);
-        updateCurrentUser(newUser);
-
-        // async storage
-        storeInfo(newUser, currentService); // store to localstorage
-
-        console.log("Saved successfully!");
+        if (response.data.jwtToken === "") {
+          storeInfo({...user, jwtToken: ""}, null)
+          logoutUser()
+          logoutServices()
+        } else {
+          const newUser = {
+            ...user,
+            jwtToken: response.data.refreshedToken,
+          };
+          
+          // redux
+          updateServices(currentService);
+          updateCurrentUser(newUser);
+          
+          // async storage
+          storeInfo(newUser, currentService); // store to localstorage
+          
+          console.log("Saved successfully!");
+        }
       })
       .catch((error) => {
         console.log(error);
       });
-      
-      setLoading(false);
-      navigation.goBack();
-    }
-    
-    return (
-      <Center flex={1}>
-      <ScrollView mb={"20px"} keyboardShouldPersistTaps='always' listViewDisplayed={false}>
-        
-        <Button onPress={() => pickImage()} mode="contained">Pick images</Button>
-        
+
+    setLoading(false);
+    navigation.goBack();
+  };
+
+  return (
+    <>
+      <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
+        <Button onPress={() => pickImage()} mode="contained">
+          Pick images
+        </Button>
+
         <ImageSwiper images={service.Images} />
         <Box w={"90%"} alignSelf={"center"}>
-          <Title style={styles.header} >
-            Title:
-          </Title>
+          <Title style={styles.header}>Title:</Title>
           <TextInput
-            // style={styles.textInput}
+            style={styles.textInput}
             onChangeText={(title) => updateService("Title", { title })}
             defaultValue={service.Title}
             label="Title"
@@ -223,71 +220,68 @@ const EditService = ({ route }) => {
 
           <Divider style={{ marginTop: 16 }} />
 
-          <Title style={styles.header} >
-            Description:
-          </Title>
+          <Title style={styles.header}>Description:</Title>
           <TextInput
-            // style={styles.textInput}
+            style={styles.textInput}
             defaultValue={service.Description}
-            onChangeText={(description) => updateService("Description", { description })}
+            onChangeText={(description) =>
+              updateService("Description", { description })
+            }
             label="Description"
             multiline={true}
           />
 
           <Divider style={{ marginTop: 16 }} />
 
-          <Title style={styles.header} >
-            Address:
-          </Title>
-          <GooglePlacesInput 
-            style={{fontFamily: "ComfortaaRegular"}}
-            ref={googleAutocompleteRef}
-            passLocation={(address) => updateService("Address", { address })}
-            mode="flat"
-          />
-
-          <Divider style={{ marginTop: 16 }} />
-
-          <Title style={styles.header} >
-            Category:
-          </Title>
-          <RNPickerSelect
-              onValueChange={(category) => updateService("Category", category)}
-              items={[
-                { label: "Baking", value: "Baking" },
-                { label: "Teaching", value: "Teaching" },
-                { label: "Fixing", value: "Fixing" },
-              ]}
-              Icon={() => (
-                <Icon
-                  mt="2.5"
-                  mr="1"
-                  size={8}
-                  as={<MaterialIcons name="arrow-drop-down" />}
-                  Color="muted.400"
-                />
-              )}
-              value={currentService.Category}
-              // style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-              textInputProps={{
-                borderWidth: 1,
-                borderRadius: 5,
-                height: 50,
-                borderColor: "lightgray",
-                padding: 6,
-                backgroundColor: colors.background,
-              }}
+          <Title style={styles.header}>Address:</Title>
+          <Box mx={"8px"} mt={"16px"}>
+            <GooglePlacesInput
+              style={{ fontFamily: "ComfortaaRegular" }}
+              ref={googleAutocompleteRef}
+              passLocation={(address) => updateService("Address", { address })}
+              mode="flat"
             />
+          </Box>
           <Divider style={{ marginTop: 16 }} />
-          <Title style={styles.header} >
-            Days Available:
-          </Title>
+
+          <Title style={styles.header}>Category:</Title>
+          <RNPickerSelect
+            onValueChange={(category) => updateService("Category", category)}
+            items={[
+              { label: "Baking", value: "Baking" },
+              { label: "Teaching", value: "Teaching" },
+              { label: "Fixing", value: "Fixing" },
+            ]}
+            Icon={() => (
+              <Icon
+                mt="6"
+                mr="1"
+                size={8}
+                as={<MaterialIcons name="arrow-drop-down" />}
+                Color="muted.400"
+              />
+            )}
+            value={currentService.Category}
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
+            textInputProps={{
+              borderWidth: 1,
+              borderRadius: 5,
+              height: 50,
+              borderColor: "lightgray",
+              padding: 6,
+              backgroundColor: colors.background,
+            }}
+          />
+          <Divider style={{ marginTop: 16 }} />
+          <Title style={styles.header}>Days Available:</Title>
           <CustomMultiPicker
             options={days}
             search={false} // should show search bar?
             multiple={true} //
-            callback={(daysAvailable) => { updateService("DaysAvailable", daysAvailable) }} // callback, array of selected items
+            callback={(daysAvailable) => {
+              updateService("DaysAvailable", daysAvailable);
+            }} // callback, array of selected items
             rowBackgroundColor={"#fff"}
             rowHeight={50}
             rowRadius={4}
@@ -301,25 +295,36 @@ const EditService = ({ route }) => {
 
           <Divider style={{ marginTop: 16 }} />
 
-          <Title style={styles.header}>
-            Price:
-          </Title>
-          <CurrencyInput
-            style={[styles.textInput, { marginBottom: 20 }]}
-            onChangeValue={(price) => updateService("Price", { price })}
-            value={currentService.Price}
-            prefix="$"
-            delimiter=","
-            separator="."
-            precision={2}
-            name="Price"
-            keyboardType="number-pad"
+          <Title style={styles.header}>Price:</Title>
+
+          <TextInput
+            label="Price"
+            style={styles.textInput}
+            render={(props) => (
+              <CurrencyInput
+                {...props}
+                onChangeValue={(price) => updateService("Price", { price })}
+                value={currentService.Price}
+                prefix="$"
+                delimiter=","
+                separator="."
+                precision={2}
+                keyboardType="number-pad"
+              />
+            )}
           />
 
-          <Button onPress={() => saveChanges()} loading={loading} mode="contained">Save</Button>
+          <Button
+            style={{ marginTop: 20, marginLeft: 8 }}
+            onPress={() => saveChanges()}
+            loading={loading}
+            mode="contained"
+          >
+            Save
+          </Button>
         </Box>
-      </ScrollView>
-    </Center>
+      </KeyboardAwareScrollView>
+    </>
   );
 };
 
@@ -327,23 +332,23 @@ export default EditService;
 
 const styles = StyleSheet.create({
   textInput: {
-    fontSize: 16,
-    fontFamily: "ComfortaaRegular",
-    paddingLeft: 16,
+    // fontSize: 16,
+    // fontFamily: "ComfortaaRegular",
+    marginHorizontal: 8,
     marginTop: 16,
-    borderWidth: 1,
-    borderRadius: 4,
-    height: 60,
-    color: "black",
-    borderColor: "gray",
-    backgroundColor: "#fff"
+    // borderWidth: 1,
+    // borderRadius: 4,
+    // height: 60,
+    // color: "black",
+    // borderColor: "gray",
+    // backgroundColor: "#fff"
   },
   header: {
     fontSize: 20,
     fontFamily: "ComfortaaBold",
-    paddingLeft: 8,
+    paddingHorizontal: 8,
     marginTop: 16,
-  }
+  },
 });
 
 const pickerSelectStyles = StyleSheet.create({
@@ -355,9 +360,9 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderRadius: 4,
-    color: 'black',
+    color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
@@ -368,9 +373,9 @@ const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderRadius: 4,
-    color: 'black',
+    color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
