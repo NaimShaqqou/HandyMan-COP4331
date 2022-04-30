@@ -173,13 +173,39 @@ export default function ServicePage() {
     return price;
   }
 
-  console.log(reviews);
+  function srcset(image, size, rows = 1, cols = 1) {
+    return {
+      src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
+      srcSet: `${image}?w=${size * cols}&h=${
+        size * rows
+      }&fit=crop&auto=format&dpr=2 2x`,
+    };
+  }
+
+  let imageItems = service.Images.map(img => ({
+    img: img,
+    cols: 1,
+    rows: 1,
+  }));
+
+  // Duplicate first image for testing
+  // let imageItems = service.Images.length > 0 ? [
+  //   {
+  //     img: service.Images[0],
+  //     cols: 2,
+  //     rows: 2,
+  //   }
+  // ] : [];
+
+  if (imageItems.length >= 1) {
+    imageItems[0].rows = 2
+    imageItems[0].cols = 2
+  }
 
   return (
-    <div>
-      {/* <ResponsiveAppBar /> */}
+    <Box>
       <Container maxWidth="xl">
-        <Box sx={{ pt: 5 }}></Box>
+        <Box m={5}/>
         <Grid container direction="row" spacing={5}>
           <Grid item xs={8.5}>
             <Paper
@@ -200,15 +226,19 @@ export default function ServicePage() {
                 spacing={2}
               >
                 <ImageList
-                  sx={{ width: 500, height: 150 }}
+                  sx={{ 
+                    width: '100%',
+                    maxHeight: '360px',
+                  }}
                   variant="quilted"
                   cols={4}
-                  rowHeight={121}
+                  rowHeight={120}
                 >
-                  {service.Images.map((url) => (
-                    <ImageListItem key={url}>
+                  {imageItems.map((item, idx) => (
+                    <ImageListItem key={idx} cols={item.cols || 1} rows={item.rows || 1}>
                       <img
-                        src={url}
+                        {...srcset(item.img, 120, item.rows, item.cols)}
+                        alt={item.title}
                         loading="lazy"
                       />
                     </ImageListItem>
@@ -234,7 +264,7 @@ export default function ServicePage() {
                   </Typography>
                   <Box>
                     {reviews.length === 0 && fetchedData ?
-                      <Box sx={{ height: "100%", pt: 5, display: "flex", justifyContent: "center" }} >
+                      <Box sx={{ height: "100%", pt: 3, display: "flex", justifyContent: "center" }} >
                         <img src={NoReview} style={{ width: "30%", height: "30%", aspectRatio: 802 / 537 }} alt="Review Section" />
                       </Box>
                       : <List sx={{ overflow: 'auto', maxHeight: 600 }}>
@@ -351,9 +381,6 @@ export default function ServicePage() {
         </Grid>
 
       </Container>
-    </div>
+    </Box>
   )
-
-
-
 }
