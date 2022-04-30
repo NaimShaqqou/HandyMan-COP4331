@@ -78,7 +78,7 @@ const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
 
   return (
     <>
-      {service.Images.length !== 0 ? (
+      {images.length !== 0 ? (
         <Swiper
           style={styles.wrapper}
           showsButtons={true}
@@ -88,7 +88,7 @@ const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
           bounces={true}
           onIndexChanged={(index) => setCurIndex(index)}
         >
-          {service.Images.map((item) => (
+          {images.map((item) => (
             <ImageMap key={item} item={item} />
           ))}
         </Swiper>

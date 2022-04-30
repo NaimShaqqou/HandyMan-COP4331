@@ -201,11 +201,11 @@ const AddService = () => {
   return (
     <>
       <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
-        <Button onPress={() => pickImage()} mode="contained">
-          Pick images
-        </Button>
 
         <ImageSwiper images={currentService.Images} service={currentService} serviceSetter={(ret) => setCurrentService(ret)} edit={true}/>
+        <Button style={{alignSelf: 'flex-start', marginLeft: 8, width: '46%'}} onPress={() => pickImage()} mode="contained">
+          Pick images
+        </Button>
         <Box w={"90%"} alignSelf={"center"}>
           <Title style={styles.header}>Title:</Title>
           <TextInput
