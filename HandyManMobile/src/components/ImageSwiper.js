@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Alert } from "react-native";
 import React from "react";
 
 import Swiper from "react-native-swiper";
@@ -32,6 +32,16 @@ const renderPagination = (index, total, context) => {
 
 const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
   const [curIndex, setCurIndex] = React.useState(0);
+
+  const deleteConfirmation = async () =>
+    Alert.alert("Are you sure you want to delete this image?", "", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      { text: "Delete", style: "destructive", onPress: () => handleDelete() },
+    ]);
+  
   const handleDelete = () => {
     let newImages = [...images];
     newImages.splice(curIndex, 1);
@@ -52,11 +62,13 @@ const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
           mode="contained"
           icon="delete"
           color="#B00020"
-          onPress={() => handleDelete()}
+          onPress={() => deleteConfirmation()}
         >
           Delete Image
         </Button>
       );
+    } else {
+      return null;
     }
   };
 

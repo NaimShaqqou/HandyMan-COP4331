@@ -111,7 +111,7 @@ const ServiceInfo = ({ route }) => {
         </Button>
       </Box>
       <ScrollView mb={"69px"}>
-        <ImageSwiper images={service.Images} />
+        <ImageSwiper images={service.Images} edit={false} />
         <Box w={"90%"} alignSelf={"center"}>
           <Headline
             style={{
