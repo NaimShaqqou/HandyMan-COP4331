@@ -308,7 +308,7 @@ const EditService = ({ route }) => {
                 prefix="$"
                 delimiter=","
                 separator="."
-                precision={2}
+                precision={0}
                 keyboardType="number-pad"
               />
             )}
