@@ -232,7 +232,7 @@ export default function ServicePage() {
                   }}
                   variant="quilted"
                   cols={4}
-                  rowHeight={120}
+                  rowHeight={180}
                 >
                   {imageItems.map((item, idx) => (
                     <ImageListItem key={idx} cols={item.cols || 1} rows={item.rows || 1}>
