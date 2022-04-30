@@ -71,8 +71,6 @@ const EditService = ({ route }) => {
 
   const [currentService, setCurrentService] = React.useState(service);
   const [loading, setLoading] = React.useState(false);
-  const [daysAvailOpen, setDaysAvailOpen] = React.useState(false);
-  const [daysAvailValues, setDaysAvailValues] = React.useState([]);
 
   const updateService = (name, value) => {
     if (value) {
@@ -148,7 +146,6 @@ const EditService = ({ route }) => {
   // Setup page
   React.useEffect(() => {
     googleAutocompleteRef.current.setText(service.Address);
-    setDaysAvailValues(service.DaysAvailable);
   }, []);
 
   // Get the user's information
@@ -315,6 +312,14 @@ const EditService = ({ route }) => {
           />
 
           <Button
+            disabled={
+              currentService.Title == "" || 
+              currentService.Description == "" || 
+              currentService.Address == "" || 
+              currentService.Price == null || 
+              currentService.Category == "" ||
+              currentService.DaysAvailable == [] ||
+              currentService.Images == []}
             style={{ marginTop: 20, marginLeft: 8 }}
             onPress={() => saveChanges()}
             loading={loading}
