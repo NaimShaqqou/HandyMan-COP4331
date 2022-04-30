@@ -12,6 +12,7 @@ import UserRequestedService from "../components/UserRequestedService";
 import axios from "axios";
 import { motion, Variants } from "framer-motion";
 import emptyBookings from "../images/empty.png"
+import { GifBoxTwoTone } from "@mui/icons-material";
 
 
 export default function UserRequestedServices() {
@@ -98,41 +99,65 @@ export default function UserRequestedServices() {
 
   console.log(requestedServices)
 
-
   return (
-    <div>
-      {/* <ResponsiveAppBar/> */}
-      <Box sx={{ pt: 4}}>
-      <Grid container direction="column" spacing={5}>  
-        {requestedServices.length === 0 && fetchedData
-            ? 
-                <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
-                  <Paper
-                      elevation= {5}
-                      sx={{
-                          margin: "auto",
-                          p: 10,
-                          backgroundColor: (theme) =>
-                              theme.palette.mode === "dark" ? "#1A2027" : "white",
-                      }}
-                  >
-                    <Box sx={{pt: "100px",  display: 'flex', flexDirection: 'column'}}>
-                      <Typography variant="h2">You don't have any bookings</Typography> 
-                      <Box sx={{ height: 600, pt: 20 }} >
-                        <img src={emptyBookings} style={{width: "100%", height: "100%", aspectRatio: 863/645}} alt="People looking into empty box" />
-                      </Box>
-                    </Box>
-                    </Paper>
-                </Grid>
-                
-          : requestedServices.map((requestedService, index) => 
+    <Box m={4}>
+      {requestedServices.length === 0 && fetchedData ? 
+      <Box sx={{
+          // justifyContent: 'center', 
+          // bgcolor: 'green' 
+        }}
+      >
+        <Paper
+          elevation= {5}
+          sx={{
+            maxWidth: '1200px',
+            height: '80vh',
+            margin: "auto",
+            p: 10,
+            textAlign: 'center', 
+            // display: 'flex',
+            // flexDirection: 'column',
+            // justifyContent: 'space-between',
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1A2027" : "white",
+          }}
+        >
+          <Typography variant="h2" >
+            You don't have any bookings
+          </Typography>
+          {/* <Box m={10} sx={{ bgcolor: 'green' }}/> */}
+          <Box sx={{
+              mt: 10,
+              mb: 10,
+              ml: 'auto',
+              mr: 'auto',
+              width: '80%',
+              height: '80%',
+              // bgcolor: 'green'
+            }}
+          >
+            <img
+              src={emptyBookings} 
+              style={{
+                width: '100%', 
+                height: '100%',
+                objectFit: 'contain',
+                // aspectRatio: 863/645
+              }} 
+              alt="People looking into empty box" 
+            />
+          </Box>
+        </Paper>
+      </Box>
+      : 
+      requestedServices.map((requestedService, index) => 
+        <Grid container direction="column" spacing={5} >  
+      
           <Grid item key={index}>
             <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>
           </Grid>
-        )}
-      </Grid>
-      </Box>
-      
-    </div>
+        </Grid>
+      )}
+    </Box>
   );
 }
