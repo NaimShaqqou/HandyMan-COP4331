@@ -15,7 +15,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as ActionCreators from "../reducerStore/ActionCreators/index";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from"@react-native-async-storage/async-storage";
 
 
 const BookingComponent = ({ service }) => {
@@ -68,6 +68,8 @@ const BookingComponent = ({ service }) => {
 
   function disableDates() {
     let disableDates = convertAvailableDaysToNumbers();
+    if (disableDates.length === 0) return []
+
     var d = new Date(),
       year = d.getYear(),
       daysToDisable = [];
