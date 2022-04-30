@@ -225,7 +225,7 @@ const ServiceInfo = ({ route }) => {
           onChange={handleSheetChanges}
         >
           <ScrollView style={{padding: 16}}>
-            <BookingComponent service={service} />
+            <BookingComponent service={service} modalRef={bottomSheetModalRef} />
           </ScrollView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
