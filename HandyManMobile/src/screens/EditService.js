@@ -119,7 +119,7 @@ const EditService = ({ route }) => {
     const data = new FormData();
     data.append("image", imageFile);
 
-    console.log(data);
+    // console.log(data);
 
     let imageUrl;
 
@@ -135,7 +135,7 @@ const EditService = ({ route }) => {
       var response = JSON.parse(await res.text());
 
       imageUrl = response.imageUrl;
-      console.log(imageUrl);
+      // console.log(imageUrl);
     } catch (error) {
       console.log(error);
     }
@@ -152,9 +152,9 @@ const EditService = ({ route }) => {
   }, []);
 
   // Get the user's information
-  React.useEffect(() => {
-    console.log(currentService);
-  }, [currentService]);
+  // React.useEffect(() => {
+  //   console.log(currentService);
+  // }, [currentService]);
 
   const saveChanges = async () => {
     setLoading(true);
@@ -208,7 +208,7 @@ const EditService = ({ route }) => {
           Pick images
         </Button>
 
-        <ImageSwiper images={service.Images} />
+        <ImageSwiper images={currentService.Images} service={currentService} serviceSetter={(ret) => setCurrentService(ret)} edit={true}/>
         <Box w={"90%"} alignSelf={"center"}>
           <Title style={styles.header}>Title:</Title>
           <TextInput
