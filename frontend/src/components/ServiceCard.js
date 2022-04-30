@@ -81,7 +81,7 @@ export default function ServiceCard(props) {
         }}
       >
         <Grid container spacing={2} sx={{minHeight: 250}}>
-          <Grid item xs={4} sx={{ p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
+          <Grid item xs={4} sx={{ display:"flex", justifyContent: "center", p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#2074d4' }}>
             <Img
               sx={{
                 width: '256px',
