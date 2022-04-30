@@ -140,7 +140,6 @@ const BookingComponent = ({ service }) => {
               status: "success",
               description:
                 "Service request was sent to the handler.",
-              fontFamily: "ComfortaaRegular",
             }
             toast.show({
               render: ({id}) => {
