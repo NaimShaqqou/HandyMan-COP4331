@@ -63,8 +63,9 @@ const SearchPage = () => {
   return (
     <Box
       sx={{
+        // mt: '0px',
         width: '100%',
-        height: '95vh',
+        height: 'calc(100vh - 64px)',
       }}
     >
       {/* Developer Tools */}
@@ -133,6 +134,7 @@ const SearchPage = () => {
           zIndex: 98,
           position: 'sticky',
           pointerEvents: 'none',
+          // bgcolor: 'green',
         }}
       />
 

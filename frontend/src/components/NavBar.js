@@ -132,7 +132,14 @@ const ResponsiveAppBar = (props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" elevation={0} sx={{ bgcolor: '#003c80' }}>
+      <AppBar 
+        position="static" 
+        elevation={0} 
+        sx={{ 
+          bgcolor: '#003c80', 
+          height: '64px' 
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             {
