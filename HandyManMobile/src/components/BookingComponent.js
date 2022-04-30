@@ -1,16 +1,28 @@
-import { Box } from "native-base";
+import { useToast } from "native-base";
+import ToastAlert from "./ToastAlert";
 import {
   TextInput,
   Button,
   Headline,
-  Title,
   Text,
   Subheading,
 } from "react-native-paper";
-import { DatePickerInput, DatePickerModal } from "react-native-paper-dates";
+import {  DatePickerModal } from "react-native-paper-dates";
+import { format } from 'date-fns';
 import React from "react";
 
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as ActionCreators from "../reducerStore/ActionCreators/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 const BookingComponent = ({ service }) => {
+  const user = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+  const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(ActionCreators, dispatch);
+
   const [disabledDates, setDisabledDates] = React.useState([]);
   
   const [startDate, setStartDate] = React.useState("");
@@ -65,8 +77,7 @@ const BookingComponent = ({ service }) => {
     while (!disableDates.includes(d.getDay())) {
       d.setDate(d.getDate() + 1);
     }
-
-    console.log(d.getYear());
+    
     while (d.getYear() === year) {
       if (disableDates.includes(d.getDay())) {
         var pushDate = new Date(d.getTime());
@@ -75,6 +86,85 @@ const BookingComponent = ({ service }) => {
       d.setDate(d.getDate() + 1);
     }
     return daysToDisable;
+  }
+
+  const calculatePrice = () => {
+    let timeDifference = range.endDate.getTime() - range.startDate.getTime()
+
+    // number of days between the two dates
+    let daysDifference = timeDifference / (1000 * 3600 * 24)
+
+    let numWorkingDays = 1
+    let disabledDays = convertAvailableDaysToNumbers()
+    let newDate = new Date(range.startDate)
+
+    for (let i = 1; i < daysDifference; i++) {
+      newDate.setDate(newDate.getDate() + 1)
+
+      if (!disabledDays.includes(newDate.getDay())) {
+        numWorkingDays++
+      }
+    }
+
+    let price = parseInt(service.Price) * numWorkingDays
+    return price
+  }
+
+  const toast = useToast();
+  const doBook = async () => {
+    const serviceRequest = {
+        requesterId: user.userId,
+        serviceId: service._id,
+        price: calculatePrice(),
+        dates: [format(range.startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"), format(range.endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")],
+        description: msg,
+        jwtToken: user.jwtToken
+    }
+
+    console.log(serviceRequest)
+
+    await axios
+      .post("https://myhandyman1.herokuapp.com/api/request-service", serviceRequest)
+      .then(async function (response) {
+        if (response.data.jwtToken === "") {
+          await AsyncStorage.setItem("userInfo", JSON.stringify({...user, jwtToken: ""}));
+          logoutUser()
+          logoutServices()
+        } else {
+          updateCurrentUser({...user, jwtToken: response.data.refreshedToken})
+          await AsyncStorage.setItem("userInfo", JSON.stringify({...user, jwtToken: response.data.refreshedToken}));
+
+          if (response.data.error == "") {
+            const item = {
+              title: "Service Booked",
+              status: "success",
+              description:
+                "Service request was sent to the handler.",
+              fontFamily: "ComfortaaRegular",
+            }
+            toast.show({
+              render: ({id}) => {
+                return <ToastAlert toast={toast} id={id} {...item} />
+              },
+            });
+          } else {
+            const item = {
+              title: "Error",
+              status: "error",
+              description: res.data.error,
+            }
+
+            toast.show({
+              render: ({id}) => {
+                return <ToastAlert toast={toast} id={id} {...item} />
+              },
+            });
+          }
+        }
+      })
+      .catch(function (response) {
+        console.log(response)
+      })
   }
 
   const [range, setRange] = React.useState({
@@ -149,7 +239,7 @@ const BookingComponent = ({ service }) => {
       >
         Pick Dates
       </Button>
-      <Button mode="contained" style={{ marginTop: 16 }}>
+      <Button mode="contained" style={{ marginTop: 16 }} onPress={() => doBook()}>
         Book!
       </Button>
     </>
