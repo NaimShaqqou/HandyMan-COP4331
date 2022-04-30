@@ -27,14 +27,14 @@ const storeInfo = async (userInfo, serviceInfo) => {
     await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
 
     if (serviceInfo != null) {
-    await AsyncStorage.getItem("serviceInfo").then((data) => {
-      // Update whats already in the storage
-      data = JSON.parse(data);
-      data.push(serviceInfo);
+      await AsyncStorage.getItem("serviceInfo").then((data) => {
+        // Update whats already in the storage
+        data = JSON.parse(data);
+        data.push(serviceInfo);
 
-      AsyncStorage.setItem("serviceInfo", JSON.stringify(data));
-    });
-  }
+        AsyncStorage.setItem("serviceInfo", JSON.stringify(data));
+      });
+    }
   } catch (err) {
     console.log(err);
   }
@@ -66,14 +66,14 @@ const AddService = () => {
   const navigation = useNavigation();
 
   const [currentService, setCurrentService] = React.useState({
-                                                    Title: "",
-                                                    Images: [],
-                                                    Address: "",
-                                                    Description: "",
-                                                    Price: 0,
-                                                    DaysAvailable: [],
-                                                    Category: "",
-                                                  });
+    Title: "",
+    Images: [],
+    Address: "",
+    Description: "",
+    Price: 0,
+    DaysAvailable: [],
+    Category: "",
+  });
   const [loading, setLoading] = React.useState(false);
 
   const updateService = (name, value) => {
@@ -171,22 +171,22 @@ const AddService = () => {
       .then((response) => {
         console.log(response);
         if (response.data.jwtToken === "") {
-          storeInfo({...user, jwtToken: ""}, null)
-          logoutUser()
-          logoutServices()
+          storeInfo({ ...user, jwtToken: "" }, null);
+          logoutUser();
+          logoutServices();
         } else {
           const newUser = {
             ...user,
             jwtToken: response.data.refreshedToken,
           };
-          
+
           // redux
           updateServices(currentService);
           updateCurrentUser(newUser);
-          
+
           // async storage
           storeInfo(newUser, currentService); // store to localstorage
-          
+
           console.log("Saved successfully!");
         }
       })
@@ -201,9 +201,17 @@ const AddService = () => {
   return (
     <>
       <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
-
-        <ImageSwiper images={currentService.Images} service={currentService} serviceSetter={(ret) => setCurrentService(ret)} edit={true}/>
-        <Button style={{alignSelf: 'flex-start', marginLeft: 8, width: '46%'}} onPress={() => pickImage()} mode="contained">
+        <ImageSwiper
+          images={currentService.Images}
+          service={currentService}
+          serviceSetter={(ret) => setCurrentService(ret)}
+          edit={true}
+        />
+        <Button
+          style={{ alignSelf: "flex-start", marginLeft: 8, width: "46%" }}
+          onPress={() => pickImage()}
+          mode="contained"
+        >
           Pick images
         </Button>
         <Box w={"90%"} alignSelf={"center"}>
@@ -231,7 +239,7 @@ const AddService = () => {
           <Title style={styles.header}>Address:</Title>
           <Box mx={"8px"} mt={"16px"}>
             <GooglePlacesInput
-              style={{ fontFamily: "ComfortaaRegular" }}
+              // style={{ fontFamily: "ComfortaaRegular" }}
               ref={googleAutocompleteRef}
               passLocation={(address) => updateService("Address", { address })}
               mode="flat"
@@ -311,13 +319,14 @@ const AddService = () => {
 
           <Button
             disabled={
-              currentService.Title == "" || 
-              currentService.Description == "" || 
-              currentService.Address == "" || 
-              currentService.Price == null || 
+              currentService.Title == "" ||
+              currentService.Description == "" ||
+              currentService.Address == "" ||
+              currentService.Price == null ||
               currentService.Category == "" ||
               currentService.DaysAvailable == [] ||
-              currentService.Images == []}
+              currentService.Images == []
+            }
             style={{ marginTop: 20, marginLeft: 8 }}
             onPress={() => saveChanges()}
             loading={loading}
