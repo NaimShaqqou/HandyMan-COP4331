@@ -212,8 +212,12 @@ export default function Map(props) {
   const onChange = (mapState/* , bounds, marginBounds */) => {
     // console.log(props.center);
     // console.log(mapState);
-    props.updateMargin(mapState.marginBounds);
     // console.log(mapRef.current);
+    props.updateMargin(mapState.marginBounds);
+    if (props.autoSearch) {
+      console.log(218);
+      props.triggerSearch();
+    }
   }
 
   return (

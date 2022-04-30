@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-// TODO: enter to select a dropdown option
 // TODO: location dropdown is different from the other two dropdowns
 // TODO: when searching from homepage, contents of search bar should carry on to search page.
 
@@ -32,23 +31,37 @@ const emptySearch = {
 };
 
 function SearchBar(props) {
-  // console.log('Rendering SearchBar.js');
   const [predictions, setPredictions] = useState(new Array());
   const [search, setSearch] = useState(emptySearch);
   const [userLocation, setUserLocation] = useState(null);
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [region, setRegion] = useState(null);
-  const [status, setStatus] = useState(null);
 
+  // Get user location on first time render
   useEffect(() => {
     updateCurLocation();
 
+    // Clearing the state fixes error.
     return () => {
       setPredictions(new Array());
       setSearch(emptySearch)
     }
   }, []);
+
+  useEffect(async () => {
+    let res = await marginSearchAPI({
+      marginBounds: props.mapMargin,
+      search: search.keyword,
+      category: search.category
+    });
+
+    if (window.location.pathname == '/search') {
+      props.updateRes({
+        res: res, 
+        fitBoundsTrigger: props.fitBoundsTrigger
+      });
+    } else {
+      navigate("/search", { state: { res: res} });
+    }
+  }, [props.searchTrigger]);
 
   let navigate = useNavigate();
 
@@ -110,83 +123,81 @@ function SearchBar(props) {
     setSearch({...search, location: userLocation});
   }
 
+  const marginSearchAPI = async (body) => {
+    let res = null;
+    let js = JSON.stringify(body);
+    // console.log('sending:');
+    // console.log(obj);
+
+    try {
+      const response = await fetch(bp.buildPath("api/search-on-map-change"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      res = JSON.parse(await response.text());
+    } catch (e) {
+      console.log(e.toString());
+    }
+    return res;
+  }
+
+  const regularSearchAPI = async (body) => {
+    let res = null;
+    let js = JSON.stringify(body);
+    // console.log('sending:');
+    // console.log(obj);
+
+    try {
+      const response = await fetch(bp.buildPath("api/search-services"), {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      res = JSON.parse(await response.text());
+    } catch (e) {
+      console.log(e.toString());
+    }
+    return res;
+  }
+
   const doSearch = async (e) => {
     e.preventDefault();
 
     // Convert "15 miles" to 15
     let maxDist = parseInt(search.distance.split(' ')[0]);
 
-    var obj = {
+    let body = {
       search: search.keyword,
       category: search.category,
       location: search.location,
       maxDist: maxDist,
     };
 
-    let js = JSON.stringify(obj);
-    console.log('search input:');
-    console.log(obj);
-    
-    if (isNaN(obj.maxDist))
-      obj.maxDist = 15;
+    if (isNaN(body.maxDist))
+      body.maxDist = 15;
 
     let res = null;
+
+    // Initialize to current fitBoundsTrigger.
+    // Changing to a different value will trigger fitBounds.
     let fitBoundsTrigger = props.fitBoundsTrigger;
 
-    if (window.location.pathname == '/search' && obj.location == '') {
-      obj = {
+    if (window.location.pathname == '/search' && body.location == '') {
+      res = await marginSearchAPI({
         marginBounds: props.mapMargin,
         search: search.keyword,
         category: search.category
-      };
-
-      js = JSON.stringify(obj);
-      console.log('sending:');
-      console.log(obj);
-
-      try {
-        const response = await fetch(bp.buildPath("api/search-on-map-change"), {
-          method: "POST",
-          body: js,
-          headers: { "Content-Type": "application/json" },
-        });
-        res = JSON.parse(await response.text());
-
-      } catch (e) {
-        console.log(e.toString());
-        return;
-      }
+      });
     } else {
-      if (obj.location == '') {
-        obj.location = 'Orlando, FL';
+      if (body.location == '')
+        body.location = userLocation ? userLocation : 'Orlando, FL';
 
-        if (userLocation)
-          obj.location = userLocation;
-      }
-      js = JSON.stringify(obj);
-      console.log('sending:');
-      console.log(obj);
-  
-      try {
-        const response = await fetch(bp.buildPath("api/search-services"), {
-          method: "POST",
-          body: js,
-          headers: { "Content-Type": "application/json" },
-        });
-        res = JSON.parse(await response.text());
-
-        fitBoundsTrigger = Math.random();
-      } catch (e) {
-        console.log(e.toString());
-        return;
-      }
+      fitBoundsTrigger = Math.random();
+      res = await regularSearchAPI(body);
     }
 
-    // Sort by title
-    res.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
-
     if (window.location.pathname == '/search') {
-      // props.updateRes();
       props.updateRes({res: res, fitBoundsTrigger: fitBoundsTrigger});
     } else {
       navigate("/search", { state: { res: res} });

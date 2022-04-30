@@ -35,9 +35,9 @@ export default function Switch({value, onClick, style, width, height, text}) {
         pointerEvents: 'auto',
       }}
     >
-      {/* <Typography sx={{ fontSize: '10px' }}>
+      <Typography sx={{ fontSize: '10px' }}>
         {text}
-      </Typography> */}
+      </Typography>
 
       <motion.div 
         className="handle" 

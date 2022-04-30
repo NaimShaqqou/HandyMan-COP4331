@@ -33,6 +33,10 @@ import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'frame
 export default function SearchResults(props) {
   let navigate = useNavigate();
 
+  // Sort by title
+  if (props.results)
+    props.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
+
   let [showResults, setShowResults] = useState(true);
 
   const theme = createTheme({

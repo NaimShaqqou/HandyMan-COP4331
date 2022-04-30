@@ -33,6 +33,7 @@ const SearchPage = () => {
     res: state && state.res ? state.res : [],
     fitBoundsTrigger: 0,
   });
+  let [searchTrigger, setSearchTrigger] = useState(0);
   let [mapMargin, setMapMargin] = useState({});
 
   // console.log(mapMargin);
@@ -56,17 +57,8 @@ const SearchPage = () => {
   const updateResFromSearchbar = (newResObj) => {
     setResObj(newResObj);
   };
-  // let center = {
-  //   lat: 28.602,
-  //   lng: -81.200,
-  // };
 
-  // let res = resObj.res;
-
-  // if (res && res.searchLocationCoords)
-  //   center = res.searchLocationCoords;
-
-  console.log(autoSearch);
+  const triggerSearch = () => setSearchTrigger(Math.random());
 
   return (
     <Box
@@ -75,6 +67,8 @@ const SearchPage = () => {
         height: '95vh',
       }}
     >
+      {/* Developer Tools */}
+      {/* <Button onClick={triggerSearch}>Search Current Map</Button> */}
       <Box
         sx={{
           height: '100%'
@@ -90,6 +84,8 @@ const SearchPage = () => {
           resObj={resObj}
           // center={center}
           updateMargin={updateMapMarginFromChild}
+          triggerSearch={triggerSearch}
+          autoSearch={autoSearch}
         />
       </Box>
 
@@ -101,12 +97,17 @@ const SearchPage = () => {
           pointerEvents: 'none',
         }}
       >
-        <SearchBar updateRes={updateResFromSearchbar} mapMargin={mapMargin} fitBoundsTrigger={resObj.fitBoundsTrigger} />
+        <SearchBar 
+          updateRes={updateResFromSearchbar} 
+          mapMargin={mapMargin} 
+          fitBoundsTrigger={resObj.fitBoundsTrigger}
+          searchTrigger={searchTrigger}
+        />
 
         <Switch 
           value={autoSearch} 
           onClick={toggleAutoSearch}
-          width={90}
+          width={100}
           height={60}
           style={{
             // width: '160px',
@@ -115,7 +116,7 @@ const SearchPage = () => {
             top: 0,
             left: -100,
           }}
-          text="Auto Search"
+          text=""
         />
       </Container>
 
