@@ -126,8 +126,9 @@ const SearchPage = () => {
         searchResults = {state}
         results={(resObj.res && resObj.res.error == '') ? resObj.res.results : []}
         sx={{
-          height: '75vh',
-          mt: '-15vh',
+          // width: '500px',
+          height: '75%',
+          mt: '-200px',
           ml: '3%',
           zIndex: 98,
           position: 'sticky',

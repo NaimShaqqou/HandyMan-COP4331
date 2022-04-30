@@ -2,21 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import {
-  List,
-  ListItem,
   Divider,
-  ListItemText,
-  ListSubheader,
-  ListItemAvatar,
-  Avatar,
   Typography,
   Box,
-  Button,
-  Fade,
-  Collapse,
-  Grid,
-  IconButton,
-  Tooltip,
   createTheme,
   ThemeProvider,
   Stack,
@@ -28,7 +16,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import SearchResultCard from './SearchResultCard';
 
-import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchResults(props) {
   let navigate = useNavigate();
@@ -55,8 +43,6 @@ export default function SearchResults(props) {
     <Box
       sx={{
         ...props.sx,
-        // borderRadius: 10
-        // p: 10
       }}
     >
       <Stack direction='row'
@@ -94,7 +80,7 @@ export default function SearchResults(props) {
               <Paper
                 elevation={10}
                 sx={{
-                  width: {md: '350px', lg: '450px'},
+                  width: {md: '400px'},
                   height: '100%',
                   bgcolor: '#fff',
                   pointerEvents: 'auto',
