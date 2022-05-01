@@ -26,8 +26,11 @@ export default function ServicePage() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [msg, setMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState(false);
-  const [failMsg, setFailMsg] = useState(false);
+  const [alert, setAlert] = useState({
+    show: false,
+    severity: 'success',
+    msg: '',
+  });
   const [reviews, setReviews] = useState([]);
   const [fetchedData, setFetchedData] = useState(false)
   const user = useSelector((state) => state.user);
@@ -65,11 +68,34 @@ export default function ServicePage() {
 
   async function doBook(event) {
     event.preventDefault();
-    if (user.jwtToken === "") {
-      setFailMsg(true)
-      return
+
+    if (user.jwtToken === '') {
+      setAlert({
+        show: true,
+        severity: 'error',
+        msg: 'Please log in first.',
+      })
+      return;
     }
-    if (startDate === null || endDate === null) return;
+    
+    if (msg === '') {
+      setAlert({
+        show: true,
+        severity: 'error',
+        msg: 'Please provide a description.',
+      })
+      return;
+    }
+    
+    if (startDate === null || endDate === null) {
+      setAlert({
+        show: true,
+        severity: 'error',
+        msg: 'Please select a start/end date.',
+      })
+      return;
+    }
+
     calculatePrice();
     let obj = {
       requesterId: user.userId,
@@ -97,14 +123,21 @@ export default function ServicePage() {
         updateCurrentUser({ ...user, jwtToken: refreshedToken })
         console.log(res);
 
-
         if (res.error == "") {
-          setSuccessMsg(true);
+          setAlert({
+            show: true,
+            severity: 'success',
+            msg: 'Appointment successfully booked!',
+          });
         } else {
-
+          console.log(res.error);
+          setAlert({
+            show: true,
+            severity: 'error',
+            msg: res.error,
+          });
         }
       }
-
     } catch (e) {
       console.log(e.toString());
       return;
@@ -285,125 +318,103 @@ export default function ServicePage() {
               </Stack>
             </ Paper>
           </Grid>
+          
+          <Grid item xs={3.5}>
+            <Paper
+              elevation={5}
+              sx={{
+                textAlign: 'center',
+                p: 3,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark' ? '#1A2027' : 'white', alignItems: "center"
+              }}
+            >
+              <TextField
+                value={msg}
+                onChange={(event) => { setMsg(event.target.value); }}
+                placeholder="Message to Handler"
+                multiline
+                maxRows={4}
+                sx={{ width: '100%' }}
+              />
 
-            <Grid item xs={3.5}>
-              <Paper
-                elevation={5}
-                sx={{
-                  textAlign: 'center',
-                  p: 3,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#1A2027' : 'white', alignItems: "center"
-                }}
-              >
-                <TextField
-                  value={msg}
-                  onChange={(event) => { setMsg(event.target.value); }}
-                  placeholder="Message to Handler"
-                  multiline
-                  maxRows={4}
-                  sx={{ width: '100%' }}
-                />
+              <Box m={3} />
 
-                <Box m={3} />
-
-                <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        label="Start Date"
-                        value={startDate}
-                        shouldDisableDate={disableDates}
-                        onChange={(newValue) => { setStartDate(newValue); }}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-
-                  </Grid>
-
-                  <Grid item>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        label="End Date"
-                        value={endDate}
-                        shouldDisableDate={disableDates}
-                        minDate={startDate}
-                        onChange={(newValue) => { setEndDate(newValue); }}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-
-                  </Grid>
-
-                  <Grid item xs={4} >
-                    <Box textAlign='center' sx={{ height: '100%' }}>
-                      <Button
-                        align="center"
-                        color="primary"
-                        // size="large"
-                        type="submit"
-                        variant="contained"
-                        onClick={doBook}
-                        sx={{ height: '100%' }}
-                      >
-                        Book!
-                      </Button>
-                    </Box>
-
-                  </Grid>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="Start Date"
+                      value={startDate}
+                      shouldDisableDate={disableDates}
+                      onChange={(newValue) => { setStartDate(newValue); }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
 
                 </Grid>
 
+                <Grid item>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="End Date"
+                      value={endDate}
+                      shouldDisableDate={disableDates}
+                      minDate={startDate}
+                      onChange={(newValue) => { setEndDate(newValue); }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
 
-                <Box m={3} />
+                </Grid>
 
-                <Box sx={{ width: '100%' }}>
-                  <Collapse in={successMsg}>
-                    <Alert
-                      action={
-                        <IconButton
-                          aria-label="close"
-                          color="inherit"
-                          size="small"
-                          onClick={() => {
-                            setSuccessMsg(false);
-                          }}
-                        >
-                          <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                      }
-                      sx={{ mb: 2 }}
+                <Grid item xs={4} >
+                  <Box textAlign='center' sx={{ height: '100%' }}>
+                    <Button
+                      align="center"
+                      color="primary"
+                      // size="large"
+                      type="submit"
+                      variant="contained"
+                      onClick={doBook}
+                      sx={{ height: '100%' }}
                     >
-                      Appointment successfully booked!
-                    </Alert>
-                  </Collapse>
-                </Box>
+                      Book
+                    </Button>
+                  </Box>
 
-                <Box sx={{ width: '100%' }}>
-                  <Collapse in={failMsg}>
-                    <Alert
-                      severity="error"
-                      action={
-                        <IconButton
-                          aria-label="close"
-                          color="inherit"
-                          size="small"
-                          onClick={() => {
-                            setFailMsg(false);
-                          }}
-                        >
-                          <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                      }
-                      sx={{ mb: 2 }}
-                    >
-                      Must be logged in to book!
-                    </Alert>
-                  </Collapse>
-                </Box>
+                </Grid>
 
-              </Paper>
-            </Grid>
+              </Grid>
+
+
+              <Box m={3} />
+
+              <Box sx={{ width: '100%' }}>
+                <Collapse in={alert.show}>
+                  <Alert
+                    severity={alert.severity}
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setAlert(prev => ({ ...prev, show: false}));
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    {alert.msg}
+                  </Alert>
+                </Collapse>
+              </Box>
+
+            </Paper>
+          </Grid>
         </Grid>
 
       </Container>
