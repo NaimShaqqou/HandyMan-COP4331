@@ -33,6 +33,7 @@ export default function ServicePage() {
   });
   const [reviews, setReviews] = useState([]);
   const [fetchedData, setFetchedData] = useState(false)
+  const [price, setPrice] = useState(0);
   const user = useSelector((state) => state.user);
   const service = state ? state.service : null;
   const navigate = useNavigate()
@@ -64,8 +65,6 @@ export default function ServicePage() {
     return <></>
   }
 
-
-
   async function doBook(event) {
     event.preventDefault();
 
@@ -96,7 +95,6 @@ export default function ServicePage() {
       return;
     }
 
-    calculatePrice();
     let obj = {
       requesterId: user.userId,
       serviceId: service._id,
@@ -114,7 +112,7 @@ export default function ServicePage() {
         headers: { "Content-Type": "application/json" },
       });
       var res = JSON.parse(await response.text());
-      if (res.refreshedToken === "") {
+      if (res.jwtToken === "") {
         logoutUser()
         logoutServices()
         navigate("../login")
@@ -195,6 +193,11 @@ export default function ServicePage() {
 
     // To calculate the no. of days between two dates
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    
+    // Fixes bug when endDate is set to startDate on error
+    if (Difference_In_Days % 1 === 0) {
+      Difference_In_Days = Difference_In_Days + 0.001
+    }
 
     let numberOfWorkingDays = 1
     let disabledDays = convertAvailableDaysToNumbers()
@@ -208,7 +211,7 @@ export default function ServicePage() {
       }
     }
     let price = parseInt(service.Price) * numberOfWorkingDays
-    return price;
+    return price
   }
 
   function srcset(image, size, rows = 1, cols = 1) {
@@ -290,7 +293,13 @@ export default function ServicePage() {
                     {service.Description}
                   </Typography>
                   <Typography sx={{ pb: 2 }} variant="h5" fontWeight="bold">
-                    Price:
+                    Address:
+                  </Typography>
+                  <Typography sx={{ pb: 2 }} variant='h5'>
+                    {service.Address}
+                  </Typography>
+                  <Typography sx={{ pb: 2 }} variant="h5" fontWeight="bold">
+                    Price per Day:
                   </Typography>
                   <Typography variant='h5'>
                     ${service.Price}
@@ -345,6 +354,7 @@ export default function ServicePage() {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       label="Start Date"
+                      minDate={new Date()}
                       value={startDate}
                       shouldDisableDate={disableDates}
                       onChange={(newValue) => { setStartDate(newValue); }}
@@ -361,11 +371,18 @@ export default function ServicePage() {
                       value={endDate}
                       shouldDisableDate={disableDates}
                       minDate={startDate}
-                      onChange={(newValue) => { setEndDate(newValue); }}
+                      onError={(error) => setEndDate(startDate)}
+                      onChange={(newValue) => { 
+                        setEndDate(newValue);
+                      }}
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
 
+                </Grid>
+
+                <Grid item>
+                  <Typography>Estimated Price: ${startDate !== null && endDate !== null && endDate >= startDate ? calculatePrice() : 0}</Typography>
                 </Grid>
 
                 <Grid item xs={4} >
