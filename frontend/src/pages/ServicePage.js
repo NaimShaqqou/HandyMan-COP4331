@@ -92,6 +92,14 @@ export default function ServicePage() {
               <Typography variant='h2'>
                 {service.Title}
               </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
+                <Typography sx={{ color: '#0041ab', display: 'inline' }} variant='h6'>
+                  {service.Address}
+                </Typography>
+                <Typography sx={{ color: '#0041ab', display: 'inline' }} variant='h5'>
+                  ${service.Price} per day
+                </Typography>
+              </Box>
               <Stack
                 direction="column"
                 divider={window.width < 900 ? (<div></div>) : (<Divider orientation="horizontal" flexItem />)}
@@ -120,20 +128,8 @@ export default function ServicePage() {
                   <Typography variant="h5" sx={{ pb: 2 }} fontWeight="bold">
                     Description:
                   </Typography>
-                  <Typography sx={{ pb: 2 }} variant='h5'>
+                  <Typography sx={{ pb: 1 }} variant='h6'>
                     {service.Description}
-                  </Typography>
-                  <Typography sx={{ pb: 2 }} variant="h5" fontWeight="bold">
-                    Address:
-                  </Typography>
-                  <Typography sx={{ pb: 2 }} variant='h5'>
-                    {service.Address}
-                  </Typography>
-                  <Typography sx={{ pb: 2 }} variant="h5" fontWeight="bold">
-                    Price per Day:
-                  </Typography>
-                  <Typography variant='h5'>
-                    ${service.Price}
                   </Typography>
                 </Box>
                 <Box>
