@@ -1,148 +1,113 @@
-// TEMPORARY CODE - TO BE FIXED
-
-
-import * as React from 'react';
-import { useState } from 'react';
+import { Center, Box, Divider, View } from "native-base";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Button, Card, Title, Paragraph, Text, useTheme} from 'react-native-paper';
-import { ImageBackground, Dimensions, StyleSheet, View, FlatList, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
-import { colors, Icon } from 'react-native-elements';
-import { Center, Column, ListItem } from 'native-base';
+import { Text, Card } from "react-native-paper";
+//import Icon from "react-native-vector-icons/FontAwesome";
+import axios from "axios";
+import {
+  ImageBackground,
+  Dimensions,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { colors } from "react-native-elements";
+import UserRequestedService from "../components/UserRequestedService";
 
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
-
+const windowHeight = Dimensions.get("window").height;
 const { width, height } = Dimensions.get("screen");
 
-const Services = () => {
-  const { colors } = useTheme();
-  const user = useSelector((state) => state.user)
-  const services = useSelector((state) => state.services).services;
+const Bookings = () => {
+  const user = useSelector((state) => state.user);
+  const [bookings, setBookings] = React.useState([]);
+  const [requestedService, setRequestedService] = React.useState([]);
+  const [service, setService] = React.useState([]);
+  //const [serviceId, setServiceId] = React.useState([]);
+  const [fetchedData, setFetchedData] = React.useState(false);
 
-  const navigation = useNavigation();
-
-  const doDelete = async (event) => {
-    
-  }
-
-  const onAddServiceTransition = () => {
-    navigation.navigate("AddService");
-  };
-
-  const onEditServiceTransition = () => {
-    navigation.navigate("EditService");
-  };
-  
-  return (
-    <ImageBackground
-      source={require("../../assets/profile-screen-bg.png")}
-      style={{
-        width: width,
-        height: height,
-        padding: 0,
-        zIndex: 1,
-      }}
-      imageStyle={{ width: width, height: height }}
-      >
-      <Text>{"\n"}</Text>
-      
-      <Button onPress={onAddServiceTransition} mode ='outlined' style = {styles.addButton}>
-        <Icon name="add-circle-outline" size = {40} color={"white"} style ={{marginRight: 0}}/>
-      </Button>
-
-
-      <ScrollView contentContainerStyle = {styles.viewContainer}>
-        { 
-          Object.values(services).map(item => (
-            <Text key={item._id}>
-              <Card style = {styles.menuContainer}>
-                <Card.Title 
-                  titleStyle={{justifyContent:'center', alignItems:'center'}}
-                  title = {item.Title} 
-                  subtitle = {item.Description}
-                />
-                <Card.Cover style = {{ borderRadius: 10 }} source={{ uri: 'https://picsum.photos/700' }} />
-                <Card.Content>
-                  <Title></Title>
-                  <View style = {styles.cardContentView}>
-                    <Icon name="credit-card"  style ={{marginRight: 0, }}/>
-                    <Text>  Price: ${item.Price}</Text>
-                  </View>
-                  <View style = {styles.cardContentView}>
-                    <Icon name="home-repair-service" style ={{marginRight: 0, }}/>
-                    <Text>  Category: {item.Category}</Text>
-                  </View>
-                  <View style = {styles.cardContentView}>
-                    <Icon name="event" style ={{marginRight: 0, }}/>
-                    <Text>  Days Available: {item.DaysAvailable}</Text>
-                  </View>
-                  <View style = {styles.cardContentView}>
-                    <Icon name="place" style ={{marginRight: 0, }}/>
-                    <Text>  Address: {item.Address}</Text>
-                  </View>
-                </Card.Content>
-                <Card.Actions>
-
-                  <Button onPress={onEditServiceTransition}>
-                    Edit
-                  </Button>
-
-                  <Button color = {colors.error}>
-                    Delete
-                  </Button>
-
-                </Card.Actions>
-              </Card>{"\n"}
-            </Text>
-          ))
+  useEffect(() => {
+    let mounted = true;
+    axios
+      .post("https://myhandyman1.herokuapp.com/api/services-user-booked", {
+          requesterId: user.userId,
+          jwtToken: user.jwtToken
+      })
+      .then((response) => {
+        if (mounted) {
+          setBookings(response.data.results);
+          setFetchedData(true);
         }
-        <Text>{"\n"}{"\n"}{"\n"}</Text>
-      </ScrollView>
-    </ImageBackground>
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-  )
+    return () => (mounted = false);
+  }, []);
+
+  //const renderItem = useCallback(({ item }) => <Booking review={item} />);
+  return (
+    <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
+    <ScrollView
+      contentContainerStyle={styles.viewContainer}
+    >
+      {Object.values(bookings).map((item, index) => (
+        <Text key={item._id}>
+          <UserRequestedService item={item} key={index.toString()}/>
+          {"\n"}
+        </Text>
+      ))}
+      <Text>
+        hi
+        {"\n"}
+        {"\n"}
+        {"\n"}
+      </Text>
+    </ScrollView>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-  menuContainer:{
-    display: 'flex',
+  menuContainer: {
+    display: "flex",
     padding: 10,
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 20,
     borderColor: colors.primary,
-    borderWidth: 3,
+    borderWidth: 5,
     elevation: 5,
-    shadowColor: '#470000',
+    shadowColor: "#470000",
     shadowRadius: 10,
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.4,
-    justifyContent:'center',
-    alignItems: 'stretch',
+    justifyContent: "center",
+    alignItems: "stretch",
     width: width,
-    maxWidth: '100%',
+    maxWidth: "100%",
   },
 
-  viewContainer:{
-    flexDirection: 'column',
-    justifyContent:'space-between',
-    alignItems: 'center',
+  viewContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
     margin: 10,
     width: width,
-    maxWidth: '95%',
+    maxWidth: "95%",
   },
 
-  addButton:{
-    alignItems: 'center',
+  addButton: {
+    alignItems: "center",
   },
 
-  cardContentView:{
-    flexDirection: 'row',
-    alignItems: 'center',
+  cardContentView: {
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 2,
     width: width,
-    maxWidth: '95%',
-  }
-})
-  
-export default Services;
+    maxWidth: "95%",
+  },
+});
+
+export default Bookings;
