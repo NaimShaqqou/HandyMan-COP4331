@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from 'react-router-dom';
 import UserRequestedService from "../components/UserRequestedService";
+import BouncyCardAnimation from '../components/BouncyCardAnimation'
 import axios from "axios";
 import { motion } from "framer-motion";
 
@@ -62,45 +63,13 @@ export default function UserRequestedServices() {
         return () => mounted = false;
   }, []);
 
-
-  
-  function AnimatedDiv({children}) {
-    const cardVariants = {
-      offscreen: {
-        y: 500,
-        opacity: 0,
-      },
-      onscreen: {
-        y: 0,
-        opacity: 1,
-        transition: {
-          type: "spring",
-          bounce: 0.4,
-          duration: 0.8
-        }
-      }
-    };
-  
-    return (
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.8}}
-      >
-        <motion.div  variants={cardVariants}>
-          {children}
-        </motion.div>
-      </motion.div>
-    );
-  }
-
   return (
     <Box m={10}>
       {requestedServices.length === 0 && fetchedData ? <EmptyBoxArt/> : 
         requestedServices.map((requestedService, index) => 
-        <AnimatedDiv key={index}>
+        <BouncyCardAnimation key={index}>
           <UserRequestedService requestedService={requestedService} />
-        </AnimatedDiv>
+        </BouncyCardAnimation>
       )}
     </Box>
   );

@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/NavBar';
 import { motion, Variants } from "framer-motion";
 
+import BouncyCardAnimation from '../components/BouncyCardAnimation';
 
 export default function ServicesPage() {
   let services = useSelector((state) => state.services);
@@ -19,38 +20,6 @@ export default function ServicesPage() {
   function addService() {
     navigate("../add-service")
   }
-
-  
-  function AnimatedDiv({children}) {
-    const cardVariants = {
-      offscreen: {
-        y: 500,
-        opacity: 0,
-      },
-      onscreen: {
-        y: 0,
-        opacity: 1,
-        transition: {
-          type: "spring",
-          bounce: 0.4,
-          duration: 0.8
-        }
-      }
-    };
-  
-    return (
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.8 }}
-      >
-        <motion.div variants={cardVariants}>
-          {children}
-        </motion.div>
-      </motion.div>
-    );
-  }
-
 
   return (
     <Box m={4}>
@@ -63,9 +32,9 @@ export default function ServicesPage() {
       <Box m={4} />
 
       {services.map((service, index) => (
-        <AnimatedDiv key={index}>
+        <BouncyCardAnimation key={index}>
           <ServiceCard service={service} />
-        </AnimatedDiv>
+        </BouncyCardAnimation>
       ))}
     </Box>
   );

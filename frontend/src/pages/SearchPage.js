@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../map.css';
 import jwt_decode from "jwt-decode";
 import Navbar from '../components/NavBar';
@@ -11,30 +11,27 @@ import Map from '../components/GoogleMapReactComponent';
 
 import {
   Container,
-  Grid,
   Box,
-  Paper,
-  Stack,
-  Button
 } from "@mui/material";
 
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-
-import { motion, AnimatePresence, LayoutGroup, AnimateSharedLayout } from 'framer-motion';
-
 const SearchPage = () => {
+  console.log('SearchPage');
   const { state } = useLocation();
   
-  let [autoSearch, setAutoSearch] = useState(true);
+  let [autoSearch, setAutoSearch] = useState(false);
   let [focusItem, setFocusItem] = useState(null);
-  // let [res, setRes] = useState(state && state.res ? state.res : []);
   let [resObj, setResObj] = useState({
     res: state && state.res ? state.res : [],
     fitBoundsTrigger: 0,
   });
   let [searchTrigger, setSearchTrigger] = useState(0);
   let [mapMargin, setMapMargin] = useState({});
+
+  // useEffect(() => {
+  //   if (state.res) {
+  //     console.log(43);
+  //   }
+  // }, []);
 
   // console.log(mapMargin);
 

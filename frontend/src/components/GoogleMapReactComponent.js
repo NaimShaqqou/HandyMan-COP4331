@@ -173,15 +173,12 @@ export default function Map(props) {
   useEffect(() => {
     if (mapRef.current && mapsRef.current) {
       fitToPlaces();
-      console.log(164);
 
       if (results.length == 0)
         mapRef.current.setCenter(props.center);
-      
     }
-
   }, [props.resObj.fitBoundsTrigger]);
-  
+
   useEffect(() => {
     if (props.focus && mapRef.current) {
       // mapRef.current.setCenter(props.center);
@@ -211,11 +208,12 @@ export default function Map(props) {
 
   const onChange = (mapState/* , bounds, marginBounds */) => {
     // console.log(props.center);
-    // console.log(mapState);
     // console.log(mapRef.current);
+    console.log("map change");
+    console.log(mapState);
     props.updateMargin(mapState.marginBounds);
     if (props.autoSearch) {
-      console.log(218);
+      console.log('auto searching');
       props.triggerSearch();
     }
   }
