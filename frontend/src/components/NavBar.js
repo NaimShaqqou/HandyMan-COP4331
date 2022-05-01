@@ -9,6 +9,7 @@ import SearchBar from "./SearchBar"
 import { useNavigate, useLocation } from "react-router-dom";
 import BackButton from "./BackButton"
 import jwt_decode from "jwt-decode";
+import axios from 'axios';
 import '../Title.css';
 import {
   AppBar,
@@ -38,8 +39,9 @@ const loggedInSettings = ['Home', 'Search', 'Profile', 'Services', 'Bookings', '
 const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const { logoutUser } = bindActionCreators(actionCreators, dispatch);
+  const { logoutUser, updateCurrentUser } = bindActionCreators(actionCreators, dispatch);
   let location = useLocation()
+  const bp = require("./Path");
 
   const pathname = window.location.pathname;
   const navigate = useNavigate()
@@ -56,11 +58,24 @@ const ResponsiveAppBar = (props) => {
       'Bookings': "../user-requested-services",
     }
 
-    // call the redux function
-    if (setting === "Logout")
+    if (user.jwtToken === "" && (setting === "Search" || setting === "Home")) {
+      navigate(mappings[setting]);
+    } else if (setting === "Logout") {
       logoutUser();
-
-    navigate(mappings[setting]);
+      navigate(mappings[setting]);
+    } else {
+      axios.post(bp.buildPath("api/refresh-token"), { jwtToken: user.jwtToken }).then((response) => {
+        if (response.data.refreshedToken === "") {
+          logoutUser();
+          navigate(mappings["Logout"]);
+        } else {
+          updateCurrentUser({ ...user, jwtToken: response.data.refreshedToken })
+          navigate(mappings[setting]);
+        }
+      }).catch((error) => {
+        console.log(error.message)
+      })
+    }
   };
 
   let userObj = {
@@ -117,7 +132,14 @@ const ResponsiveAppBar = (props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" elevation={0} sx={{ bgcolor: '#003c80' }}>
+      <AppBar 
+        position="static" 
+        elevation={0} 
+        sx={{ 
+          bgcolor: '#003c80', 
+          height: '64px' 
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             {

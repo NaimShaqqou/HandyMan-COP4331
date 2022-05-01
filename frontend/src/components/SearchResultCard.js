@@ -83,7 +83,7 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
         }}
       >
         <Grid item xs={3} sx={{ 
-            marginRight: '10px', 
+            marginRight: '20px', 
             // bgcolor: 'green' 
           }} 
         >

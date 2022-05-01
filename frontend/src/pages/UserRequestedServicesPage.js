@@ -1,18 +1,14 @@
-import { Button, Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import ServiceCard from "../components/ServiceCard";
-import { Container } from "@mui/material";
-import { Box, Paper ,Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from 'react-router-dom';
-import ResponsiveAppBar from '../components/NavBar';
 import UserRequestedService from "../components/UserRequestedService";
 import axios from "axios";
-import { motion, Variants } from "framer-motion";
-import emptyBookings from "../images/empty.png"
+import { motion } from "framer-motion";
 
+import { Box, Grid } from "@mui/material";
+import EmptyBoxArt from '../components/EmptyBoxArt';
 
 export default function UserRequestedServices() {
   let user = useSelector((state) => state.user);
@@ -82,7 +78,6 @@ export default function UserRequestedServices() {
   };
 
   function Card({serviceCard}) {
-  
     return (
       <motion.div
         initial="offscreen"
@@ -98,41 +93,17 @@ export default function UserRequestedServices() {
 
   console.log(requestedServices)
 
-
   return (
-    <div>
-      {/* <ResponsiveAppBar/> */}
-      <Box sx={{ pt: 4}}>
-      <Grid container direction="column" spacing={5}>  
-        {requestedServices.length === 0 && fetchedData
-            ? 
-                <Grid item sx={{display: 'flex', justifyContent: 'center'}}>
-                  <Paper
-                      elevation= {5}
-                      sx={{
-                          margin: "auto",
-                          p: 10,
-                          backgroundColor: (theme) =>
-                              theme.palette.mode === "dark" ? "#1A2027" : "white",
-                      }}
-                  >
-                    <Box sx={{pt: "100px",  display: 'flex', flexDirection: 'column'}}>
-                      <Typography variant="h2">You don't have any bookings</Typography> 
-                      <Box sx={{ height: 600, pt: 20 }} >
-                        <img src={emptyBookings} style={{width: "100%", height: "100%", aspectRatio: 863/645}} alt="People looking into empty box" />
-                      </Box>
-                    </Box>
-                    </Paper>
-                </Grid>
-                
-          : requestedServices.map((requestedService, index) => 
+    <Box m={4}>
+      {requestedServices.length === 0 && fetchedData ? <EmptyBoxArt/> : 
+      requestedServices.map((requestedService, index) => 
+        <Grid container direction="column" spacing={5} >  
+      
           <Grid item key={index}>
             <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>
           </Grid>
-        )}
-      </Grid>
-      </Box>
-      
-    </div>
+        </Grid>
+      )}
+    </Box>
   );
 }

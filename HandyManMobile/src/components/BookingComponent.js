@@ -18,7 +18,7 @@ import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from"@react-native-async-storage/async-storage";
 
 
-const BookingComponent = ({ service }) => {
+const BookingComponent = ({ service, modalRef }) => {
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch();
   const { updateCurrentUser, logoutUser, logoutServices } = bindActionCreators(ActionCreators, dispatch);
@@ -113,7 +113,9 @@ const BookingComponent = ({ service }) => {
   }
 
   const toast = useToast();
+  const [loading, setLoading] = React.useState(false)
   const doBook = async () => {
+    setLoading(true)
     const serviceRequest = {
         requesterId: user.userId,
         serviceId: service._id,
@@ -148,6 +150,7 @@ const BookingComponent = ({ service }) => {
                 return <ToastAlert toast={toast} id={id} {...item} />
               },
             });
+            modalRef.current?.close()
           } else {
             const item = {
               title: "Error",
@@ -161,10 +164,13 @@ const BookingComponent = ({ service }) => {
               },
             });
           }
+
+          setLoading(false)
         }
       })
       .catch(function (response) {
         console.log(response)
+        setLoading(false)
       })
   }
 
@@ -240,7 +246,7 @@ const BookingComponent = ({ service }) => {
       >
         Pick Dates
       </Button>
-      <Button mode="contained" style={{ marginTop: 16 }} onPress={() => doBook()}>
+      <Button loading={loading} mode="contained" style={{ marginTop: 16 }} onPress={() => doBook()}>
         Book!
       </Button>
     </>

@@ -12,6 +12,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { IconButton, Alert, Collapse } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Profile() {
   let bp = require("./Path.js");
@@ -24,6 +26,10 @@ function Profile() {
   const [userInfo, setUserInfo] = useState(user);
   const [showSaveChangesButton, setShowSaveChangesButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
+  const [successProfileMsg, setSuccessProfileMsg] = useState(false);
+  const [failProfileMsg, setFailProfileMsg] = useState(false);
+  const [successPasswordMsg, setSuccessPasswordMsg] = useState(false);
+  const [failPasswordMsg, setFailPasswordMsg] = useState(false);
   const [fileData, setFileData] = useState();
   const [password, setPassword] = useState({
     oldPassword: "",
@@ -39,6 +45,8 @@ function Profile() {
   const handleClose = () => {
     setOpen(false);
     setChangePasswordMessage("");
+    setFailPasswordMsg(false)
+    setSuccessPasswordMsg(false)
     setPassword({ oldPassword: "", newPassword: "" });
     setNewPasswordValidation(false);
     setOldPasswordValidation(false);
@@ -51,6 +59,8 @@ function Profile() {
   function editProfile() {
     setShowSaveChangesButton(true);
     setShowEditButton(false);
+    setSuccessProfileMsg(false)
+    setFailProfileMsg(false)
   }
 
   const handleImageChange = ({ target }) => {
@@ -106,10 +116,11 @@ function Profile() {
       })
       .then((response) => {
         if (response.data.jwtToken === "") {
-            logoutUser()
-            logoutServices()
-            navigate("../login")
+          logoutUser()
+          logoutServices()
+          navigate("../login")
         } else {
+          if (response.data.error === "") {
             updateCurrentUser({
               userId: user.userId,
               username: userInfo.username,
@@ -119,6 +130,10 @@ function Profile() {
               profilePicture: newImageUrl,
               jwtToken: response.data.refreshedToken,
             });
+            setSuccessProfileMsg(true)
+          } else {
+            setFailProfileMsg(true)
+          }
         }
       })
       .catch((response) => {
@@ -136,6 +151,8 @@ function Profile() {
 
   async function changePassword() {
     let message;
+    setFailPasswordMsg(false)
+    setSuccessPasswordMsg(false)
     if (password.oldPassword === "" || password.newPassword === "") {
       if (password.oldPassword === "") setOldPasswordValidation(true);
       if (password.newPassword === "") setNewPasswordValidation(true);
@@ -156,12 +173,14 @@ function Profile() {
         } else {
           if (response.data.error === "") {
             message = "Successfully changed password.";
+            setSuccessPasswordMsg(true)
           } else {
             message = response.data.error;
+            setFailPasswordMsg(true)
           }
           setChangePasswordMessage(message);
         }
-        
+
       })
       .catch((error) => {
         console.log(error);
@@ -181,210 +200,297 @@ function Profile() {
   };
 
   return (
-      <Container>
-         <Paper
-              elevation= {5}
-              sx={{
-                  margin: "auto",
-                  p: 5,
-                  backgroundColor: (theme) =>
-                      theme.palette.mode === "dark" ? "#1A2027" : "white",
+    <Container>
+      <Paper
+        elevation={5}
+        sx={{
+          margin: "auto",
+          p: 5,
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1A2027" : "white",
+        }}
+      >
+        <Grid container direction="column">
+          <Grid item sx={{ height: 240, display: "flex", justifyContent: "center" }} >
+            <img
+              src={userInfo.profilePicture}
+              style={{
+                width: 240,
+                height: 240,
+                objectFit: 'cover'
               }}
-          >
-          <Grid container direction="column">
-            <Grid item sx={{ height: 240, display: "flex", justifyContent: "center" }} >
-              <img
-                src={userInfo.profilePicture}
-                style={{
-                  width: 240, 
-                  height: 240,
-                  objectFit: 'cover'
-                }}
-              />
-            </Grid>
+            />
+          </Grid>
 
-            <Grid item>
+          <Grid item>
             {showSaveChangesButton && (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageChange(e)}
-                />
-              )}
-            </Grid>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageChange(e)}
+              />
+            )}
+          </Grid>
 
-            <Grid item mt={3}>
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-                direction="row"
-                spacing={4}
-              >
-                <Grid item xs={5}>
-                  <Typography sx={{ pb: 2 }} fontWeight="bold">
-                      First Name:
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    required
-                    id="firstName"
-                    label="First Name"
-                    variant="outlined"
-                    value={userInfo.firstName}
-                    disabled={showEditButton}
-                    error={userInfo.firstName === ""}
-                    helperText={
-                      userInfo.firstName === ""
-                        ? "First Name is required!"
-                        : " "
-                    }
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, firstName: e.target.value })
-                    }
-                  />
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography sx={{ pb: 2 }} fontWeight="bold">
-                      Last Name:
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    required
-                    id="lastName"
-                    label="Last Name"
-                    variant="outlined"
-                    value={userInfo.lastName}
-                    disabled={showEditButton}
-                    error={userInfo.lastName === ""}
-                    helperText={
-                      userInfo.lastName === "" ? "Last Name is required!" : " "
-                    }
-                    onChange={(e) =>
-                      setUserInfo({ ...userInfo, lastName: e.target.value })
-                    }
-                  />
-                </Grid>
+          <Grid item mt={3}>
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="space-between"
+              direction="row"
+              spacing={4}
+            >
+              <Grid item xs={5}>
+                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                  First Name:
+                </Typography>
+                <TextField
+                  fullWidth
+                  required
+                  id="firstName"
+                  label="First Name"
+                  variant="outlined"
+                  value={userInfo.firstName}
+                  disabled={showEditButton}
+                  error={userInfo.firstName === ""}
+                  helperText={
+                    userInfo.firstName === ""
+                      ? "First Name is required!"
+                      : " "
+                  }
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, firstName: e.target.value })
+                  }
+                />
               </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container justifyContent="flex-start" spacing={4}>
-                <Grid item xs={12}>
-                  <Typography sx={{ pb: 2 }} fontWeight="bold">
-                      Description:
-                  </Typography>
-                  <TextField
-                    id="description"
-                    label="Description"
-                    variant="outlined"
-                    multiline
-                    rows={4}
-                    fullWidth
-                    value={userInfo.profileDescription}
-                    disabled={showEditButton}
-                    onChange={(e) =>
-                      setUserInfo({
-                        ...userInfo,
-                        profileDescription: e.target.value,
-                      })
-                    }
-                  />
-                </Grid>
-                {showEditButton && (
-                  <Grid item>
-                    <Button variant="contained" onClick={() => editProfile()}>
-                      Edit Profile
-                    </Button>
-                  </Grid>
-                )}
-                {showSaveChangesButton && (
-                  <Grid item>
-                    <Button variant="contained" onClick={() => saveChanges()}>
-                      Save Changes
-                    </Button>
-                  </Grid>
-                )}
-                {showSaveChangesButton && (
-                  <Grid item>
-                    <Button variant="contained" onClick={() => cancelChanges()}>
-                      Cancel Changes
-                    </Button>
-                  </Grid>
-                )}
-                {showEditButton && (
-                  <Grid item>
-                    <Button variant="contained" onClick={handleOpen}>
-                      Change Password
-                    </Button>
-                    <Modal
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <Grid container direction="column" spacing={2}>
-                          <Grid item>
-                            <TextField
-                              fullWidth
-                              label="Old Password"
-                              required
-                              variant="outlined"
-                              error={oldPasswordValidation === true}
-                              helperText={
-                                oldPasswordValidation === true
-                                  ? "Can't be empty!"
-                                  : " "
-                              }
-                              onChange={(e) => {
-                                setPassword({
-                                  ...password,
-                                  oldPassword: e.target.value,
-                                });
-                                setOldPasswordValidation(false);
-                              }}
-                            ></TextField>
-                          </Grid>
-                          <Grid item>
-                            <TextField
-                              fullWidth
-                              label="New Password"
-                              required
-                              variant="outlined"
-                              error={newPasswordValidation === true}
-                              helperText={
-                                newPasswordValidation === true
-                                  ? "Can't be empty!"
-                                  : " "
-                              }
-                              onChange={(e) => {
-                                setPassword({
-                                  ...password,
-                                  newPassword: e.target.value,
-                                });
-                                setNewPasswordValidation(false);
-                              }}
-                            ></TextField>
-                          </Grid>
-                          <span>{changePasswordMessage}</span>
-                          <Grid item>
-                            <Button
-                              variant="contained"
-                              onClick={async () => await changePassword()}
-                            >
-                              Confirm
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Modal>
-                  </Grid>
-                )}
+              <Grid item xs={5}>
+                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                  Last Name:
+                </Typography>
+                <TextField
+                  fullWidth
+                  required
+                  id="lastName"
+                  label="Last Name"
+                  variant="outlined"
+                  value={userInfo.lastName}
+                  disabled={showEditButton}
+                  error={userInfo.lastName === ""}
+                  helperText={
+                    userInfo.lastName === "" ? "Last Name is required!" : " "
+                  }
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, lastName: e.target.value })
+                  }
+                />
               </Grid>
             </Grid>
           </Grid>
-          </ Paper>
-      </Container>
+          <Grid item>
+            <Grid container justifyContent="flex-start" spacing={4}>
+              <Grid item xs={12}>
+                <Typography sx={{ pb: 2 }} fontWeight="bold">
+                  Description:
+                </Typography>
+                <TextField
+                  id="description"
+                  label="Description"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  value={userInfo.profileDescription}
+                  disabled={showEditButton}
+                  onChange={(e) =>
+                    setUserInfo({
+                      ...userInfo,
+                      profileDescription: e.target.value,
+                    })
+                  }
+                />
+              </Grid>
+              {showEditButton && (
+                <Grid item>
+                  <Button variant="contained" onClick={() => editProfile()}>
+                    Edit Profile
+                  </Button>
+                </Grid>
+              )}
+              {showSaveChangesButton && (
+                <Grid item>
+                  <Button variant="contained" onClick={() => saveChanges()}>
+                    Save Changes
+                  </Button>
+                </Grid>
+              )}
+              {showSaveChangesButton && (
+                <Grid item>
+                  <Button variant="contained" onClick={() => cancelChanges()}>
+                    Cancel Changes
+                  </Button>
+                </Grid>
+              )}
+              {showEditButton && (
+                <Grid item>
+                  <Button variant="contained" onClick={handleOpen}>
+                    Change Password
+                  </Button>
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <Grid container direction="column" spacing={2}>
+                        <Grid item>
+                          <TextField
+                            fullWidth
+                            label="Old Password"
+                            required
+                            variant="outlined"
+                            error={oldPasswordValidation === true}
+                            helperText={
+                              oldPasswordValidation === true
+                                ? "Can't be empty!"
+                                : " "
+                            }
+                            onChange={(e) => {
+                              setPassword({
+                                ...password,
+                                oldPassword: e.target.value,
+                              });
+                              setOldPasswordValidation(false);
+                            }}
+                          ></TextField>
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            fullWidth
+                            label="New Password"
+                            required
+                            variant="outlined"
+                            error={newPasswordValidation === true}
+                            helperText={
+                              newPasswordValidation === true
+                                ? "Can't be empty!"
+                                : " "
+                            }
+                            onChange={(e) => {
+                              setPassword({
+                                ...password,
+                                newPassword: e.target.value,
+                              });
+                              setNewPasswordValidation(false);
+                            }}
+                          ></TextField>
+                        </Grid>
+                        <Box>
+                          <Collapse in={successPasswordMsg}>
+                            <Alert
+                              action={
+                                <IconButton
+                                  aria-label="close"
+                                  color="inherit"
+                                  size="small"
+                                  onClick={() => {
+                                    setSuccessPasswordMsg(false);
+                                  }}
+                                >
+                                  <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                              }
+                              sx={{ mb: 2 }}
+                            >
+                              {changePasswordMessage}
+                            </Alert>
+                          </Collapse>
+                        </Box>
+                        <Box>
+                          <Collapse in={failPasswordMsg}>
+                            <Alert
+                              severity="warning"
+                              action={
+                                <IconButton
+                                  aria-label="close"
+                                  color="inherit"
+                                  size="small"
+                                  onClick={() => {
+                                    setFailPasswordMsg(false);
+                                  }}
+                                >
+                                  <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                              }
+                              sx={{ mb: 2 }}
+                            >
+                              {changePasswordMessage}
+                            </Alert>
+                          </Collapse>
+                        </Box>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            onClick={async () => await changePassword()}
+                          >
+                            Confirm
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Modal>
+                </Grid>
+              )}
+
+            </Grid>
+            <Box sx={{ mt: 3 }}></Box>
+            <Box>
+              <Collapse in={successProfileMsg}>
+                <Alert
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setSuccessProfileMsg(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  sx={{ mb: 2 }}
+                >
+                  Succesfully edited profile!
+                </Alert>
+              </Collapse>
+            </Box>
+            <Box>
+              <Collapse in={failProfileMsg}>
+                <Alert
+                  severity="warning"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setFailProfileMsg(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  sx={{ mb: 2 }}
+                >
+                  Error editing profile!
+                </Alert>
+              </Collapse>
+            </Box>
+          </Grid>
+        </Grid>
+      </ Paper>
+    </Container>
   );
 }
 

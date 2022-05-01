@@ -2,13 +2,14 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import BottomSheet, {BottomSheetVirtualizedList} from "@gorhom/bottom-sheet";
-import { Avatar, Button, Divider, List, Subheading } from "react-native-paper";
+import { Avatar, Button, Divider, Headline, List, Subheading } from "react-native-paper";
 
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
-import { Box, View } from "native-base";
+import { Box, Center, View } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
+import Logo from "./Logo.js"
 
 const BottomSheetComponent = ({ searchResults }) => {
   const navigation = useNavigation();
@@ -110,7 +111,10 @@ const BottomSheetComponent = ({ searchResults }) => {
       onChange={handleSheetChanges}
     >
       {searchResults == "" ? (
-        <Subheading>No search results found</Subheading>
+        <Center >
+        <Logo />
+        <Headline>No search results found</Headline>
+        </Center>
       ) : (
         <View h={height}>
         <FlatList

@@ -21,6 +21,9 @@ const TopBar = ({ navigation, back, route }) => {
       case "AddService":
         setName("Add Service")
         break;
+      case "RequestedServices":
+        setName("Service Requests")
+        break;
       default:
         setName("default");
         break;

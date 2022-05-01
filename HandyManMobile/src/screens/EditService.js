@@ -71,8 +71,6 @@ const EditService = ({ route }) => {
 
   const [currentService, setCurrentService] = React.useState(service);
   const [loading, setLoading] = React.useState(false);
-  const [daysAvailOpen, setDaysAvailOpen] = React.useState(false);
-  const [daysAvailValues, setDaysAvailValues] = React.useState([]);
 
   const updateService = (name, value) => {
     if (value) {
@@ -110,6 +108,7 @@ const EditService = ({ route }) => {
       }).then((response) => {
         images.push(response);
         updateService("Images", { images: images });
+        setImagesToDisplay(images)
       });
     }
   };
@@ -148,7 +147,6 @@ const EditService = ({ route }) => {
   // Setup page
   React.useEffect(() => {
     googleAutocompleteRef.current.setText(service.Address);
-    setDaysAvailValues(service.DaysAvailable);
   }, []);
 
   // Get the user's information
@@ -201,14 +199,20 @@ const EditService = ({ route }) => {
     navigation.goBack();
   };
 
+  const [imagesToDisplay, setImagesToDisplay] = React.useState(service.Images)
+  const imageSetter = (images) => {
+    updateService("Images", { images: images});
+    setImagesToDisplay(images)
+  }
+
   return (
     <>
       <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
-        <Button onPress={() => pickImage()} mode="contained">
+
+        <ImageSwiper images={imagesToDisplay} imageSetter={imageSetter} edit={true}/>
+        <Button icon="image-plus" onPress={() => pickImage()} mode="contained" style={{alignSelf: 'flex-start', marginLeft: 8, width: '46%'}}>
           Pick images
         </Button>
-
-        <ImageSwiper images={currentService.Images} service={currentService} serviceSetter={(ret) => setCurrentService(ret)} edit={true}/>
         <Box w={"90%"} alignSelf={"center"}>
           <Title style={styles.header}>Title:</Title>
           <TextInput
@@ -315,6 +319,14 @@ const EditService = ({ route }) => {
           />
 
           <Button
+            disabled={
+              currentService.Title == "" || 
+              currentService.Description == "" || 
+              currentService.Address == "" || 
+              currentService.Price == null || 
+              currentService.Category == "" ||
+              currentService.DaysAvailable == [] ||
+              currentService.Images == []}
             style={{ marginTop: 20, marginLeft: 8 }}
             onPress={() => saveChanges()}
             loading={loading}

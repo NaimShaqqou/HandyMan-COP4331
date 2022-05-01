@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Alert } from "react-native";
 import React from "react";
 
 import Swiper from "react-native-swiper";
@@ -8,9 +8,14 @@ import { Text, Button, IconButton, useTheme } from "react-native-paper";
 
 const windowHeight = Dimensions.get("window").height;
 
-const renderPagination = (index, total, _context) => {
-  return (
-    <>
+
+const ImageSwiper = ({ images, edit, imageSetter }) => {
+  const renderPagination = (index, total, context) => {
+    if (index == -1)
+      ref.current.scrollBy(1)
+  
+    return (
+      <>
         <Box
           alignSelf={"flex-end"}
           py={"8px"}
@@ -26,59 +31,84 @@ const renderPagination = (index, total, _context) => {
             {index + 1} / {total}
           </Text>
         </Box>
-    </>
-  );
-};
-
-const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
+      </>
+    );
+  };
   const [curIndex, setCurIndex] = React.useState(0);
+
+  const deleteConfirmation = async () =>
+    Alert.alert("Are you sure you want to delete this image?", "", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      { text: "Delete", style: "destructive", onPress: () => handleDelete() },
+    ]);
+  
   const handleDelete = () => {
     let newImages = [...images];
     newImages.splice(curIndex, 1);
 
-    serviceSetter({ ...service, Images: newImages });
+
+    console.log(newImages);
+    imageSetter(newImages)
   };
 
+  const DeleteButton = () => {
+    if (edit) {
+      return (
+        <Button
+          style={{
+            marginTop: -38,
+            alignSelf: "flex-start",
+            marginLeft: 8,
+          }}
+          mode="contained"
+          icon="delete"
+          color="#B00020"
+          onPress={() => deleteConfirmation()}
+        >
+          Delete Image
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const ImageMap = ({ item }) => (
+    <>
+      <Center key={item}>
+        <Image
+          source={{
+            uri: item,
+          }}
+          alt={"\n\n\n\n\n" + "Image Unavailable"}
+          width="100%"
+          height="100%"
+        />
+      </Center>
+      <DeleteButton />
+    </>
+  );
+
+  const ref = React.useRef(null)
   return (
     <>
-      {service.Images.length !== 0 ? (
+      {images.length !== 0 ? (
         <Swiper
+          ref={ref}
           style={styles.wrapper}
           showsButtons={true}
           height={windowHeight / 3}
           renderPagination={renderPagination}
           loop={false}
           bounces={true}
-          onIndexChanged={(index) => setCurIndex(index)}
+          onIndexChanged={(index) => {setCurIndex(index);}}
+          index={0}
         >
-          {Object.values(images).map((item) => (
-            <>
-              <Center>
-                <Image
-                  source={{
-                    uri: item,
-                  }}
-                  alt={"\n\n\n\n\n" + "Image Unavailable"}
-                  width="100%"
-                  height="100%"
-                />
-              </Center>
-              {edit && (
-                <Button
-                  style={{
-                    marginTop: -38,
-                    alignSelf: "flex-start",
-                    marginLeft: 8,
-                  }}
-                  mode="contained"
-                  icon="delete"
-                  color="#B00020"
-                  onPress={() => handleDelete()}
-                >
-                  Delete Image
-                </Button>
-              )}
-            </>
+          {images.map((item) => (
+            <ImageMap key={item} item={item} />
           ))}
         </Swiper>
       ) : (

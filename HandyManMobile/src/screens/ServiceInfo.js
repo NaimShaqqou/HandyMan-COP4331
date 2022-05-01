@@ -111,7 +111,7 @@ const ServiceInfo = ({ route }) => {
         </Button>
       </Box>
       <ScrollView mb={"69px"}>
-        <ImageSwiper images={service.Images} />
+        <ImageSwiper images={service.Images} edit={false} />
         <Box w={"90%"} alignSelf={"center"}>
           <Headline
             style={{
@@ -225,7 +225,7 @@ const ServiceInfo = ({ route }) => {
           onChange={handleSheetChanges}
         >
           <ScrollView style={{padding: 16}}>
-            <BookingComponent service={service} />
+            <BookingComponent service={service} modalRef={bottomSheetModalRef} />
           </ScrollView>
         </BottomSheetModal>
       </BottomSheetModalProvider>

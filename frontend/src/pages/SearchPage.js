@@ -63,8 +63,9 @@ const SearchPage = () => {
   return (
     <Box
       sx={{
+        // mt: '0px',
         width: '100%',
-        height: '95vh',
+        height: 'calc(100vh - 64px)',
       }}
     >
       {/* Developer Tools */}
@@ -126,12 +127,14 @@ const SearchPage = () => {
         searchResults = {state}
         results={(resObj.res && resObj.res.error == '') ? resObj.res.results : []}
         sx={{
-          height: '75vh',
-          mt: '-15vh',
+          // width: '500px',
+          height: '75%',
+          mt: '-200px',
           ml: '3%',
           zIndex: 98,
           position: 'sticky',
           pointerEvents: 'none',
+          // bgcolor: 'green',
         }}
       />
 
