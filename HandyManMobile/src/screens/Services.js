@@ -24,6 +24,8 @@ import { colors, Icon } from "react-native-elements";
 import { bindActionCreators } from "redux";
 import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EmptyBoxArt from "../components/EmptyBoxArt";
+import { Center } from "native-base";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
@@ -93,12 +95,16 @@ const Services = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
-      <ScrollView contentContainerStyle={styles.viewContainer}>
-        {Object.values(services).map((item) => (
+      {services.length !== 0 ? (
+        <ScrollView contentContainerStyle={styles.viewContainer}>
+          {Object.values(services).map((item) => (
           <Text key={item._id}>
             <Card style={styles.menuContainer}>
               <Card.Title
-                titleStyle={{ justifyContent: "center", alignItems: "center" }}
+                titleStyle={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
                 title={item.Title}
                 subtitle={item.Description}
               />
@@ -143,20 +149,29 @@ const Services = () => {
                 <IconButton
                   icon="briefcase-clock"
                   onPress={() =>
-                    navigation.navigate("RequestedServices", { service: item })
+                    navigation.navigate("RequestedServices", {
+                      service: item,
+                    })
                   }
                 />
               </Card.Actions>
             </Card>
             {"\n"}
           </Text>
-        ))}
-        <Text>
-          {"\n"}
-          {"\n"}
-          {"\n"}
-        </Text>
-      </ScrollView>
+          ))}
+          <Text>
+            {"\n"}
+            {"\n"}
+            {"\n"}
+          </Text>
+        </ScrollView>
+      ) : (
+        <Center m={'10px'} alignItems={'center'} justifyContent={'center'} h={'100%'}>
+          <EmptyBoxArt
+            text={"Create your first service by clicking the plus icon above!"}
+          />
+        </Center>
+      )}
     </View>
   );
 };

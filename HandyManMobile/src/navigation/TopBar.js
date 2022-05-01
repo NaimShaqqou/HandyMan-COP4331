@@ -19,10 +19,13 @@ const TopBar = ({ navigation, back, route }) => {
         setName("Edit Service");
         break;
       case "AddService":
-        setName("Add Service")
+        setName("Add Service");
         break;
       case "RequestedServices":
-        setName("Service Requests")
+        setName("Service Requests");
+        break;
+      case "ServiceInfoScreen":
+        setName("Book Service");
         break;
       default:
         setName("default");
@@ -33,10 +36,15 @@ const TopBar = ({ navigation, back, route }) => {
   return (
     <Appbar.Header>
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-      <Appbar.Content
-        title={name}
-      />
-      {name == "My Services" && <Appbar.Action icon="plus-circle-outline" onPress={() => {navigation.navigate("AddService")}} />}
+      <Appbar.Content title={name} />
+      {name == "My Services" && (
+        <Appbar.Action
+          icon="plus-circle-outline"
+          onPress={() => {
+            navigation.navigate("AddService");
+          }}
+        />
+      )}
     </Appbar.Header>
   );
 };

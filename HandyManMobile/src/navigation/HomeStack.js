@@ -15,7 +15,7 @@ const HomeStack = () => {
       screenOptions={{ headerShown: false, header: (props) => <TopBar {...props} /> }}
     >
       <Stack.Screen name="HomeScreen" component={Home} />
-      <Stack.Screen name="ServiceInfoScreen" component={ServiceInfo} />
+      <Stack.Screen name="ServiceInfoScreen" component={ServiceInfo} options={{headerShown: true}}/>
     </Stack.Navigator>
   );
 };
