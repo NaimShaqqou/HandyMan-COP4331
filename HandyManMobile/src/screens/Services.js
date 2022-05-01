@@ -9,6 +9,7 @@ import {
   Title,
   useTheme,
   Text,
+  IconButton,
 } from "react-native-paper";
 import {
   ImageBackground,
@@ -27,6 +28,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 const { width, height } = Dimensions.get("screen");
+
+const storeInfo = async (userInfo) => {
+  try {
+    await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const Services = () => {
   const { colors } = useTheme();
@@ -84,9 +93,7 @@ const Services = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
-      <ScrollView
-        contentContainerStyle={styles.viewContainer}
-      >
+      <ScrollView contentContainerStyle={styles.viewContainer}>
         {Object.values(services).map((item) => (
           <Text key={item._id}>
             <Card style={styles.menuContainer}>
@@ -111,11 +118,12 @@ const Services = () => {
                 </View>
                 <View style={styles.cardContentView}>
                   <Icon name="event" style={{ marginRight: 0 }} />
-                  <Text> Days Available: 
+                  <Text>
+                    {" "}
+                    Days Available:
                     {item.DaysAvailable.map((day) => (
                       <Text key={day}> {day}</Text>
                     ))}
-
                   </Text>
                 </View>
                 <View style={styles.cardContentView}>
@@ -123,17 +131,21 @@ const Services = () => {
                   <Text> Address: {item.Address}</Text>
                 </View>
               </Card.Content>
-              <Card.Actions>
-                <Button onPress={() => onEditServiceTransition(item)}>
-                  Edit
-                </Button>
-
-                <Button
+              <Card.Actions style={{ justifyContent: "space-between" }}>
+                <IconButton
+                  icon="pencil"
+                  onPress={() => onEditServiceTransition(item)}
+                />
+                <IconButton
+                  icon="delete"
                   onPress={() => deleteConfirmation(item)}
-                  color={colors.error}
-                >
-                  Delete
-                </Button>
+                />
+                <IconButton
+                  icon="briefcase-clock"
+                  onPress={() =>
+                    navigation.navigate("RequestedServices", { service: item })
+                  }
+                />
               </Card.Actions>
             </Card>
             {"\n"}

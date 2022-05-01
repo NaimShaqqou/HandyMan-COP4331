@@ -108,6 +108,7 @@ const EditService = ({ route }) => {
       }).then((response) => {
         images.push(response);
         updateService("Images", { images: images });
+        setImagesToDisplay(images)
       });
     }
   };
@@ -198,11 +199,17 @@ const EditService = ({ route }) => {
     navigation.goBack();
   };
 
+  const [imagesToDisplay, setImagesToDisplay] = React.useState(service.Images)
+  const imageSetter = (images) => {
+    updateService("Images", { images: images});
+    setImagesToDisplay(images)
+  }
+
   return (
     <>
       <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
 
-        <ImageSwiper images={currentService.Images} service={currentService} serviceSetter={(ret) => setCurrentService(ret)} edit={true}/>
+        <ImageSwiper images={imagesToDisplay} imageSetter={imageSetter} edit={true}/>
         <Button icon="image-plus" onPress={() => pickImage()} mode="contained" style={{alignSelf: 'flex-start', marginLeft: 8, width: '46%'}}>
           Pick images
         </Button>

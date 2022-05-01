@@ -8,29 +8,32 @@ import { Text, Button, IconButton, useTheme } from "react-native-paper";
 
 const windowHeight = Dimensions.get("window").height;
 
-const renderPagination = (index, total, context) => {
-  return (
-    <>
-      <Box
-        alignSelf={"flex-end"}
-        py={"8px"}
-        px={"16px"}
-        // backgroundColor={"#003b801a"}
-        backgroundColor={"#00000099"}
-        position={"absolute"}
-        right={"16px"}
-        top={windowHeight / 3.5}
-        borderRadius={15}
-      >
-        <Text style={{ color: "white" }}>
-          {index + 1} / {total}
-        </Text>
-      </Box>
-    </>
-  );
-};
 
-const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
+const ImageSwiper = ({ images, edit, imageSetter }) => {
+  const renderPagination = (index, total, context) => {
+    if (index == -1)
+      ref.current.scrollBy(1)
+  
+    return (
+      <>
+        <Box
+          alignSelf={"flex-end"}
+          py={"8px"}
+          px={"16px"}
+          // backgroundColor={"#003b801a"}
+          backgroundColor={"#00000099"}
+          position={"absolute"}
+          right={"16px"}
+          top={windowHeight / 3.5}
+          borderRadius={15}
+        >
+          <Text style={{ color: "white" }}>
+            {index + 1} / {total}
+          </Text>
+        </Box>
+      </>
+    );
+  };
   const [curIndex, setCurIndex] = React.useState(0);
 
   const deleteConfirmation = async () =>
@@ -46,8 +49,9 @@ const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
     let newImages = [...images];
     newImages.splice(curIndex, 1);
 
+
     console.log(newImages);
-    serviceSetter({ ...service, Images: newImages });
+    imageSetter(newImages)
   };
 
   const DeleteButton = () => {
@@ -88,17 +92,20 @@ const ImageSwiper = ({ images, serviceSetter, service, edit }) => {
     </>
   );
 
+  const ref = React.useRef(null)
   return (
     <>
       {images.length !== 0 ? (
         <Swiper
+          ref={ref}
           style={styles.wrapper}
           showsButtons={true}
           height={windowHeight / 3}
           renderPagination={renderPagination}
           loop={false}
           bounces={true}
-          onIndexChanged={(index) => setCurIndex(index)}
+          onIndexChanged={(index) => {setCurIndex(index);}}
+          index={0}
         >
           {images.map((item) => (
             <ImageMap key={item} item={item} />
