@@ -27,6 +27,7 @@ export default function ServicePage() {
   const [endDate, setEndDate] = useState(null);
   const [msg, setMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState(false);
+  const [failMsg, setFailMsg] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [fetchedData, setFetchedData] = useState(false)
   const user = useSelector((state) => state.user);
@@ -64,6 +65,10 @@ export default function ServicePage() {
 
   async function doBook(event) {
     event.preventDefault();
+    if (user.jwtToken === "") {
+      setFailMsg(true)
+      return
+    }
     if (startDate === null || endDate === null) return;
     calculatePrice();
     let obj = {
@@ -280,7 +285,6 @@ export default function ServicePage() {
               </Stack>
             </ Paper>
           </Grid>
-          {user.jwtToken !== "" ?
 
             <Grid item xs={3.5}>
               <Paper
@@ -375,9 +379,31 @@ export default function ServicePage() {
                   </Collapse>
                 </Box>
 
+                <Box sx={{ width: '100%' }}>
+                  <Collapse in={failMsg}>
+                    <Alert
+                      severity="error"
+                      action={
+                        <IconButton
+                          aria-label="close"
+                          color="inherit"
+                          size="small"
+                          onClick={() => {
+                            setFailMsg(false);
+                          }}
+                        >
+                          <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                      }
+                      sx={{ mb: 2 }}
+                    >
+                      Must be logged in to book!
+                    </Alert>
+                  </Collapse>
+                </Box>
+
               </Paper>
             </Grid>
-            : ""}
         </Grid>
 
       </Container>
