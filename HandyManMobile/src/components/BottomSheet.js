@@ -1,15 +1,22 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
-import BottomSheet, {BottomSheetVirtualizedList} from "@gorhom/bottom-sheet";
-import { Avatar, Button, Divider, Headline, List, Subheading } from "react-native-paper";
+import BottomSheet, { BottomSheetVirtualizedList } from "@gorhom/bottom-sheet";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Headline,
+  List,
+  Subheading,
+} from "react-native-paper";
 
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 import { Box, Center, View } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
-import Logo from "./Logo.js"
+import EmptyBoxArt from "./EmptyBoxArt";
 
 const BottomSheetComponent = ({ searchResults }) => {
   const navigation = useNavigation();
@@ -21,17 +28,17 @@ const BottomSheetComponent = ({ searchResults }) => {
   const snapPoints = useMemo(() => ["3%", "25%", "50%", "80%"], []);
 
   // callbacks
-  const [height, setHeight] = React.useState()
+  const [height, setHeight] = React.useState();
   const handleSheetChanges = useCallback((index) => {
-    switch(index) {
+    switch (index) {
       case 1:
-        setHeight('175');
+        setHeight("175");
         break;
       case 3:
-        setHeight('100%');
+        setHeight("100%");
         break;
       default:
-        setHeight('365');
+        setHeight("365");
         break;
     }
   }, []);
@@ -111,20 +118,19 @@ const BottomSheetComponent = ({ searchResults }) => {
       onChange={handleSheetChanges}
     >
       {searchResults == "" ? (
-        <Center >
-        <Logo />
-        <Headline>No search results found</Headline>
+        <Center>
+          <EmptyBoxArt text={"No search results found!"} />
         </Center>
       ) : (
         <View h={height}>
-        <FlatList
-          data={searchResults}
-          // getItemCount={(data) => data.length}
-          // getItem={(data, index) => data[index]}
-          renderItem={renderItem}
-          ItemSeparatorComponent={() => <Divider />}
-          keyExtractor={(item, index) => index.toString()}
-        />
+          <FlatList
+            data={searchResults}
+            // getItemCount={(data) => data.length}
+            // getItem={(data, index) => data[index]}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => <Divider />}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       )}
     </BottomSheet>
