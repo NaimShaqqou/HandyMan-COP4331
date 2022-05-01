@@ -1,16 +1,6 @@
-import { Center, Box, Divider, View } from "native-base";
-import React, { useCallback, useRef, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  Text,
-  Headline,
-  Subheading,
-  Title,
-  Button,
-  Card,
-  Avatar,
-  TextInput,
-} from "react-native-paper";
+import { View } from "native-base";
+import React, { useState, useEffect } from "react";
+import { Text, Title, Button, Card, } from "react-native-paper";
 //import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 import {
@@ -27,29 +17,35 @@ import { colors, Icon } from "react-native-elements";
 const windowHeight = Dimensions.get("window").height;
 const { width, height } = Dimensions.get("screen");
 
-const UserRequestedServices = ({ item }) => {
-    const [serviceId, setServiceId] = useState(item.ServiceId);
-    const [service, setService] = useState(null);
+export default function UserRequestedService(props) {
+    const [requestedService, setRequestedService] = useState(props.item);
+    const [serviceId, setServiceId] = useState(requestedService.ServiceId);
+    const [service, setService] = useState([]);
+    console.log(serviceId);
 
-    React.useEffect(() => {
-      console.log("here")
+    useEffect(() => {
+      console.log("hii");
+        let mounted = true;
         axios
           .post("https://myhandyman1.herokuapp.com/api/get-service", {
-            serviceId: serviceId,
+            serviceId: serviceId
           })
           .then((response) => {
-            setService(response.data.service);
+            if (mounted) {
+              console.log("success");
+              setService(response.data.service);
+            }
+            console.log(response.data.service)
           })
           .catch((error) => {
+            console.log("failure")
             console.log(error);
           });
-    }, []);
-
-  //const renderItem = useCallback(({ item }) => <Booking review={item} />);
+        return () => (mounted = false);
+    }, [requestedService]);
 
   return (
     <Card style={styles.menuContainer}>
-      {console.log(service.Category)}
       <Card.Title
         titleStyle={{ justifyContent: "center", alignItems: "center" }}
         title={service.Title}

@@ -1,16 +1,7 @@
 import { Center, Box, Divider, View } from "native-base";
-import React, { useCallback, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Text,
-  Headline,
-  Subheading,
-  Title,
-  Button,
-  Card,
-  Avatar,
-  TextInput,
-} from "react-native-paper";
+import { Text, Card } from "react-native-paper";
 //import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 import {
@@ -20,8 +11,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import ImageSwiper from "../components/ImageSwiper";
-import { colors, Icon } from "react-native-elements";
+import { colors } from "react-native-elements";
 import UserRequestedService from "../components/UserRequestedService";
 
 const windowHeight = Dimensions.get("window").height;
@@ -35,42 +25,40 @@ const Bookings = () => {
   //const [serviceId, setServiceId] = React.useState([]);
   const [fetchedData, setFetchedData] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
     axios
       .post("https://myhandyman1.herokuapp.com/api/services-user-booked", {
           requesterId: user.userId,
           jwtToken: user.jwtToken
       })
-      .then(function (response) {
+      .then((response) => {
         if (mounted) {
-          console.log(success)
           setBookings(response.data.results);
           setFetchedData(true);
         }
-        console.log(success)
       })
-      .catch(function (response) {
-        console.log(response);
-        console.log("failure")
+      .catch((error) => {
+        console.log(error);
       });
 
     return () => (mounted = false);
   }, []);
 
   //const renderItem = useCallback(({ item }) => <Booking review={item} />);
-
   return (
     <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
     <ScrollView
       contentContainerStyle={styles.viewContainer}
     >
-      {Object.values(bookings).map((item) => (
-        <Text key={item._id} serviceCard={<UserRequestedService item={item} />}>
+      {Object.values(bookings).map((item, index) => (
+        <Text key={item._id}>
+          <UserRequestedService item={item} key={index.toString()}/>
           {"\n"}
         </Text>
       ))}
       <Text>
+        hi
         {"\n"}
         {"\n"}
         {"\n"}
