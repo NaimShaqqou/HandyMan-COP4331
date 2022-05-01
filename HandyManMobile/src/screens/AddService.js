@@ -200,7 +200,7 @@ const AddService = () => {
 
   return (
     <>
-      <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" style={{ marginBottom: 20 }}>
         <ImageSwiper
           images={currentService.Images}
           service={currentService}
