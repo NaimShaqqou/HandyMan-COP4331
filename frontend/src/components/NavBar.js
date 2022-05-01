@@ -34,7 +34,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 const pages = [];
-const loggedInSettings = ['Home', 'Search', 'Profile', 'Services', 'Bookings', 'Logout'];
+const loggedInSettings = ['Home', 'Search', 'Profile', 'My Services', 'My Requests', 'Logout'];
 
 const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
@@ -53,9 +53,9 @@ const ResponsiveAppBar = (props) => {
       'Profile': "../profile",
       'Home': "../",
       'Search': "../search",
-      'Services': "../services",
+      'My Services': "../services",
       'Logout': "../login",
-      'Bookings': "../user-requested-services",
+      'My Requests': "../user-requested-services",
     }
 
     if (user.jwtToken === "" && (setting === "Search" || setting === "Home")) {

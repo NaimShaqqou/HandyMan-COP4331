@@ -20,38 +20,31 @@ export default function ServicesPage() {
     navigate("../add-service")
   }
 
-  const cardVariants = {
-    offscreen: {
-      y: 500,
-      opacity: 0,
-    },
-    onscreen: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        bounce: 0.4,
-        duration: 0.8
+  
+  function AnimatedDiv({children}) {
+    const cardVariants = {
+      offscreen: {
+        y: 500,
+        opacity: 0,
+      },
+      onscreen: {
+        y: 0,
+        opacity: 1,
+        transition: {
+          type: "spring",
+          bounce: 0.4,
+          duration: 0.8
+        }
       }
-    }
-  };
-
-  function Card({children}) {
+    };
   
     return (
       <motion.div
         initial="offscreen"
         whileInView="onscreen"
         viewport={{ once: true, amount: 0.8 }}
-        // whileHover={{ y: -20 }}
-        // onHoverStart={e => {}}
-        // onHoverEnd={e => {}}
-        // style={{ backgroundColor: 'green' }}
       >
-        <motion.div 
-          variants={cardVariants} 
-          // style={{ display: 'inline', backgroundColor: 'green' }}
-        >
+        <motion.div variants={cardVariants}>
           {children}
         </motion.div>
       </motion.div>
@@ -60,34 +53,20 @@ export default function ServicesPage() {
 
 
   return (
-    <div>
-      {/* <ResponsiveAppBar/> */}
-      <Box sx={{ pt: 4 }}>
-
-      <Grid item>
-          <Box textAlign='center'>
-          <Button variant="contained" onClick={() => addService()}>Add new service</Button>
-          </Box>
-        </Grid>
-      
-        <Box sx={{ pt: 4}} />
-        
-        <Grid 
-          container 
-          direction="column" 
-          // spacing={5}
-        >  
-        {services.map((service, index) => (
-          <Grid item key={index}>
-            <Card>
-              <ServiceCard service={service} />
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+    <Box m={4}>
+      <Box textAlign='center'>
+        <Button variant="contained" onClick={() => addService()}>
+          Add new service
+        </Button>
       </Box>
-      
-      
-    </div>
+
+      <Box m={4} />
+
+      {services.map((service, index) => (
+        <AnimatedDiv key={index}>
+          <ServiceCard service={service} />
+        </AnimatedDiv>
+      ))}
+    </Box>
   );
 }

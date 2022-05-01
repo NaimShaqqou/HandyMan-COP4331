@@ -63,21 +63,24 @@ export default function UserRequestedServices() {
   }, []);
 
 
-  const cardVariants = {
-    offscreen: {
-      y: 300
-    },
-    onscreen: {
-      y: 50,
-      transition: {
-        type: "spring",
-        bounce: 0.4,
-        duration: 0.8
+  
+  function AnimatedDiv({children}) {
+    const cardVariants = {
+      offscreen: {
+        y: 500,
+        opacity: 0,
+      },
+      onscreen: {
+        y: 0,
+        opacity: 1,
+        transition: {
+          type: "spring",
+          bounce: 0.4,
+          duration: 0.8
+        }
       }
-    }
-  };
-
-  function Card({serviceCard}) {
+    };
+  
     return (
       <motion.div
         initial="offscreen"
@@ -85,24 +88,19 @@ export default function UserRequestedServices() {
         viewport={{ once: true, amount: 0.8}}
       >
         <motion.div  variants={cardVariants}>
-          {serviceCard}
+          {children}
         </motion.div>
       </motion.div>
     );
   }
 
-  console.log(requestedServices)
-
   return (
-    <Box m={4}>
+    <Box m={10}>
       {requestedServices.length === 0 && fetchedData ? <EmptyBoxArt/> : 
-      requestedServices.map((requestedService, index) => 
-        <Grid container direction="column" spacing={5} >  
-      
-          <Grid item key={index}>
-            <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>
-          </Grid>
-        </Grid>
+        requestedServices.map((requestedService, index) => 
+        <AnimatedDiv key={index}>
+          <UserRequestedService requestedService={requestedService} />
+        </AnimatedDiv>
       )}
     </Box>
   );
