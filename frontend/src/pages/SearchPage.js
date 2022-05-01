@@ -14,6 +14,11 @@ import {
   Box,
 } from "@mui/material";
 
+let defaultCenter = {
+  lat: 28.602,
+  lng: -81.200,
+};
+
 const SearchPage = () => {
   console.log('SearchPage');
   const { state } = useLocation();
@@ -26,6 +31,8 @@ const SearchPage = () => {
   });
   let [searchTrigger, setSearchTrigger] = useState(0);
   let [mapMargin, setMapMargin] = useState({});
+
+  console.log(resObj);
 
   // useEffect(() => {
   //   if (state.res) {
@@ -80,7 +87,7 @@ const SearchPage = () => {
           focus={focusItem}
           updateFocus={updateFocusFromChild}
           resObj={resObj}
-          // center={center}
+          center={resObj && resObj.res ? resObj.res.searchLocationCoords : defaultCenter}
           updateMargin={updateMapMarginFromChild}
           triggerSearch={triggerSearch}
           autoSearch={autoSearch}
