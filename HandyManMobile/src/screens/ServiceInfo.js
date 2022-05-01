@@ -25,6 +25,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { DatePickerInput } from "react-native-paper-dates";
 import BookingComponent from "../components/BookingComponent";
+import EmptyBoxArt from "../components/EmptyBoxArt";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -173,9 +174,7 @@ const ServiceInfo = ({ route }) => {
           {fetchedData ? (
             <>
               {reviews.length === 0 ? (
-                <Text style={{ paddingLeft: 8, marginTop: 16 }}>
-                  No reviews yet...
-                </Text>
+                <EmptyBoxArt text={"No reviews yet..."} />
               ) : (
                 <View>
                   <View
@@ -224,8 +223,11 @@ const ServiceInfo = ({ route }) => {
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-          <ScrollView style={{padding: 16}}>
-            <BookingComponent service={service} modalRef={bottomSheetModalRef} />
+          <ScrollView style={{ padding: 16 }}>
+            <BookingComponent
+              service={service}
+              modalRef={bottomSheetModalRef}
+            />
           </ScrollView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
