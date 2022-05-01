@@ -8,9 +8,10 @@ import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import axios from "axios";
-import { ScrollView } from "native-base";
+import { Center, ScrollView } from "native-base";
 
 import RequestedService from "../components/RequestedService";
+import EmptyBoxArt from "../components/EmptyBoxArt";
 
 const storeInfo = async (userInfo) => {
   try {
@@ -77,18 +78,22 @@ const RequestedServices = ({ route }) => {
   }, []);
 
   return (
-    <ScrollView>
+    <>
       {requestedServicesArray.length !== 0 && fetchedData ? (
-        requestedServicesArray.map((requestedService, index) => (
-          <RequestedService
-            requestedService={requestedService}
-            key={index.toString()}
-          />
-        ))
+        <ScrollView>
+          {requestedServicesArray.map((requestedService, index) => (
+            <RequestedService
+              requestedService={requestedService}
+              key={index.toString()}
+            />
+          ))}
+        </ScrollView>
       ) : (
-        <Text>You don't have any bookings</Text>
+        <Center h={'100%'}>
+          <EmptyBoxArt text={"You dont have any bookings yet!"} />
+        </Center>
       )}
-    </ScrollView>
+    </>
   );
 };
 

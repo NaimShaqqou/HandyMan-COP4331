@@ -18,6 +18,7 @@ const BottomTab = () => {
     <Tab.Navigator
       shifting={true}
       barStyle={{ backgroundColor: colors.primary }}
+      initialRouteName="Search"
     >
       {/* <Tab.Screen
         name="Testing"
