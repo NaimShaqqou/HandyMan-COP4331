@@ -26,6 +26,7 @@
         "multer-storage-cloudinary": "^4.0.0",
         "node-geometry-library": "^1.2.6",
         "react-native-onboarding-swiper": "^1.2.0",
+        "react-native-ratings": "^8.1.0",
         "react-router-dom": "^5.2.0"
     },
     "devDependencies": {

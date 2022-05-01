@@ -246,7 +246,7 @@ const BookingComponent = ({ service, modalRef }) => {
       >
         Pick Dates
       </Button>
-      <Button loading={loading} mode="contained" style={{ marginTop: 16 }} onPress={() => doBook()}>
+      <Button loading={loading} disabled={loading} mode="contained" style={{ marginTop: 16 }} onPress={() => doBook()}>
         Book!
       </Button>
     </>

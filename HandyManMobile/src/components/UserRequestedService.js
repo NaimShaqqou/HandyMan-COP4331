@@ -1,98 +1,135 @@
-import { View } from "native-base";
+import { Divider, Center, Box, ScrollView } from "native-base";
 import React, { useState, useEffect } from "react";
-import { Text, Title, Button, Card, } from "react-native-paper";
-//import Icon from "react-native-vector-icons/FontAwesome";
-import axios from "axios";
 import {
-  ImageBackground,
-  Dimensions,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from "react-native";
-import ImageSwiper from "./ImageSwiper";
-import { colors, Icon } from "react-native-elements";
+  Text,
+  Button,
+  Card,
+  Avatar,
+  Paragraph,
+  useTheme,
+} from "react-native-paper";
+import axios from "axios";
+import { Dimensions, StyleSheet } from "react-native";
 
+import { colors } from "react-native-elements";
 
-const windowHeight = Dimensions.get("window").height;
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 export default function UserRequestedService(props) {
-    const [requestedService, setRequestedService] = useState(props.item);
-    const [serviceId, setServiceId] = useState(requestedService.ServiceId);
-    const [service, setService] = useState([]);
-    console.log(serviceId);
+  const { colors } = useTheme();
+  const requestedService = props.item;
+  const serviceId = requestedService.ServiceId;
+  const [service, setService] = useState(null);
+  const [fetchedData, setFetchedData] = useState(false);
 
-    useEffect(() => {
-      console.log("hii");
-        let mounted = true;
-        axios
-          .post("https://myhandyman1.herokuapp.com/api/get-service", {
-            serviceId: serviceId
-          })
-          .then((response) => {
-            if (mounted) {
-              console.log("success");
-              setService(response.data.service);
-            }
-            console.log(response.data.service)
-          })
-          .catch((error) => {
-            console.log("failure")
-            console.log(error);
-          });
-        return () => (mounted = false);
-    }, [requestedService]);
+  useEffect(() => {
+    let mounted = true;
+    axios
+      .post("https://myhandyman1.herokuapp.com/api/get-service", {
+        serviceId: serviceId,
+      })
+      .then((response) => {
+        if (mounted) {
+          console.log("success");
+          setService(response.data.service);
+          setFetchedData(true);
+        }
+        console.log(response.data.service);
+      })
+      .catch((error) => {
+        console.log("failure");
+        console.log(error);
+      });
+    return () => (mounted = false);
+  }, [requestedService]);
+
+  const Status = () =>
+    requestedService.Accepted ? (
+      <CompletionButtons />
+    ) : (
+      <Button color={colors.error} mode="outlined" style={{ marginRight: 8 }}>
+        Rejected
+      </Button>
+    );
+
+  const CompletionButtons = () =>
+    requestedService.Completion ? (
+      <Box>
+        <Button
+          color={"#16a34a"}
+          mode="outlined"
+          style={{ marginRight: 8, marginBottom: 8 }}
+        >
+          Completed
+        </Button>
+        <ReviewButtons />
+      </Box>
+    ) : (
+      <Button mode="outlined" style={{ marginRight: 8 }}>
+        In Progress
+      </Button>
+    );
+
+  const ReviewButtons = () =>
+    requestedService.Reviewed ? (
+      <Button color={"#16a34a"} mode="contained" style={{ marginRight: 8 }}>
+        Reviewed
+      </Button>
+    ) : (
+      props.AddReviewButton
+    );
 
   return (
-    <Card style={styles.menuContainer}>
-      <Card.Title
-        titleStyle={{ justifyContent: "center", alignItems: "center" }}
-        title={service.Title}
-        subtitle={service.Description}
-      />
-
-      <Card.Cover style={{ borderRadius: 13 }}>
-        <ImageSwiper images={service.Images} />
-      </Card.Cover>
-
-      <Card.Content>
-        <Title></Title>
-        <View style={styles.cardContentView}>
-          <Icon name="credit-card" style={{ marginRight: 0 }} />
-          <Text> Price: ${service.Price}</Text>
-        </View>
-        <View style={styles.cardContentView}>
-          <Icon name="home-repair-service" style={{ marginRight: 0 }} />
-          <Text> Category: {service.Category}</Text>
-        </View>
-        <View style={styles.cardContentView}>
-          <Icon name="event" style={{ marginRight: 0 }} />
-          <Text> Days Available: 
-            {service.DaysAvailable.map((day) => (
-              <Text key={day}> {day}</Text>
-            ))}
-          </Text>
-        </View>
-        <View style={styles.cardContentView}>
-          <Icon name="place" style={{ marginRight: 0 }} />
-          <Text> Address: {service.Address}</Text>
-        </View>
-      </Card.Content>
-
-      <Card.Actions>
-        <Button>
-          Edit
-        </Button>
-
-        <Button>
-          Delete
-        </Button>
-      </Card.Actions>
-
-    </Card>
+    <>
+      {service !== null && fetchedData && (
+        <Card style={{ width: "95%", marginTop: 16, alignSelf: "center" }}>
+          <Card.Title
+            title={service.Title}
+            titleNumberOfLines={4}
+            left={() => (
+              <Avatar.Image
+                size={48}
+                source={{
+                  uri: service.Images === null ? "" : service.Images[0],
+                }}
+              />
+            )}
+            subtitle={service.Address}
+            subtitleNumberOfLines={4}
+            right={() => <Status />}
+          />
+          <Card.Content>
+            <Box mt={"8px"}>
+              <Paragraph>
+                {"Service Description: " + service.Description}
+              </Paragraph>
+            </Box>
+            <Divider mt={"16px"} />
+            <Center flexDir={"row"} mt={"8px"} justifyContent={"space-evenly"}>
+              <Text>
+                {new Date(requestedService.Dates[0]).toLocaleDateString(
+                  "en-US"
+                )}{" "}
+                -{" "}
+                {new Date(requestedService.Dates[1]).toLocaleDateString(
+                  "en-US"
+                )}
+              </Text>
+              <Divider orientation="vertical" mx="3" />
+              <Text>${requestedService.Price}</Text>
+            </Center>
+            <Divider mt={"8px"} />
+            <Center mt={"8px"}>
+              <Paragraph>
+                {"Your request: " + requestedService.DescriptionFromRequester}
+              </Paragraph>
+            </Center>
+          </Card.Content>
+        </Card>
+      )}
+    </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   menuContainer: {
@@ -135,3 +172,47 @@ const styles = StyleSheet.create({
     maxWidth: "95%",
   },
 });
+
+// <Card style={styles.menuContainer}>
+//           <Card.Title
+//             titleStyle={{ justifyContent: "center", alignItems: "center" }}
+//             title={service.Title}
+//             subtitle={service.Description}
+//           />
+
+//           <Card.Cover style={{ borderRadius: 13 }}>
+//             <ImageSwiper images={service.Images} />
+//           </Card.Cover>
+
+//           <Card.Content>
+//             <Title></Title>
+//             <View style={styles.cardContentView}>
+//               <Icon name="credit-card" style={{ marginRight: 0 }} />
+//               <Text> Price: ${service.Price}</Text>
+//             </View>
+//             <View style={styles.cardContentView}>
+//               <Icon name="home-repair-service" style={{ marginRight: 0 }} />
+//               <Text> Category: {service.Category}</Text>
+//             </View>
+//             <View style={styles.cardContentView}>
+//               <Icon name="event" style={{ marginRight: 0 }} />
+//               <Text>
+//                 {" "}
+//                 Days Available:
+//                 {service.DaysAvailable.map((day) => (
+//                   <Text key={day}> {day}</Text>
+//                 ))}
+//               </Text>
+//             </View>
+//             <View style={styles.cardContentView}>
+//               <Icon name="place" style={{ marginRight: 0 }} />
+//               <Text> Address: {service.Address}</Text>
+//             </View>
+//           </Card.Content>
+
+//           <Card.Actions>
+//             <Button>Edit</Button>
+
+//             <Button>Delete</Button>
+//           </Card.Actions>
+//         </Card>

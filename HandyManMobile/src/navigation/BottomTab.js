@@ -6,7 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import HomeStack from "./HomeStack";
 import ProfileStack from "./ProfileStack.js";
 import OwnedServiceStack from "./OwnedServiceStack";
-import BookingsScreen from "../screens/Bookings.js";
+import BookingsStack from "./BookingsStack";
 
 import { useTheme } from "react-native-paper";
 
@@ -49,7 +49,7 @@ const BottomTab = () => {
       />
       <Tab.Screen
         name="Bookings"
-        component={BookingsScreen}
+        component={BookingsStack}
         options={{
           tabBarIcon: () => (
             <FontAwesome5 name="airbnb" size={26} color={"white"} />
