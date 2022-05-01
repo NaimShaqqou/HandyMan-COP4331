@@ -166,7 +166,7 @@ const ResponsiveAppBar = (props) => {
               component="a"
               sx={{ ...titlestyle, display: { xs: 'none', sm: 'flex' } }}
             >
-              handler
+              Handler
             </Typography>
 
             <Box m={1}/>
@@ -181,7 +181,7 @@ const ResponsiveAppBar = (props) => {
               component="a"
               sx={{ ...titlestyle, display: { xs: 'flex', sm: 'none' }, textDecoration: 'none', flexGrow: 1 }}
             >
-              handler
+              Handler
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}/>

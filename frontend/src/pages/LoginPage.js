@@ -140,21 +140,13 @@ const LoginPage = () =>
   };
 
   const boxStyle = {
-    minHeight: '450px',
+    minHeight: '500px',
     width: {
+      xs: 385,
       sm: 385,
       md: 450
     },
     // pt: 10
-  }
-
-  const style1 = {
-    width: {
-      md: '90%',
-      lg: '80%',
-      xl: '65%'
-    },
-    margin: '0 auto',
   }
 
   return(
@@ -172,7 +164,7 @@ const LoginPage = () =>
           fontFamily: 'Comfortaa'
         }}
       >
-        welcome to handler
+        Welcome to Handler
       </Typography>
 
       <Box m={3}/>
@@ -195,13 +187,31 @@ const LoginPage = () =>
         </StyledTabs>
       </Box>
 
-      <Box m={3}/>
+      <Box m={7}/>
 
-      <Container maxWidth={false} sx={{...style1}}>
-          <Grid container spacing={0} wrap='nowrap'>
-            <Grid item xs sx={{display:'flex', flexDirection:'row'}}>
+      <Container 
+        maxWidth={false} 
+        sx={{
+          width: {
+            xs: '90%',
+            sm: '90%',
+            md: '90%',
+            lg: '50%',
+            // xl: '65%'
+          },
+          // margin: '0 auto',
+          position: 'relative'
+        }}
+      >
+          {/* <Grid container spacing={0} wrap='nowrap'>
+            <Grid item xs sx={{display:'flex', flexDirection:'row'}}> */}
                 <Slide direction="right" in={value == 0} mountOnEnter unmountOnExit>
                   <motion.div 
+                    style={{
+                      display: 'inline-block', 
+                      position: 'absolute', 
+                      left: 0
+                    }}
                     // uncomment the following for fun mode:
                     // drag
                     // dragConstraints={{
@@ -214,16 +224,22 @@ const LoginPage = () =>
                     <LoginBox sx={boxStyle}/>
                   </motion.div>
                 </Slide>
-            </Grid>
+            {/* </Grid> */}
 
-            <Grid item xs sx={{display:'flex', flexDirection:'row-reverse'}}>
+            {/* <Grid item xs sx={{display:'flex', flexDirection:'row-reverse'}}> */}
               <Slide direction="left" in={value == 1} mountOnEnter unmountOnExit>
-                <div>
+                <div 
+                  style={{
+                    display: 'inline-block', 
+                    position: 'absolute', 
+                    right: 0
+                  }}
+                >
                   <RegisterBox sx={boxStyle} />
                 </div>
               </Slide>
-            </Grid>
-          </Grid>
+            {/* </Grid>
+          </Grid> */}
       </Container>
     </Box>
   );
