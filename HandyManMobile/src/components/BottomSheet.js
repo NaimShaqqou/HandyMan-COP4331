@@ -13,15 +13,17 @@ import {
   IconButton,
 } from "react-native-paper";
 
+import axios from "axios";
+
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
-import { Box, Center, View, Divider, } from "native-base";
+import { Box, Center, View, Divider } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
 import EmptyBoxArt from "./EmptyBoxArt";
 import { Icon } from "react-native-elements";
 
-const BottomSheetComponent = ({ searchResults }) => {
+const BottomSheetComponent = ({ searchResults, popularServices }) => {
   const navigation = useNavigation();
 
   // ref
@@ -47,7 +49,11 @@ const BottomSheetComponent = ({ searchResults }) => {
   }, []);
 
   React.useEffect(() => {
-    bottomSheetRef.current.snapToIndex(2);
+    if (searchResults != "") {
+      setShowPopularServices(false);
+    }
+
+    bottomSheetRef.current?.snapToIndex(2)
   }, [searchResults]);
 
   const renderItem = useCallback(
@@ -78,6 +84,7 @@ const BottomSheetComponent = ({ searchResults }) => {
             </Button>
           )}
         />
+
         <Card.Cover source={{ uri: item.Images[0] }} />
         <Card.Content>
           <Box flexDir={"row"} alignItems={"center"} mt={"16px"}>
@@ -107,30 +114,95 @@ const BottomSheetComponent = ({ searchResults }) => {
     []
   );
 
+  const PopularServiceComponent = () => {
+    return (
+        <Box flexDir={"column"}>
+          <Headline style={{ marginLeft: 10 }}>Popular Services:</Headline>
+          {searchResults != "" && (
+            <Button
+              mode={"outlined"}
+              style={{ width: "95%", alignSelf: "center" }}
+              onPress={() => setShowPopularServices(false)}
+            >
+              Search Results
+            </Button>
+          )}
+          <Divider w={"95%"} alignSelf={"center"} mt={"8px"} />
+          <FlatList
+            data={popularServices}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => <Divider />}
+            keyExtractor={(item, index) => index.toString()}
+            style={{marginBottom: 46}}
+          />
+        </Box>
+    );
+  };
+  const EmptyElement = () => {
+    return (
+      <>
+        {showPopularServices ? (
+          <View h={height}>
+            <PopularServiceComponent />
+          </View>
+        ) : (
+          <Center h={"365"} justifyContent={"space-evenly"}>
+            <EmptyBoxArt text={"No search results found!"} />
+            <Button
+              mode={"outlined"}
+              onPress={() => setShowPopularServices(true)}
+            >
+              Popular Services
+            </Button>
+          </Center>
+        )}
+      </>
+    );
+  };
+
+  const SearchElement = () => {
+    return (
+      <>
+        {showPopularServices ? (
+          <View h={height}>
+            <PopularServiceComponent />
+          </View>
+        ) : (
+          <View h={height}>
+            <Box flexDir={"column"}>
+              <Headline style={{ marginLeft: 10 }}>Search Results:</Headline>
+              <Button
+                mode={"outlined"}
+                style={{ width: "95%", alignSelf: "center" }}
+                onPress={() => setShowPopularServices(true)}
+              >
+                Popular Services
+              </Button>
+            </Box>
+            <Divider w={"95%"} alignSelf={"center"} mt={"8px"} />
+            <FlatList
+              data={searchResults}
+              renderItem={renderItem}
+              ItemSeparatorComponent={() => <Divider />}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        )}
+      </>
+    );
+  };
+
+  const [showPopularServices, setShowPopularServices] = React.useState(true);
+
   // renders
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={-1}
+      index={2}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
     >
-      {searchResults == "" ? (
-        <Center h={"365"}>
-          <EmptyBoxArt text={"No search results found!"} />
-        </Center>
-      ) : (
-        <View h={height}>
-          <Headline style={{ marginLeft: 10 }}>Search Results:</Headline>
-          <Divider w={'95%'} alignSelf={"center"} mt={'8px'} />
-          <FlatList
-            data={searchResults}
-            renderItem={renderItem}
-            ItemSeparatorComponent={() => <Divider />}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-      )}
+      {searchResults == "" ? <EmptyElement /> : <SearchElement />}
     </BottomSheet>
   );
 };
