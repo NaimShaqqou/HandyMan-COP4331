@@ -58,7 +58,7 @@ const AddService = () => {
 
   // Redux stuff
   const dispatch = useDispatch();
-  const { updateServices, updateCurrentUser } = bindActionCreators(
+  const { updateServices, updateCurrentUser, addService } = bindActionCreators(
     ActionCreators,
     dispatch
   );
@@ -181,7 +181,8 @@ const AddService = () => {
           };
 
           // redux
-          updateServices(currentService);
+          // updateServices(currentService);
+          addService(currentService)
           updateCurrentUser(newUser);
 
           // async storage
