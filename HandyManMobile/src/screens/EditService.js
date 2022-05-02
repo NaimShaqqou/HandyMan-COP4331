@@ -207,7 +207,7 @@ const EditService = ({ route }) => {
 
   return (
     <>
-      <KeyboardAwareScrollView style={{ marginBottom: 20 }}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" style={{ marginBottom: 20 }}>
 
         <ImageSwiper images={imagesToDisplay} imageSetter={imageSetter} edit={true}/>
         <Button icon="image-plus" onPress={() => pickImage()} mode="contained" style={{alignSelf: 'flex-start', marginLeft: 8, width: '46%'}}>
@@ -238,14 +238,14 @@ const EditService = ({ route }) => {
           <Divider style={{ marginTop: 16 }} />
 
           <Title style={styles.header}>Address:</Title>
-          <Box mx={"8px"} mt={"16px"}>
+          <View mx={"8px"} mt={"16px"}>
             <GooglePlacesInput
               style={{ fontFamily: "ComfortaaRegular" }}
               ref={googleAutocompleteRef}
               passLocation={(address) => updateService("Address", { address })}
               mode="flat"
             />
-          </Box>
+          </View>
           <Divider style={{ marginTop: 16 }} />
 
           <Title style={styles.header}>Category:</Title>

@@ -34,7 +34,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 const pages = [];
-const loggedInSettings = ['Home', 'Search', 'Profile', 'Services', 'Bookings', 'Logout'];
+const loggedInSettings = ['Home', 'Search', 'Profile', 'My Services', 'My Requests', 'Logout'];
 
 const ResponsiveAppBar = (props) => {
   let user = useSelector((state) => state.user);
@@ -53,9 +53,9 @@ const ResponsiveAppBar = (props) => {
       'Profile': "../profile",
       'Home': "../",
       'Search': "../search",
-      'Services': "../services",
+      'My Services': "../services",
       'Logout': "../login",
-      'Bookings': "../user-requested-services",
+      'My Requests': "../user-requested-services",
     }
 
     if (user.jwtToken === "" && (setting === "Search" || setting === "Home")) {
@@ -166,7 +166,7 @@ const ResponsiveAppBar = (props) => {
               component="a"
               sx={{ ...titlestyle, display: { xs: 'none', sm: 'flex' } }}
             >
-              handler
+              Handler
             </Typography>
 
             <Box m={1}/>
@@ -181,7 +181,7 @@ const ResponsiveAppBar = (props) => {
               component="a"
               sx={{ ...titlestyle, display: { xs: 'flex', sm: 'none' }, textDecoration: 'none', flexGrow: 1 }}
             >
-              handler
+              Handler
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}/>
