@@ -93,7 +93,7 @@ export default function ServicePage() {
 
   const ServiceOwnerCard = ({serviceOwner}) => {
     return (
-      <Paper elevation={5} sx={{ m: 0}}>
+      <Paper elevation={5} sx={{ m: 0, overflow: 'clip'}}>
         <Grid container>
           <Grid item xs={4}>
             <img
