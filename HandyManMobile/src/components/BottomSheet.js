@@ -44,8 +44,7 @@ const BottomSheetComponent = ({ searchResults }) => {
   }, []);
 
   React.useEffect(() => {
-    if (searchResults == "") bottomSheetRef.current.snapToIndex(0);
-    else bottomSheetRef.current.snapToIndex(2);
+    bottomSheetRef.current.snapToIndex(2);
   }, [searchResults]);
 
   const renderItem = useCallback(
@@ -118,15 +117,13 @@ const BottomSheetComponent = ({ searchResults }) => {
       onChange={handleSheetChanges}
     >
       {searchResults == "" ? (
-        <Center>
+        <Center h={"365"}>
           <EmptyBoxArt text={"No search results found!"} />
         </Center>
       ) : (
         <View h={height}>
           <FlatList
             data={searchResults}
-            // getItemCount={(data) => data.length}
-            // getItem={(data, index) => data[index]}
             renderItem={renderItem}
             ItemSeparatorComponent={() => <Divider />}
             keyExtractor={(item, index) => index.toString()}

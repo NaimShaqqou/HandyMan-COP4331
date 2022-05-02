@@ -200,7 +200,7 @@ const AddService = () => {
 
   return (
     <>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" style={{ marginBottom: 20 }}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" >
         <ImageSwiper
           images={currentService.Images}
           service={currentService}
@@ -327,7 +327,7 @@ const AddService = () => {
               currentService.DaysAvailable == [] ||
               currentService.Images == []
             }
-            style={{ marginTop: 20, marginLeft: 8 }}
+            style={{ marginVertical: 20, marginLeft: 8 }}
             onPress={() => saveChanges()}
             loading={loading}
             mode="contained"

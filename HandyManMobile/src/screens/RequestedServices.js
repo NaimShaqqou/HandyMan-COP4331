@@ -80,7 +80,7 @@ const RequestedServices = ({ route }) => {
   return (
     <>
       {requestedServicesArray.length !== 0 && fetchedData ? (
-        <ScrollView>
+        <ScrollView bgColor={"#003b801a"}>
           {requestedServicesArray.map((requestedService, index) => (
             <RequestedService
               requestedService={requestedService}
@@ -89,7 +89,7 @@ const RequestedServices = ({ route }) => {
           ))}
         </ScrollView>
       ) : (
-        <Center h={'100%'}>
+        <Center h={'100%'} bgColor={"#003b801a"}>
           <EmptyBoxArt text={"You dont have any bookings yet!"} />
         </Center>
       )}

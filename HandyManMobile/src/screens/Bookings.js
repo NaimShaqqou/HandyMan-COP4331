@@ -85,7 +85,7 @@ const Bookings = () => {
             storeInfo({ ...user, jwtToken: "" });
           } else {
             if (response.data.error === "") {
-              console.log("added review")
+              console.log("added review");
               updateCurrentUser({
                 ...user,
                 jwtToken: response.data.refreshedToken,
@@ -111,12 +111,20 @@ const Bookings = () => {
             jwtToken: user.jwtToken,
           })
           .then((response) => {
-            let serviceToChange = bookings.findIndex(service => service._id === requestedService._id)
-            setRequestedService({ ...bookings[serviceToChange], Reviewed: true });
+            let serviceToChange = bookings.findIndex(
+              (service) => service._id === requestedService._id
+            );
+            setRequestedService({
+              ...bookings[serviceToChange],
+              Reviewed: true,
+            });
 
-            const newArray = [...bookings]
-            newArray[serviceToChange] = {...newArray[serviceToChange], Reviewed: true}
-            setBookings(newArray)
+            const newArray = [...bookings];
+            newArray[serviceToChange] = {
+              ...newArray[serviceToChange],
+              Reviewed: true,
+            };
+            setBookings(newArray);
           })
           .catch((error) => {
             console.log(error);
@@ -144,7 +152,6 @@ const Bookings = () => {
         <>
           <ScrollView
             bgColor={"#003b801a"}
-            // contentContainerStyle={styles.viewContainer}
           >
             {bookings.map((item, index) => (
               <UserRequestedService
@@ -155,7 +162,10 @@ const Bookings = () => {
                     color={"#16a34a"}
                     mode="outlined"
                     style={{ marginRight: 8 }}
-                    onPress={() => {handlePresentModalPress(); setRequestedService(item)}}
+                    onPress={() => {
+                      handlePresentModalPress();
+                      setRequestedService(item);
+                    }}
                   >
                     Add Review
                   </Button>
