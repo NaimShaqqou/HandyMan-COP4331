@@ -5,18 +5,21 @@ import BottomSheet, { BottomSheetVirtualizedList } from "@gorhom/bottom-sheet";
 import {
   Avatar,
   Button,
-  Divider,
+  Card,
   Headline,
   List,
   Subheading,
+  Text,
+  IconButton,
 } from "react-native-paper";
 
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
-import { Box, Center, View } from "native-base";
+import { Box, Center, View, Divider, } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
 import EmptyBoxArt from "./EmptyBoxArt";
+import { Icon } from "react-native-elements";
 
 const BottomSheetComponent = ({ searchResults }) => {
   const navigation = useNavigation();
@@ -49,61 +52,57 @@ const BottomSheetComponent = ({ searchResults }) => {
 
   const renderItem = useCallback(
     ({ item }) => (
-      <List.Accordion
-        title={item.Title}
-        description={item.Description}
-        left={() => <Avatar.Image source={{ uri: item.Images[0] }} />}
-        style={styles.list}
-        theme={{ colors: { background: "white" } }}
+      <Card
+        style={{ marginVertical: 16, width: "95%", alignSelf: "center" }}
+        onPress={() =>
+          navigation.navigate("ServiceInfoScreen", { service: item })
+        }
       >
-        <List.Item
-          title={"Price: $" + item.Price}
-          left={() => (
-            <List.Icon icon="credit-card-outline" style={{ marginRight: 0 }} />
-          )}
-          style={{ marginVertical: -18 }}
-        />
-        <List.Item
-          title={"Category: " + item.Category}
-          left={() => (
-            <List.Icon icon="toolbox-outline" style={{ marginRight: 0 }} />
-          )}
-          style={{ marginVertical: -18 }}
-        />
-        <List.Item
-          title={"Days Available: " + item.DaysAvailable}
-          style={{ marginVertical: -18 }}
-          left={() => <List.Icon icon="calendar" style={{ marginRight: 0 }} />}
-        />
-        <List.Item
-          title={"Address: " + item.Address}
-          style={{ marginVertical: -18 }}
-          left={() => (
-            <List.Icon icon="map-marker-outline" style={{ marginRight: 0 }} />
-          )}
-        />
-        <List.Item
-          title=""
-          onPress={() =>
-            navigation.navigate("ServiceInfoScreen", { service: item })
-          }
-          left={() => (
-            <Box
-              flexDir={"row"}
-              alignItems="center"
-              justifyContent={"flex-end"}
+        <Card.Title
+          titleStyle={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          title={item.Title}
+          subtitle={item.Description}
+          titleNumberOfLines={4}
+          subtitleNumberOfLines={4}
+          right={() => (
+            <Button
+              icon="arrow-right"
+              onPress={() =>
+                navigation.navigate("ServiceInfoScreen", { service: item })
+              }
             >
-              <Button
-                icon="information-outline"
-                style={{ width: "95%" }}
-                mode="outlined"
-              >
-                Learn More
-              </Button>
-            </Box>
+              Book Now!
+            </Button>
           )}
         />
-      </List.Accordion>
+        <Card.Cover source={{ uri: item.Images[0] }} />
+        <Card.Content>
+          <Box flexDir={"row"} alignItems={"center"} mt={"16px"}>
+            <Icon name="credit-card" style={{ marginRight: 0 }} />
+            <Text style={{ marginLeft: 8 }}>Price: ${item.Price}</Text>
+          </Box>
+          <Box flexDir={"row"} alignItems={"center"} mt={"8px"}>
+            <Icon name="home-repair-service" style={{ marginRight: 0 }} />
+            <Text style={{ marginLeft: 8 }}>Category: {item.Category}</Text>
+          </Box>
+          <Box flexDir={"row"} alignItems={"center"} mt={"8px"}>
+            <Icon name="event" style={{ marginRight: 0 }} />
+            <Text style={{ marginLeft: 8 }}>
+              Days Available:
+              {item.DaysAvailable.map((day) => (
+                <Text key={day}> {day}</Text>
+              ))}
+            </Text>
+          </Box>
+          <Box flexDir={"row"} alignItems={"center"} mt={"8px"}>
+            <Icon name="place" style={{ marginRight: 0 }} />
+            <Text style={{ marginLeft: 8 }}>Address: {item.Address}</Text>
+          </Box>
+        </Card.Content>
+      </Card>
     ),
     []
   );
@@ -122,6 +121,8 @@ const BottomSheetComponent = ({ searchResults }) => {
         </Center>
       ) : (
         <View h={height}>
+          <Headline style={{ marginLeft: 10 }}>Search Results:</Headline>
+          <Divider w={'95%'} alignSelf={"center"} mt={'8px'} />
           <FlatList
             data={searchResults}
             renderItem={renderItem}
@@ -133,27 +134,5 @@ const BottomSheetComponent = ({ searchResults }) => {
     </BottomSheet>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    width: "100%",
-  },
-  contentContainer: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  itemContainer: {
-    padding: 6,
-    margin: 6,
-  },
-  list: {
-    backgroundColor: "white",
-    marginVertical: 8,
-    alignSelf: "center",
-    width: "95%",
-  },
-});
 
 export default BottomSheetComponent;

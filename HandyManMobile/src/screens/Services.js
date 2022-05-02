@@ -117,7 +117,6 @@ const Services = () => {
                 subtitleNumberOfLines={4}
                 right={() => (
                   <Box flexDir={"row"}>
-                    {" "}
                     <IconButton
                       icon="pencil"
                       onPress={() => onEditServiceTransition(item)}
