@@ -18,7 +18,8 @@ import {
   IconButton,
   Tooltip,
   createTheme,
-  ThemeProvider
+  ThemeProvider,
+  Stack
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -70,16 +71,11 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
       }}
       onClick={clickItem(service)}
     >
-      
-      {/* <Box sx={{ height: '100%', width: '100px', bgcolor: 'green' }}>
 
-      </Box> */}
-      <Grid container sx={{ 
-          // maxHeight: '100%',
-          // height: '100%',
-          // bgcolor: 'green',
-          // overflow: 'clip'
-          // display: 'flex'
+      <Grid 
+        container 
+        sx={{
+
         }}
       >
         <Grid item xs={3} sx={{ 
@@ -107,9 +103,9 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
                 {service.Title}
               </Typography>
               
-              <Typography variant='h6' sx={{ display: 'inline' }} color='#ababab'>
+              {/* <Typography variant='h6' sx={{ display: 'inline' }} color='#ababab'>
                 ${service.Price}
-              </Typography>
+              </Typography> */}
             </Box>
 
             <Typography>
@@ -124,13 +120,17 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center', 
+            position: 'relative'
             // bgcolor: 'green'
           }}
           >
-          {focus != null && focus._id === service._id &&
-            <div
-              style={{display:'flex', flexDirection:'row-reverse'}}
-            >
+            <Typography variant='h6' sx={{ display: 'block', position: 'absolute', top: 0 }} color='#ababab'>
+              ${service.Price}
+            </Typography>
+            {focus != null && focus._id === service._id &&
+              <div
+                style={{display:'flex', flexDirection:'row-reverse'}}
+              >
                 <Tooltip title="Go to Service">
                   <IconButton
                     onClick={clickOpen(service)}
@@ -149,8 +149,8 @@ export default function SearchResultCard({listitem: service, focus, updateFocus}
                     />
                   </IconButton>
                 </Tooltip>
-            </div>
-          }
+              </div>
+            }
         </Grid>
       </Grid>
     </motion.div>
