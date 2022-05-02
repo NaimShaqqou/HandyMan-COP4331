@@ -29,6 +29,32 @@ const Home = () => {
   const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
   const { colors } = useTheme();
 
+  const [popularServices, setPopularServices] = React.useState("");
+
+  React.useEffect(async () => {
+    console.log("use effect")
+    var obj = {
+      numOfServices: "4",
+    };
+
+    await axios
+      .post("https://myhandyman1.herokuapp.com/api/best-reviewed-services", obj)
+      .then(function (response) {
+        let newArray = [...response.data.topServices]
+
+        newArray.forEach((element, index) => {
+          newArray[index] = {...newArray[index].service}
+        })
+        setPopularServices(newArray);
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+      // bottomSheetRef.current.snapToIndex(2);
+  }, []);
+
   // Can be called to actually call the search api
   const doSearch = async (filters, _event) => {
     try {
@@ -140,7 +166,7 @@ const Home = () => {
         />
       </Center>
 
-      <BottomSheet searchResults={bottomSheetList} />
+      <BottomSheet searchResults={bottomSheetList} popularServices={popularServices} />
 
       <BottomSheetModalProvider>
         <BottomSheetModal
