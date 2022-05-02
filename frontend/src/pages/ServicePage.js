@@ -19,8 +19,12 @@ var bp = require("../components/Path.js");
 export default function ServicePage() {
   const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
+  const [serviceOwner, setServiceOwner] = useState(null);
   const [fetchedData, setFetchedData] = useState(false)
   const service = state ? state.service : null;
+
+  console.log("service owner: " );
+  console.log(serviceOwner);
 
   useEffect(() => {
     console.log("IN SERVICE PAGE USE EFFECT")
@@ -33,6 +37,19 @@ export default function ServicePage() {
         if (mounted) {
           setFetchedData(true)
           setReviews(response.data.reviews);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+    axios
+      .post(bp.buildPath("api/get-user"), {
+        userId: service.UserId
+      })
+      .then((response) => {
+        if (mounted) {
+          setServiceOwner(response.data.user);
         }
       })
       .catch((error) => {
@@ -73,6 +90,35 @@ export default function ServicePage() {
     imageItems[0].rows = 2
     imageItems[0].cols = 2
   }
+
+  const ServiceOwnerCard = ({serviceOwner}) => {
+    return (
+      <Paper elevation={5} sx={{ m: 0}}>
+        <Grid container>
+          <Grid item xs={4}>
+            <img
+              src={serviceOwner.ProfilePicture}
+              style={{ height: '128px', width: '128px', objectFit: 'cover', padding: 0, display: "block"}}
+            />
+          </Grid>
+          <Grid item xs={8} sx={{  mt: 2}}>
+            <Typography variant='h6' >
+              {serviceOwner.Username}
+            </Typography>
+            <Typography variant='subtitle2' sx={{ color: '#3a009e' }}>
+              {serviceOwner.FirstName + " " + serviceOwner.LastName}
+            </Typography>
+            <Typography variant='subtitle2' sx={{}}>
+              {serviceOwner.Email}
+            </Typography>
+            <Typography variant='body1' sx={{}}>
+              {serviceOwner.ProfileDescription}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    )
+  };
 
   return (
     <Box>
@@ -157,6 +203,8 @@ export default function ServicePage() {
 
           <Grid item xs={3.5}>
             {service && <BookService service={service}/>}
+            <Box m={3}/> 
+            {serviceOwner && <ServiceOwnerCard serviceOwner={serviceOwner}/>}
           </Grid>
         </Grid>
 
