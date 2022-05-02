@@ -30,10 +30,10 @@ export default function SearchResults(props) {
   titleres.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
 
   let priceincres = [...mutableRes];
-  priceincres.sort((a, b) => (b.Price < a.Price ? 1 : -1));
+  priceincres.sort((a, b) => (parseInt(b.Price) < parseInt(a.Price) ? 1 : -1));
 
   let pricedecres = [...mutableRes];
-  pricedecres.sort((a, b) => (b.Price > a.Price ? 1 : -1));
+  pricedecres.sort((a, b) => (parseInt(b.Price) > parseInt(a.Price) ? 1 : -1));
 
   const setSortFromChild = (newSort) => {
     setSort(newSort);
