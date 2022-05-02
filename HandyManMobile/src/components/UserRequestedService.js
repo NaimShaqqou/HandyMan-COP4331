@@ -47,8 +47,14 @@ export default function UserRequestedService(props) {
     requestedService.Accepted ? (
       <CompletionButtons />
     ) : (
-      <Button color={colors.error} mode="outlined" style={{ marginRight: 8 }}>
-        Rejected
+      <Button color={colors.error} mode="outlined" style={{ marginTop: 8, marginRight: 8, flexDirection: "column" }} >
+        {/* Hasn't{"\n"}been{"\n"}accepted */}
+        <Box m="0px" p={"0px"}>
+          <Button color={colors.error}>Hasn't</Button>
+          <Button color={colors.error}>Been</Button>
+          <Button color={colors.error}>Accepted</Button>
+
+        </Box>
       </Button>
     );
 
