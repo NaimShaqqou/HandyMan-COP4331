@@ -145,6 +145,8 @@ const Home = () => {
     setCategoryFilter(category);
     setMaxDistFilter(maxDist);
     setSortFilter(sort);
+    setValueChanged(false);
+    setCategoryValueChanged(false)
   }, []);
 
   // filters to use in search api:
@@ -162,6 +164,8 @@ const Home = () => {
   const [searchFilter, setSearchFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [maxDistFilter, setMaxDistFilter] = React.useState("5");
+  const [valueChanged, setValueChanged] = useState(false)
+  const [categoryValueChanged, setCategoryValueChanged] = useState(false)
 
   // When any of the listed filters change, execute a search
   useEffect(() => {
@@ -176,6 +180,8 @@ const Home = () => {
     setCategory(categoryFilter);
     setMaxDist(maxDistFilter);
     setSort(sortFilter);
+    setValueChanged(false)
+    setCategoryValueChanged(false)
     bottomSheetModalRef.current?.close();
   };
 
@@ -216,7 +222,7 @@ const Home = () => {
               placeholder="Bakery"
               mode="outlined"
               onChangeText={(newSearch) => setSearchFilter(newSearch)}
-              defaultValue={searchFilter}
+              defaultValue={searchFilter == search ? searchFilter : search}
               left={<TextInput.Icon name="magnify" />}
             />
 
@@ -245,9 +251,9 @@ const Home = () => {
             <Divider style={{ marginVertical: 16 }} />
             <Headline style={{ marginBottom: 16 }}>Sort By</Headline>
             <RNPickerSelect
-              onValueChange={(value) => setSortFilter(value)}
+              onValueChange={(value) => {setSortFilter(value); setValueChanged(true)}}
               // value={sort}
-              value={sortFilter}
+              value={valueChanged ? sortFilter : sort}
               items={[
                 { label: "Title", value: "Title" },
                 { label: "Price Increasing", value: "Price Increasing" },
@@ -274,8 +280,8 @@ const Home = () => {
             <Divider style={{ marginVertical: 16 }} />
             <Headline style={{ marginBottom: 16 }}>Select Category</Headline>
             <RNPickerSelect
-              value={categoryFilter}
-              onValueChange={(value) => setCategoryFilter(value)}
+              value={categoryValueChanged ? categoryFilter : category}
+              onValueChange={(value) => {setCategoryFilter(value); setCategoryValueChanged(true);}}
               items={[
                 { label: "Baking", value: "baking" },
                 { label: "Teaching", value: "teaching" },
@@ -299,7 +305,7 @@ const Home = () => {
                 backgroundColor: colors.background,
               }}
             />
-            <Button disabled={bottomSheetList == "" ? true : false} style={{ marginTop: 16 }} mode={"contained"} onPress={() => handleFilterChange()}>Apply Fiters</Button>
+            <Button disabled={location == "" ? true : false} style={{ marginTop: 16 }} mode={"contained"} onPress={() => handleFilterChange()}>Apply Fiters</Button>
           </Box>
         </BottomSheetModal>
       </BottomSheetModalProvider>
