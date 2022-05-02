@@ -1,5 +1,6 @@
 import { Center, ScrollView } from "native-base";
 import React, { useEffect } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Text, Card, Button, Headline, TextInput } from "react-native-paper";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -42,25 +43,32 @@ const Bookings = () => {
   const [requestedService, setRequestedService] = React.useState(null);
   const [fetchedData, setFetchedData] = React.useState(false);
 
-  useEffect(() => {
-    let mounted = true;
-    axios
-      .post("https://myhandyman1.herokuapp.com/api/services-user-booked", {
-        requesterId: user.userId,
-        jwtToken: user.jwtToken,
-      })
-      .then((response) => {
-        if (mounted) {
-          setBookings(response.data.results);
+  useFocusEffect(
+    React.useCallback(() => {
+      axios
+        .post("https://myhandyman1.herokuapp.com/api/services-user-booked", {
+          requesterId: user.userId,
+          jwtToken: user.jwtToken,
+        })
+        .then((response) => {
+          let sortedArray = [...response.data.results]
+          sortedArray.sort((a, b) => {
+            let da = new Date(a.Dates[1])
+            let db = new Date(b.Dates[1])
+            return db - da
+          })
+          setBookings(sortedArray);
           setFetchedData(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-    return () => (mounted = false);
-  }, []);
+      return () => {
+        setBookings([]);
+      };
+    }, [])
+  );
 
   const addReview = async () => {
     setLoading(true);
@@ -150,9 +158,7 @@ const Bookings = () => {
     <>
       {bookings.length !== 0 && fetchedData ? (
         <>
-          <ScrollView
-            bgColor={"#003b801a"}
-          >
+          <ScrollView bgColor={"#003b801a"}>
             {bookings.map((item, index) => (
               <UserRequestedService
                 item={item}
