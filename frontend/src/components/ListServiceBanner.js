@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import {
   Paper, Typography, Box
@@ -9,6 +10,7 @@ import BannerButton from './BannerButton'
 
 export default function ListServiceBanner() {
   let navigate = useNavigate();
+  let user = useSelector((state) => state.user);
 
   return (
     <Paper
@@ -43,7 +45,15 @@ export default function ListServiceBanner() {
             right: 0 
           }}
         >
-          <BannerButton text="List Service" onClick={() => navigate("/services")}/>
+          <BannerButton 
+            text="List Service" 
+            onClick={() => {
+              if (user.jwtToken === '')
+                navigate('/login');
+              else
+                navigate("/services");
+            }}
+          />
         </Box>
 
       </Box>

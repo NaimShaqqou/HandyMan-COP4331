@@ -17,12 +17,13 @@ import Box from "@mui/material/Box"
 import {
   Input, Alert,
   Typography, Grid,
-  Paper
+  Paper, Collapse
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from "react-router-dom";
+import CloseIcon from '@mui/icons-material/Close';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -40,9 +41,12 @@ export default function LoginForm() {
   const dispatch = useDispatch();
   const { updateCurrentUser, loginServices } = bindActionCreators(actionCreators, dispatch);
   const navigate = useNavigate();
-  const [invalidCredentials, setInvalidCredentials] = useState(false);
-
-  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState({
+    show: false,
+    severity: 'success',
+    msg: '',
+  });
+  console.log(alert);
 
   const doLogin = async (event) => {
     event.preventDefault();
@@ -62,14 +66,23 @@ export default function LoginForm() {
       var res = JSON.parse(await response.text());
 
       if (res.error == "") {
-        setMessage("Logged in " + res.firstName + " " + res.lastName);
         console.log("Logged in " + res.firstName + " " + res.lastName);
         updateCurrentUser(res);
         loginServices(res.services);
         navigate("../");
       } else if (res.error == "Incorrect credentials") {
-        setInvalidCredentials(true);
-        setMessage(res.error);
+        setAlert({
+          show: true,
+          severity: 'error',
+          msg: 'Invalid Credentials'
+        })
+        console.log(res.error);
+      } else if (res.error == "Account has not been verified!") {
+        setAlert({
+          show: true,
+          severity: 'error',
+          msg: 'Account has not been verified. Please check your email.'
+        })
         console.log(res.error);
       } else {
         console.log(res.error);
@@ -87,7 +100,9 @@ export default function LoginForm() {
   });
 
   const handleChange = (prop) => (event) => {
-    if (invalidCredentials) setInvalidCredentials(false);
+    // if (alert.show) {
+    //   setAlert(prev => ({...prev, show: false}));
+    // }
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -114,7 +129,7 @@ export default function LoginForm() {
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginUsername">Username</InputLabel> */}
           <Input
-            error={invalidCredentials}
+            error={alert.show && alert.msg == 'Invalid Credentials'}
             id="loginUsername"
             type='text'
             value={values.username}
@@ -133,7 +148,7 @@ export default function LoginForm() {
         <FormControl sx={classes.text} variant="standard">
           {/* <InputLabel htmlFor="loginPassword">Password</InputLabel> */}
           <Input
-            error={invalidCredentials}
+            error={alert.show && alert.msg == 'Invalid Credentials'}
             id="loginPassword"
             type={values.showPassword ? 'text' : 'password'}
             value={values.password}
@@ -187,46 +202,29 @@ export default function LoginForm() {
         <Box m={3}/>
 
         <ForgotPassword/>
-        {/* <span id="loginResult">{message}</span> */}
       </form>
-
-      <AnimatePresence
-        intial={false}
-        exitBeforeEnter={true}
-        onExitComplete={() => null}
-      >
-
-        {invalidCredentials &&
-        <motion.div
-          initial='hidden' 
-          animate='visible'
-          exit='exit'
-          variants={{
-            hidden: {
-              scale: .8,
-              opacity: 0
-            },
-            visible: {
-              scale: 1,
-              opacity: 1,
-            },
-            exit: {
-              scale: 0,
-              opacity: 0
+      <Box sx={{ width: '90%', m: 3 }}>
+        <Collapse in={alert.show}>
+          <Alert
+            severity={alert.severity}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setAlert(prev => ({ ...prev, show: false}));
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
             }
-          }}
-        >
-
-          <Box m={3}>
-            <Alert
-              severity='error'
-              sx={{ mb: 2 }}
-            >
-              Invalid Credentials
-            </Alert>
-          </Box>
-        </motion.div>}
-      </AnimatePresence>
+            sx={{ mb: 2 }}
+          >
+            {alert.msg}
+          </Alert>
+        </Collapse>
+      </Box>
     </div>
   )
 }
