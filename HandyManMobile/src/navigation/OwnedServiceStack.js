@@ -4,6 +4,7 @@ import Services from "../screens/Services.js";
 import EditService from "../screens/EditService.js";
 import AddService from "../screens/AddService.js";
 import RequestedServices from "../screens/RequestedServices.js";
+import ServiceInfo from "../screens/ServiceInfo.js"
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TopBar from "./TopBar.js";
@@ -23,6 +24,7 @@ const OwnedServiceStack = () => {
       <Stack.Screen name="EditService" component={EditService} />
       <Stack.Screen name="AddService" component={AddService} />
       <Stack.Screen name="RequestedServices" component={RequestedServices} />
+      <Stack.Screen name="ServiceInfo" component={ServiceInfo} />
     </Stack.Navigator>
   );
 };

@@ -61,7 +61,7 @@ const BottomSheetComponent = ({ searchResults, popularServices }) => {
       <Card
         style={{ marginVertical: 16, width: "95%", alignSelf: "center" }}
         onPress={() =>
-          navigation.navigate("ServiceInfoScreen", { service: item })
+          navigation.navigate("ServiceInfoScreen", { service: item, book: true })
         }
       >
         <Card.Title

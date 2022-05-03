@@ -105,6 +105,7 @@ const Services = () => {
               key={item._id}
               // style={styles.menuContainer}
               style={{ marginTop: 16, width: "95%", alignSelf: "center" }}
+              onPress={() => navigation.navigate("ServiceInfo", {service: item, book: false})}
             >
               <Card.Title
                 titleStyle={{

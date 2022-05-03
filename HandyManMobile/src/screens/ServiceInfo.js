@@ -30,7 +30,7 @@ import EmptyBoxArt from "../components/EmptyBoxArt";
 const windowHeight = Dimensions.get("window").height;
 
 const ServiceInfo = ({ route }) => {
-  const { service } = route.params;
+  const { service, book } = route.params;
   const [user, setUser] = React.useState(null);
   const [avgReviews, setAvgReviews] = React.useState(0);
   const [reviews, setReviews] = React.useState([]);
@@ -88,30 +88,32 @@ const ServiceInfo = ({ route }) => {
 
   return (
     <Center flex={1}>
-      <Box
-        width={"100%"}
-        height={windowHeight * 0.08}
-        borderTopLeftRadius={15}
-        borderTopRightRadius={15}
-        shadow={6}
-        position={"absolute"}
-        bottom={0}
-        backgroundColor={"#003b801a"}
-        justifyContent={"space-around"}
-        flexDir={"row"}
-        alignItems={"center"}
-      >
-        <Title>Price: ${service.Price}</Title>
-        <Button
-          mode="contained"
-          onPress={() => {
-            handlePresentModalPress();
-          }}
+      {book && (
+        <Box
+          width={"100%"}
+          height={windowHeight * 0.08}
+          borderTopLeftRadius={15}
+          borderTopRightRadius={15}
+          shadow={6}
+          position={"absolute"}
+          bottom={0}
+          backgroundColor={"#003b801a"}
+          justifyContent={"space-around"}
+          flexDir={"row"}
+          alignItems={"center"}
         >
-          Book!
-        </Button>
-      </Box>
-      <ScrollView mb={"69px"} w={'100%'}>
+          <Title>Price: ${service.Price}</Title>
+          <Button
+            mode="contained"
+            onPress={() => {
+              handlePresentModalPress();
+            }}
+          >
+            Book!
+          </Button>
+        </Box>
+      )}
+      <ScrollView mb={book ? "69px" : "16px"} w={"100%"}>
         {service.Images.length !== 0 && (
           <ImageSwiper images={service.Images} edit={false} />
         )}
