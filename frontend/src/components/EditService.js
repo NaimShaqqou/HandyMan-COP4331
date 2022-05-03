@@ -90,10 +90,14 @@ export default function EditService(props) {
                 logoutServices()
                 navigate("../login")
             } else {
-                let refreshedToken = response.data.refreshedToken
-                updateCurrentUser({ ...user, jwtToken: refreshedToken })
-                updateServices(response.data.service)
-                navigate(-1)
+                if (response.data.error === "Invalid address") {
+                    setLocationValidation(true)
+                } else {
+                    let refreshedToken = response.data.refreshedToken
+                    updateCurrentUser({ ...user, jwtToken: refreshedToken })
+                    updateServices(response.data.service)
+                    navigate(-1)
+                }
             }
         }).catch((error) => {
             console.log(error.message)
@@ -264,7 +268,7 @@ export default function EditService(props) {
                                     error={locationValidation === true}
                                     helperText={
                                         locationValidation === true
-                                            ? "Address can't be empty!"
+                                            ? "Invalid Address!"
                                             : " "
                                     }
                                     onChange={async (e) => {

@@ -264,20 +264,6 @@ exports.setApp = function (app, client, cloudinaryParser) {
       jwtToken
     } = req.body;
 
-    let coordinates = await convertAddressToCoordinates(newAddress);
-
-    let update = {
-      Title: newTitle, 
-      Address: newAddress, 
-      Images: newImages,
-      Longitude: coordinates.location.lng.toString(),
-      Latitude: coordinates.location.lat.toString(),
-      Description: newDescription, 
-      Price: newPrice, 
-      DaysAvailable: newDaysAvailable, 
-      Category: newCategory
-    }
-
     try {
       if (token.isExpired(jwtToken)) {
         var r = { service: null, error: "The JWT is no longer valid", jwtToken: "" };
@@ -295,6 +281,28 @@ exports.setApp = function (app, client, cloudinaryParser) {
       console.log(e.message);
     }
 
+
+    let coordinates = await convertAddressToCoordinates(newAddress);
+
+    if (coordinates.error === "Not valid") {
+      res.status(200).json({service: null, refreshedToken: refreshedToken, error: "Invalid address"});
+      return;
+    }
+
+    let update = {
+      Title: newTitle, 
+      Address: newAddress, 
+      Images: newImages,
+      Longitude: coordinates.location.lng.toString(),
+      Latitude: coordinates.location.lat.toString(),
+      Description: newDescription, 
+      Price: newPrice, 
+      DaysAvailable: newDaysAvailable, 
+      Category: newCategory
+    }
+
+
+    
     var options = { new : true };
     Service.findOneAndUpdate( { _id : serviceId }, update, options,
       function(err, service) {
@@ -344,6 +352,11 @@ exports.setApp = function (app, client, cloudinaryParser) {
     }
 
     let coordinates = await convertAddressToCoordinates(address)
+    if (coordinates.error === "Not valid") {
+      res.status(200).json({service: null, refreshedToken: refreshedToken, error: "Invalid address"});
+      return;
+    }
+
     userId = ObjectId(userId)
 
     await Service.create(
@@ -1203,8 +1216,12 @@ exports.setApp = function (app, client, cloudinaryParser) {
 
     await axios(googleUrl)
       .then((response) => {
-        let result = response.data.results[0]
-        coordinates = { location: result.geometry.location, viewport: result.geometry.viewport, type: result.types } 
+        if (response.data.status === "ZERO_RESULTS") {
+          coordinates = { error: "Not valid"};
+        } else {
+          let result = response.data.results[0]
+          coordinates = { location: result.geometry.location, viewport: result.geometry.viewport, type: result.types, error: "" } 
+        }
       })
       .catch((error) => {
         console.log(error);

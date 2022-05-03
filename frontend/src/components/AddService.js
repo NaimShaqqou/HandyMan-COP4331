@@ -90,12 +90,16 @@ export default function AddService() {
                 logoutServices()
                 navigate("../login")
             } else {
-                let insertedService = response.data.service
-                let refreshedToken = response.data.refreshedToken
-                updateCurrentUser({ ...user, jwtToken: refreshedToken })
-                console.log(insertedService)
-                addService(insertedService)
-                navigate(-1)
+                if (response.data.error === "Invalid address") {
+                    setLocationValidation(true)
+                } else {
+                    let insertedService = response.data.service
+                    let refreshedToken = response.data.refreshedToken
+                    updateCurrentUser({ ...user, jwtToken: refreshedToken })
+                    console.log(insertedService)
+                    addService(insertedService)
+                    navigate(-1)
+                }
             }
         }).catch((error) => {
             console.log(error.message)
@@ -254,7 +258,7 @@ export default function AddService() {
                                 error={locationValidation === true}
                                 helperText={
                                     locationValidation === true
-                                        ? "Address can't be empty!"
+                                        ? "Invalid Address!"
                                         : " "
                                 }
                                 onChange={async (e) => {
