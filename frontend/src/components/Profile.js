@@ -347,6 +347,7 @@ function Profile() {
                           <TextField
                             fullWidth
                             label="Old Password"
+                            type="password"
                             required
                             variant="outlined"
                             error={oldPasswordValidation === true}
@@ -368,6 +369,7 @@ function Profile() {
                           <TextField
                             fullWidth
                             label="New Password"
+                            type="password"
                             required
                             variant="outlined"
                             error={newPasswordValidation === true}
