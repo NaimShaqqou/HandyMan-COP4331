@@ -77,7 +77,7 @@ const BottomSheetComponent = ({ searchResults, popularServices }) => {
             <Button
               icon="arrow-right"
               onPress={() =>
-                navigation.navigate("ServiceInfoScreen", { service: item })
+                navigation.navigate("ServiceInfoScreen", { service: item, book: true })
               }
             >
               Book Now!
