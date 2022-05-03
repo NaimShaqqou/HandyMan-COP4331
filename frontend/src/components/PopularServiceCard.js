@@ -74,6 +74,7 @@ export default function PopularServiceCard({serviceWithRating}) {
         position: 'relative', 
         mt: -12,
         ml: 1,
+        pr: 1,
         zIndex: 1,
         // fontWeight: 'bold',
         color: 'white',

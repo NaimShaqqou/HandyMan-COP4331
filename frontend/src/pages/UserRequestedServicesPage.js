@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../reducerStore/index";
 import { useNavigate } from 'react-router-dom';
 import UserRequestedService from "../components/UserRequestedService";
+import BouncyCardAnimation from '../components/BouncyCardAnimation'
 import axios from "axios";
 import { motion } from "framer-motion";
 
@@ -62,47 +63,13 @@ export default function UserRequestedServices() {
         return () => mounted = false;
   }, []);
 
-
-  const cardVariants = {
-    offscreen: {
-      y: 300
-    },
-    onscreen: {
-      y: 50,
-      transition: {
-        type: "spring",
-        bounce: 0.4,
-        duration: 0.8
-      }
-    }
-  };
-
-  function Card({serviceCard}) {
-    return (
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.8}}
-      >
-        <motion.div  variants={cardVariants}>
-          {serviceCard}
-        </motion.div>
-      </motion.div>
-    );
-  }
-
-  console.log(requestedServices)
-
   return (
-    <Box m={4}>
+    <Box m={10}>
       {requestedServices.length === 0 && fetchedData ? <EmptyBoxArt/> : 
-      requestedServices.map((requestedService, index) => 
-        <Grid container direction="column" spacing={5} >  
-      
-          <Grid item key={index}>
-            <Card serviceCard={<UserRequestedService requestedService={requestedService} />}/>
-          </Grid>
-        </Grid>
+        requestedServices.map((requestedService, index) => 
+        <BouncyCardAnimation key={index}>
+          <UserRequestedService requestedService={requestedService} />
+        </BouncyCardAnimation>
       )}
     </Box>
   );

@@ -27,6 +27,9 @@ const TopBar = ({ navigation, back, route }) => {
       case "ServiceInfoScreen":
         setName("Book Service");
         break;
+      case "BookingsScreen":
+        setName("Bookings");
+        break;
       default:
         setName("default");
         break;

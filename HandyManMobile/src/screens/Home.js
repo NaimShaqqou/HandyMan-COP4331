@@ -1,4 +1,4 @@
-import { Center, Box, Button, Icon, Input } from "native-base";
+import { Center, Box, Icon, Input } from "native-base";
 import { MaterialIcons } from "@native-base/icons";
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
@@ -10,7 +10,7 @@ import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-import { Divider, Headline, useTheme, TextInput } from "react-native-paper";
+import { Divider, Headline, useTheme, TextInput, Button } from "react-native-paper";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -29,6 +29,31 @@ const Home = () => {
   const { updateCurrentUser } = bindActionCreators(ActionCreators, dispatch);
   const { colors } = useTheme();
 
+  const [popularServices, setPopularServices] = React.useState("");
+
+  React.useEffect(async () => {
+    console.log("use effect");
+    var obj = {
+      numOfServices: "4",
+    };
+
+    await axios
+      .post("https://myhandyman1.herokuapp.com/api/best-reviewed-services", obj)
+      .then(function (response) {
+        let newArray = [...response.data.topServices];
+
+        newArray.forEach((element, index) => {
+          newArray[index] = { ...newArray[index].service };
+        });
+        setPopularServices(newArray);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+    // bottomSheetRef.current.snapToIndex(2);
+  }, []);
+
   // Can be called to actually call the search api
   const doSearch = async (filters, _event) => {
     try {
@@ -40,7 +65,6 @@ const Home = () => {
         maxDist: filters.maxDist,
       };
       var js = JSON.stringify(obj);
-      console.log("input: " + js);
 
       const response = await fetch(
         "https://myhandyman1.herokuapp.com/api/search-services",
@@ -93,18 +117,36 @@ const Home = () => {
       maxDist: maxDist,
     }).then((data) => {
       mapViewRef.current.setServicesFromParent(data.results);
-      setBottomSheetList(data.results);
+
+      let newArray = [...data.results];
+
+      if (sort == "Title")
+        newArray.sort((a, b) =>
+          b.Title.localeCompare(a.Title) == -1 ? 1 : -1
+        );
+      else if (sort == "Price Increasing") {
+        console.log("sorting...");
+        newArray.sort((a, b) => (parseInt(b.Price) < parseInt(a.Price) ? 1 : -1));
+      } else if (sort == "Price Decreasing")
+        newArray.sort((a, b) => (parseInt(b.Price) > parseInt(a.Price) ? 1 : -1));
+
+      setBottomSheetList(newArray);
     });
   };
 
   // stuff for filter modal
   const bottomSheetModalRef = React.useRef(null);
-  const snapPoints = React.useMemo(() => ["60%"], []);
+  const snapPoints = React.useMemo(() => ["94%"], []);
   const handlePresentModalPress = React.useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = React.useCallback((index) => {
-    console.log("handleSheetChanges", index);
+    setSearchFilter(search);
+    setCategoryFilter(category);
+    setMaxDistFilter(maxDist);
+    setSortFilter(sort);
+    setValueChanged(false);
+    setCategoryValueChanged(false)
   }, []);
 
   // filters to use in search api:
@@ -116,11 +158,32 @@ const Home = () => {
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
   const [maxDist, setMaxDist] = React.useState("5");
+  const [sort, setSort] = useState("Title");
+
+  const [sortFilter, setSortFilter] = useState("Title");
+  const [searchFilter, setSearchFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [maxDistFilter, setMaxDistFilter] = React.useState("5");
+  const [valueChanged, setValueChanged] = useState(false)
+  const [categoryValueChanged, setCategoryValueChanged] = useState(false)
 
   // When any of the listed filters change, execute a search
   useEffect(() => {
     doSearchHelper();
-  }, [search, category, maxDist, location]);
+  }, [
+    search, category, maxDist,
+    location, sort
+  ]);
+
+  const handleFilterChange = () => {
+    setSearch(searchFilter);
+    setCategory(categoryFilter);
+    setMaxDist(maxDistFilter);
+    setSort(sortFilter);
+    setValueChanged(false)
+    setCategoryValueChanged(false)
+    bottomSheetModalRef.current?.close();
+  };
 
   return (
     <Center safeAreaTop display={"flex"} flex={1} justifyContent={"flex-end"}>
@@ -140,7 +203,10 @@ const Home = () => {
         />
       </Center>
 
-      <BottomSheet searchResults={bottomSheetList} />
+      <BottomSheet
+        searchResults={bottomSheetList}
+        popularServices={popularServices}
+      />
 
       <BottomSheetModalProvider>
         <BottomSheetModal
@@ -155,8 +221,8 @@ const Home = () => {
               label="Service"
               placeholder="Bakery"
               mode="outlined"
-              onChangeText={(newSearch) => setSearch(newSearch)}
-              defaultValue={search}
+              onChangeText={(newSearch) => setSearchFilter(newSearch)}
+              defaultValue={searchFilter == search ? searchFilter : search}
               left={<TextInput.Icon name="magnify" />}
             />
 
@@ -168,7 +234,6 @@ const Home = () => {
               hasPadding
               selectedColor={colors.white}
               buttonColor={colors.primary}
-              // borderColor={colors.primary}
               options={[
                 { label: "1 Mile", value: 1 },
                 { label: "5 Miles", value: 5 },
@@ -177,16 +242,46 @@ const Home = () => {
               ]}
               testID="mile-switch-selector"
               accessibilityLabel="mile-switch-selector"
-              onPress={(value) => setMaxDist(value)}
+              onPress={(value) => setMaxDistFilter(value)}
               borderRadius={6}
               borderColor={"lightgray"}
               backgroundColor={colors.background}
             />
 
             <Divider style={{ marginVertical: 16 }} />
+            <Headline style={{ marginBottom: 16 }}>Sort By</Headline>
+            <RNPickerSelect
+              onValueChange={(value) => {setSortFilter(value); setValueChanged(true)}}
+              // value={sort}
+              value={valueChanged ? sortFilter : sort}
+              items={[
+                { label: "Title", value: "Title" },
+                { label: "Price Increasing", value: "Price Increasing" },
+                { label: "Price Decreasing", value: "Price Decreasing" },
+              ]}
+              Icon={() => (
+                <Icon
+                  mt="2.5"
+                  mr="1"
+                  size={8}
+                  as={<MaterialIcons name="arrow-drop-down" />}
+                  Color="muted.400"
+                />
+              )}
+              textInputProps={{
+                borderWidth: 1,
+                borderRadius: 5,
+                height: 50,
+                borderColor: "lightgray",
+                padding: 6,
+                backgroundColor: colors.background,
+              }}
+            />
+            <Divider style={{ marginVertical: 16 }} />
             <Headline style={{ marginBottom: 16 }}>Select Category</Headline>
             <RNPickerSelect
-              onValueChange={(value) => setCategory(value)}
+              value={categoryValueChanged ? categoryFilter : category}
+              onValueChange={(value) => {setCategoryFilter(value); setCategoryValueChanged(true);}}
               items={[
                 { label: "Baking", value: "baking" },
                 { label: "Teaching", value: "teaching" },
@@ -210,6 +305,7 @@ const Home = () => {
                 backgroundColor: colors.background,
               }}
             />
+            <Button disabled={location == "" ? true : false} style={{ marginTop: 16 }} mode={"contained"} onPress={() => handleFilterChange()}>Apply Fiters</Button>
           </Box>
         </BottomSheetModal>
       </BottomSheetModalProvider>

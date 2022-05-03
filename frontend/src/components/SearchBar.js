@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef,useLayoutEffect } from "react";
 
 import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
@@ -32,10 +32,10 @@ const emptySearch = {
 
 SearchBar.defaultProps = {
   mapMargin: {
-    ne: {lat: 28.84917863265754, lng: -80.32693023681641},
-    nw: {lat: 28.84917863265754, lng: -82.0730697631836},
-    se: {lat: 28.354238556858903, lng: -80.32693023681641},
-    sw: {lat: 28.354238556858903, lng: -82.0730697631836}
+    ne: {lat: 71.63976498579854, lng: -49.9000707842406},
+    nw: {lat: 71.63976498579854, lng: -170.6617895342406},
+    se: {lat: 13.593559866213852, lng: -49.9000707842406},
+    sw: {lat: 13.593559866213852, lng: -170.6617895342406}
   }
 }
 
@@ -43,6 +43,7 @@ function SearchBar(props) {
   const [predictions, setPredictions] = useState(new Array());
   const [search, setSearch] = useState(emptySearch);
   const [userLocation, setUserLocation] = useState(null);
+  const firstUpdate = useRef(true);
 
   // Get user location on first time render
   useEffect(() => {
@@ -55,21 +56,28 @@ function SearchBar(props) {
     }
   }, []);
 
-  useEffect(async () => {
-    let res = await marginSearchAPI({
-      marginBounds: props.mapMargin,
-      search: search.keyword,
-      category: search.category
-    });
-
-    // console.log(window.location.pathname);
-
-    if (window.location.pathname == '/search') {
-      props.updateRes({
-        res: res, 
-        fitBoundsTrigger: props.fitBoundsTrigger
-      });
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
     }
+    
+    async function doMarginSearch() {
+      if (window.location.pathname == '/search') {
+        let res = await marginSearchAPI({
+          marginBounds: props.mapMargin,
+          search: search.keyword,
+          category: search.category
+        });
+      
+        props.updateRes({
+          res: res, 
+          fitBoundsTrigger: props.fitBoundsTrigger
+        });
+      }
+    }
+    doMarginSearch();
+  
   }, [props.searchTrigger]);
 
   let navigate = useNavigate();
@@ -135,7 +143,7 @@ function SearchBar(props) {
   const marginSearchAPI = async (body) => {
     let res = null;
     let js = JSON.stringify(body);
-    console.log('sending:');
+    console.log('marginSearchAPI:');
     console.log(body);
 
     try {
@@ -172,6 +180,7 @@ function SearchBar(props) {
 
   const doSearch = async (e) => {
     e.preventDefault();
+    console.log('do search');
 
     // Convert "15 miles" to 15
     let maxDist = parseInt(search.distance.split(' ')[0]);
@@ -192,18 +201,28 @@ function SearchBar(props) {
     // Changing to a different value will trigger fitBounds.
     let fitBoundsTrigger = props.fitBoundsTrigger;
 
-    if (window.location.pathname == '/search' && body.location == '') {
-      res = await marginSearchAPI({
-        marginBounds: props.mapMargin,
-        search: search.keyword,
-        category: search.category
-      });
-    } else {
-      if (body.location == '')
-        body.location = userLocation ? userLocation : 'Orlando, FL';
-
-      fitBoundsTrigger = Math.random();
-      res = await regularSearchAPI(body);
+    if (window.location.pathname == '/search') {
+      if (body.location == '') {
+        res = await marginSearchAPI({
+          marginBounds: props.mapMargin,
+          search: search.keyword,
+          category: search.category
+        });
+      } else {
+        fitBoundsTrigger = Math.random();
+        res = await regularSearchAPI(body);
+      }
+    } else if (window.location.pathname == '/') {
+      if (body.location == '') {
+        res = await marginSearchAPI({
+          marginBounds: props.mapMargin,
+          search: search.keyword,
+          category: search.category
+        });
+      } else {  
+        fitBoundsTrigger = Math.random();
+        res = await regularSearchAPI(body);
+      }
     }
 
     if (window.location.pathname == '/search') {

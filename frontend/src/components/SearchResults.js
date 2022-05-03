@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -8,36 +8,38 @@ import {
   createTheme,
   ThemeProvider,
   Stack,
-  Paper
+  Paper,Button
 } from '@mui/material';
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import SearchResultCard from './SearchResultCard';
+import SearchResultsList from './SearchResultsList';
+import SortMenu from './SortMenu';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchResults(props) {
+  let mutableRes = props.results ? props.results : [];
   let navigate = useNavigate();
+  const [sort, setSort] = useState('title');
+  const [results, setResults] = useState(mutableRes);
 
-  // Sort by title
-  if (props.results)
-    props.results.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
+  let titleres = [...mutableRes];
+  titleres.sort((a, b) => (b.Title.localeCompare(a.Title) == -1 ? 1 : -1));
+
+  let priceincres = [...mutableRes];
+  priceincres.sort((a, b) => (parseInt(b.Price) < parseInt(a.Price) ? 1 : -1));
+
+  let pricedecres = [...mutableRes];
+  pricedecres.sort((a, b) => (parseInt(b.Price) > parseInt(a.Price) ? 1 : -1));
+
+  const setSortFromChild = (newSort) => {
+    setSort(newSort);
+  }
 
   let [showResults, setShowResults] = useState(true);
-
-  const theme = createTheme({
-    typography: {
-      fontFamily: [
-        // 'Comfortaa',
-        'Roboto',
-        '"Helvetica"',
-        'Arial',
-        'sans-serif'
-      ].join(','),
-    }
-  });
 
   return (
     <Box
@@ -85,49 +87,16 @@ export default function SearchResults(props) {
                   bgcolor: '#fff',
                   pointerEvents: 'auto',
                   pt: 1,
-                  pb: 3.5,
+                  pb: 8.5,
                   borderRadius: 3
                 }}
               >
-                <ThemeProvider theme={theme}>
-                  <ul
-                    style={{
-                      overflow: 'auto', // scroll bar
-                      height: '100%',
-                      // backgroundColor: 'green',
-                      paddingLeft: 5
-                    }}
-                  >
-                    { (props.results && props.results.length > 0) ? props.results.map(listitem => (
-                      <li
-                        key={listitem._id} 
-                        style={{  }}
-                      >
-                        <SearchResultCard
-                          listitem={listitem} 
-                          focus={props.focus} 
-                          updateFocus={props.updateFocus}
-                        />
-                        <Divider />
-                      </li>
-                    )) : (
-                    <div>
-                      <Typography
-                        variant='h4'
-                        sx={{
-                          textAlign: 'center',
-                          paddingTop: 5,
-                        }}
-                      >
-                        No results found
-                      </Typography>
-                    </div>
-                    )}
-                  </ul>
-                </ThemeProvider>
+                <SortMenu value={sort} onChange={setSortFromChild}/>
+                {sort === 'title' && <SearchResultsList results={titleres} focus={props.focus} updateFocus={props.updateFocus}/>}
+                {sort === 'priceinc' && <SearchResultsList results={priceincres} focus={props.focus} updateFocus={props.updateFocus}/>}
+                {sort === 'pricedec' && <SearchResultsList results={pricedecres} focus={props.focus} updateFocus={props.updateFocus}/>}
               </Paper>
             </motion.div>}
-            
 
           <motion.div
             key='button'

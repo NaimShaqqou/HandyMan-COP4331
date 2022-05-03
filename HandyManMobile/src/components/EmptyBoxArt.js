@@ -5,7 +5,7 @@ import { Center, Image, View } from "native-base";
 const EmptyBoxArt = ({ text }) => {
   return (
     <Center >
-      <Subheading>{text}</Subheading>
+      <Subheading style={{ margin: 10 }} >{text}</Subheading>
 
       <Image
         source={require("../../assets/empty.png")}

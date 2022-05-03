@@ -16,7 +16,6 @@ import {
   Dimensions,
   StyleSheet,
   View,
-  ScrollView,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -25,7 +24,7 @@ import { bindActionCreators } from "redux";
 import * as ActionCreators from "../reducerStore/ActionCreators/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EmptyBoxArt from "../components/EmptyBoxArt";
-import { Center } from "native-base";
+import { Box, Center, ScrollView } from "native-base";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
@@ -94,12 +93,19 @@ const Services = () => {
     ]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
+    // <View style={{ flex: 1, backgroundColor: "#003b801a" }}>
+    <>
       {services.length !== 0 ? (
-        <ScrollView contentContainerStyle={styles.viewContainer}>
-          {Object.values(services).map((item) => (
-          <Text key={item._id}>
-            <Card style={styles.menuContainer}>
+        <ScrollView
+          bgColor={"#003b801a"}
+        // contentContainerStyle={styles.viewContainer}
+        >
+          {services.map((item) => (
+            <Card
+              key={item._id}
+              // style={styles.menuContainer}
+              style={{ marginTop: 16, width: "95%", alignSelf: "center" }}
+            >
               <Card.Title
                 titleStyle={{
                   justifyContent: "center",
@@ -107,9 +113,22 @@ const Services = () => {
                 }}
                 title={item.Title}
                 subtitle={item.Description}
+                titleNumberOfLines={4}
+                subtitleNumberOfLines={4}
+                right={() => (
+                  <Box flexDir={"row"}>
+                    <IconButton
+                      icon="pencil"
+                      onPress={() => onEditServiceTransition(item)}
+                    />
+                    <IconButton
+                      icon="delete"
+                      onPress={() => deleteConfirmation(item)}
+                    />
+                  </Box>
+                )}
               />
               <Card.Cover
-                style={{ borderRadius: 13 }}
                 source={{ uri: item.Images[0] }}
               />
               <Card.Content>
@@ -137,42 +156,36 @@ const Services = () => {
                   <Text> Address: {item.Address}</Text>
                 </View>
               </Card.Content>
-              <Card.Actions style={{ justifyContent: "space-between" }}>
-                <IconButton
-                  icon="pencil"
-                  onPress={() => onEditServiceTransition(item)}
-                />
-                <IconButton
-                  icon="delete"
-                  onPress={() => deleteConfirmation(item)}
-                />
-                <IconButton
+              <Card.Actions style={{ justifyContent: "flex-end" }}>
+                <Button
                   icon="briefcase-clock"
                   onPress={() =>
                     navigation.navigate("RequestedServices", {
                       service: item,
                     })
                   }
-                />
+                  mode="contained"
+                >
+                  Service Requests
+                </Button>
               </Card.Actions>
             </Card>
-            {"\n"}
-          </Text>
           ))}
-          <Text>
-            {"\n"}
-            {"\n"}
-            {"\n"}
-          </Text>
         </ScrollView>
       ) : (
-        <Center m={'10px'} alignItems={'center'} justifyContent={'center'} h={'100%'}>
+        <Center
+          // m={"10px"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          h={"100%"}
+          bgColor={"#003b801a"}
+        >
           <EmptyBoxArt
             text={"Create your first service by clicking the plus icon above!"}
           />
         </Center>
       )}
-    </View>
+    </>
   );
 };
 
@@ -200,9 +213,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-    margin: 10,
-    width: width,
-    maxWidth: "95%",
+    // margin: 10,
+    // width: width,
+    // maxWidth: "95%",
   },
 
   addButton: {
