@@ -46,7 +46,6 @@ export default function LoginForm() {
     severity: 'success',
     msg: '',
   });
-  console.log(alert);
 
   const doLogin = async (event) => {
     event.preventDefault();

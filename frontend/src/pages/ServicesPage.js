@@ -1,5 +1,5 @@
 import { Button, Grid } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ServiceCard from "../components/ServiceCard";
 import { Container } from "@mui/material";
 import { Box } from "@mui/material";
@@ -14,12 +14,21 @@ import BouncyCardAnimation from '../components/BouncyCardAnimation';
 
 export default function ServicesPage() {
   let services = useSelector((state) => state.services);
-  const navigate = useNavigate()
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
   services = services.services; // Annoying
 
   function addService() {
     navigate("../add-service")
   }
+
+  useEffect(() => {
+    if (user.jwtToken == '') {
+      console.log('tried accessing services page as guest');
+      navigate('/login');
+      return;
+    }
+  }, []);
 
   return (
     <Box m={4}>

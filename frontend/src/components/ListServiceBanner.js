@@ -48,9 +48,9 @@ export default function ListServiceBanner() {
           <BannerButton 
             text="List Service" 
             onClick={() => {
-              if (user.jwtToken === '')
-                navigate('/login');
-              else
+              // if (user.jwtToken === '')
+              //   navigate('/login');
+              // else
                 navigate("/services");
             }}
           />
